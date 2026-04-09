@@ -1,42 +1,42 @@
-// Importa el módulo HTTP nativo de Node.js para crear el servidor
+// Importa el modulo HTTP nativo de Node.js para crear el servidor
 import { createServer } from 'node:http';
 
-// Importa todas las funciones del módulo calculos.js (ejercicio 4)
+// Importa todas las funciones del modulo calculos.js (ejercicio 4)
 import * as calc from './calculos.js';
 
 // =======================
 // FUNCIONES (Ejercicio 3)
 // =======================
 
-// Función que suma dos números
+// Funcion que suma dos numeros
 function suma(a, b) { return a + b; }
 
-// Función que resta dos números
+// Funcion que resta dos numeros
 function resta(a, b) { return a - b; }
 
-// Función que multiplica dos números
+// Funcion que multiplica dos numeros
 function multiplicacion(a, b) { return a * b; }
 
-// Función que divide dos números
+// Funcion que divide dos numeros
 function division(a, b) { return a / b; }
 
 // =======================
-// CREACIÓN DEL SERVIDOR
+// CREACION DEL SERVIDOR
 // =======================
 
 // Se crea el servidor HTTP
 const server = createServer((req, res) => {
 
-  // Se define la cabecera indicando que la respuesta será HTML
+  // Se define la cabecera indicando que la respuesta sera HTML
   res.writeHead(200, { 'Content-Type': 'text/html' });
 
-  // Se envía la respuesta al navegador
+  // Se envia la respuesta al navegador
   res.end(`
     <html>
       <head>
         <title>Ejercicios Node</title>
 
-        <!-- Estilos CSS para dar formato a la página -->
+        <!-- Estilos CSS para dar formato a la pagina -->
         <style>
           body {
             font-family: Arial;
@@ -83,7 +83,7 @@ const server = createServer((req, res) => {
         <h2>Resultados directos</h2>
         <table>
           <tr>
-            <th>Operación</th>
+            <th>Operacion</th>
             <th>Resultado</th>
           </tr>
           <!-- Operaciones realizadas directamente -->
@@ -97,7 +97,7 @@ const server = createServer((req, res) => {
         <h2>Resultados con funciones</h2>
         <table>
           <tr>
-            <th>Operación</th>
+            <th>Operacion</th>
             <th>Resultado</th>
           </tr>
           <!-- Uso de funciones definidas en este archivo -->
@@ -107,11 +107,11 @@ const server = createServer((req, res) => {
           <tr><td>20 / 4</td><td>${division(20,4)}</td></tr>
         </table>
 
-        <!-- Ejercicio 4: Resultados usando módulo -->
-        <h2>Resultados con módulo</h2>
+        <!-- Ejercicio 4: Resultados usando modulo -->
+        <h2>Resultados con modulo</h2>
         <table>
           <tr>
-            <th>Operación</th>
+            <th>Operacion</th>
             <th>Resultado</th>
           </tr>
           <!-- Uso de funciones importadas desde calculos.js -->
