@@ -31,100 +31,90 @@ const server = createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
 
   // Se envia la respuesta al navegador
-  res.end(`
-    <html>
-      <head>
-        <title>Ejercicios Node</title>
+ res.end(`
+  <html>
+    <head>
+      <title>Ejercicios Node</title>
 
-        <!-- Estilos CSS para dar formato a la pagina -->
-        <style>
-          body {
-            font-family: Arial;
-            padding: 20px;
-          }
-          h2 {
-            text-align: center;
-          }
-          table {
-            border-collapse: collapse;
-            width: 60%;
-            margin: 20px auto;
-          }
-          th {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-          }
-          td {
-            padding: 8px;
-            border: 1px solid #ccc;
-            text-align: center;
-          }
-          tr:nth-child(even) {
-            background-color: #f2f2f2;
-          }
-          .texto {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 18px;
-          }
-        </style>
-      </head>
+      <!-- META RESPONSIVE -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <body>
+      <!-- Bootstrap CDN -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
 
-        <!-- Ejercicio 1: Mostrar mensajes -->
-        <div class="texto">
-          <p>Hola mundo desde Node.js</p>
+    <body class="bg-light">
+
+      <div class="container py-4">
+
+        <!-- Texto -->
+        <div class="text-center mb-4">
+          <p class="fs-4">Hola mundo desde Node.js</p>
           <p>Fin</p>
         </div>
 
-        <!-- Ejercicio 2: Resultados directos -->
-        <h2>Resultados directos</h2>
-        <table>
-          <tr>
-            <th>Operacion</th>
-            <th>Resultado</th>
-          </tr>
-          <!-- Operaciones realizadas directamente -->
-          <tr><td>4 + 5</td><td>${4+5}</td></tr>
-          <tr><td>3 - 6</td><td>${3-6}</td></tr>
-          <tr><td>2 * 7</td><td>${2*7}</td></tr>
-          <tr><td>20 / 4</td><td>${20/4}</td></tr>
-        </table>
+        <!-- TABLA 1 -->
+        <h2 class="text-center">Resultados directos</h2>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered text-center">
+            <thead class="table-dark">
+              <tr>
+                <th>Operacion</th>
+                <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>4 + 5</td><td>${4+5}</td></tr>
+              <tr><td>3 - 6</td><td>${3-6}</td></tr>
+              <tr><td>2 * 7</td><td>${2*7}</td></tr>
+              <tr><td>20 / 4</td><td>${20/4}</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-        <!-- Ejercicio 3: Resultados usando funciones -->
-        <h2>Resultados con funciones</h2>
-        <table>
-          <tr>
-            <th>Operacion</th>
-            <th>Resultado</th>
-          </tr>
-          <!-- Uso de funciones definidas en este archivo -->
-          <tr><td>4 + 5</td><td>${suma(4,5)}</td></tr>
-          <tr><td>3 - 6</td><td>${resta(3,6)}</td></tr>
-          <tr><td>2 * 7</td><td>${multiplicacion(2,7)}</td></tr>
-          <tr><td>20 / 4</td><td>${division(20,4)}</td></tr>
-        </table>
+        <!-- TABLA 2 -->
+        <h2 class="text-center mt-5">Resultados con funciones</h2>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered text-center">
+            <thead class="table-dark">
+              <tr>
+                <th>Operacion</th>
+                <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>4 + 5</td><td>${suma(4,5)}</td></tr>
+              <tr><td>3 - 6</td><td>${resta(3,6)}</td></tr>
+              <tr><td>2 * 7</td><td>${multiplicacion(2,7)}</td></tr>
+              <tr><td>20 / 4</td><td>${division(20,4)}</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-        <!-- Ejercicio 4: Resultados usando modulo -->
-        <h2>Resultados con modulo</h2>
-        <table>
-          <tr>
-            <th>Operacion</th>
-            <th>Resultado</th>
-          </tr>
-          <!-- Uso de funciones importadas desde calculos.js -->
-          <tr><td>5 + 3</td><td>${calc.suma(5,3)}</td></tr>
-          <tr><td>8 - 6</td><td>${calc.resta(8,6)}</td></tr>
-          <tr><td>3 * 11</td><td>${calc.multiplicacion(3,11)}</td></tr>
-          <tr><td>30 / 5</td><td>${calc.division(30,5)}</td></tr>
-        </table>
+        <!-- TABLA 3 -->
+        <h2 class="text-center mt-5">Resultados con modulo</h2>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered text-center">
+            <thead class="table-dark">
+              <tr>
+                <th>Operacion</th>
+                <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>5 + 3</td><td>${calc.suma(5,3)}</td></tr>
+              <tr><td>8 - 6</td><td>${calc.resta(8,6)}</td></tr>
+              <tr><td>3 * 11</td><td>${calc.multiplicacion(3,11)}</td></tr>
+              <tr><td>30 / 5</td><td>${calc.division(30,5)}</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-      </body>
-    </html>
-  `);
-});
+      </div>
+
+    </body>
+  </html>
+`)});
 
 // =======================
 // INICIO DEL SERVIDOR
