@@ -15,7 +15,7 @@ server.listen(3000, '127.0.0.1', () => {
     console.log("Resultado de la división de 20 entre 4: "+ (20/4));
 });
 
-// run with `ejercicio2.js`
+// run with `node ejercicio2.js`
 
 
 
