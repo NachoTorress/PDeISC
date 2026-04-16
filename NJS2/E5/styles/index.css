@@ -1,0 +1,158 @@
+/**
+ * styles/index.css
+ * Estilos específicos de la página de inicio (index.html)
+ */
+
+/* ── Hero principal ─────────────────────────────────────────────────────────── */
+.hero {
+  min-height:  calc(100vh - var(--nav-height));
+  display:     flex;
+  align-items: center;
+  position:    relative;
+  overflow:    hidden;
+  /* Fondo con gradiente atmosférico */
+  background:  linear-gradient(160deg, #1a1008 0%, #0f0d0b 50%, #1a0e06 100%);
+}
+
+/* Círculo de luz dorado de fondo */
+.hero::before {
+  content:   '';
+  position:  absolute;
+  width:      800px;
+  height:     800px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,.12) 0%, transparent 70%);
+  right:     -200px;
+  top:       50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Textura de puntos sutiles */
+.hero::after {
+  content:   '';
+  position:  absolute;
+  inset:     0;
+  background-image: radial-gradient(circle, rgba(201,168,76,.05) 1px, transparent 1px);
+  background-size:  32px 32px;
+  pointer-events:   none;
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero-eyebrow {
+  font-family:  var(--font-body);
+  font-size:    0.7rem;
+  font-weight:  500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color:        var(--color-gold);
+  margin-bottom: 1.25rem;
+  display:      flex;
+  align-items:  center;
+  gap:          0.75rem;
+}
+.hero-eyebrow::before {
+  content:    '';
+  width:      32px;
+  height:     1px;
+  background: var(--color-gold);
+}
+
+.hero-title {
+  font-size:  clamp(3.5rem, 8vw, 7rem);
+  font-style: italic;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+}
+.hero-title span { color: var(--color-gold); }
+
+.hero-subtitle {
+  font-size:  1.05rem;
+  color:      var(--color-muted);
+  max-width:  480px;
+  margin-bottom: 2.5rem;
+  line-height: 1.8;
+}
+
+/* Línea de características debajo del hero */
+.hero-features {
+  display:    flex;
+  gap:        2.5rem;
+  margin-top: 2rem;
+  flex-wrap:  wrap;
+}
+.hero-feature {
+  display:    flex;
+  align-items: center;
+  gap:        0.5rem;
+  font-size:  0.8rem;
+  letter-spacing: 0.08em;
+  color:      var(--color-muted);
+}
+.hero-feature i { color: var(--color-gold); }
+
+/* Número decorativo a la derecha */
+.hero-number {
+  font-family: var(--font-display);
+  font-size:   clamp(8rem, 18vw, 16rem);
+  font-style:  italic;
+  color:       rgba(201,168,76,.05);
+  line-height: 1;
+  position:    absolute;
+  right:       -2rem;
+  top:         50%;
+  transform:   translateY(-50%);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Sección de especialidades ──────────────────────────────────────────────── */
+.specialties-section { background: var(--color-bg); }
+
+.specialty-card {
+  text-align: center;
+  padding:    2.5rem 1.5rem;
+  border:     1px solid var(--color-border);
+  border-radius: var(--radius);
+  transition: border-color var(--transition), transform var(--transition);
+}
+.specialty-card:hover {
+  border-color: rgba(201,168,76,.4);
+  transform:   translateY(-6px);
+}
+.specialty-icon {
+  font-size:   2.5rem;
+  margin-bottom: 1rem;
+  display:     block;
+}
+.specialty-card h4 {
+  font-style:  italic;
+  font-size:   1.5rem;
+  margin-bottom: 0.75rem;
+}
+.specialty-card p { color: var(--color-muted); font-size: 0.9rem; }
+
+/* ── Sección de horario / llamada a la acción ───────────────────────────────── */
+.cta-section {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  text-align: center;
+  padding:    5rem 0;
+}
+.cta-section .display-title { margin-bottom: 1rem; }
+.cta-section p { color: var(--color-muted); margin-bottom: 2rem; }
+
+/* ── Horarios ────────────────────────────────────────────────────────────────── */
+.schedule-table td { padding: 0.35rem 0; }
+.schedule-table td:first-child { color: var(--color-muted); padding-right: 2rem; }
+.schedule-table td:last-child  { color: var(--color-gold); text-align: right; }
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .hero-number { display: none; }
+}
+@media (max-width: 576px) {
+  .hero-features { gap: 1.25rem; }
+}

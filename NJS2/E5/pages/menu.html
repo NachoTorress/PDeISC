@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!--
+  pages/menu.html
+  Página de carta / menú — Café Aurora
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Café Aurora — Carta</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="stylesheet" href="/styles/pages.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="/"><span class="brand-icon">☕</span><span class="brand-text">Café Aurora</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Abrir navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/menu"><i class="bi bi-journal-text me-1"></i>Menú</a></li>
+          <li class="nav-item"><a class="nav-link" href="/nosotros"><i class="bi bi-people me-1"></i>Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="/galeria"><i class="bi bi-images me-1"></i>Galería</a></li>
+          <li class="nav-item"><a class="nav-link" href="/eventos"><i class="bi bi-calendar-event me-1"></i>Eventos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contacto"><i class="bi bi-envelope me-1"></i>Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <p class="section-label fade-up">Nuestra propuesta</p>
+      <h1 class="display-title fade-up fade-up-1">La carta</h1>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <section>
+    <div class="container">
+
+      <!-- Tabs de categorías -->
+      <ul class="nav menu-tabs justify-content-center gap-2 mb-5" id="menuTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="tab-cafes" data-bs-toggle="tab" data-bs-target="#cafes" type="button" role="tab" aria-controls="cafes" aria-selected="true">Cafés</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-desayuno" data-bs-toggle="tab" data-bs-target="#desayuno" type="button" role="tab" aria-controls="desayuno" aria-selected="false">Desayuno</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-almuerzo" data-bs-toggle="tab" data-bs-target="#almuerzo" type="button" role="tab" aria-controls="almuerzo" aria-selected="false">Almuerzo</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-bebidas" data-bs-toggle="tab" data-bs-target="#bebidas" type="button" role="tab" aria-controls="bebidas" aria-selected="false">Bebidas</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-postres" data-bs-toggle="tab" data-bs-target="#postres" type="button" role="tab" aria-controls="postres" aria-selected="false">Postres</button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="menuTabContent">
+
+        <!-- ── CAFÉS ── -->
+        <div class="tab-pane fade show active" id="cafes" role="tabpanel" aria-labelledby="tab-cafes">
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <h3 class="menu-section-heading mb-1">Cafés de especialidad</h3>
+              <p class="text-muted-aurora mb-4" style="font-size:.85rem;">Todos nuestros cafés se preparan con granos de un solo origen, extraídos en el momento.</p>
+
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Espresso doble</p><p class="menu-item-desc">Dos shots de espresso, cuerpo intenso, crema avellana persistente.</p></div><span class="menu-item-price">$1.800</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Cortado Aurora</p><p class="menu-item-desc">Espresso con un toque de leche cremosa al vapor. Equilibrio perfecto.</p></div><span class="menu-item-price">$2.100</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Flat White</p><p class="menu-item-desc">Doble ristretto con leche de vaca o de avena, microespuma sedosa.</p></div><span class="menu-item-price">$2.400</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Latte artesanal</p><p class="menu-item-desc">Espresso suave con leche texturizada. Disponible en vainilla o caramelo.</p></div><span class="menu-item-price">$2.600</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Cold Brew</p><p class="menu-item-desc">Infusión en frío de 18 horas. Notas de chocolate oscuro y frutos rojos.</p></div><span class="menu-item-price">$2.900</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">V60 de origen</p><p class="menu-item-desc">Preparación manual en filtro. Origen mensual rotativo, servido con tarjeta de taza.</p></div><span class="menu-item-price">$3.200</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DESAYUNO ── -->
+        <div class="tab-pane fade" id="desayuno" role="tabpanel" aria-labelledby="tab-desayuno">
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <h3 class="menu-section-heading mb-1">Desayunos & meriendas</h3>
+              <p class="text-muted-aurora mb-4" style="font-size:.85rem;">Elaborados cada mañana, disponibles de 7:30 a 13:00.</p>
+
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Croissant de manteca</p><p class="menu-item-desc">Laminado artesanal, 72 hs de fermentación, crujiente y aireado.</p></div><span class="menu-item-price">$2.200</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Tostada con palta</p><p class="menu-item-desc">Pan de masa madre, palta, huevo pochado y semillas tostadas.</p></div><span class="menu-item-price">$3.800</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Bowl de yogurt</p><p class="menu-item-desc">Yogurt griego, granola de avena, miel de flores y frutas de temporada.</p></div><span class="menu-item-price">$3.500</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Desayuno Aurora</p><p class="menu-item-desc">Café + medialunas + tostada con queso crema y mermelada casera.</p></div><span class="menu-item-price">$5.200</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ALMUERZO ── -->
+        <div class="tab-pane fade" id="almuerzo" role="tabpanel" aria-labelledby="tab-almuerzo">
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <h3 class="menu-section-heading mb-1">Almuerzos de autor</h3>
+              <p class="text-muted-aurora mb-4" style="font-size:.85rem;">Disponibles de 12:00 a 16:00. Carta de temporada, sujeta a cambios.</p>
+
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Ensalada de quínoa</p><p class="menu-item-desc">Quínoa tricolor, vegetales asados, feta, vinagreta de limón y menta.</p></div><span class="menu-item-price">$5.800</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Sandwich de autor</p><p class="menu-item-desc">Pan de campo, pollo braseado, rúcula, queso brie y salsa de mostaza antigua.</p></div><span class="menu-item-price">$6.400</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Pasta del día</p><p class="menu-item-desc">Pasta fresca casera con salsa de temporada. Consultar opciones del día.</p></div><span class="menu-item-price">$7.200</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Tabla de quesos y fiambres</p><p class="menu-item-desc">Selección artesanal con frutas, mermeladas y pan de nuez.</p></div><span class="menu-item-price">$8.900</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── BEBIDAS ── -->
+        <div class="tab-pane fade" id="bebidas" role="tabpanel" aria-labelledby="tab-bebidas">
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <h3 class="menu-section-heading mb-1">Otras bebidas</h3>
+              <p class="text-muted-aurora mb-4" style="font-size:.85rem;">Tés, infusiones y opciones sin alcohol.</p>
+
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Té de especialidad</p><p class="menu-item-desc">Selección de hojas sueltas: Darjeeling, Oolong, Sencha y mezclas de autor.</p></div><span class="menu-item-price">$2.200</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Matcha latte</p><p class="menu-item-desc">Matcha ceremonial japonés con leche de avena texturizada.</p></div><span class="menu-item-price">$3.400</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Agua tónica de autor</p><p class="menu-item-desc">Tónica artesanal con jengibre, yuzu o pepino-menta. Sin alcohol.</p></div><span class="menu-item-price">$2.800</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Vino de la carta</p><p class="menu-item-desc">Copa de vino blanco o tinto de bodegas boutique seleccionadas. Consultar disponibilidad.</p></div><span class="menu-item-price">$4.500</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── POSTRES ── -->
+        <div class="tab-pane fade" id="postres" role="tabpanel" aria-labelledby="tab-postres">
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <h3 class="menu-section-heading mb-1">Postres & dulces</h3>
+              <p class="text-muted-aurora mb-4" style="font-size:.85rem;">Elaborados diariamente en nuestra pastelería.</p>
+
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Tarta de limón merengada</p><p class="menu-item-desc">Base de masa bretona, crema de limón Meyer, merengue italiano.</p></div><span class="menu-item-price">$3.800</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Brownie de chocolate</p><p class="menu-item-desc">Chocolate 70% Valrhona, nuez pecán, centro fudgy. Con helado de vainilla.</p></div><span class="menu-item-price">$4.200</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Cheesecake del día</p><p class="menu-item-desc">Receta rotativa. Consultar sabor disponible con el equipo.</p></div><span class="menu-item-price">$4.000</span></div>
+              <div class="menu-item"><div class="menu-item-info"><p class="menu-item-name">Éclair de café</p><p class="menu-item-desc">Pasta choux rellena de crema de café, glaseado espejo oscuro.</p></div><span class="menu-item-price">$2.900</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-content -->
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <a class="footer-brand d-block mb-2" href="/">☕ Café Aurora</a>
+          <p>Un espacio donde el tiempo tiene otro ritmo y cada taza cuenta una historia.</p>
+        </div>
+        <div class="col-md-2 col-6">
+          <h6>Páginas</h6>
+          <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/menu">Menú</a></li>
+            <li><a href="/nosotros">Nosotros</a></li>
+            <li><a href="/galeria">Galería</a></li>
+            <li><a href="/eventos">Eventos</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 col-6">
+          <h6>Horarios</h6>
+          <p>Lun–Vie: 7:30–21:00<br />Sábados: 8:00–22:00<br />Domingos: 9:00–20:00</p>
+        </div>
+        <div class="col-md-3">
+          <h6>Contacto</h6>
+          <p><i class="bi bi-geo-alt me-1"></i>Av. Del Libertador 1240<br />Buenos Aires, Argentina</p>
+          <p class="mt-2"><i class="bi bi-telephone me-1"></i>+54 11 4000-0000</p>
+        </div>
+      </div>
+      <p class="footer-copy">© 2024 Café Aurora · Todos los derechos reservados</p>
+    </div>
+  </footer>
+
+  <button id="scrollTop" aria-label="Volver al inicio"><i class="bi bi-arrow-up"></i></button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/scripts/main.js"></script>
+</body>
+</html>

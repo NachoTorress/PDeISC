@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!--
+  pages/galeria.html
+  Página de galería visual — Café Aurora
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Café Aurora — Galería</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="stylesheet" href="/styles/pages.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="/"><span class="brand-icon">☕</span><span class="brand-text">Café Aurora</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Abrir navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/menu"><i class="bi bi-journal-text me-1"></i>Menú</a></li>
+          <li class="nav-item"><a class="nav-link" href="/nosotros"><i class="bi bi-people me-1"></i>Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/galeria"><i class="bi bi-images me-1"></i>Galería</a></li>
+          <li class="nav-item"><a class="nav-link" href="/eventos"><i class="bi bi-calendar-event me-1"></i>Eventos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contacto"><i class="bi bi-envelope me-1"></i>Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <p class="section-label fade-up">Imágenes del local</p>
+      <h1 class="display-title fade-up fade-up-1">Galería</h1>
+    </div>
+  </div>
+
+  <!-- GALERÍA -->
+  <section>
+    <div class="container">
+
+      <div class="text-center mb-5">
+        <p class="section-label">Momentos Aurora</p>
+        <h2 class="section-title">Cada rincón<br /><em>tiene su historia</em></h2>
+      </div>
+
+      <!-- Grilla de galería (con placeholders visuales) -->
+      <div class="gallery-grid">
+
+        <div class="gallery-item tall">
+          <div class="gallery-placeholder">
+            <span>☕</span>
+            <small style="font-size:.7rem;letter-spacing:.1em;">EL ESPRESSO BAR</small>
+          </div>
+          <div class="gallery-caption">El espresso bar, corazón del café</div>
+        </div>
+
+        <div class="gallery-item">
+          <div class="gallery-placeholder">🥐</div>
+          <div class="gallery-caption">Croissants frescos del horno</div>
+        </div>
+
+        <div class="gallery-item">
+          <div class="gallery-placeholder">🌿</div>
+          <div class="gallery-caption">Rincón verde, luz natural</div>
+        </div>
+
+        <div class="gallery-item wide">
+          <div class="gallery-placeholder">
+            <span>🪑</span>
+            <small style="font-size:.7rem;letter-spacing:.1em;">SALÓN PRINCIPAL</small>
+          </div>
+          <div class="gallery-caption">El salón principal, donde todo pasa</div>
+        </div>
+
+        <div class="gallery-item">
+          <div class="gallery-placeholder">🎨</div>
+          <div class="gallery-caption">Arte en cada taza</div>
+        </div>
+
+        <div class="gallery-item">
+          <div class="gallery-placeholder">🧁</div>
+          <div class="gallery-caption">Pastelería de temporada</div>
+        </div>
+
+        <div class="gallery-item">
+          <div class="gallery-placeholder">🪴</div>
+          <div class="gallery-caption">La terraza interior</div>
+        </div>
+
+        <div class="gallery-item tall">
+          <div class="gallery-placeholder">
+            <span>🌄</span>
+            <small style="font-size:.7rem;letter-spacing:.1em;">APERTURA DIARIA</small>
+          </div>
+          <div class="gallery-caption">Las primeras luces de cada mañana</div>
+        </div>
+
+        <div class="gallery-item">
+          <div class="gallery-placeholder">📚</div>
+          <div class="gallery-caption">Un lugar para leer</div>
+        </div>
+
+      </div><!-- /gallery-grid -->
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4"><a class="footer-brand d-block mb-2" href="/">☕ Café Aurora</a><p>Un espacio donde el tiempo tiene otro ritmo y cada taza cuenta una historia.</p></div>
+        <div class="col-md-2 col-6"><h6>Páginas</h6><ul><li><a href="/">Inicio</a></li><li><a href="/menu">Menú</a></li><li><a href="/nosotros">Nosotros</a></li><li><a href="/galeria">Galería</a></li><li><a href="/eventos">Eventos</a></li><li><a href="/contacto">Contacto</a></li></ul></div>
+        <div class="col-md-3 col-6"><h6>Horarios</h6><p>Lun–Vie: 7:30–21:00<br />Sábados: 8:00–22:00<br />Domingos: 9:00–20:00</p></div>
+        <div class="col-md-3"><h6>Contacto</h6><p><i class="bi bi-geo-alt me-1"></i>Av. Del Libertador 1240<br />Buenos Aires, Argentina</p><p class="mt-2"><i class="bi bi-telephone me-1"></i>+54 11 4000-0000</p></div>
+      </div>
+      <p class="footer-copy">© 2024 Café Aurora · Todos los derechos reservados</p>
+    </div>
+  </footer>
+
+  <button id="scrollTop" aria-label="Volver al inicio"><i class="bi bi-arrow-up"></i></button>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/scripts/main.js"></script>
+</body>
+</html>

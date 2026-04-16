@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--
+  pages/index.html
+  Página de inicio — Café Aurora
+  Menú generado por menuModule.js (ver modulos/menuModule.js)
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Café Aurora — Inicio</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="stylesheet" href="/styles/index.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════
+       NAVBAR — generada por menuModule.js
+  ═══════════════════════════════════════════════════ -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <span class="brand-icon">☕</span>
+        <span class="brand-text">Café Aurora</span>
+      </a>
+      <button class="navbar-toggler" type="button"
+              data-bs-toggle="collapse" data-bs-target="#navbarMain"
+              aria-controls="navbarMain" aria-expanded="false"
+              aria-label="Abrir navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/menu"><i class="bi bi-journal-text me-1"></i>Menú</a></li>
+          <li class="nav-item"><a class="nav-link" href="/nosotros"><i class="bi bi-people me-1"></i>Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="/galeria"><i class="bi bi-images me-1"></i>Galería</a></li>
+          <li class="nav-item"><a class="nav-link" href="/eventos"><i class="bi bi-calendar-event me-1"></i>Eventos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contacto"><i class="bi bi-envelope me-1"></i>Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════
+       HERO PRINCIPAL
+  ═══════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 hero-content">
+
+          <p class="hero-eyebrow fade-up">Desde 2008 · Buenos Aires</p>
+
+          <h1 class="hero-title fade-up fade-up-1">
+            El arte de<br />
+            <span>cada sorbo</span>
+          </h1>
+
+          <p class="hero-subtitle fade-up fade-up-2">
+            Café de especialidad, gastronomía artesanal y una atmósfera
+            diseñada para que el tiempo se detenga.
+          </p>
+
+          <div class="d-flex gap-3 flex-wrap fade-up fade-up-3">
+            <a href="/menu" class="btn-gold">Ver carta</a>
+            <a href="/contacto" class="btn-outline-gold">Reservar mesa</a>
+          </div>
+
+          <div class="hero-features fade-up fade-up-4">
+            <span class="hero-feature"><i class="bi bi-award"></i> Café specialty</span>
+            <span class="hero-feature"><i class="bi bi-leaf"></i> Ingredientes naturales</span>
+            <span class="hero-feature"><i class="bi bi-clock"></i> Abierto todos los días</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- Número decorativo -->
+    <span class="hero-number" aria-hidden="true">01</span>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       ESPECIALIDADES
+  ═══════════════════════════════════════════════════ -->
+  <section class="specialties-section">
+    <div class="container">
+
+      <div class="text-center mb-5">
+        <p class="section-label">Lo que nos define</p>
+        <h2 class="section-title">Nuestras especialidades</h2>
+      </div>
+
+      <div class="row g-4">
+        <!-- Especialidad 1 -->
+        <div class="col-sm-6 col-lg-3">
+          <div class="specialty-card">
+            <span class="specialty-icon">☕</span>
+            <h4>Café de origen</h4>
+            <p>Granos seleccionados de fincas de Etiopía, Colombia y Guatemala, tostados en pequeños lotes.</p>
+          </div>
+        </div>
+        <!-- Especialidad 2 -->
+        <div class="col-sm-6 col-lg-3">
+          <div class="specialty-card">
+            <span class="specialty-icon">🥐</span>
+            <h4>Pastelería artesanal</h4>
+            <p>Croissants, medialunas y tartas elaboradas cada mañana por nuestro equipo.</p>
+          </div>
+        </div>
+        <!-- Especialidad 3 -->
+        <div class="col-sm-6 col-lg-3">
+          <div class="specialty-card">
+            <span class="specialty-icon">🥗</span>
+            <h4>Almuerzo de autor</h4>
+            <p>Platos de temporada con productos locales, pensados para una pausa perfecta.</p>
+          </div>
+        </div>
+        <!-- Especialidad 4 -->
+        <div class="col-sm-6 col-lg-3">
+          <div class="specialty-card">
+            <span class="specialty-icon">🍷</span>
+            <h4>Carta de vinos</h4>
+            <p>Selección curada de bodegas boutique del NOA y la Patagonia argentina.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       HORARIOS / CTA
+  ═══════════════════════════════════════════════════ -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+          <p class="section-label">Visitanos</p>
+          <h2 class="display-title mb-4">Siempre hay<br /><em>un momento</em></h2>
+
+          <table class="schedule-table mx-auto mb-4">
+            <tbody>
+              <tr><td>Lunes a Viernes</td><td>7:30 — 21:00</td></tr>
+              <tr><td>Sábados</td>        <td>8:00 — 22:00</td></tr>
+              <tr><td>Domingos</td>       <td>9:00 — 20:00</td></tr>
+            </tbody>
+          </table>
+
+          <div class="divider"><span class="divider-icon">✦</span></div>
+
+          <p class="text-muted-aurora mb-3">
+            <i class="bi bi-geo-alt text-gold me-1"></i>
+            Av. Del Libertador 1240, Buenos Aires
+          </p>
+
+          <a href="/contacto" class="btn-gold">Cómo llegar</a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <a class="footer-brand d-block mb-2" href="/">☕ Café Aurora</a>
+          <p>Un espacio donde el tiempo tiene otro ritmo y cada taza cuenta una historia.</p>
+        </div>
+        <div class="col-md-2 col-6">
+          <h6>Páginas</h6>
+          <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/menu">Menú</a></li>
+            <li><a href="/nosotros">Nosotros</a></li>
+            <li><a href="/galeria">Galería</a></li>
+            <li><a href="/eventos">Eventos</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 col-6">
+          <h6>Horarios</h6>
+          <p>Lun–Vie: 7:30–21:00<br />Sábados: 8:00–22:00<br />Domingos: 9:00–20:00</p>
+        </div>
+        <div class="col-md-3">
+          <h6>Contacto</h6>
+          <p><i class="bi bi-geo-alt me-1"></i>Av. Del Libertador 1240<br />Buenos Aires, Argentina</p>
+          <p class="mt-2"><i class="bi bi-telephone me-1"></i>+54 11 4000-0000</p>
+        </div>
+      </div>
+      <p class="footer-copy">© 2024 Café Aurora · Todos los derechos reservados</p>
+    </div>
+  </footer>
+
+  <!-- Botón volver arriba -->
+  <button id="scrollTop" aria-label="Volver al inicio">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Script global -->
+  <script src="/scripts/main.js"></script>
+</body>
+</html>
