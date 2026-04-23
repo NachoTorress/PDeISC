@@ -1,0 +1,3 @@
+.tarea-item { cursor: pointer; transition: all 0.2s; }
+.tarea-item:hover { background-color: #f8f9fa; }
+.tachado { text-decoration: line-through; color: #adb5bd; }

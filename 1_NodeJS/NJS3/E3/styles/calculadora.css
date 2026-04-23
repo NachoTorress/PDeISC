@@ -1,0 +1,6 @@
+.resultado-box {
+    transition: background-color 0.3s ease;
+}
+.resultado-box:hover {
+    background-color: #0b5ed7 !important; /* Azul más oscuro al pasar el mouse */
+}

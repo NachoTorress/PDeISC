@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/calculadora.css">
+</head>
+<body class="bg-light">
+    <div id="navbar-container"></div>
+    <main class="container py-4">
+        <div class="card shadow mx-auto col-md-6 col-lg-4 p-4">
+            <h3 class="text-center mb-4">💳 Calculadora de Propinas</h3>
+            <label class="form-label">Total de la cuenta ($):</label>
+            <input type="number" id="monto" class="form-control mb-3" placeholder="0.00">
+            <label class="form-label d-flex justify-content-between">
+                <span>Porcentaje:</span> <span id="lblPorcentaje" class="fw-bold">15%</span>
+            </label>
+            <input type="range" id="rango" class="form-range mb-4" min="0" max="50" value="15">
+            <div class="resultado-box p-3 bg-primary text-white rounded text-center">
+                <h5>Total a Pagar</h5>
+                <h2 id="totalFinal">$ 0.00</h2>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">import { renderNavbar } from '/modules/navbar.js'; renderNavbar();</script>
+    <script type="module" src="/scripts/calculadora.js"></script>
+</body>
+</html>

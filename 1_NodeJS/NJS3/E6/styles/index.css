@@ -1,0 +1,315 @@
+/* =====================================================
+   index.css — Estilos elegantes para el formulario
+   Complementa Bootstrap 5 sin romper su sistema de grid
+   ===================================================== */
+
+/* ----- Variables globales ----- */
+:root {
+  --cream:      #faf8f5;
+  --ink:        #1a1a2e;
+  --gold:       #c9a84c;
+  --gold-light: #e8d5a3;
+  --card-bg:    #ffffff;
+  --border:     #e2ddd6;
+  --muted:      #6b6b7b;
+  --radius:     14px;
+  --shadow:     0 8px 32px rgba(26,26,46,.08);
+  --shadow-lg:  0 20px 60px rgba(26,26,46,.14);
+}
+
+/* ----- Reset base ----- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+.registro-header {
+  background: var(--ink);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Detalle decorativo geométrico detrás del header */
+.registro-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 80% 50%, rgba(201,168,76,.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(201,168,76,.10) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Badge "Bienvenido" */
+.badge-pill {
+  display: inline-block;
+  background: rgba(201,168,76,.2);
+  color: var(--gold-light);
+  border: 1px solid rgba(201,168,76,.4);
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .3rem 1rem;
+}
+
+.registro-header h1 {
+  font-family: 'Playfair Display', serif;
+  color: #fff;
+  letter-spacing: -.01em;
+}
+
+.registro-header .subtitle {
+  color: rgba(255,255,255,.55);
+  font-size: .95rem;
+  font-weight: 300;
+}
+
+/* =====================================================
+   CARDS ELEGANTES
+   ===================================================== */
+.card-elegante {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  /* padding se controla con clases Bootstrap en el HTML: p-3 p-lg-4 */
+  transition: box-shadow .3s ease;
+}
+
+.card-elegante:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Franja título superior de la card */
+.card-elegante-header {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--ink);
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: .6rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+/* =====================================================
+   FORM LABELS
+   ===================================================== */
+.form-label {
+  font-weight: 500;
+  font-size: .875rem;
+  color: var(--muted);
+  margin-bottom: .3rem;
+  letter-spacing: .02em;
+}
+
+/* =====================================================
+   INPUTS & SELECT
+   ===================================================== */
+.input-elegante {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .55rem .85rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .92rem;
+  color: var(--ink);
+  background: var(--cream);
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.input-elegante:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.18);
+  background: #fff;
+  outline: none;
+}
+
+/* Feedback de validación */
+.invalid-feedback {
+  font-size: .8rem;
+}
+
+/* =====================================================
+   RADIO & CHECKBOX
+   ===================================================== */
+.check-elegante .form-check-input {
+  border-color: var(--border);
+  cursor: pointer;
+}
+
+.check-elegante .form-check-input:checked {
+  background-color: var(--ink);
+  border-color: var(--gold);
+}
+
+.check-elegante .form-check-input:focus {
+  box-shadow: 0 0 0 3px rgba(201,168,76,.2);
+}
+
+.check-elegante .form-check-label {
+  font-size: .9rem;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+/* =====================================================
+   BOTÓN REGISTRAR
+   ===================================================== */
+.btn-registrar {
+  background: var(--ink);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  letter-spacing: .04em;
+  font-size: .95rem;
+  padding: .75rem 1.5rem;
+  border-radius: 8px;
+  border: 2px solid var(--ink);
+  transition: background .25s, color .25s, border-color .25s, transform .15s;
+}
+
+.btn-registrar:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.btn-registrar:active {
+  transform: translateY(0);
+}
+
+/* =====================================================
+   RESULTADO DINÁMICO
+   ===================================================== */
+
+/* Estado vacío (placeholder) */
+.resultado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  padding: 3rem 1rem;
+  color: var(--border);
+  text-align: center;
+}
+
+.resultado-vacio i {
+  font-size: 3.5rem;
+  opacity: .4;
+}
+
+.resultado-vacio p {
+  font-size: .9rem;
+  opacity: .6;
+}
+
+/* Fila de dato dentro del resultado */
+#resultado .dato-fila {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--border);
+  animation: fadeSlide .35s ease both;
+}
+
+#resultado .dato-fila:last-child { border-bottom: none; }
+
+#resultado .dato-icono {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+#resultado .dato-label {
+  font-size: .75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  line-height: 1;
+  margin-bottom: .2rem;
+}
+
+#resultado .dato-valor {
+  font-size: .95rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* Animación de entrada por fila */
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Aplicar delay escalonado a cada fila */
+#resultado .dato-fila:nth-child(1) { animation-delay: .00s; }
+#resultado .dato-fila:nth-child(2) { animation-delay: .06s; }
+#resultado .dato-fila:nth-child(3) { animation-delay: .12s; }
+#resultado .dato-fila:nth-child(4) { animation-delay: .18s; }
+#resultado .dato-fila:nth-child(5) { animation-delay: .24s; }
+#resultado .dato-fila:nth-child(6) { animation-delay: .30s; }
+#resultado .dato-fila:nth-child(7) { animation-delay: .36s; }
+
+/* =====================================================
+   BOTÓN VOLVER ARRIBA
+   ===================================================== */
+.btn-subir {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--gold);
+  border: 2px solid var(--gold);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s, transform .3s, background .2s;
+  z-index: 9999;
+  box-shadow: 0 4px 16px rgba(26,26,46,.25);
+}
+
+.btn-subir.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.btn-subir:hover {
+  background: var(--gold);
+  color: var(--ink);
+  transform: translateY(-3px);
+}
+
+/* =====================================================
+   RESPONSIVE
+   El responsive se maneja completamente con clases
+   de Bootstrap en el HTML (py-lg-5, p-lg-4, etc.)
+   No se necesitan media queries propias.
+   ===================================================== */

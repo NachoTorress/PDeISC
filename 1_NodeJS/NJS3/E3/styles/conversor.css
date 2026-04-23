@@ -1,0 +1,7 @@
+input[type=number] {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+}
+/* Oculta las flechas por defecto de los inputs numéricos */
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }

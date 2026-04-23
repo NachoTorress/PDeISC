@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- Google Fonts: Playfair Display (títulos) + DM Sans (cuerpo) -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/index.css">
+</head>
+<body>
+
+  <!-- ===== HERO HEADER ===== -->
+  <!-- py-4 en móvil, py-5 en desktop — reemplaza la media query del header -->
+  <header class="registro-header text-center py-4 py-lg-5 px-3">
+    <div class="container">
+      <span class="badge-pill mb-3">Bienvenido</span>
+      <!-- fs-4 en móvil, display-5 en desktop — reemplaza media query del h1 -->
+      <h1 class="fs-4 fs-lg-display-5 display-lg-5 fw-bold mb-1">Formulario de Registro</h1>
+      <p class="subtitle">Completá tus datos para continuar</p>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <!-- py-3 en móvil, py-5 en desktop — reemplaza media query del main -->
+  <main class="container py-3 py-lg-5">
+    <div class="row justify-content-center g-5">
+
+      <!-- ===== FORMULARIO ===== -->
+      <div class="col-12 col-lg-6">
+        <!-- p-3 en móvil, p-4 en desktop — reemplaza media query de .card-elegante -->
+        <div class="card-elegante p-3 p-lg-4">
+          <div class="card-elegante-header">
+            <i class="bi bi-person-fill-add me-2"></i>Tus datos
+          </div>
+
+          <form id="formulario" novalidate>
+
+            <!-- Nombre -->
+            <div class="mb-3">
+              <label class="form-label" for="nombre">
+                <i class="bi bi-person me-1"></i>Nombre
+              </label>
+              <input
+                type="text"
+                class="form-control input-elegante"
+                id="nombre"
+                placeholder="Ej: María"
+                required
+                pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]{3,}"
+                title="Mínimo 3 letras, sin números"
+              >
+              <div class="invalid-feedback">Ingresá al menos 3 letras, sin números.</div>
+            </div>
+
+            <!-- Apellido -->
+            <div class="mb-3">
+              <label class="form-label" for="apellido">
+                <i class="bi bi-person me-1"></i>Apellido
+              </label>
+              <input
+                type="text"
+                class="form-control input-elegante"
+                id="apellido"
+                placeholder="Ej: González"
+                required
+                pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]{3,}"
+                title="Mínimo 3 letras, sin números"
+              >
+              <div class="invalid-feedback">Ingresá al menos 3 letras, sin números.</div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label" for="email">
+                <i class="bi bi-envelope me-1"></i>Email
+              </label>
+              <input
+                type="email"
+                class="form-control input-elegante"
+                id="email"
+                placeholder="ejemplo@correo.com"
+                required
+                pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+              >
+              <div class="invalid-feedback">Ingresá un email válido.</div>
+            </div>
+
+            <!-- Edad -->
+            <div class="mb-3">
+              <label class="form-label" for="edad">
+                <i class="bi bi-calendar3 me-1"></i>Edad
+              </label>
+              <input
+                type="number"
+                class="form-control input-elegante"
+                id="edad"
+                min="1"
+                max="120"
+                placeholder="Ej: 28"
+                required
+              >
+              <div class="invalid-feedback">Ingresá una edad entre 1 y 120.</div>
+            </div>
+
+            <!-- Género (radio) -->
+            <div class="mb-3">
+              <label class="form-label">
+                <i class="bi bi-gender-ambiguous me-1"></i>Género
+              </label>
+              <div class="d-flex gap-4">
+                <div class="form-check check-elegante">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="genero"
+                    id="generoM"
+                    value="Masculino"
+                    required
+                  >
+                  <label class="form-check-label" for="generoM">Masculino</label>
+                </div>
+                <div class="form-check check-elegante">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="genero"
+                    id="generoF"
+                    value="Femenino"
+                  >
+                  <label class="form-check-label" for="generoF">Femenino</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- País (select) -->
+            <div class="mb-3">
+              <label class="form-label" for="pais">
+                <i class="bi bi-globe-americas me-1"></i>País
+              </label>
+              <select class="form-select input-elegante" id="pais">
+                <option>Argentina</option>
+                <option>Chile</option>
+                <option>Uruguay</option>
+              </select>
+            </div>
+
+            <!-- Intereses (checkbox) -->
+            <div class="mb-4">
+              <label class="form-label">
+                <i class="bi bi-stars me-1"></i>Intereses
+              </label>
+              <div class="d-flex flex-wrap gap-3">
+                <div class="form-check check-elegante">
+                  <input class="form-check-input" type="checkbox" id="dep" value="Deportes">
+                  <label class="form-check-label" for="dep">
+                    <i class="bi bi-trophy me-1"></i>Deportes
+                  </label>
+                </div>
+                <div class="form-check check-elegante">
+                  <input class="form-check-input" type="checkbox" id="mus" value="Música">
+                  <label class="form-check-label" for="mus">
+                    <i class="bi bi-music-note-beamed me-1"></i>Música
+                  </label>
+                </div>
+                <div class="form-check check-elegante">
+                  <input class="form-check-input" type="checkbox" id="tec" value="Tecnología">
+                  <label class="form-check-label" for="tec">
+                    <i class="bi bi-cpu me-1"></i>Tecnología
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botón submit -->
+            <button type="submit" class="btn btn-registrar w-100">
+              <i class="bi bi-check2-circle me-2"></i>Registrar
+            </button>
+
+          </form>
+        </div>
+      </div>
+
+      <!-- ===== RESULTADO ===== -->
+      <div class="col-12 col-lg-5">
+        <!-- p-3 en móvil, p-4 en desktop — reemplaza media query de resultado-card -->
+        <div class="card-elegante p-3 p-lg-4 h-100" id="resultado-wrapper">
+          <div class="card-elegante-header">
+            <i class="bi bi-card-text me-2"></i>Datos ingresados
+          </div>
+          <!-- Estado vacío -->
+          <div class="resultado-vacio" id="resultado-vacio">
+            <i class="bi bi-person-bounding-box"></i>
+            <p>Completá el formulario y verás tu perfil aquí</p>
+          </div>
+          <!-- Resultado dinámico (lo llena index.js) -->
+          <div id="resultado"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===== BOTÓN SUBIR ===== -->
+  <button class="btn-subir" id="btnSubir" title="Volver al inicio" aria-label="Volver arriba">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Lógica del formulario (sin modificar) + extras UI -->
+  <script src="scripts/index.js"></script>
+</body>
+</html>

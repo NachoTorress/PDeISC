@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/conversor.css">
+</head>
+<body class="bg-light">
+    <div id="navbar-container"></div>
+
+    <main class="container py-4">
+        <div class="card shadow mx-auto col-md-6 col-lg-5 p-4 border-info border-top border-4">
+            
+            <!-- CONVERSOR -->
+            <h3 class="text-center mb-4">🔄 Conversor de Medidas</h3>
+            
+            <div class="mb-3">
+                <label class="form-label">Kilómetros:</label>
+                <input type="number" id="kmInput" class="form-control" placeholder="0">
+            </div>
+
+            <div class="text-center mb-3">⬇️ equivale a ⬇️</div>
+
+            <div class="mb-3">
+                <label class="form-label">Millas:</label>
+                <input type="number" id="miInput" class="form-control" placeholder="0">
+            </div>
+
+            <small class="text-muted d-block text-center mt-3 mb-4">
+                * Escribe en cualquier caja para convertir
+            </small>
+
+            <!-- ANALIZADOR DOM -->
+            <div class="border-top pt-4">
+                <p class="small text-secondary text-uppercase text-center mb-3">
+                    Contador de Descendientes
+                </p>
+
+                <div class="bg-light p-3 rounded text-center">
+                    <p class="small text-muted mb-3">
+                        Haz clic en cualquier parte de la tarjeta para analizar un elemento
+                    </p>
+
+                    <button id="btnContarTodo" class="btn btn-info w-100 mb-3">
+                        🔍 Analizar componente completo
+                    </button>
+
+                    <h5 class="mb-0">
+                        Total nodos: 
+                        <span id="conteoNodos" class="text-primary">0</span>
+                    </h5>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script type="module">
+        import { renderNavbar } from '/modules/navbar.js';
+        renderNavbar();
+    </script>
+    <script type="module" src="/scripts/conversor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
