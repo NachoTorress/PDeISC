@@ -1,0 +1,25 @@
+body {
+  background-color: #f5f7fa;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+.card {
+  border-radius: 15px;
+  min-height: 380px;
+}
+
+.lista {
+  list-style: none;
+  padding: 0;
+}
+
+.lista li {
+  background: #f1f3f5;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 6px;
+}

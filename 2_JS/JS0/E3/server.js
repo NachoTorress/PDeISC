@@ -1,0 +1,45 @@
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
+
+const server = http.createServer((req, res) => {
+  let filePath;
+
+  if (req.url === "/") {
+    filePath = "./html/index.html";
+  } else {
+    filePath = "." + req.url;
+  }
+
+  const ext = path.extname(filePath);
+
+  let contentType = "text/html";
+
+  if (ext === ".css") {
+    contentType = "text/css";
+  }
+
+  if (ext === ".js") {
+    contentType = "application/javascript";
+  }
+
+  fs.readFile(filePath, (error, content) => {
+    if (error) {
+      res.writeHead(404, {
+        "Content-Type": "text/plain; charset=utf-8"
+      });
+      res.end("Archivo no encontrado");
+      return;
+    }
+
+    res.writeHead(200, {
+      "Content-Type": contentType + "; charset=utf-8"
+    });
+
+    res.end(content);
+  });
+});
+
+server.listen(3002, () => {
+  console.log("Servidor en http://localhost:3002");
+});

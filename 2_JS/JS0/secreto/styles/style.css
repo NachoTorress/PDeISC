@@ -1,0 +1,26 @@
+.min-vh-10 {
+    min-height: 60px;
+    word-wrap: break-word;
+}
+
+textarea:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15) !important;
+}
+
+.card {
+    border: none;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+#resultado {
+    transition: all 0.3s ease;
+    border-left: 5px solid #dee2e6;
+}
+
+.border-success {
+    border-left: 5px solid #198754 !important;
+}
