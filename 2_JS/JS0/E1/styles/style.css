@@ -1,23 +1,28 @@
+/* Estilos generales del cuerpo de la página */
 body {
   background-color: #f5f7fa;
   font-family: Arial, sans-serif;
 }
 
+/* Estilos para el título principal */
 h1 {
   font-weight: bold;
 }
 
+/* Estilos para las tarjetas de contenedor */
 .card {
   border-radius: 15px;
   min-height: 300px;
 }
 
+/* Estilos para las listas */
 .lista {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
+/* Estilos para cada elemento de la lista */
 .lista li {
   background: #f1f3f5;
   padding: 10px;
@@ -27,6 +32,7 @@ h1 {
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
+/* Estilos para el mensaje de lista vacía */
 .vacio {
   color: gray;
   font-style: italic;

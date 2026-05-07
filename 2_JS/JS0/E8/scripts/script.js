@@ -1,7 +1,9 @@
+// Código JavaScript para manejar la lógica de la página
 let usuarios = ["usuario", "moderador", "admin", "editor"];
 let colores = ["rojo", "azul", "amarillo", "verde"];
 let numeros = [10, 20, 30, 40];
 
+// Función que renderiza un array en la página HTML
 function render(id, arr) {
   const div = document.getElementById(id);
 
@@ -12,6 +14,7 @@ function render(id, arr) {
   div.innerHTML = html;
 }
 
+// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("usuarios", usuarios);
   render("colores", colores);

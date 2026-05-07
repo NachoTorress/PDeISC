@@ -1,3 +1,4 @@
+// Código JavaScript para manejar la lógica de la página
 let numeros = [10, 20, 30, 40, 50];
 let peliculas = [
   "Inception",
@@ -8,6 +9,7 @@ let peliculas = [
 ];
 let datos = [5, 15, 25, 35, 45, 55];
 
+// Función que renderiza un array en la página HTML
 function render(id, arr) {
   const div = document.getElementById(id);
 
@@ -18,6 +20,7 @@ function render(id, arr) {
   div.innerHTML = html;
 }
 
+// Función que realiza una acción de la interfaz
 function init() {
   render("numeros", numeros);
   render("peliculas", peliculas);

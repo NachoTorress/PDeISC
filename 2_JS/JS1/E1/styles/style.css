@@ -1,0 +1,70 @@
+body {
+    background-color: #f4f7f6;
+    min-height: 100vh;
+    font-size: 14px;
+}
+
+.sticky-form {
+    position: sticky;
+    top: 15px;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0d6efd;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+}
+
+.rt-monitor {
+    background: #1e1e1e;
+    color: #00ff00;
+    font-family: monospace;
+    border-left: 4px solid #0d6efd;
+    border-radius: 6px;
+    min-height: 55px;
+    font-size: 13px;
+}
+
+.monitor-header {
+    display: block;
+    font-size: 11px;
+    color: #bdbdbd;
+    margin-bottom: 4px;
+}
+
+.animate-row {
+    animation: fadeIn 0.35s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.invalid-feedback {
+    font-size: 11px;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}

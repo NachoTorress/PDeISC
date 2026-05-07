@@ -1,3 +1,4 @@
+// Código JavaScript para manejar la lógica de la página
 let colores = [];
 let tareas = [
   "Lavar los platos",
@@ -7,6 +8,7 @@ let tareas = [
 
 let usuarios = ["Cheski", "Tizi", "Valen"];
 
+// Función que renderiza un array en la página HTML
 function renderLista(id, array) {
   const contenedor = document.getElementById(id);
 
@@ -25,6 +27,7 @@ function renderLista(id, array) {
   contenedor.innerHTML = html;
 }
 
+// Función que controla la visibilidad de elementos en la página
 function controlarOpciones() {
   if (colores.length >= 3) {
     document.getElementById("selectColor").style.display = "none";
@@ -39,6 +42,7 @@ function controlarOpciones() {
   }
 }
 
+// Función que actualiza todas las listas en pantalla
 function actualizarPantalla() {
   renderLista("colores", colores);
   renderLista("tareas", tareas);
@@ -46,6 +50,7 @@ function actualizarPantalla() {
   controlarOpciones();
 }
 
+// Función para agregar elementos al inicio del array usando unshift()
 function agregarColor() {
   const select = document.getElementById("selectColor");
   const valor = select.value;
@@ -62,6 +67,7 @@ function agregarColor() {
   actualizarPantalla();
 }
 
+// Función para agregar elementos al inicio del array usando unshift()
 function agregarTarea() {
   const select = document.getElementById("selectTarea");
   const valor = select.value;
@@ -78,6 +84,7 @@ function agregarTarea() {
   actualizarPantalla();
 }
 
+// Función para agregar elementos al inicio del array usando unshift()
 function agregarUsuario() {
   const select = document.getElementById("selectUsuario");
   const valor = select.value;

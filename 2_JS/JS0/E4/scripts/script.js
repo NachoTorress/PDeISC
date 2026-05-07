@@ -1,7 +1,9 @@
+// Código JavaScript para manejar la lógica de la página
 let enteros = [1, 2, 3, 4, 5];
 let mensajes = ["Hola", "¿Cómo estás?", "Adiós"];
 let cola = ["Primero", "Segundo", "Tercero"];
 
+// Función que renderiza un array en la página HTML
 function renderLista(id, array) {
   const contenedor = document.getElementById(id);
 
@@ -20,6 +22,7 @@ function renderLista(id, array) {
   contenedor.innerHTML = html;
 }
 
+// Función que controla la visibilidad de elementos en la página
 function controlarInputs() {
   if (enteros.length === 0) {
     document.getElementById("rangoEnteros").style.display = "none";
@@ -37,6 +40,7 @@ function controlarInputs() {
   }
 }
 
+// Función que actualiza todas las listas en pantalla
 function actualizarPantalla() {
   renderLista("enteros", enteros);
   renderLista("mensajes", mensajes);
@@ -44,10 +48,12 @@ function actualizarPantalla() {
   controlarInputs();
 }
 
+// Función que realiza una acción de la interfaz
 function resetRange(id) {
   document.getElementById(id).value = 0;
 }
 
+// Función para eliminar elementos del array usando pop()
 function eliminarEntero() {
   if (enteros.length > 0) {
     const eliminado = enteros.shift();
@@ -60,6 +66,7 @@ function eliminarEntero() {
   actualizarPantalla();
 }
 
+// Función para eliminar elementos del array usando pop()
 function eliminarMensaje() {
   if (mensajes.length > 0) {
     const eliminado = mensajes.shift();
@@ -72,6 +79,7 @@ function eliminarMensaje() {
   actualizarPantalla();
 }
 
+// Función que realiza una acción de la interfaz
 function atenderCliente() {
   if (cola.length > 0) {
     const eliminado = cola.shift();

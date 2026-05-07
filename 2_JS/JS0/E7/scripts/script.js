@@ -1,7 +1,9 @@
+// Código JavaScript para manejar la lógica de la página
 let animales = ["gato", "perro", "loro", "pez"];
 let numeros = [10, 20, 50, 80, 100];
 let ciudades = ["Buenos Aires", "Lima", "Madrid", "Bogotá"];
 
+// Función que renderiza un array en la página HTML
 function render(id, arr) {
   const div = document.getElementById(id);
 
@@ -12,6 +14,7 @@ function render(id, arr) {
   div.innerHTML = html;
 }
 
+// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("animales", animales);
   render("numeros", numeros);

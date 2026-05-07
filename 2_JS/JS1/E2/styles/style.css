@@ -1,0 +1,80 @@
+:root {
+    --primary: #2563eb;
+    --dark: #0f172a;
+    --error: #ef4444;
+}
+
+body {
+    background-color: #f1f5f9;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #334155;
+}
+
+.main-header { background: linear-gradient(135deg, var(--dark) 0%, #1e3a8a 100%); }
+
+.badge-count {
+    background: rgba(255, 255, 255, 0.1);
+    color: #38bdf8;
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.glass-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.label-custom {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 0.2rem;
+    display: block;
+}
+
+.input-custom {
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.input-error { border-color: var(--error) !important; background-color: #fffafb; }
+
+.error-msg {
+    color: var(--error);
+    font-size: 0.65rem;
+    font-weight: 600;
+    margin-top: 3px;
+    display: none;
+}
+
+.btn-primary-custom {
+    width: 100%;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.btn-delete {
+    background: transparent;
+    border: none;
+    color: var(--error);
+    font-weight: 700;
+    font-size: 0.7rem;
+}
+
+.row-animate { animation: fadeIn 0.3s ease forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

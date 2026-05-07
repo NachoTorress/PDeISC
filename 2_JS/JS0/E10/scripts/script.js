@@ -1,7 +1,9 @@
+// Código JavaScript para manejar la lógica de la página
 let numeros = [1, 2, 3, 4, 5];
 let nombres = ["ana", "luis", "carlos", "maria"];
 let precios = [100, 250, 500, 1000];
 
+// Función que renderiza un array en la página HTML
 function render(id, arr) {
   const div = document.getElementById(id);
 
@@ -12,6 +14,7 @@ function render(id, arr) {
   div.innerHTML = html;
 }
 
+// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("numeros", numeros);
   render("nombres", nombres);

@@ -1,3 +1,4 @@
+// Código JavaScript para manejar la lógica de la página
 document.getElementById('btnDescifrar').addEventListener('click', () => {
     const input = document.getElementById('inputTexto').value;
     const errorContainer = document.getElementById('errorContainer');
@@ -22,6 +23,7 @@ document.getElementById('btnDescifrar').addEventListener('click', () => {
     }
 });
 
+// Función que realiza una acción de la interfaz
 function decodificarOIA(texto) {
     let final = "";
     for (let i = 0; i < texto.length; i++) {

@@ -1,7 +1,9 @@
+// Código JavaScript para manejar la lógica de la página
 let letras = ["A", "B", "C", "D", "E"];
 let numeros = [10, 20, 30, 40, 50];
 let texto = "JavaScript";
 
+// Función que renderiza un array en la página HTML
 function render(id, arr) {
   const div = document.getElementById(id);
 
@@ -12,6 +14,7 @@ function render(id, arr) {
   div.innerHTML = html;
 }
 
+// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("letras", letras);
   render("numeros", numeros);

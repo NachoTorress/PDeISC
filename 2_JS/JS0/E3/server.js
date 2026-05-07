@@ -1,9 +1,12 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
+// Importar módulos necesarios para crear un servidor HTTP
+import http from "http";
+import fs from "fs";
+import path from "path";
 
+// Crear servidor HTTP que responde a las solicitudes
 const server = http.createServer((req, res) => {
-  let filePath;
+  let filePath;  // Verificar ruta y elegir el archivo que se va a servir
+
 
   if (req.url === "/") {
     filePath = "./html/index.html";
@@ -40,6 +43,7 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(3002, () => {
-  console.log("Servidor en http://localhost:3002");
+// Iniciar el servidor en el puerto configurado
+server.listen(3017, () => {
+  console.log("Servidor en http://localhost:3017");
 });
