@@ -43,9 +43,7 @@ app.post("/guardar-archivo", (req, res) => {
     const { nombre, contenido } = req.body;
 
     if (!nombre || !contenido) {
-        return res.status(400).json({
-            error: "Faltan datos"
-        });
+        return res.status(400).json({ error: "Faltan datos" });
     }
 
     const rutaArchivo = path.join(carpetaGuardado, nombre);
@@ -53,15 +51,49 @@ app.post("/guardar-archivo", (req, res) => {
     fs.writeFile(rutaArchivo, contenido, "utf8", (err) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({
-                error: "Error al guardar archivo"
-            });
+            return res.status(500).json({ error: "Error al guardar archivo" });
+        }
+        res.json({ mensaje: "Archivo guardado correctamente" });
+    });
+});
+
+// ─── Listar archivos guardados ──────────────────────────────
+
+app.get("/listar-archivos", (req, res) => {
+    fs.readdir(carpetaGuardado, (err, files) => {
+        if (err) {
+            return res.status(500).json({ error: "Error al leer carpeta" });
         }
 
-        res.json({
-            mensaje: "Archivo guardado correctamente"
-        });
+        const archivos = files
+            .filter(f => f.endsWith(".txt"))
+            .map(nombre => {
+                const ruta = path.join(carpetaGuardado, nombre);
+                const stats = fs.statSync(ruta);
+                return {
+                    nombre,
+                    fecha: stats.mtime.toISOString(),
+                    tamaño: stats.size
+                };
+            })
+            // Más reciente primero
+            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        res.json({ archivos });
     });
+});
+
+// ─── Descargar un archivo guardado ─────────────────────────
+
+app.get("/descargar-archivo/:nombre", (req, res) => {
+    const nombre = path.basename(req.params.nombre); // sanitizar
+    const rutaArchivo = path.join(carpetaGuardado, nombre);
+
+    if (!fs.existsSync(rutaArchivo)) {
+        return res.status(404).json({ error: "Archivo no encontrado" });
+    }
+
+    res.download(rutaArchivo);
 });
 
 // ─── Inicio servidor ───────────────────────────────────────

@@ -500,3 +500,145 @@ scrollBtn.addEventListener('click', () => {
 // ─── Inicialización ───────────────────────────────────────────────────────────
 
 updateUI();
+// ─────────────────────────────────────────────────────────────────────────────
+// BLOQUE: Historial de Exportaciones
+// Pegá esto al FINAL de main.js, después de updateUI()
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ─── Referencias DOM (historial) ─────────────────────────────────────────────
+
+const historyLoading    = document.getElementById('history-loading');
+const historyEmpty      = document.getElementById('history-empty');
+const historyError      = document.getElementById('history-error');
+const historyList       = document.getElementById('history-list');
+const historyItems      = document.getElementById('history-items');
+const historyBadge      = document.getElementById('history-badge');
+const refreshHistoryBtn = document.getElementById('refresh-history-btn');
+
+// ─── Cargar historial desde servidor ─────────────────────────────────────────
+
+/**
+ * Formatea bytes a una cadena legible (ej. "1.2 KB").
+ * @param {number} bytes
+ * @returns {string}
+ */
+function formatSize(bytes) {
+    if (bytes < 1024) return `${bytes} B`;
+    return `${(bytes / 1024).toFixed(1)} KB`;
+}
+
+/**
+ * Formatea una fecha ISO a "DD/MM/AAAA HH:MM".
+ * @param {string} iso
+ * @returns {string}
+ */
+function formatDate(iso) {
+    const d = new Date(iso);
+    const dd   = String(d.getDate()).padStart(2, '0');
+    const mm   = String(d.getMonth() + 1).padStart(2, '0');
+    const aaaa = d.getFullYear();
+    const hh   = String(d.getHours()).padStart(2, '0');
+    const min  = String(d.getMinutes()).padStart(2, '0');
+    return `${dd}/${mm}/${aaaa} ${hh}:${min}`;
+}
+
+/**
+ * Genera el HTML de una tarjeta de archivo guardado.
+ * @param {{ nombre: string, fecha: string, tamaño: number }} archivo
+ * @returns {string}
+ */
+function buildHistoryItemHTML(archivo) {
+    return `
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="history-card d-flex justify-content-between align-items-center p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="history-file-icon">📄</span>
+                    <div>
+                        <p class="history-file-name mb-0 font-mono">${archivo.nombre}</p>
+                        <span class="history-file-meta">${formatDate(archivo.fecha)} · ${formatSize(archivo.tamaño)}</span>
+                    </div>
+                </div>
+                <a
+                    href="/descargar-archivo/${encodeURIComponent(archivo.nombre)}"
+                    download="${archivo.nombre}"
+                    class="btn btn-history-download btn-sm"
+                    aria-label="Descargar ${archivo.nombre}"
+                    title="Volver a descargar"
+                >⬇</a>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Muestra el estado correcto del panel de historial y actualiza el badge.
+ * @param {'loading'|'empty'|'error'|'list'} state
+ * @param {Array} [items]
+ */
+function renderHistory(state, items = []) {
+    historyLoading.classList.add('d-none');
+    historyEmpty.classList.add('d-none');
+    historyError.classList.add('d-none');
+    historyList.classList.add('d-none');
+
+    if (state === 'loading') {
+        historyLoading.classList.remove('d-none');
+
+    } else if (state === 'empty') {
+        historyEmpty.classList.remove('d-none');
+        historyBadge.classList.add('d-none');
+
+    } else if (state === 'error') {
+        historyError.classList.remove('d-none');
+        historyBadge.classList.add('d-none');
+
+    } else if (state === 'list') {
+        historyItems.innerHTML = items.map(buildHistoryItemHTML).join('');
+        historyList.classList.remove('d-none');
+        historyBadge.textContent = items.length;
+        historyBadge.classList.remove('d-none');
+    }
+}
+
+/**
+ * Llama al servidor para obtener la lista de archivos guardados.
+ */
+async function loadHistory() {
+    renderHistory('loading');
+    try {
+        const res  = await fetch('/listar-archivos');
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Error del servidor');
+
+        if (data.archivos.length === 0) {
+            renderHistory('empty');
+        } else {
+            renderHistory('list', data.archivos);
+        }
+    } catch (err) {
+        console.error('Error al cargar historial:', err);
+        renderHistory('error');
+    }
+}
+
+// ─── Refrescar historial al exportar ─────────────────────────────────────────
+
+// Extendemos el listener del botón de exportación para que recargue el
+// historial luego de cada exportación exitosa.
+// Como main.js usa addEventListener, agregamos otro listener que se ejecuta
+// DESPUÉS del listener original (burbuja de eventos, mismo elemento).
+exportBtn.addEventListener('click', () => {
+    // Esperamos un momento a que el servidor termine de escribir el archivo
+    setTimeout(loadHistory, 800);
+});
+
+// ─── Botón "Actualizar" ───────────────────────────────────────────────────────
+
+refreshHistoryBtn.addEventListener('click', () => {
+    loadHistory();
+});
+
+// ─── Carga inicial del historial ──────────────────────────────────────────────
+
+loadHistory();

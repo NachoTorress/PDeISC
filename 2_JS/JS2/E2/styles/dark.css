@@ -569,3 +569,170 @@ code {
     max-width: 420px;
     width: 100%;
 }
+/* ─────────────────────────────────────────────────────────────────────────────
+   BLOQUE: Estilos del Historial de Resultados — NumFilter
+   Pegá esto al FINAL de light.css Y al FINAL de dark.css.
+   Usa var() del sistema de tokens existente, funciona en ambos temas.
+   ────────────────────────────────────────────────────────────────────────────── */
+
+/* ─── Badge contador ────────────────────────────────────────────────────────── */
+.history-count-badge {
+    font-family: var(--font-mono, 'DM Mono', monospace);
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: rgba(59, 91, 219, 0.12);
+    color: var(--color-accent, #3b5bdb);
+    padding: 2px 9px;
+    border-radius: 20px;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+}
+
+/* ─── Botón Actualizar ──────────────────────────────────────────────────────── */
+.btn-history-refresh {
+    background: transparent;
+    border: 1.5px solid var(--color-border, #dee2ef);
+    color: var(--color-text-muted, #718096);
+    border-radius: 8px;
+    font-family: var(--font-sans, 'DM Sans', sans-serif);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 13px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.btn-history-refresh:hover {
+    border-color: var(--color-accent, #3b5bdb);
+    color: var(--color-accent, #3b5bdb);
+    transform: rotate(-20deg);
+}
+
+/* ─── Estados (cargando / vacío / error) ────────────────────────────────────── */
+.history-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    gap: 0.4rem;
+    color: var(--color-text-muted, #718096);
+    font-size: 0.88rem;
+}
+
+.history-state-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.history-state-msg {
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ─── Nota de expiración ────────────────────────────────────────────────────── */
+.history-expiry-note {
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #718096);
+    margin: 0;
+    font-style: italic;
+}
+
+/* ─── Item de historial ─────────────────────────────────────────────────────── */
+.history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--color-border, #dee2ef);
+    border-radius: 10px;
+    background: var(--color-surface-raised, #f8f9fa);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.history-item:hover {
+    background: var(--color-surface-hover, #eef2ff);
+    box-shadow: 0 3px 12px rgba(59, 91, 219, 0.09);
+    transform: translateY(-1px);
+}
+
+.history-item-expired {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.history-item-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    overflow: hidden;
+}
+
+.history-item-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.history-item-name {
+    font-family: var(--font-mono, 'DM Mono', monospace);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-text, #1a1d2e);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+}
+
+.history-item-meta {
+    font-family: var(--font-mono, 'DM Mono', monospace);
+    font-size: 0.7rem;
+    color: var(--color-text-muted, #718096);
+}
+
+/* ─── Indicador de expiración inline ───────────────────────────────────────── */
+.history-expiry {
+    font-style: italic;
+}
+
+.history-expiry.expired {
+    color: var(--color-danger, #e03131);
+    font-weight: 600;
+}
+
+/* ─── Botón de descarga individual ─────────────────────────────────────────── */
+.btn-history-dl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(59, 91, 219, 0.1);
+    color: var(--color-accent, #3b5bdb);
+    font-size: 1rem;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    cursor: pointer;
+}
+
+.btn-history-dl:hover {
+    background: var(--color-accent, #3b5bdb);
+    border-color: var(--color-accent, #3b5bdb);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-history-dl.disabled {
+    background: var(--color-border, #dee2ef);
+    color: var(--color-text-muted, #718096);
+    cursor: not-allowed;
+    transform: none;
+}

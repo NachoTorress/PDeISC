@@ -151,14 +151,14 @@ app.post('/upload', (req, res) => {
             fs.writeFileSync(outputPath, outputContent, 'utf-8');
 
             return res.json({
-                success:         true,
-                usefulNumbers:   result.usefulNumbers,
+                success:          true,
+                usefulNumbers:    result.usefulNumbers,
                 factorialNumbers: result.factorialNumbers,
-                total:           result.total,
-                useful:          result.useful,
-                nonUseful:       result.nonUseful,
-                percentage:      result.percentage,
-                downloadUrl:     `/downloads/${outputFilename}`
+                total:            result.total,
+                useful:           result.useful,
+                nonUseful:        result.nonUseful,
+                percentage:       result.percentage,
+                downloadUrl:      `/downloads/${outputFilename}`
             });
 
         } catch (processErr) {
@@ -169,6 +169,64 @@ app.post('/upload', (req, res) => {
             return res.status(500).json({ success: false, error: 'Error interno al procesar el archivo.' });
         }
     });
+});
+
+// ─── Listar resultados generados ──────────────────────────────────────────────
+
+/**
+ * GET /listar-resultados
+ * Devuelve los archivos resultado_*.txt en /downloads (excluye uploads temporales).
+ * Ordenados por fecha de modificación descendente.
+ */
+app.get('/listar-resultados', (req, res) => {
+    try {
+        const files = fs.readdirSync(downloadsDir);
+        const now   = Date.now();
+
+        const archivos = files
+            .filter(f => f.startsWith('resultado_') && f.endsWith('.txt'))
+            .map(nombre => {
+                const ruta  = path.join(downloadsDir, nombre);
+                const stats = fs.statSync(ruta);
+                const age   = now - stats.mtimeMs;
+                return {
+                    nombre,
+                    fecha:    stats.mtime.toISOString(),
+                    tamaño:   stats.size,
+                    expirado: age > DOWNLOAD_MAX_AGE_MS
+                };
+            })
+            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        res.json({ archivos });
+    } catch (err) {
+        console.error('[/listar-resultados] Error:', err.message);
+        res.status(500).json({ error: 'Error al leer los resultados.' });
+    }
+});
+
+// ─── Re-descargar un resultado ────────────────────────────────────────────────
+
+/**
+ * GET /redescargar/:nombre
+ * Envía un archivo resultado al cliente para su descarga.
+ * Solo permite archivos resultado_*.txt para evitar path traversal.
+ */
+app.get('/redescargar/:nombre', (req, res) => {
+    const nombre = path.basename(req.params.nombre);
+
+    // Solo archivos de resultado válidos
+    if (!nombre.startsWith('resultado_') || !nombre.endsWith('.txt')) {
+        return res.status(403).json({ error: 'Archivo no permitido.' });
+    }
+
+    const rutaArchivo = path.join(downloadsDir, nombre);
+
+    if (!fs.existsSync(rutaArchivo)) {
+        return res.status(404).json({ error: 'El archivo ya no está disponible (puede haber expirado).' });
+    }
+
+    res.download(rutaArchivo);
 });
 
 /** GET / → sirve index.html */

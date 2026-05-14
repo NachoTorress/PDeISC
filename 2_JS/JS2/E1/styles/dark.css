@@ -389,3 +389,124 @@ body {
 #empty-hint {
       color: var(--text-muted) !important;
 }
+/* ─────────────────────────────────────────────────────────────────────────────
+   BLOQUE: Estilos del Historial de Exportaciones
+   Pegá esto al FINAL de light.css Y al FINAL de dark.css.
+   En dark.css cambiá los colores de acuerdo a las variables de ese tema
+   (ya usan var() así que funcionan en ambos sin cambios).
+   ────────────────────────────────────────────────────────────────────────────── */
+
+/* ─── Badge contador del historial ─────────────────────────────────────────── */
+.history-count-badge {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(76, 110, 245, 0.15);
+    color: var(--text-accent);
+    padding: 2px 8px;
+    border-radius: 20px;
+    line-height: 1.6;
+}
+
+/* ─── Botón "Actualizar" ────────────────────────────────────────────────────── */
+.btn-refresh-history {
+    background: transparent;
+    border: 1.5px solid var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 8px !important;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.btn-refresh-history:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: rotate(-15deg);
+}
+
+/* ─── Estados vacío / cargando / error ──────────────────────────────────────── */
+.history-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    text-align: center;
+    gap: 0.5rem;
+}
+
+.history-empty-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.history-empty-msg {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ─── Tarjeta de archivo individual ─────────────────────────────────────────── */
+.history-card {
+    background-color: var(--bg-item);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-item);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.history-card:hover {
+    background-color: var(--bg-item-hover);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.history-file-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.history-file-name {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.history-file-meta {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* ─── Botón de descarga ─────────────────────────────────────────────────────── */
+.btn-history-download {
+    background: rgba(76, 110, 245, 0.12);
+    border: 1.5px solid transparent;
+    color: var(--text-accent);
+    border-radius: 8px !important;
+    font-size: 1rem;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    text-decoration: none;
+}
+
+.btn-history-download:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+}

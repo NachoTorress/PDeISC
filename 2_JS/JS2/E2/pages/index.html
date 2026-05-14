@@ -113,7 +113,7 @@
             </div>
 
             <!-- ── CARD RESULTADOS ──────────────────────────────────────── -->
-            <div class="app-card d-none" id="resultsCard">
+            <div class="app-card d-none mb-4" id="resultsCard">
                 <div class="app-card-header">
                     <span class="card-step">02</span>
                     <h2 class="app-card-title">Resultados</h2>
@@ -204,6 +204,56 @@
                         >
                             ↺ Subir otro archivo
                         </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ── CARD HISTORIAL ───────────────────────────────────────── -->
+            <div class="app-card mb-4" id="historyCard">
+                <div class="app-card-header d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="card-step">📂</span>
+                        <h2 class="app-card-title mb-0">Resultados recientes</h2>
+                        <span class="history-count-badge d-none" id="historyBadge">0</span>
+                    </div>
+                    <button
+                        class="btn-history-refresh"
+                        id="refreshHistoryBtn"
+                        type="button"
+                        title="Actualizar historial"
+                        aria-label="Actualizar historial"
+                    >↻ Actualizar</button>
+                </div>
+
+                <div class="app-card-body">
+
+                    <!-- Estado: cargando -->
+                    <div class="history-state d-none" id="historyLoading">
+                        <div class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></div>
+                        <span>Cargando resultados...</span>
+                    </div>
+
+                    <!-- Estado: vacío -->
+                    <div class="history-state" id="historyEmpty">
+                        <span class="history-state-icon">📭</span>
+                        <p class="history-state-msg">
+                            No hay resultados recientes.<br>
+                            Procesá un archivo para verlo aquí.
+                        </p>
+                        <p class="history-expiry-note">Los resultados expiran a los 10 minutos.</p>
+                    </div>
+
+                    <!-- Estado: error -->
+                    <div class="history-state d-none" id="historyError">
+                        <span class="history-state-icon">⚠️</span>
+                        <p class="history-state-msg text-danger">No se pudo conectar con el servidor.</p>
+                    </div>
+
+                    <!-- Lista -->
+                    <div class="d-none" id="historyList">
+                        <p class="history-expiry-note mb-3">Los resultados expiran a los 10 minutos tras su generación.</p>
+                        <div class="row g-2" id="historyItems"></div>
                     </div>
 
                 </div>
