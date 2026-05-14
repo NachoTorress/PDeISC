@@ -1,43 +1,51 @@
-// Importar módulos necesarios para crear un servidor HTTP
 import http from "http";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
+// Configuración de constantes y corrección de __dirname para ES Modules
 const PORT = 3004;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Crear servidor HTTP que responde a las solicitudes
 const server = http.createServer((req, res) => {
-  let filePath;  // Verificar ruta y elegir el archivo que se va a servir
+    let filePath = "";
 
-
-  if (req.url === "/") {
-    filePath = "./html/index.html";
-  } else {
-    filePath = "." + req.url;
-  }
-
-  const ext = path.extname(filePath);
-  let contentType = "text/html";
-
-  if (ext === ".css") contentType = "text/css";
-  if (ext === ".js") contentType = "application/javascript";    // Leer el archivo solicitado del disco
-
-
-  fs.readFile(filePath, (err, content) => {
-    if (err) {
-      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
-      return res.end("Archivo no encontrado");
+    // Lógica de ruteo
+    if (req.url === "/") {
+        filePath = path.join(__dirname, "html", "index.html");
+    } else {
+        // Esto permite cargar archivos desde /styles o /scripts correctamente
+        filePath = path.join(__dirname, req.url);
     }
 
-    res.writeHead(200, {
-      "Content-Type": contentType + "; charset=utf-8"
-    });
+    // Leer el archivo solicitado
+    fs.readFile(filePath, (err, content) => {
+        if (err) {
+            res.writeHead(404, { "Content-Type": "text/plain" });
+            res.end("404 - Archivo no encontrado");
+            return;
+        }
 
-    res.end(content);
-  });
+        // Definir el tipo de contenido según la extensión
+        const ext = path.extname(filePath);
+        let contentType = "text/html";
+
+        switch (ext) {
+            case ".css":
+                contentType = "text/css";
+                break;
+            case ".js":
+                contentType = "text/javascript";
+                break;
+        }
+
+        res.writeHead(200, { "Content-Type": contentType });
+        res.end(content);
+    });
 });
 
-// Iniciar el servidor en el puerto configurado
+// Iniciar el servidor usando la variable PORT
 server.listen(PORT, () => {
-  console.log(`Servidor en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

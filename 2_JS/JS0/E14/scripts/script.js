@@ -1,20 +1,13 @@
-// Código JavaScript para manejar la lógica de la página
+
 let letras = ["A", "B", "C", "D", "E"];
 let numeros = [10, 20, 30, 40, 50];
 let texto = "JavaScript";
 
-// Función que renderiza un array en la página HTML
 function render(id, arr) {
   const div = document.getElementById(id);
-
-  let html = "<ul class='lista'>";
-  arr.forEach(e => html += `<li>${e}</li>`);
-  html += "</ul>";
-
-  div.innerHTML = html;
+  div.textContent = `${id} = [${arr.join(', ')}]`;
 }
 
-// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("letras", letras);
   render("numeros", numeros);
@@ -22,32 +15,32 @@ function actualizar() {
 
 /* LETRAS */
 document.getElementById("btnLet").addEventListener("click", (e) => {
+  // Usamos spread para no mutar el original en la vista previa
   const res = [...letras].reverse();
 
-  document.getElementById("resLet").textContent =
-    `Invertido: ${res.join(" - ")}`;
+  document.getElementById("resLet").textContent = `✔ Invertido: ${res.join(" - ")}`;
 
-  e.target.remove();
+  // Quitamos el contenedor del botón y su label
+  document.getElementById("wrapperLet").remove();
 });
 
 /* NUMEROS */
 document.getElementById("btnNum").addEventListener("click", (e) => {
   const res = [...numeros].reverse();
 
-  document.getElementById("resNum").textContent =
-    `Invertido: ${res.join(" - ")}`;
+  document.getElementById("resNum").textContent = `✔ Invertido: ${res.join(" - ")}`;
 
-  e.target.remove();
+  document.getElementById("wrapperNum").remove();
 });
 
 /* TEXTO */
 document.getElementById("btnTxt").addEventListener("click", (e) => {
+  // Proceso para invertir un string
   const res = texto.split("").reverse().join("");
 
-  document.getElementById("resTxt").textContent =
-    `Invertido: ${res}`;
+  document.getElementById("resTxt").textContent = `✔ Invertido: ${res}`;
 
-  e.target.remove();
+  document.getElementById("wrapperTxt").remove();
 });
 
 actualizar();

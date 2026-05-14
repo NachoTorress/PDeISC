@@ -1,27 +1,49 @@
-const form = document.getElementById('userForm');
-const tabla = document.getElementById('tablaUsuarios');
+// ============================================================
+//  SISTEMA DE GESTIÓN DINÁMICA — Solo Memoria (Array)
+// ============================================================
+
+// --- REFERENCIAS AL DOM ───────────────────────────────────────
+const form           = document.getElementById('userForm');
+const tabla          = document.getElementById('tablaUsuarios');
 const alertContainer = document.getElementById('alertContainer');
-const userBadge = document.getElementById('userBadge');
+const userBadge      = document.getElementById('userBadge');
+const emptyMsg       = document.getElementById('emptyMsg');
+const btnTop         = document.getElementById('btnTop');
 
-// Cargamos de LocalStorage por defecto, o de Session si el Local está vacío
-let usuarios = JSON.parse(localStorage.getItem('db_usuarios')) || 
-               JSON.parse(sessionStorage.getItem('db_usuarios')) || [];
+// --- REGEX DE VALIDACIÓN ──────────────────────────────────────
+const regexText = /^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s']{3,}$/; 
 
-const regexLetras = /^[a-zA-ZÁéíóúÁÉÍÓÚñÑ\s]{3,}$/;
+// --- ESTADO DE LA APLICACIÓN ──────────────────────────────────
+// Ahora es solo un array vacío que vive mientras no se refresque la pestaña
+let usuarios = [];
 
-window.addEventListener('DOMContentLoaded', () => renderTabla());
+// --- FUNCIONES DE INTERFAZ ────────────────────────────────────
 
-// VALIDACIÓN DINÁMICA
-document.querySelectorAll('.validate-text').forEach(input => {
+const showAlert = (msg, type) => {
+    alertContainer.innerHTML = `<div class="alert-custom alert-${type}">${msg}</div>`;
+    setTimeout(() => alertContainer.innerHTML = '', 3500);
+};
+
+// --- VALIDACIÓN DINÁMICA ──────────────────────────────────────
+document.querySelectorAll('.field-input').forEach(input => {
     input.addEventListener('input', () => {
-        const errorDiv = document.getElementById(`error-${input.id}`);
-        if (input.value.length > 0 && !regexLetras.test(input.value)) {
-            errorDiv.style.display = 'block';
-            input.classList.add('input-error');
-        } else {
-            errorDiv.style.display = 'none';
-            input.classList.remove('input-error');
+        const id = input.id;
+        const errorDiv = document.getElementById(`error-${id}`);
+        let esValido = true;
+
+        if (['nombre', 'apellidos', 'calle', 'ciudad'].includes(id)) {
+            esValido = regexText.test(input.value);
+        } else if (['altura', 'cp'].includes(id)) {
+            esValido = input.value.length > 0 && Number(input.value) > 0;
         }
+
+        // Opcionales
+        if ((id === 'piso' || id === 'depto') && input.value === "") {
+            esValido = true;
+        }
+
+        if (errorDiv) errorDiv.style.display = esValido ? 'none' : 'block';
+        input.classList.toggle('input-error', !esValido);
     });
 });
 
@@ -31,72 +53,105 @@ document.querySelectorAll('.input-no-e').forEach(input => {
     });
 });
 
+// --- MANEJO DEL SUBMIT ────────────────────────────────────────
 form.addEventListener('submit', (e) => {
     e.preventDefault();
+
     const fd = new FormData(form);
     const data = Object.fromEntries(fd.entries());
-
-    const inputsParaValidar = ['nombre', 'apellidos', 'calle', 'ciudad'];
+    const metodoStorage = data.metodo; // push o unshift
+    
     let formValido = true;
-    inputsParaValidar.forEach(id => {
-        if (!regexLetras.test(document.getElementById(id).value)) formValido = false;
+
+    // Validación de campos obligatorios
+    ['nombre', 'apellidos', 'calle', 'ciudad'].forEach(id => {
+        if (!regexText.test(document.getElementById(id).value)) formValido = false;
     });
 
-    if (!formValido || !data.altura || !data.cp) {
-        showAlert('Revisa los campos obligatorios (*) y el formato.', 'danger');
+    ['altura', 'cp'].forEach(id => {
+        const val = document.getElementById(id).value;
+        if (!val || Number(val) < 1) formValido = false;
+    });
+
+    if (!formValido) {
+        showAlert('⚠ Completa los campos obligatorios.', 'danger');
         return;
     }
 
-    data.id = Date.now();
-    usuarios.push(data);
-    
-    sincronizarAlmacenamiento();
+    const nuevoUsuario = {
+        id: Date.now(),
+        nombre: data.nombre,
+        apellidos: data.apellidos,
+        calle: data.calle,
+        altura: data.altura,
+        piso: data.piso || '',
+        depto: data.depto || '',
+        ciudad: data.ciudad,
+        cp: data.cp
+    };
+
+    // Uso de métodos de Array según el formulario
+    if (metodoStorage === 'push') {
+        usuarios.push(nuevoUsuario);
+    } else {
+        usuarios.unshift(nuevoUsuario);
+    }
+
     renderTabla();
     form.reset();
-    showAlert('✓ Registrado en Local y Session Storage.', 'success');
+    showAlert(`✓ Agregado al array usando ${metodoStorage}()`, 'success');
 });
 
-// FUNCIÓN DE DUAL STORAGE
-function sincronizarAlmacenamiento() {
-    const dataString = JSON.stringify(usuarios);
-    localStorage.setItem('db_usuarios', dataString);
-    sessionStorage.setItem('db_usuarios', dataString);
-}
-
+// --- RENDERIZADO DE TABLA ─────────────────────────────────────
 function renderTabla() {
     tabla.innerHTML = '';
-    userBadge.innerText = `${usuarios.length} Usuarios`;
+    
+    userBadge.textContent = `${usuarios.length} ${usuarios.length === 1 ? 'Registro' : 'Registros'}`;
+    emptyMsg.style.display = usuarios.length === 0 ? 'block' : 'none';
 
     usuarios.forEach(user => {
         const row = document.createElement('tr');
-        row.className = "row-animate";
+        row.className = 'row-animate';
+
+        const pisoDpto = [
+            user.piso ? `Piso ${user.piso}` : '',
+            user.depto ? `Dpto ${user.depto}` : ''
+        ].filter(Boolean).join(' · ');
+
         row.innerHTML = `
             <td>
-                <div class="fw-bold">${user.nombre} ${user.apellidos}</div>
-                <div class="text-muted small">CP: ${user.cp}</div>
+                <div class="user-name">${user.apellidos}, ${user.nombre}</div>
             </td>
             <td>
-                <div class="small">${user.calle} ${user.altura}</div>
-                <div class="text-muted small">${user.piso ? 'Piso '+user.piso : ''} ${user.depto || ''}</div>
+                <div class="user-address">${user.calle} ${user.altura}</div>
+                ${pisoDpto ? `<div class="user-meta">${pisoDpto}</div>` : ''}
             </td>
             <td>
-                <div class="small fw-semibold text-primary">${user.ciudad}</div>
+                <div class="user-city">${user.ciudad}</div>
+                <div class="user-meta">CP: ${user.cp}</div>
             </td>
             <td class="text-end">
-                <button class="btn-delete" onclick="eliminarUsuario(${user.id})">Eliminar</button>
+                <button class="btn-delete" data-id="${user.id}">Eliminar</button>
             </td>
         `;
-        tabla.prepend(row);
+        
+        tabla.appendChild(row);
+    });
+
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.onclick = () => {
+            const id = Number(btn.dataset.id);
+            usuarios = usuarios.filter(u => u.id !== id);
+            renderTabla();
+        };
     });
 }
 
-window.eliminarUsuario = (id) => {
-    usuarios = usuarios.filter(u => u.id !== id);
-    sincronizarAlmacenamiento();
-    renderTabla();
-};
+// --- BOTÓN VOLVER ARRIBA ──────────────────────────────────────
+window.addEventListener('scroll', () => {
+    btnTop.classList.toggle('visible', window.scrollY > 300);
+});
 
-function showAlert(msg, type) {
-    alertContainer.innerHTML = `<div class="alert alert-${type} py-2 mb-3 border-0 shadow-sm">${msg}</div>`;
-    setTimeout(() => alertContainer.innerHTML = '', 3000);
-}
+btnTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});

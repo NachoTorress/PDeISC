@@ -1,7 +1,7 @@
-// Código JavaScript para manejar la lógica de la página
+
+
 let numeros = [25, 8, 42, 3, 17, 10];
 let palabras = ["banana", "manzana", "pera", "uva", "naranja"];
-
 let personas = [
   { nombre: "Nacho", edad: 20 },
   { nombre: "Valen", edad: 18 },
@@ -9,24 +9,12 @@ let personas = [
   { nombre: "Tizi", edad: 19 }
 ];
 
-// Función que renderiza un array en la página HTML
 function render(id, arr) {
   const div = document.getElementById(id);
-
-  let html = "<ul class='lista'>";
-  arr.forEach(e => {
-    if (typeof e === "object") {
-      html += `<li>${e.nombre} - ${e.edad}</li>`;
-    } else {
-      html += `<li>${e}</li>`;
-    }
-  });
-  html += "</ul>";
-
-  div.innerHTML = html;
+  const contenido = arr.map(e => typeof e === "object" ? `${e.nombre}(${e.edad})` : e).join(', ');
+  div.textContent = `${id} = [${contenido}]`;
 }
 
-// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("numeros", numeros);
   render("palabras", palabras);
@@ -35,26 +23,34 @@ function actualizar() {
 
 /* NUMEROS */
 document.getElementById("selNum").addEventListener("change", (e) => {
+  if (!e.target.value) return;
+  
   const sorted = [...numeros].sort((a, b) => a - b);
+  document.getElementById("resNum").textContent = `✔ Resultado Final: ${sorted.join(" < ")}`;
 
-  document.getElementById("resNum").textContent =
-    `Ordenados: ${sorted.join(" - ")}`;
+  // Eliminamos el label y el select asociados
+  document.getElementById("wrapperNum").remove();
 });
 
 /* PALABRAS */
 document.getElementById("selPal").addEventListener("change", (e) => {
-  const sorted = [...palabras].sort();
+  if (!e.target.value) return;
 
-  document.getElementById("resPal").textContent =
-    `Ordenadas: ${sorted.join(" - ")}`;
+  const sorted = [...palabras].sort();
+  document.getElementById("resPal").textContent = `✔ Resultado Final: ${sorted.join(", ")}`;
+
+  document.getElementById("wrapperPal").remove();
 });
 
 /* PERSONAS */
 document.getElementById("selPer").addEventListener("change", (e) => {
-  const sorted = [...personas].sort((a, b) => a.edad - b.edad);
+  if (!e.target.value) return;
 
-  document.getElementById("resPer").textContent =
-    sorted.map(p => `${p.nombre} (${p.edad})`).join(" - ");
+  const sorted = [...personas].sort((a, b) => a.edad - b.edad);
+  document.getElementById("resPer").textContent = 
+    `✔ Resultado Final: ` + sorted.map(p => `${p.nombre} (${p.edad})`).join(" - ");
+
+  document.getElementById("wrapperPer").remove();
 });
 
 actualizar();

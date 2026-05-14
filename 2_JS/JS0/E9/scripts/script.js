@@ -1,4 +1,3 @@
-// Código JavaScript para manejar la lógica de la página
 let nombres = ["Ana", "Luis", "Carlos", "María"];
 let numeros = [2, 4, 6, 8, 10];
 let personas = [
@@ -7,18 +6,14 @@ let personas = [
   { nombre: "Alexis", edad: 22 }
 ];
 
-// Función que renderiza un array en la página HTML
+// Función que renderiza un array en formato de código plano
 function render(id, arr) {
   const div = document.getElementById(id);
-
-  let html = "<ul class='lista'>";
-  arr.forEach(e => html += `<li>${JSON.stringify(e)}</li>`);
-  html += "</ul>";
-
-  div.innerHTML = html;
+  // Para las personas (objetos), usamos stringify para que se vea el contenido
+  const contenido = arr.map(e => typeof e === 'object' ? JSON.stringify(e) : e).join(', ');
+  div.textContent = `${id}=[${contenido}]`;
 }
 
-// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("nombres", nombres);
   render("numeros", numeros);
@@ -34,7 +29,6 @@ document.getElementById("btnNombres").addEventListener("dblclick", (e) => {
   });
 
   document.getElementById("resNombres").textContent = res;
-
   e.target.remove();
 });
 
@@ -47,7 +41,6 @@ document.getElementById("btnNumeros").addEventListener("dblclick", (e) => {
   });
 
   document.getElementById("resNumeros").textContent = res;
-
   e.target.remove();
 });
 
@@ -60,7 +53,6 @@ document.getElementById("btnPersonas").addEventListener("dblclick", (e) => {
   });
 
   document.getElementById("resPersonas").textContent = res;
-
   e.target.remove();
 });
 

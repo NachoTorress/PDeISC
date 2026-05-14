@@ -1,25 +1,37 @@
-body {
-  background-color: #f5f7fa;
-  font-family: Arial, sans-serif;
+.array-text {
+  font-family: 'Consolas', 'Monaco', monospace;
+  background-color: #f8f9fa;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  width: 100%;
+  min-height: 50px;
+  word-wrap: break-word;
+  word-break: break-all;
+  color: #2c3e50;
+  margin-top: 5px;
+  display: block;
 }
 
-h1 {
+.resultado-verificacion {
+  font-family: 'Consolas', 'Monaco', monospace;
   font-weight: bold;
+  padding: 12px;
+  border-radius: 5px;
+  background-color: #e9ecef;
+  border-left: 5px solid #6c757d;
+  min-height: 48px;
+  transition: all 0.3s ease;
 }
 
-.card {
-  border-radius: 15px;
-  min-height: 300px;
+.existe {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+  border-left-color: #28a745 !important;
 }
 
-.lista {
-  list-style: none;
-  padding: 0;
-}
-
-.lista li {
-  background: #f1f3f5;
-  padding: 8px;
-  margin-bottom: 5px;
-  border-radius: 6px;
+.no-existe {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+  border-left-color: #dc3545 !important;
 }

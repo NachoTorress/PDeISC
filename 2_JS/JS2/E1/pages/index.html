@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E1 - Generador de Secuencias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link id="theme-link" rel="stylesheet" href="../styles/light.css">
+</head>
+<body class="min-vh-100 d-flex flex-column">
+
+    <!-- ===== HEADER ===== -->
+    <header class="app-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom">
+        <div class="d-flex align-items-center gap-3">
+            <div class="header-icon">⬡</div>
+            <div>
+                <h1 class="app-title mb-0">Generador de Secuencias</h1>
+                <p class="app-subtitle mb-0">Carga, visualizá y exportá tus números</p>
+            </div>
+        </div>
+        <button id="toggle-theme" class="btn btn-theme" title="Cambiar tema" aria-label="Cambiar tema">
+            <span id="theme-icon">☀️</span>
+        </button>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <main class="flex-grow-1 d-flex flex-column p-3 p-md-4 gap-4">
+
+        <!-- Panel de Ingreso -->
+        <section class="card app-card shadow-sm" aria-label="Panel de ingreso de números">
+            <div class="card-body p-4">
+                <div class="row g-3 align-items-start justify-content-between">
+
+                    <!-- Input -->
+                    <div class="col-12 col-md-6 col-lg-5">
+                        <label for="num-input" class="form-label fw-semibold">Número entero</label>
+                        <div class="input-group input-group-lg">
+                            <input
+                                type="number"
+                                id="num-input"
+                                class="form-control font-mono"
+                                step="1"
+                                autocomplete="off"
+                                autofocus
+                                aria-describedby="error-feedback"
+                            >
+                            <button id="add-btn" class="btn btn-primary px-4 fw-bold" type="button">
+                                + Cargar
+                            </button>
+                        </div>
+                        <div id="error-feedback" class="form-error-msg mt-1" role="alert" aria-live="polite"></div>
+                    </div>
+
+                    <!-- Info + Botones -->
+                    <div class="col-12 col-md-5 col-lg-4 d-flex flex-column align-items-md-end gap-2">
+                        <!-- Contador -->
+                        <div class="counter-display d-flex align-items-center gap-2">
+                            <span class="counter-label">Registros:</span>
+                            <span id="counter-badge" class="counter-badge">0 / 20</span>
+                        </div>
+                        <!-- Barra de progreso -->
+                        <div class="progress w-100" style="height: 8px; border-radius: 4px;">
+                            <div
+                                id="progress-bar"
+                                class="progress-bar"
+                                role="progressbar"
+                                style="width: 0%"
+                                aria-valuenow="0"
+                                aria-valuemin="0"
+                                aria-valuemax="20"
+                            ></div>
+                        </div>
+                        <!-- Botones: Exportar y Limpiar -->
+                        <div class="d-flex flex-column gap-2 w-100">
+                            <button id="export-btn" class="btn btn-export w-100 fw-bold d-none" type="button">
+                                ⬇ Descargar .TXT
+                            </button>
+                            <button id="clear-btn" class="btn btn-clear w-100 fw-bold d-none" type="button">
+                                🗑 Limpiar todo
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Panel de Lista -->
+        <section class="card app-card shadow-sm flex-grow-1 d-flex flex-column overflow-hidden" aria-label="Lista de números cargados">
+            <div class="card-header app-card-header d-flex justify-content-between align-items-center">
+                <h2 class="section-title mb-0">Registros en Memoria</h2>
+                <span id="empty-hint" class="text-muted small">Aún no hay números cargados</span>
+            </div>
+            <div class="card-body p-3 overflow-auto flex-grow-1">
+                <div id="number-list" class="row g-3"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Botón flotante: volver arriba -->
+    <button
+        id="scroll-top"
+        class="btn btn-scroll-top d-none"
+        title="Volver arriba"
+        aria-label="Volver al inicio de la página"
+    >↑</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../scripts/main.js"></script>
+</body>
+</html>

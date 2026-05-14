@@ -1,4 +1,6 @@
-// Código JavaScript para manejar la lógica de la página
+// Definición de puerto por variable según preferencia
+const APP_PORT = 3000; 
+
 let numeros = [1, 2, 3, 4, 5];
 let numeros2 = [2, 3, 4];
 let productos = [
@@ -7,26 +9,13 @@ let productos = [
   { precio: 400 }
 ];
 
-// Función que renderiza un array en la página HTML
+// Función para renderizar arrays en formato texto plano
 function render(id, arr) {
   const div = document.getElementById(id);
-
-  let html = "<ul class='lista'>";
-
-  arr.forEach(e => {
-    if (typeof e === "object") {
-      html += `<li>Precio: ${e.precio}</li>`;
-    } else {
-      html += `<li>${e}</li>`;
-    }
-  });
-
-  html += "</ul>";
-
-  div.innerHTML = html;
+  const contenido = arr.map(e => typeof e === "object" ? `Precio: ${e.precio}` : e).join(', ');
+  div.textContent = `${id}=[${contenido}]`;
 }
 
-// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("suma", numeros);
   render("mult", numeros2);
@@ -36,31 +25,23 @@ function actualizar() {
 /* SUMA */
 document.getElementById("btnSuma").addEventListener("dblclick", (e) => {
   const res = numeros.reduce((acc, n) => acc + n, 0);
-
-  document.getElementById("resSuma").textContent =
-    `Suma total: ${res}`;
-
+  document.getElementById("resSuma").textContent = `Suma total: ${res}`;
   e.target.remove();
 });
 
 /* MULTIPLICACION */
 document.getElementById("btnMult").addEventListener("dblclick", (e) => {
   const res = numeros2.reduce((acc, n) => acc * n, 1);
-
-  document.getElementById("resMult").textContent =
-    `Producto total: ${res}`;
-
+  document.getElementById("resMult").textContent = `Producto total: ${res}`;
   e.target.remove();
 });
 
 /* OBJETOS */
 document.getElementById("btnPrecios").addEventListener("dblclick", (e) => {
   const res = productos.reduce((acc, obj) => acc + obj.precio, 0);
-
-  document.getElementById("resPrecios").textContent =
-    `Total precios: ${res}`;
-
+  document.getElementById("resPrecios").textContent = `Total precios: ${res}`;
   e.target.remove();
 });
 
 actualizar();
+console.log(`Aplicación inicializada en el puerto: ${APP_PORT}`);

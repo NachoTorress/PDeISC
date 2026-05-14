@@ -1,20 +1,13 @@
-// Código JavaScript para manejar la lógica de la página
 let numeros = [1, 2, 3, 4, 5];
 let nombres = ["ana", "luis", "carlos", "maria"];
 let precios = [100, 250, 500, 1000];
 
-// Función que renderiza un array en la página HTML
+// Renderizado en formato array plano para mantener consistencia
 function render(id, arr) {
   const div = document.getElementById(id);
-
-  let html = "<ul class='lista'>";
-  arr.forEach(e => html += `<li>${e}</li>`);
-  html += "</ul>";
-
-  div.innerHTML = html;
+  div.textContent = `${id}=[${arr.join(', ')}]`;
 }
 
-// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("numeros", numeros);
   render("nombres", nombres);

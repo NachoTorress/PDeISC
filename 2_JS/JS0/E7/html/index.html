@@ -3,60 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/style.css">
-
-  <title>indexOf() con input</title>
+  <link rel="stylesheet" href="/styles/style.css">
+  <title>Método indexOf() - Selects Interactivos</title>
 </head>
-<body>
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 p-3">
 
-<div class="container py-5">
+<div class="container" style="max-width: 900px;">
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-dark text-white text-center py-3">
+      <h1 class="h3 mb-0">Método indexOf() en JavaScript</h1>
+    </div>
 
-  <h1 class="text-center mb-4">Método indexOf()</h1>
+    <div class="card-body p-4">
+      <div class="row g-4">
 
-  <div class="row g-4">
+        <!-- ANIMALES -->
+        <div class="col-12">
+          <div class="exercise-row">
+            <h3 class="h5 fw-bold text-primary">Animales</h3>
+            <div id="animales" class="array-text"></div>
+            <select id="selectAnimales" class="form-select mt-3">
+              <option value="" selected disabled>Seleccioná un animal...</option>
+            </select>
+            <div id="resPerro" class="resultado-busqueda mt-2">Esperando selección</div>
+          </div>
+          <hr class="mt-4 opacity-10">
+        </div>
 
-    <!-- PERRO -->
-    <div class="col-md-4">
-      <div class="card shadow p-3">
-        <h3>Animales</h3>
-        <div id="animales"></div>
+        <!-- NUMEROS -->
+        <div class="col-12">
+          <div class="exercise-row">
+            <h3 class="h5 fw-bold text-danger">Números</h3>
+            <div id="numeros" class="array-text"></div>
+            <select id="selectNumero" class="form-select mt-3">
+              <option value="" selected disabled>Seleccioná un número...</option>
+            </select>
+            <div id="resNumero" class="resultado-busqueda mt-2">Esperando selección</div>
+          </div>
+          <hr class="mt-4 opacity-10">
+        </div>
 
-        <input id="inputPerro" class="form-control mt-3" placeholder="Buscar 'perro'">
+        <!-- CIUDADES -->
+        <div class="col-12">
+          <div class="exercise-row">
+            <h3 class="h5 fw-bold text-success">Ciudades</h3>
+            <div id="ciudades" class="array-text"></div>
+            <select id="selectCiudades" class="form-select mt-3">
+              <option value="" selected disabled>Seleccioná una ciudad...</option>
+            </select>
+            <div id="resCiudad" class="resultado-busqueda mt-2">Esperando selección</div>
+          </div>
+        </div>
 
-        <div id="resPerro" class="mt-3"></div>
       </div>
     </div>
 
-    <!-- NUMEROS -->
-    <div class="col-md-4">
-      <div class="card shadow p-3">
-        <h3>Números</h3>
-        <div id="numeros"></div>
-
-        <input id="inputNumero" class="form-control mt-3" placeholder="Buscar 50">
-
-        <div id="resNumero" class="mt-3"></div>
-      </div>
+    <div class="card-footer text-center text-muted small">
+      Búsqueda de Índices por Selección Directa
     </div>
-
-    <!-- CIUDADES -->
-    <div class="col-md-4">
-      <div class="card shadow p-3">
-        <h3>Ciudades</h3>
-        <div id="ciudades"></div>
-
-        <input id="inputCiudad" class="form-control mt-3" placeholder="Buscar Madrid">
-
-        <div id="resCiudad" class="mt-3"></div>
-      </div>
-    </div>
-
   </div>
-
 </div>
 
-<script src="../scripts/script.js"></script>
+<script src="/scripts/script.js"></script>
 </body>
 </html>

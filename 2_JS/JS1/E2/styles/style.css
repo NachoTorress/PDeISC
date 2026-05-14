@@ -1,80 +1,390 @@
+/* ============================================================
+   DUAL STORAGE SYSTEM — style.css
+   Tema: Minimalismo editorial, blanco hueso + negro + verde lima
+   Fuentes: Fraunces (títulos) + Nunito (cuerpo)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Nunito:wght@400;500;600;700&display=swap');
+
+/* ─── VARIABLES ────────────────────────────────────────────── */
 :root {
-    --primary: #2563eb;
-    --dark: #0f172a;
-    --error: #ef4444;
+    --bg:            #f7f7f5;
+    --bg-card:       #ffffff;
+    --bg-field:      #f2f2f0;
+    --border:        #e0e0dc;
+    --accent:        #84cc16;          /* Verde lima */
+    --accent-dim:    rgba(132,204,22,0.12);
+    --accent-dark:   #65a30d;
+    --text:          #1a1a18;
+    --text-muted:    #6b6b66;
+    --text-dim:      #9b9b94;
+    --local-color:   #3b82f6;          /* Azul — LocalStorage */
+    --session-color: #f59e0b;          /* Amarillo — SessionStorage */
+    --success:       #16a34a;
+    --danger:        #dc2626;
+    --radius-sm:     6px;
+    --radius-md:     12px;
+    --radius-lg:     20px;
+    --shadow:        0 4px 24px rgba(0,0,0,0.07);
+    --transition:    0.2s ease;
 }
+
+/* ─── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
-    background-color: #f1f5f9;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #334155;
+    background-color: var(--bg);
+    /* Patrón de puntos editorial como fondo */
+    background-image: radial-gradient(circle, #d4d4c8 1px, transparent 1px);
+    background-size: 24px 24px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    min-height: 100vh;
 }
 
-.main-header { background: linear-gradient(135deg, var(--dark) 0%, #1e3a8a 100%); }
+/* ─── HEADER ───────────────────────────────────────────────── */
+.main-header {
+    background: var(--text);                /* Negro */
+    border-bottom: 3px solid var(--accent); /* Línea verde lima */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-.badge-count {
-    background: rgba(255, 255, 255, 0.1);
-    color: #38bdf8;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon { font-size: 1.8rem; line-height: 1; }
+
+.brand-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.02em;
+}
+
+.brand-sub {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* Badge contador de usuarios */
+.user-badge {
+    background: var(--accent);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
     padding: 6px 18px;
     border-radius: 50px;
-    font-size: 0.8rem;
-    font-weight: 700;
+    letter-spacing: 0.04em;
+    transition: background var(--transition);
 }
 
-.glass-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    border: 1px solid #e2e8f0;
+/* ─── CARDS ────────────────────────────────────────────────── */
+.card-custom {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.6rem;
+    box-shadow: var(--shadow);
 }
 
-.label-custom {
-    font-size: 0.65rem;
+/* Formulario fijo en desktop */
+.sticky-col {
+    position: sticky;
+    top: 68px;
+}
+
+.card-tag {
+    font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
-    color: #64748b;
-    margin-bottom: 0.2rem;
-    display: block;
+    letter-spacing: 0.14em;
+    color: var(--accent-dark);
+    margin-bottom: 4px;
 }
 
-.input-custom {
-    width: 100%;
-    padding: 0.6rem 0.9rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    outline: none;
-}
-
-.input-error { border-color: var(--error) !important; background-color: #fffafb; }
-
-.error-msg {
-    color: var(--error);
-    font-size: 0.65rem;
-    font-weight: 600;
-    margin-top: 3px;
-    display: none;
-}
-
-.btn-primary-custom {
-    width: 100%;
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    padding: 1rem;
-    border-radius: 10px;
+.card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
     font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.2rem;
 }
 
+/* ─── DIVISORES DE SECCIÓN ──────────────────────────────────── */
+.section-divider {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    margin-top: 4px;
+}
+
+/* ─── CAMPOS ────────────────────────────────────────────────── */
+.field-group { margin-bottom: 0.75rem; }
+
+.field-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.opt {
+    font-weight: 400;
+    text-transform: none;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0;
+}
+
+.field-input {
+    width: 100%;
+    background: var(--bg-field);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13.5px;
+    padding: 0.5rem 0.75rem;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    outline: none;
+    appearance: none;
+}
+
+.field-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+    background: #fff;
+}
+
+.field-input::placeholder { color: var(--text-dim); }
+
+/* Estado de error */
+.input-error {
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 3px rgba(220,38,38,0.12) !important;
+}
+
+.field-error {
+    display: none;
+    font-size: 11px;
+    color: var(--danger);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* Quitar flechitas de inputs numéricos */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* ─── PANEL INFO DUAL STORAGE ───────────────────────────────── */
+.storage-info {
+    background: var(--bg-field);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.storage-info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dot-local   { background: var(--local-color); }
+.dot-session { background: var(--session-color); }
+
+/* ─── BOTÓN SUBMIT ─────────────────────────────────────────── */
+.btn-submit {
+    width: 100%;
+    background: var(--text);
+    color: #fff;
+    border: 2px solid var(--text);
+    border-radius: var(--radius-sm);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13.5px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.65rem;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.btn-submit:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--text);
+    transform: translateY(-1px);
+}
+
+.btn-submit:active { transform: translateY(0); }
+
+/* ─── TABLA ────────────────────────────────────────────────── */
+.table { color: var(--text) !important; border-color: var(--border) !important; }
+
+.table thead th {
+    background: var(--bg) !important;
+    color: var(--text-muted) !important;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 2px solid var(--border) !important;
+    padding: 0.65rem 0.9rem;
+}
+
+.table td {
+    border-bottom: 1px solid var(--border) !important;
+    padding: 0.7rem 0.9rem;
+    vertical-align: middle;
+    background: transparent;
+}
+
+.table tbody tr { transition: background var(--transition); }
+.table tbody tr:hover td { background: #fafaf8 !important; }
+
+.user-name    { font-weight: 700; font-size: 13.5px; color: var(--text); }
+.user-address { font-size: 13px; color: var(--text); }
+.user-city    { font-size: 13px; font-weight: 600; color: var(--text); }
+.user-meta    { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* Botón eliminar */
 .btn-delete {
     background: transparent;
-    border: none;
-    color: var(--error);
+    border: 1.5px solid rgba(220,38,38,0.35);
+    color: var(--danger);
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
     font-weight: 700;
-    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all var(--transition);
 }
 
-.row-animate { animation: fadeIn 0.3s ease forwards; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.btn-delete:hover {
+    background: rgba(220,38,38,0.08);
+    border-color: var(--danger);
+}
 
-input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+/* Tabla vacía */
+.empty-msg {
+    display: none;
+    text-align: center;
+    padding: 2.5rem;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* ─── ALERTAS ───────────────────────────────────────────────── */
+.alert-custom {
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0.6rem 0.9rem;
+    animation: fadeSlideIn 0.28s ease;
+}
+
+.alert-success {
+    background: rgba(22,163,74,0.1);
+    color: var(--success);
+    border: 1.5px solid rgba(22,163,74,0.3);
+}
+
+.alert-danger {
+    background: rgba(220,38,38,0.08);
+    color: var(--danger);
+    border: 1.5px solid rgba(220,38,38,0.25);
+}
+
+/* ─── ANIMACIONES ───────────────────────────────────────────── */
+.row-animate { animation: fadeSlideIn 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── BOTÓN VOLVER ARRIBA ───────────────────────────────────── */
+#btnTop {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    background: var(--text);
+    color: #fff;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    transition: transform var(--transition), background var(--transition);
+}
+
+#btnTop.visible {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeSlideIn 0.3s ease;
+}
+
+#btnTop:hover {
+    background: var(--accent);
+    color: var(--text);
+    transform: translateY(-3px) scale(1.08);
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 991px) {
+    .sticky-col { position: static; }
+}
+
+@media (max-width: 576px) {
+    body { font-size: 13px; }
+    .container { padding-left: 12px; padding-right: 12px; }
+    .card-custom { padding: 1.1rem; }
+    .brand-title { font-size: 1rem; }
+    .table thead th, .table td { font-size: 12px; padding: 0.5rem 0.6rem; }
+    #btnTop { bottom: 16px; right: 16px; width: 38px; height: 38px; font-size: 15px; }
+}

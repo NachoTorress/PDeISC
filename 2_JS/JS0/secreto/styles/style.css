@@ -1,26 +1,76 @@
-.min-vh-10 {
-    min-height: 60px;
-    word-wrap: break-word;
-}
-
-textarea:focus {
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15) !important;
-}
-
-.card {
-    border: none;
-}
+/* Reset y Base */
+* { box-sizing: border-box; }
 
 body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
     min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px; /* Espacio para que no toque los bordes en móvil */
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Contenedor Principal */
+.app-container {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    justify-content: center;
+}
+
+.main-card {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    /* En PC limita el alto, en móvil crece según necesite */
+    max-height: 90vh; 
+}
+
+.card-body {
+    padding: 1.5rem;
+    overflow: hidden; /* Evita scroll doble */
+}
+
+/* Áreas de texto */
+textarea, #resultado {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    resize: none;
+    border: 2px solid #e9ecef;
 }
 
 #resultado {
-    transition: all 0.3s ease;
+    white-space: pre-wrap;
+    overflow-y: auto;
     border-left: 5px solid #dee2e6;
+    min-height: 120px; /* Asegura visibilidad en móvil */
 }
 
-.border-success {
-    border-left: 5px solid #198754 !important;
+/* Estado de éxito */
+.border-success-custom {
+    border-left-color: #198754 !important;
+    background-color: #f8fff9 !important;
+}
+
+/* Responsividad para móviles */
+@media (max-width: 767px) {
+    body {
+        align-items: flex-start; /* En móvil, que empiece desde arriba */
+        overflow-y: auto;
+    }
+    
+    .main-card {
+        max-height: none; /* Que se expanda todo lo necesario */
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    textarea {
+        min-height: 150px;
+    }
 }

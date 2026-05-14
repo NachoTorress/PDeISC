@@ -1,20 +1,13 @@
-// Código JavaScript para manejar la lógica de la página
 let letras = ["A", "B", "C", "D", "E"];
 let nombres = ["Ana", "Luis", "Carlos", "María", "Sofía"];
 let cosas = ["Display", "Teclado", "Mouse", "Parlantes"];
 
-// Función que renderiza un array en la página HTML
+// Renderizado en formato array: nombre=[...]
 function render(id, arr) {
   const div = document.getElementById(id);
-
-  let html = "<ul class='lista'>";
-  arr.forEach(e => html += `<li>${e}</li>`);
-  html += "</ul>";
-
-  div.innerHTML = html;
+  div.textContent = `${id}=[${arr.join(', ')}]`;
 }
 
-// Función que actualiza todas las listas en pantalla
 function actualizar() {
   render("letras", letras);
   render("nombres", nombres);
@@ -23,41 +16,41 @@ function actualizar() {
 
 /* LETRAS */
 document.getElementById("btnLetras").addEventListener("click", (e) => {
-  letras.splice(1, 2);
-
-  document.getElementById("resultado").textContent =
-    "Se eliminaron elementos de letras";
-
-  e.target.remove();
+  letras.splice(1, 2); 
+  document.getElementById("resultado").textContent = "Se eliminaron elementos de letras";
+  e.target.remove(); 
   actualizar();
 });
 
 /* NOMBRES */
 document.getElementById("btnNombres").addEventListener("click", (e) => {
-  nombres.splice(2, 0, "Nacho");
-
-  document.getElementById("resultado").textContent =
-    "Se insertó Nacho en nombres";
-
-  e.target.remove();
+  nombres.splice(2, 0, "Nacho"); 
+  document.getElementById("resultado").textContent = "Se insertó Nacho en nombres";
+  e.target.remove(); 
   actualizar();
 });
 
-/* COSAS (DINÁMICO) */
+/* COSAS (DINÁMICO CON VALIDACIÓN SILENCIOSA) */
 document.getElementById("btnCosas").addEventListener("click", (e) => {
-  const pos = parseInt(document.getElementById("pos").value);
+  const posInput = document.getElementById("pos");
+  const pos = parseInt(posInput.value);
   const n1 = document.getElementById("n1").value;
   const n2 = document.getElementById("n2").value;
+  const errorMsg = document.getElementById("errorMsg");
 
-  if (!isNaN(pos)) {
-    cosas.splice(pos, 2, n1, n2);
-
-    document.getElementById("resultado").textContent =
-      `Se reemplazó desde posición ${pos}`;
+  // Validación: Solo procede si la posición existe en el array
+  if (!isNaN(pos) && pos >= 0 && pos < cosas.length) {
+    cosas.splice(pos, 2, n1, n2); 
+    document.getElementById("resultado").textContent = `Se reemplazó desde posición ${pos}`;
+    
+    // Si todo sale bien, borramos el bloque de inputs y ocultamos el error
+    document.getElementById("inputsCosas").remove();
+    actualizar();
+  } else {
+    // Si la posición está mal, mostramos un mensajito de texto en rojo (sin alert)
+    errorMsg.classList.remove("d-none");
+    posInput.classList.add("is-invalid");
   }
-
-  e.target.remove();
-  actualizar();
 });
 
 actualizar();
