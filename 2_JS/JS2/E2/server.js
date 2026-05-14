@@ -146,7 +146,15 @@ app.post('/upload', (req, res) => {
 
             // Generar archivo de resultado
             const outputContent  = result.usefulNumbers.join('\n');
-            const outputFilename = `resultado_${Date.now()}.txt`;
+            const now2 = new Date();
+const dd   = String(now2.getDate()).padStart(2, '0');
+const mm   = String(now2.getMonth() + 1).padStart(2, '0');
+const aaaa = now2.getFullYear();
+const hh   = String(now2.getHours()).padStart(2, '0');
+const min  = String(now2.getMinutes()).padStart(2, '0');
+const ss   = String(now2.getSeconds()).padStart(2, '0');
+
+const outputFilename = `resultado_${dd}-${mm}-${aaaa}_${hh}-${min}-${ss}.txt`;
             const outputPath     = path.join(downloadsDir, outputFilename);
             fs.writeFileSync(outputPath, outputContent, 'utf-8');
 
