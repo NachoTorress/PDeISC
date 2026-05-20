@@ -2,7 +2,7 @@
 import { createServer } from 'node:http';
 
 // Importa todas las funciones del modulo calculos.js (ejercicio 4)
-import * as calc from './calculos.js';
+import * as calc from './modules/calculos.js';
 
 // =======================
 // FUNCIONES (Ejercicio 3)
@@ -49,12 +49,12 @@ const server = createServer((req, res) => {
 
         <!-- Texto -->
         <div class="text-center mb-4">
-          <p class="fs-4">Hola mundo desde Node.js</p>
+          <p class="fs-4">(Ejercicio 1) Hola mundo desde Node.js </p>
           <p>Fin</p>
         </div>
 
         <!-- TABLA 1 -->
-        <h2 class="text-center">Resultados directos</h2>
+        <h2 class="text-center">Resultados directos (Ejercicio 2)</h2>
         <div class="table-responsive">
           <table class="table table-striped table-bordered text-center">
             <thead class="table-dark">
@@ -73,7 +73,7 @@ const server = createServer((req, res) => {
         </div>
 
         <!-- TABLA 2 -->
-        <h2 class="text-center mt-5">Resultados con funciones</h2>
+        <h2 class="text-center mt-5">Resultados con funciones (Ejercicio 3)</h2>
         <div class="table-responsive">
           <table class="table table-striped table-bordered text-center">
             <thead class="table-dark">
@@ -92,7 +92,7 @@ const server = createServer((req, res) => {
         </div>
 
         <!-- TABLA 3 -->
-        <h2 class="text-center mt-5">Resultados con modulo</h2>
+        <h2 class="text-center mt-5">Resultados con modulo (Ejercicio 4)</h2>
         <div class="table-responsive">
           <table class="table table-striped table-bordered text-center">
             <thead class="table-dark">
