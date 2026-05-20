@@ -1,0 +1,345 @@
+/* ============================================================
+   STYLE.CSS — El Pliegue (Con Modo Oscuro Nativo)
+   ============================================================ */
+
+/* ───────────────── CONFIGURACIÓN DE COLORES (MODO CLARO) ───────────────── */
+:root {
+  --ink: #1a1209;
+  --paper: #f5f0e8;
+  --cream: #ece7d9;
+  --rule: #c8b89a;
+  --accent: #8b1a1a;
+  --accent-lt: #b32020;
+  --muted: #6b5e4e;
+  --bg-sticky-shadow: rgba(0, 0, 0, 0.12);
+}
+
+/* ───────────────── CONFIGURACIÓN DE COLORES (MODO OSCURO) ───────────────── */
+[data-bs-theme="dark"] {
+  --ink: #f5f0e8;
+  --paper: #120e0a;
+  --cream: #1e1812;
+  --rule: #4a3f35;
+  --accent: #e65151;
+  --accent-lt: #ff6b6b;
+  --muted: #a39382;
+  --bg-sticky-shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* ───────────────── BASE ───────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: 'Source Serif 4', Georgia, serif;
+  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ───────────────── HEADER STICKY (CABECERA FIJA) ───────────────── */
+.header-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  box-shadow: 0 4px 12px var(--bg-sticky-shadow);
+  transition: box-shadow 0.3s ease;
+}
+
+/* ───────────────── TOPBAR ───────────────── */
+.topbar {
+  background-color: var(--ink);
+  color: var(--paper);
+  border-bottom: 3px solid var(--accent);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.topbar-fecha {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rule);
+  font-family: 'Source Serif 4', serif;
+}
+
+.topbar-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  line-height: 1;
+}
+
+.topbar-titulo span {
+  color: var(--accent-lt);
+}
+
+/* ───────────────── CLIMA ───────────────── */
+.clima-temp {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--paper);
+}
+
+.clima-ciudad {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rule);
+}
+
+.clima-cond {
+  font-size: 0.8rem;
+  color: #d4c9b4;
+}
+
+/* ───────────────── BOTÓN CAMBIO DE TEMA (DESKTOP) ───────────────── */
+.btn-theme-toggle {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--paper);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--paper);
+}
+
+/* ───────────────── HAMBURGUESA ───────────────── */
+.topbar-toggler {
+  background: transparent;
+  padding: 4px 6px;
+  color: var(--paper);
+  border: 1px solid var(--rule) !important;
+  border-radius: 4px;
+}
+
+.topbar-toggler i {
+  color: var(--paper);
+}
+
+/* ───────────────── NAV SECCIONES ───────────────── */
+.seccionbar {
+  background-color: var(--cream);
+  border-bottom: 2px solid var(--rule);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.seccion-link {
+  display: inline-block;
+  padding: 0.75rem 1.4rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.seccion-link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  background-color: var(--paper);
+}
+
+/* ───────────────── SECCIONES ───────────────── */
+.seccion {
+  padding: 3rem 1rem 2rem;
+  border-bottom: 2px solid var(--rule);
+  transition: border-color 0.3s ease;
+}
+
+.seccion:last-child {
+  border-bottom: none;
+}
+
+.seccion-header {
+  padding-bottom: 0.6rem;
+  border-bottom: 3px double var(--ink);
+  transition: border-color 0.3s ease;
+}
+
+.seccion-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.seccion-linea {
+  height: 1px;
+  background-color: var(--rule);
+  transition: background-color 0.3s ease;
+}
+
+.seccion-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ───────────────── NOTICIAS ───────────────── */
+@media (min-width: 992px) {
+  .col-lg-4:not(:last-child) .noticia {
+    border-right: 1px solid var(--rule);
+    padding-right: 1.5rem;
+  }
+}
+
+.noticia {
+  gap: 0.6rem;
+}
+
+.noticia-img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  display: block;
+  transition: border-color 0.3s ease;
+}
+
+/* Filtro sutil para que las imágenes no brillen tanto en modo oscuro */
+[data-bs-theme="dark"] .noticia-img {
+  filter: brightness(0.85) contrast(1.05);
+}
+
+.noticia-categoria {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.noticia-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.25;
+  transition: color 0.2s;
+}
+
+a:hover .noticia-titulo {
+  color: var(--accent);
+}
+
+.noticia-bajada {
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.55;
+  font-style: italic;
+}
+
+.noticia-meta {
+  font-size: 0.72rem;
+  color: var(--rule);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--cream);
+  transition: border-color 0.3s ease;
+}
+
+/* ───────────────── FOOTER ───────────────── */
+footer {
+  background-color: var(--ink);
+  color: var(--rule);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: 'Source Serif 4', serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+footer strong {
+  color: var(--paper);
+  font-family: 'Playfair Display', serif;
+}
+
+footer a {
+  color: var(--rule);
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: var(--paper);
+}
+
+/* ───────────────── OFFCANVAS ───────────────── */
+.menu-offcanvas {
+  background-color: var(--ink);
+  color: var(--paper);
+  border-left: 3px solid var(--accent);
+  width: 240px !important;
+}
+
+.menu-offcanvas-titulo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  color: var(--paper);
+  font-size: 1.4rem;
+}
+
+.menu-offcanvas-titulo span {
+  color: var(--accent-lt);
+}
+
+.menu-offcanvas-link {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rule);
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(200, 184, 154, 0.2);
+  transition: color 0.2s;
+}
+
+.menu-offcanvas-link:hover {
+  color: var(--paper);
+}
+
+.menu-offcanvas-link i {
+  color: var(--accent-lt);
+}
+
+/* ───────────────── BOTÓN SUBIR ───────────────── */
+.btn-subir {
+  width: 44px;
+  height: 44px;
+  background-color: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  z-index: 1050;
+  transition: background-color 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.btn-subir:hover {
+  background-color: var(--accent);
+  color: var(--paper);
+}

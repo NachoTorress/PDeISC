@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fortnite Android — El Pliegue</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap"
+    rel="stylesheet" />
+
+  <!-- CSS dinámico -->
+  <link id="article-theme" rel="stylesheet" href="../css/articulo.css" />
+
+  <link rel="icon" href="https://i.ibb.co/BHjZZwv4/EP.png" type="image/png">
+
+</head>
+
+<body>
+
+  <!-- ══════════ TOPBAR ══════════ -->
+  <header class="topbar d-flex justify-content-between align-items-center px-3 px-md-5 py-2">
+
+    <div class="topbar-fecha d-none d-md-block">
+      Jueves, 19 de marzo de 2026
+    </div>
+
+    <a class="topbar-titulo" href="../paginas/index.html">
+      El <span>Pliegue</span>
+    </a>
+
+    <div class="d-flex align-items-center gap-3">
+
+      <!-- Clima -->
+      <div class="topbar-clima d-flex align-items-center gap-2">
+        <div class="clima-info text-end">
+          <span class="clima-ciudad d-block">Mar del Plata</span>
+          <span class="clima-cond">☀️ Soleado</span>
+        </div>
+        <div class="clima-temp">20°C</div>
+      </div>
+
+      <!-- Tema -->
+      <button
+        id="btn-theme-articulo"
+        class="btn-theme-toggle d-flex align-items-center justify-content-center"
+        aria-label="Cambiar tema"
+      >
+        <i class="bi bi-moon-fill theme-icon-dark"></i>
+        <i class="bi bi-sun-fill theme-icon-light d-none"></i>
+      </button>
+
+    </div>
+
+  </header>
+
+  <!-- ══════════ VOLVER ══════════ -->
+  <div class="volver-bar px-3 px-md-5 py-2">
+    <a href="../paginas/index.html">Volver al inicio</a>
+  </div>
+
+  <!-- ══════════ ARTÍCULO ══════════ -->
+  <main class="container articulo py-5">
+
+    <span class="articulo-categoria">Videojuegos</span>
+
+    <h1 class="articulo-titulo">
+      Fortnite vuelve oficialmente a los celulares Android de todo el mundo desde hoy, 19 de marzo
+    </h1>
+
+    <div class="articulo-meta">
+      Hoy · Tecnología
+    </div>
+
+    <img
+      class="articulo-img w-100"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQizP9d_fsCro0CwUAOccVAClUC6rWK8X26bA&s"
+      alt="Fortnite Android"
+    >
+
+    <div class="articulo-cuerpo">
+
+      <p>
+        Luego de años de disputas legales que mantuvieron al juego fuera de las tiendas oficiales de
+        aplicaciones, Fortnite regresó este jueves 19 de marzo a los dispositivos Android de todo el mundo de
+        manera oficial y gratuita. Epic Games, la desarrolladora del popular battle royale, anunció el
+        relanzamiento tras llegar a un acuerdo con Google que pone fin a la batalla judicial iniciada en 2020,
+        cuando la compañía fue expulsada de la Play Store por violar las políticas de comisiones de la
+        plataforma.
+      </p>
+
+      <p>
+        El regreso implica que los usuarios de Android podrán descargar Fortnite directamente desde la Google
+        Play Store, sin necesidad de recurrir a instalaciones manuales mediante archivos APK, que era el método
+        alternativo que Epic había puesto a disposición durante los años de conflicto. La vuelta a la tienda
+        oficial facilita las actualizaciones automáticas y elimina las barreras de acceso para millones de
+        jugadores que habían abandonado el juego por la complejidad del proceso de instalación.
+      </p>
+
+      <p>
+        El caso Fortnite tuvo además un impacto regulatorio significativo: el litigio de Epic contra Google y
+        Apple derivó en decisiones judiciales y legislativas en varios países que obligaron a las grandes
+        plataformas a abrir sus ecosistemas a métodos de pago alternativos y a reducir las comisiones que cobran
+        a los desarrolladores. En ese sentido, el regreso de Fortnite a Android es también un símbolo del nuevo
+        equilibrio de fuerzas en el mercado de aplicaciones móviles.
+      </p>
+
+    </div>
+
+  </main>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer class="text-center py-4">
+
+    <strong>El Pliegue</strong>
+    &nbsp;·&nbsp;
+    Todos los derechos reservados
+    &nbsp;·&nbsp;
+    Mar del Plata
+    &nbsp;·&nbsp;
+    2026
+
+  </footer>
+
+  <!-- Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Tema -->
+  <script src="../scripts/articulo.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Pliegue — Portal de Noticias</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght=0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght=0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Estilos propios -->
+    <link id="theme-stylesheet" rel="stylesheet" href="../css/claro.css">
+</head>
+
+<body>
+
+  <!-- ══════════════ CABECERA FIJA (STICKY) ══════════════ -->
+  <div class="header-sticky">
+    
+    <!-- TOPBAR -->
+    <header class="topbar d-flex justify-content-between align-items-center px-3 px-md-5 py-2">
+      <div class="topbar-fecha d-none d-md-block">Jueves, 19 de marzo de 2026</div>
+      <div class="topbar-titulo">El <span>Pliegue</span></div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="topbar-clima d-flex align-items-center gap-2">
+          <div class="clima-info text-end">
+            <span class="clima-ciudad d-block">Mar del Plata</span>
+            <span class="clima-cond">☀️ Soleado</span>
+          </div>
+          <div class="clima-temp">20°C</div>
+        </div>
+
+        <!-- Botón Modo Oscuro (Desktop) -->
+        <button id="btn-theme-desktop" class="btn-theme-toggle d-none d-lg-flex align-items-center justify-content-center" aria-label="Cambiar tema">
+          <i class="bi bi-moon-fill theme-icon-dark"></i>
+          <i class="bi bi-sun-fill theme-icon-light d-none"></i>
+        </button>
+
+        <!-- Hamburguesa: visible solo en mobile -->
+        <button class="border-0 d-lg-none topbar-toggler"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#menuSecciones"
+                aria-controls="menuSecciones"
+                aria-label="Abrir menú de secciones">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- BARRA DE SECCIONES (desktop) -->
+    <nav class="seccionbar d-none d-lg-block">
+      <div class="d-flex justify-content-center">
+        <a class="seccion-link" href="#politica">Política</a>
+        <a class="seccion-link" href="#economia">Economía</a>
+        <a class="seccion-link" href="#tecnologia">Tecnología</a>
+        <a class="seccion-link" href="#deportes">Deportes</a>
+        <a class="seccion-link" href="#cultura">Cultura</a>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- ══════════════ OFFCANVAS (mobile) ══════════════ -->
+  <div class="offcanvas offcanvas-end menu-offcanvas" tabindex="-1" id="menuSecciones" aria-labelledby="menuSeccionesLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title menu-offcanvas-titulo" id="menuSeccionesLabel">El <span>Pliegue</span></h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column gap-2 pt-2">
+      <!-- Botón Modo Oscuro (Mobile) -->
+      <button id="btn-theme-mobile" class="menu-offcanvas-link border-0 bg-transparent text-start d-flex align-items-center justify-content-between w-100" aria-label="Cambiar tema">
+        <span class="theme-text-toggle"><i class="bi bi-moon-fill me-2"></i>Modo Oscuro</span>
+        <span class="theme-text-toggle d-none"><i class="bi bi-sun-fill me-2"></i>Modo Claro</span>
+      </button>
+      <hr class="my-1 border-secondary">
+      
+      <a class="menu-offcanvas-link" href="#politica"><i class="bi bi-building me-2"></i>Política</a>
+      <a class="menu-offcanvas-link" href="#economia"><i class="bi bi-graph-up me-2"></i>Economía</a>
+      <a class="menu-offcanvas-link" href="#tecnologia"><i class="bi bi-cpu me-2"></i>Tecnología</a>
+      <a class="menu-offcanvas-link" href="#deportes"><i class="bi bi-trophy me-2"></i>Deportes</a>
+      <a class="menu-offcanvas-link" href="#cultura"><i class="bi bi-palette me-2"></i>Cultura</a>
+    </div>
+  </div>
+
+  <!-- ══════════════ BOTÓN SUBIR ══════════════ -->
+  <a href="#" class="btn-subir position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center" aria-label="Volver arriba">
+    <i class="bi bi-arrow-up"></i>
+  </a>
+
+  <!-- ══════════════ CONTENIDO PRINCIPAL ══════════════ -->
+  <main class="container-lg">
+
+    <!-- ── POLÍTICA ── -->
+    <section class="seccion" id="politica">
+      <div class="seccion-header d-flex align-items-center gap-3 mb-4">
+        <h2 class="seccion-titulo mb-0">Política</h2>
+        <div class="seccion-linea flex-grow-1"></div>
+        <span class="seccion-label d-none d-md-inline">Nacional · Internacional</span>
+      </div>
+      <div class="row g-4">
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/pol-01.html">
+              <img class="noticia-img w-100" src="https://www.pagina12.com.ar/resizer/v2/HBSDQYRSGQ3TAOLFMMYWMYZZGE.jpg?quality=75&smart=true&auth=5c611e676ebdc1625e127b914726ff08d21fbc1413542261157100ade67481b8&width=900&height=531" alt="Rifle en el Congreso">
+            </a>
+            <span class="noticia-categoria">Congreso</span>
+            <a href="../paginas/pol-01.html"><h3 class="noticia-titulo">Un diputado del PRO compró un rifle en Mercado Libre y el paquete llegó por error al anexo del Congreso</h3></a>
+            <p class="noticia-bajada">El legislador Javier Sánchez Wrba le explicó al presidente de la Cámara, Martín Menem, que se trató de un rifle de aire comprimido enviado a su despacho en lugar de a su domicilio.</p>
+            <span class="noticia-meta mt-auto">Hoy</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/pol-02.html">
+              <img class="noticia-img w-100" src="https://www.lanacion.com.ar/resizer/v2/mauricio-macri-visito-misiones-y-aventuro-que-la-F4SF3BIZNFCFNMCHBNWHCNPMW4.jpeg?auth=825d9b673271105a68bd00d2e4975750d20fad5c31e097cd3ab9ca000a2d60d4&width=420&height=280&quality=70&smart=true" alt="Macri PRO">
+            </a>
+            <span class="noticia-categoria">PRO</span>
+            <a href="../paginas/pol-02.html"><h3 class="noticia-titulo">Macri encabeza hoy una cumbre nacional del PRO en Parque Norte para definir el rumbo del espacio de cara a 2027</h3></a>
+            <p class="noticia-bajada">El expresidente busca reorganizar el partido luego de la ruptura con La Libertad Avanza y apuntalar su estructura de cara a las próximas elecciones presidenciales.</p>
+            <span class="noticia-meta mt-auto">Hoy</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/pol-03.html">
+              <img class="noticia-img w-100" src="https://images-tools.cadena3.com/tools/r/232f556a-a787-4ee9-88a3-1283eaf0175c.jpg?width=1200&height=798" alt="Milei proyectos">
+            </a>
+            <span class="noticia-categoria">Gobierno</span>
+            <a href="../paginas/pol-03.html"><h3 class="noticia-titulo">Milei anunció 90 proyectos de ley para crear "la arquitectura jurídica de la Argentina libre" en 2026</h3></a>
+            <p class="noticia-bajada">El presidente realizó el anuncio en el evento por la adquisición de Prisma y Newpay, donde también invitó a empresas extranjeras a invertir como "pioneros" en el cambio de época.</p>
+            <span class="noticia-meta mt-auto">Ayer</span>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── ECONOMÍA ── -->
+    <section class="seccion" id="economia">
+      <div class="seccion-header d-flex align-items-center gap-3 mb-4">
+        <h2 class="seccion-titulo mb-0">Economía</h2>
+        <div class="seccion-linea flex-grow-1"></div>
+        <span class="seccion-label d-none d-md-inline">Finanzas · Mercados</span>
+      </div>
+      <div class="row g-4">
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/eco-01.html">
+              <img class="noticia-img w-100" src="https://www.roadshow.com.ar/wp-content/uploads/dolar-blue-1.jpg" alt="Dólar blue">
+            </a>
+            <span class="noticia-categoria">Mercados</span>
+            <a href="../paginas/eco-01.html"><h3 class="noticia-titulo">El dólar blue cotiza a $1.430 y el riesgo país sube 3,2% hasta los 622 puntos básicos</h3></a>
+            <p class="noticia-bajada">El dólar oficial se ubica en $1.415 y el contado con liquidación en $1.473. El Merval opera en torno a los 2.693.891 puntos en la jornada del jueves 19 de marzo.</p>
+            <span class="noticia-meta mt-auto">Hoy</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/eco-02.html">
+              <img class="noticia-img w-100" src="https://static.vecteezy.com/system/resources/thumbnails/033/303/163/small/magnifying-glass-on-charts-graphs-paper-financial-development-banking-account-statistics-investment-analytic-research-data-economy-photo.jpg" alt="Inflación">
+            </a>
+            <span class="noticia-categoria">Inflación</span>
+            <a href="../paginas/eco-02.html"><h3 class="noticia-titulo">El 73% de los directores financieros proyecta que la inflación cerrará 2026 entre el 20% y el 30%</h3></a>
+            <p class="noticia-bajada">Un informe de la consultora BDO Argentina reveals que las empresas ajustan márgenes y buscan crédito ante una inercia inflacionaria que se mantiene en niveles elevados pese a la estabilización.</p>
+            <span class="noticia-meta mt-auto">Hoy</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/eco-03.html">
+              <img class="noticia-img w-100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYXpvc-RM6KXT2sFaoTRlPfvo4bM10Yyf6fw&s" alt="FMI">
+            </a>
+            <span class="noticia-categoria">FMI</span>
+            <a href="../paginas/eco-03.html"><h3 class="noticia-titulo">El FMI proyectó que la economía argentina crecerá un 4% en 2026 y 2027, por encima del promedio regional</h3></a>
+            <p class="noticia-bajada">El organismo señaló que la recesión quedó atrás y que el país transita una etapa de normalización macroeconómica, aunque advirtió sobre riesgos externos como la volatilidad financiera global.</p>
+            <span class="noticia-meta mt-auto">Enero 2026</span>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── TECNOLOGÍA ── -->
+    <section class="seccion" id="tecnologia">
+      <div class="seccion-header d-flex align-items-center gap-3 mb-4">
+        <h2 class="seccion-titulo mb-0">Tecnología</h2>
+        <div class="seccion-linea flex-grow-1"></div>
+        <span class="seccion-label d-none d-md-inline">IA · Innovación · Digital</span>
+      </div>
+      <div class="row g-4">
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/tec-01.html">
+              <img class="noticia-img w-100" src="https://www.semana.com/resizer/v2/5OAZGA556ZEDXOHWQKFWC3LMBM.jpg?smart=true&auth=201e1033a83f23fdc36f4af4997fd9f0943df6bd367ea8f3be521669fb45428b&width=1280&height=720" alt="Starlink">
+            </a>
+            <span class="noticia-categoria">Conectividad</span>
+            <a href="../paginas/tec-01.html"><h3 class="noticia-titulo">La red de Starlink alcanzó un récord de cobertura que ninguna otra red de internet tiene en el mundo</h3></a>
+            <p class="noticia-bajada">La red satelital de Elon Musk logró un hito histórico en alcance global, consolidándose como la plataforma de conectividad de mayor cobertura geográfica a nivel mundial.</p>
+            <span class="noticia-meta mt-auto">Hoy</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/tec-02.html">
+              <img class="noticia-img w-100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQizP9d_fsCro0CwUAOccVAClUC6rWK8X26bA&s" alt="Fortnite Android">
+            </a>
+            <span class="noticia-categoria">Videojuegos</span>
+            <a href="../paginas/tec-02.html"><h3 class="noticia-titulo">Fortnite vuelve oficialmente a los celulares Android de todo el mundo desde hoy, 19 de marzo</h3></a>
+            <p class="noticia-bajada">Tras años de disputas legales con Google y Apple, el juego de Epic Games regresa a la plataforma Android de manera oficial, disponible para descarga libre en todo el mundo.</p>
+            <span class="noticia-meta mt-auto">Hoy</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/tec-03.html">
+              <img class="noticia-img w-100" src="https://statics.eleconomista.com.ar/2023/07/crop/64b00871e979c__420x280.webp" alt="FIFA YouTube">
+            </a>
+            <span class="noticia-categoria">Streaming</span>
+            <a href="../paginas/tec-03.html"><h3 class="noticia-titulo">FIFA y YouTube sellaron una alianza para el Mundial 2026 que cambiará la forma de consuming el fútbol</h3></a>
+            <p class="noticia-bajada">El acuerdo incluye transmisiones en vivo de los primeros 10 minutos de cada partido y material exclusivo en la plataforma, sin reemplazar la televisión tradicional.</p>
+            <span class="noticia-meta mt-auto">Reciente</span>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── DEPORTES ── -->
+    <section class="seccion" id="deportes">
+      <div class="seccion-header d-flex align-items-center gap-3 mb-4">
+        <h2 class="seccion-titulo mb-0">Deportes</h2>
+        <div class="seccion-linea flex-grow-1"></div>
+        <span class="seccion-label d-none d-md-inline">Fútbol · Fórmula 1 · Copa Libertadores</span>
+      </div>
+      <div class="row g-4">
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/dep-01.html">
+              <img class="noticia-img w-100" src="https://radiomitre.cienradios.com/resizer/v2/JJQHLH6XIFCFVKIKDG3RYFFECU.jpg?auth=0f51e47f48974e04014b39ce84b896b58099f642bfb1378b5c653734cc58345f&width=800&height=400" alt="Selección Argentina">
+            </a>
+            <span class="noticia-categoria">Selección</span>
+            <a href="../paginas/dep-01.html"><h3 class="noticia-titulo">Scaloni convocó 28 jugadores con Messi a la cabeza para el amistoso ante Guatemala en La Bombonera</h3></a>
+            <p class="noticia-bajada">Entre las novedades figuran las apuestas por Tomás Palacios y Gabriel Rojas. Argentina llega sin haber enfrentado rivales europeos en todo el ciclo previo al Mundial 2026, un hecho inédito.</p>
+            <span class="noticia-meta mt-auto">Hoy</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/dep-02.html">
+              <img class="noticia-img w-100" src="https://media.a24.com/p/dab8d190d3be5590b066064cca7a1a91/adjuntos/296/imagenes/009/605/0009605484/1200x675/smart/colapinto_allpine.jpg" alt="Colapinto Alpine">
+            </a>
+            <span class="noticia-categoria">Fórmula 1</span>
+            <a href="../paginas/dep-02.html"><h3 class="noticia-titulo">Colapinto terminó 10° en el GP de China y sumó su primer punto con Alpine, aunque con mucha bronca</h3></a>
+            <p class="noticia-bajada">El piloto argentino fue crítico de su actuación: "Tuve mucha mala suerte". Briatore, jefe de Alpine, también fue duro: "No es lo que esperaba de él en esta carrera".</p>
+            <span class="noticia-meta mt-auto">15 de marzo</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/dep-03.html">
+              <img class="noticia-img w-100" src="https://media.tycsports.com/files/2021/06/01/288643/copa-libertadores-sorteo-boca_416x234.jpg?v=1" alt="Copa Libertadores">
+            </a>
+            <span class="noticia-categoria">Copa Libertadores</span>
+            <a href="../paginas/dep-03.html"><h3 class="noticia-titulo">Boca conocerá hoy sus rivales en el sorteo de la fase de grupos de la Libertadores 2026 en Paraguay</h3></a>
+            <p class="noticia-bajada">El Xeneize, dirigido por Ubeda, espera el sorteo con Paredes como pieza clave en recuperación. River también conocerá hoy su destino en la Copa Sudamericana con Coudet al mando.</p>
+            <span class="noticia-meta mt-auto">Hoy</span>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── CULTURA ── -->
+    <section class="seccion" id="cultura">
+      <div class="seccion-header d-flex align-items-center gap-3 mb-4">
+        <h2 class="seccion-titulo mb-0">Cultura</h2>
+        <div class="seccion-linea flex-grow-1"></div>
+        <span class="seccion-label d-none d-md-inline">Música · Arte · Periodismo</span>
+      </div>
+      <div class="row g-4">
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/cul-01.html">
+              <img class="noticia-img w-100" src="https://d59jb5sy46ag5.cloudfront.net/filesedc/uploads/image/post/Captura_de_pantalla_2026-03-17_150415_b1bdc3e98851.png" alt="Lighter FIFA">
+            </a>
+            <span class="noticia-categoria">Mundial 2026</span>
+            <a href="../paginas/cul-01.html"><h3 class="noticia-titulo">La FIFA presentó "Lighter", el primer adelanto de la canción oficial del Mundial 2026</h3></a>
+            <p class="noticia-bajada">El organismo lanzó un video con el anticipo del tema que acompañará el torneo en Estados Unidos, Canadá y México, generando gran expectativa entre los fanáticos del fútbol de todo el mundo.</p>
+            <span class="noticia-meta mt-auto">17 de marzo</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/cul-02.html">
+              <img class="noticia-img w-100" src="https://www.cultura.gob.ar/media/uploads/mnao_retrato-anahi-caceres_por_silvina_frydlewsky_04-03-2026.jpg" alt="Anahí Cáceres">
+            </a>
+            <span class="noticia-categoria">Artes Visuales</span>
+            <a href="../paginas/cul-02.html"><h3 class="noticia-titulo">Anahí Cáceres inaugura muestra sobre migraciones y cruces culturales con videoarte y nuevas tecnologías</h3></a>
+            <p class="noticia-bajada">La artista multidisciplinaria y pionera del videoarte presentó su nueva exhibición en el marco de la programación de la Secretaría de Cultura de la Nación para el mes de marzo.</p>
+            <span class="noticia-meta mt-auto">2 de marzo</span>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="noticia h-100 d-flex flex-column">
+            <a href="../paginas/cul-03.html">
+              <img class="noticia-img w-100" src="https://fotos.perfil.com/2024/10/02/trim/987/555/usba-1884128.jpg" alt="Beca Robert Cox">
+            </a>
+            <span class="noticia-categoria">Periodismo</span>
+            <a href="../paginas/cul-03.html"><h3 class="noticia-titulo">El Grupo Perfil y la USBA lanzan la Beca Robert Cox para el Posgrado en Periodismo de Investigación</h3></a>
+            <p class="noticia-bajada">Las postulaciones para cursar sin costo están abiertas hasta el 31 de marzo. La convocatoria busca impulsar el periodismo de investigación como herramienta central de la democracia.</p>
+            <span class="noticia-meta mt-auto">Reciente</span>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="text-center py-4">
+    <strong>El Pliegue</strong> &nbsp;·&nbsp; Todos los derechos reservados &nbsp;·&nbsp; Mar del Plata &nbsp;·&nbsp; 2026
+    &nbsp;·&nbsp; <a href="contacto.html">Contacto</a>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Script propio -->
+  <script src="../scripts/index.js"></script>
+
+</body>
+</html> 

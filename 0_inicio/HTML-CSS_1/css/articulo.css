@@ -1,0 +1,256 @@
+/* ============================================================
+   ARTICULO.CSS — El Pliegue
+   Solo colores, tipografía y detalles visuales de los artículos.
+   El layout y responsive los maneja Bootstrap.
+   Ruta esperada: css/articulo.css
+   ============================================================ */
+
+:root {
+  --ink:        #1a1209;
+  --paper:      #f5f0e8;
+  --cream:      #ece7d9;
+  --rule:       #c8b89a;
+  --accent:     #8b1a1a;
+  --accent-lt:  #b32020;
+  --muted:      #6b5e4e;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: 'Source Serif 4', Georgia, serif;
+}
+
+/* Sin azul ni subrayado en links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── TOPBAR ─── */
+.topbar {
+  background-color: var(--ink);
+  color: var(--paper);
+  border-bottom: 3px solid var(--accent);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.topbar-fecha {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rule);
+}
+
+/* El logo es un <a> que lleva al inicio */
+.topbar-titulo {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  line-height: 1;
+}
+
+.topbar-titulo span { color: var(--accent-lt); }
+
+.clima-temp {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--paper);
+}
+
+.clima-ciudad {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rule);
+}
+
+.clima-cond {
+  font-size: 0.8rem;
+  color: #d4c9b4;
+}
+
+/* ─── BARRA VOLVER ─── */
+.volver-bar {
+  background-color: var(--cream);
+  border-bottom: 2px solid var(--rule);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.volver-bar a:hover { color: var(--accent); }
+.volver-bar a::before { content: '← '; }
+
+/* ─── CONTENEDOR DEL ARTÍCULO ─── */
+/* Bootstrap container limita el ancho.
+   max-width adicional para columna de lectura cómoda. */
+.articulo {
+  max-width: 780px;
+}
+
+.articulo-categoria {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.articulo-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+
+/* Responsive: título más chico en mobile */
+@media (max-width: 576px) {
+  .articulo-titulo { font-size: 1.7rem; }
+}
+
+.articulo-meta {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rule);
+  padding-bottom: 1.2rem;
+  border-bottom: 3px double var(--ink);
+  margin-bottom: 1.8rem;
+}
+
+/* Imagen en proporción 16:9, recortada sin deformarse */
+.articulo-img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  margin-bottom: 2rem;
+}
+
+/* ─── CUERPO DEL ARTÍCULO ─── */
+.articulo-cuerpo {
+  font-size: 1.05rem;
+  line-height: 1.85;
+}
+
+.articulo-cuerpo p { margin-bottom: 1.5rem; }
+
+/* Letra capital en el primer párrafo */
+.articulo-cuerpo p:first-child::first-letter {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.8rem;
+  font-weight: 900;
+  float: left;
+  line-height: 0.8;
+  margin: 0.1rem 0.15rem 0 0;
+  color: var(--accent);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background-color: var(--ink);
+  color: var(--rule);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: 'Source Serif 4', serif;
+}
+
+footer strong {
+  color: var(--paper);
+  font-family: 'Playfair Display', serif;
+}
+
+/* Link de contacto en el footer */
+footer a {
+  color: var(--rule);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+footer a:hover { color: var(--paper); }
+
+/* ─── FORMULARIO DE CONTACTO ─── */
+.contacto-label {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Inputs con el estilo visual del diario */
+.contacto-input {
+  background-color: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  color: var(--ink);
+  font-family: 'Source Serif 4', serif;
+}
+
+.contacto-input:focus {
+  background-color: var(--paper);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(139, 26, 26, 0.15);
+  color: var(--ink);
+}
+
+/* Botón de envío */
+.contacto-btn {
+  background-color: var(--ink);
+  color: var(--paper);
+  border: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.contacto-btn:hover {
+  background-color: var(--accent);
+}
+
+/* Separador horizontal */
+.contacto-hr {
+  border-color: var(--rule);
+  opacity: 1;
+}
+/* ─── BOTÓN CAMBIO DE TEMA ─── */
+
+.btn-theme-toggle {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--rule);
+  background-color: transparent;
+  color: var(--paper);
+  border-radius: 50%;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    transform 0.15s;
+}
+
+.btn-theme-toggle:hover {
+  background-color: rgba(255,255,255,0.08);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+.btn-theme-toggle i {
+  font-size: 1rem;
+}

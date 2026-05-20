@@ -1,0 +1,268 @@
+/* ============================================================
+   ARTICULO-OSCURO.CSS — El Pliegue
+   Tema oscuro para artículos
+   ============================================================ */
+
+:root {
+  --ink:        #f3eee5;
+  --paper:      #121212;
+  --cream:      #1b1b1b;
+  --rule:       #3a3a3a;
+  --accent:     #c0392b;
+  --accent-lt:  #e74c3c;
+  --muted:      #b0a79a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: 'Source Serif 4', Georgia, serif;
+}
+
+/* Sin azul ni subrayado en links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── TOPBAR ─── */
+.topbar {
+  background-color: #0b0b0b;
+  color: var(--ink);
+  border-bottom: 3px solid var(--accent);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.topbar-fecha {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8f8577;
+}
+
+/* Logo */
+.topbar-titulo {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.topbar-titulo span {
+  color: var(--accent-lt);
+}
+
+.clima-temp {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.clima-ciudad {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8f8577;
+}
+
+.clima-cond {
+  font-size: 0.8rem;
+  color: #b9afa0;
+}
+
+/* ─── BARRA VOLVER ─── */
+.volver-bar {
+  background-color: var(--cream);
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.volver-bar a:hover {
+  color: var(--accent-lt);
+}
+
+.volver-bar a::before {
+  content: '← ';
+}
+
+/* ─── CONTENEDOR DEL ARTÍCULO ─── */
+.articulo {
+  max-width: 780px;
+}
+
+.articulo-categoria {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-lt);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.articulo-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 576px) {
+  .articulo-titulo {
+    font-size: 1.7rem;
+  }
+}
+
+.articulo-meta {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8f8577;
+  padding-bottom: 1.2rem;
+  border-bottom: 2px solid var(--rule);
+  margin-bottom: 1.8rem;
+}
+
+/* Imagen */
+.articulo-img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  margin-bottom: 2rem;
+}
+
+/* ─── CUERPO ─── */
+.articulo-cuerpo {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #e7e0d6;
+}
+
+.articulo-cuerpo p {
+  margin-bottom: 1.5rem;
+}
+
+/* Letra capital */
+.articulo-cuerpo p:first-child::first-letter {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.8rem;
+  font-weight: 900;
+  float: left;
+  line-height: 0.8;
+  margin: 0.1rem 0.15rem 0 0;
+  color: var(--accent-lt);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background-color: #0b0b0b;
+  color: #8f8577;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: 'Source Serif 4', serif;
+  border-top: 1px solid var(--rule);
+}
+
+footer strong {
+  color: var(--ink);
+  font-family: 'Playfair Display', serif;
+}
+
+footer a {
+  color: #a79d8f;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: var(--ink);
+}
+
+/* ─── FORMULARIO ─── */
+.contacto-label {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contacto-input {
+  background-color: #1b1b1b;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  color: var(--ink);
+  font-family: 'Source Serif 4', serif;
+}
+
+.contacto-input:focus {
+  background-color: #222;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.2);
+  color: var(--ink);
+}
+
+.contacto-input::placeholder {
+  color: #8d8478;
+}
+
+/* Botón */
+.contacto-btn {
+  background-color: var(--ink);
+  color: #111;
+  border: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.contacto-btn:hover {
+  background-color: var(--accent);
+  color: white;
+}
+
+.contacto-hr {
+  border-color: var(--rule);
+  opacity: 1;
+}
+/* ─── BOTÓN CAMBIO DE TEMA ─── */
+
+.btn-theme-toggle {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--rule);
+  background-color: transparent;
+  color: var(--ink);
+  border-radius: 50%;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    transform 0.15s;
+}
+
+.btn-theme-toggle:hover {
+  background-color: rgba(255,255,255,0.08);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+.btn-theme-toggle i {
+  font-size: 1rem;
+}

@@ -14,7 +14,7 @@
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
-const MAX_DIGITS = 20;
+const MAX_DIGITS = 15;
 
 // ─── Estado ──────────────────────────────────────────────────────────────────
 
@@ -159,7 +159,7 @@ function updateUI() {
     progressBar.setAttribute('aria-valuenow', count);
 
     const atMax = count >= 20;
-    input.disabled = atMax;
+    input.disabled = atMax;p
     addBtn.disabled = atMax;
     if (atMax) {
         clearError();

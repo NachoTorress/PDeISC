@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Anahí Cáceres — El Pliegue</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap"
+        rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Tema dinámico -->
+    <link id="article-theme" rel="stylesheet" href="../css/articulo.css" />
+
+    <!-- Icono -->
+    <link rel="icon" href="https://i.ibb.co/BHjZZwv4/EP.png" type="image/png">
+</head>
+
+<body>
+
+    <!-- ══════════ TOPBAR ══════════ -->
+    <header class="topbar d-flex justify-content-between align-items-center px-3 px-md-5 py-2">
+
+        <!-- Fecha -->
+        <div class="topbar-fecha d-none d-md-block">
+            Jueves, 19 de marzo de 2026
+        </div>
+
+        <!-- Logo -->
+        <a class="topbar-titulo" href="../paginas/index.html">
+            El <span>Pliegue</span>
+        </a>
+
+        <!-- Clima + Tema -->
+        <div class="d-flex align-items-center gap-3">
+
+            <!-- Clima -->
+            <div class="topbar-clima d-flex align-items-center gap-2">
+
+                <div class="clima-info text-end">
+                    <span class="clima-ciudad d-block">Mar del Plata</span>
+                    <span class="clima-cond">☀️ Soleado</span>
+                </div>
+
+                <div class="clima-temp">20°C</div>
+
+            </div>
+
+            <!-- Botón tema -->
+            <button id="btn-theme-articulo"
+                class="btn-theme-toggle d-flex align-items-center justify-content-center"
+                aria-label="Cambiar tema">
+
+                <i class="bi bi-moon-fill theme-icon-dark"></i>
+                <i class="bi bi-sun-fill theme-icon-light d-none"></i>
+
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- ══════════ VOLVER ══════════ -->
+    <div class="volver-bar py-2 px-3 px-md-5">
+        <a href="../paginas/index.html">Volver al inicio</a>
+    </div>
+
+    <!-- ══════════ ARTÍCULO ══════════ -->
+    <main class="container py-4 py-md-5">
+
+        <article class="articulo mx-auto">
+
+            <span class="articulo-categoria">
+                Artes Visuales
+            </span>
+
+            <h1 class="articulo-titulo">
+                Anahí Cáceres inaugura muestra sobre migraciones y cruces culturales con videoarte y nuevas tecnologías
+            </h1>
+
+            <div class="articulo-meta">
+                2 de marzo · Cultura
+            </div>
+
+            <img class="articulo-img img-fluid w-100"
+                src="https://www.cultura.gob.ar/media/uploads/mnao_retrato-anahi-caceres_por_silvina_frydlewsky_04-03-2026.jpg"
+                alt="Anahí Cáceres">
+
+            <div class="articulo-cuerpo">
+
+                <p>
+                    La artista multidisciplinaria Anahí Cáceres, referente del videoarte argentino y pionera en la
+                    incorporación de tecnologías digitales al campo de las artes visuales, inauguró a comienzos de marzo
+                    su nueva muestra en el Museo Nacional de Arte Oriental, en el marco de la programación cultural del
+                    mes que impulsa la Secretaría de Cultura de la Nación. La exhibición propone un recorrido por los
+                    fenómenos migratorios contemporáneos a través de instalaciones de video, sonido espacializado y
+                    realidad aumentada.
+                </p>
+
+                <p>
+                    La propuesta artística de Cáceres parte de testimonios reales de migrantes de distintas latitudes
+                    que llegaron a la Argentina en las últimas décadas, y los transforma en piezas audiovisuales que
+                    dialogan con la tradición del arte oriental y con los lenguajes estéticos de la tecnología
+                    contemporánea. La muestra busca generar una experiencia inmersiva que invite al espectador a
+                    cuestionar sus propias nociones de identidad, pertenencia y cultura.
+                </p>
+
+                <p>
+                    La artista destacó en la inauguración que la obra nació durante un período de investigación que la
+                    llevó a recorrer comunidades de inmigrantes en Buenos Aires, Rosario y Mendoza, y a registrar sus
+                    historias de vida en formato audiovisual. "El arte tiene la capacidad de hacer visible lo que la
+                    política muchas veces invisibiliza", afirmó Cáceres ante el público presente. La muestra permanecerá
+                    abierta hasta el 30 de abril con entrada libre y gratuita.
+                </p>
+
+            </div>
+
+        </article>
+
+    </main>
+
+    <!-- ══════════ FOOTER ══════════ -->
+    <footer class="text-center py-4">
+
+        <strong>El Pliegue</strong>
+        &nbsp;·&nbsp;
+        Todos los derechos reservados
+        &nbsp;·&nbsp;
+        Mar del Plata, Buenos Aires
+        &nbsp;·&nbsp;
+        2026
+
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script -->
+    <script src="../scripts/articulo.js"></script>
+
+</body>
+
+</html>

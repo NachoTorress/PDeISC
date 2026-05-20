@@ -1,434 +1,644 @@
 /**
- * scripts/main.js
- * Lógica del cliente para el Filtro de Números.
+ * main.js
+ * Módulo principal del Generador de Secuencias.
  *
- * Módulos:
- *  - theme   : manejo de tema claro / oscuro con localStorage
- *  - upload  : validación y envío del formulario
- *  - render  : renderizado de resultados
- *  - scroll  : botón de volver arriba
+ * Reglas de negocio:
+ *  - Mínimo 10, máximo 20 números para habilitar la exportación.
+ *  - Solo números enteros (sin decimales).
+ *  - Negativos permitidos (son valores numéricos válidos en una secuencia).
+ *  - Cada número puede tener hasta 20 dígitos.
+ *  - Cada registro guarda su fecha de carga real (DD/MM/AA).
+ *  - Validación en tiempo real (on input).
+ *  - La eliminación y el limpiado requieren confirmación inline.
  */
 
-document.addEventListener("DOMContentLoaded", () => {
+// ─── Constantes ───────────────────────────────────────────────────────────────
 
-    // ── Referencias del DOM ──────────────────────────────────────────────────
-    const els = {
-        themeToggle:    document.getElementById("themeToggle"),
-        themeStylesheet: document.getElementById("theme-stylesheet"),
+const MAX_DIGITS = 20;
 
-        uploadForm:     document.getElementById("uploadForm"),
-        fileInput:      document.getElementById("fileInput"),
-        fileError:      document.getElementById("fileError"),
-        submitBtn:      document.getElementById("submitBtn"),
-        submitSpinner:  document.getElementById("submitSpinner"),
-        submitLabel:    document.getElementById("submitLabel"),
+// ─── Estado ──────────────────────────────────────────────────────────────────
 
-        uploadCard:     document.getElementById("uploadCard"),
-        resultsCard:    document.getElementById("resultsCard"),
-        successToast:   document.getElementById("successToast"),
+/**
+ * @typedef {{ value: number, date: string }} NumberEntry
+ */
 
-        totalCount:     document.getElementById("totalCount"),
-        usefulCount:    document.getElementById("usefulCount"),
-        nonUsefulCount: document.getElementById("nonUsefulCount"),
-        percentage:     document.getElementById("percentage"),
+/** @type {NumberEntry[]} */
+let numbers = [];
 
-        numberList:     document.getElementById("numberList"),
-        factorialList:  document.getElementById("factorialList"),
+// ─── Referencias DOM ─────────────────────────────────────────────────────────
 
-        downloadBtn:    document.getElementById("downloadBtn"),
-        newUploadBtn:   document.getElementById("newUploadBtn"),
-        backToTop:      document.getElementById("backToTop"),
-    };
+const input         = document.getElementById('num-input');
+const addBtn        = document.getElementById('add-btn');
+const listContainer = document.getElementById('number-list');
+const badge         = document.getElementById('counter-badge');
+const progressBar   = document.getElementById('progress-bar');
+const exportBtn     = document.getElementById('export-btn');
+const clearBtn      = document.getElementById('clear-btn');
+const errorMsg      = document.getElementById('error-feedback');
+const emptyHint     = document.getElementById('empty-hint');
+const scrollBtn     = document.getElementById('scroll-top');
+const toggleTheme   = document.getElementById('toggle-theme');
+const themeLink     = document.getElementById('theme-link');
+const themeIcon     = document.getElementById('theme-icon');
 
-    // ── Módulo: Tema ─────────────────────────────────────────────────────────
+// ─── Utilidades ──────────────────────────────────────────────────────────────
 
-    const STORAGE_KEY = "numfilter_theme";
-    const DARK  = "dark";
-    const LIGHT = "light";
+/**
+ * Genera la fecha actual formateada como DD/MM/AA.
+ * @returns {string}
+ */
+function getTodayStr() {
+    const now = new Date();
+    const dd  = String(now.getDate()).padStart(2, '0');
+    const mm  = String(now.getMonth() + 1).padStart(2, '0');
+    const yy  = String(now.getFullYear()).slice(-2);
+    return `${dd}/${mm}/${yy}`;
+}
 
-    /**
-     * Aplica un tema y lo persiste en localStorage.
-     * @param {"light"|"dark"} theme
-     */
-    function setTheme(theme) {
-        els.themeStylesheet.href = theme === DARK
-            ? "/styles/dark.css"
-            : "/styles/light.css";
+/**
+ * Extrae solo los dígitos de un string (ignora signo negativo para el conteo).
+ * @param {string} raw
+ * @returns {string}
+ */
+function extractDigits(raw) {
+    return raw.replace(/[^0-9]/g, '');
+}
 
-        els.themeToggle.checked = theme === DARK;
-        document.documentElement.setAttribute("data-theme", theme);
-        localStorage.setItem(STORAGE_KEY, theme);
+/**
+ * Valida el valor del input y retorna un mensaje de error o cadena vacía.
+ * @param {string} raw
+ * @returns {string}
+ */
+function getValidationError(raw) {
+    if (raw === '' || raw === null)              return 'Ingresá un número entero.';
+    if (raw.includes('.') || raw.includes(',')) return 'Solo se permiten números enteros (sin decimales).';
+    const digits = extractDigits(raw);
+    if (digits.length > MAX_DIGITS)             return `El número no puede tener más de ${MAX_DIGITS} dígitos.`;
+    const parsed = Number(raw);
+    if (isNaN(parsed))                          return 'El valor ingresado no es un número válido.';
+    if (!Number.isInteger(parsed))              return 'Solo se permiten números enteros.';
+    if (numbers.length >= 20)                   return 'Límite de 20 números alcanzado.';
+    return '';
+}
+
+// ─── Feedback de Validación ───────────────────────────────────────────────────
+
+/** @param {string} txt */
+function showError(txt) {
+    input.classList.add('is-invalid');
+    input.classList.remove('is-valid');
+    errorMsg.textContent = txt;
+}
+
+function clearError() {
+    input.classList.remove('is-invalid', 'is-valid');
+    errorMsg.textContent = '';
+}
+
+function markValid() {
+    input.classList.remove('is-invalid');
+    input.classList.add('is-valid');
+    errorMsg.textContent = '';
+}
+
+// ─── Eventos de Input ─────────────────────────────────────────────────────────
+
+input.addEventListener('input', () => {
+    const raw    = input.value;
+    const digits = extractDigits(raw);
+
+    // Truncar si supera el límite por paste o autocompletado
+    if (digits.length > MAX_DIGITS) {
+        const isNeg = raw.startsWith('-');
+        input.value = isNeg ? `-${digits.slice(0, MAX_DIGITS)}` : digits.slice(0, MAX_DIGITS);
     }
 
-    // Inicializar tema
-    const savedTheme = localStorage.getItem(STORAGE_KEY);
-    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setTheme(savedTheme ?? (systemDark ? DARK : LIGHT));
+    if (input.value === '') { clearError(); return; }
 
-    els.themeToggle.addEventListener("change", () => {
-        setTheme(els.themeToggle.checked ? DARK : LIGHT);
-    });
+    const err = getValidationError(input.value);
+    err ? showError(err) : markValid();
+});
 
-    // ── Módulo: Validación de archivo ────────────────────────────────────────
-
-    const MAX_SIZE_MB = 5;
-    const MAX_SIZE_B  = MAX_SIZE_MB * 1024 * 1024;
-
-    /**
-     * Valida el archivo seleccionado.
-     * @param {File|undefined} file
-     * @returns {string|null} Mensaje de error o null si es válido.
-     */
-    function validateFile(file) {
-        if (!file) return "Debés seleccionar un archivo.";
-
-        if (!file.name.toLowerCase().endsWith(".txt")) {
-            return "El archivo debe tener extensión .txt.";
-        }
-
-        if (file.size > MAX_SIZE_B) {
-            return `El archivo supera el límite de ${MAX_SIZE_MB} MB.`;
-        }
-
-        if (file.size === 0) {
-            return "El archivo está vacío.";
-        }
-
-        return null;
+input.addEventListener('keydown', (e) => {
+    const controlKeys = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Enter','-'];
+    if (controlKeys.includes(e.key)) {
+        if (e.key === 'Enter') addNumber();
+        return;
     }
-
-    /**
-     * Muestra u oculta el mensaje de error del input de archivo.
-     * @param {string|null} message - null para limpiar el error.
-     */
-    function setFileError(message) {
-        if (message) {
-            els.fileInput.classList.add("is-invalid");
-            els.fileError.textContent = message;
-            els.fileError.classList.remove("d-none");
-        } else {
-            els.fileInput.classList.remove("is-invalid");
-            els.fileError.textContent = "";
-            els.fileError.classList.add("d-none");
-        }
-    }
-
-    // Validación en tiempo real al cambiar el archivo
-    els.fileInput.addEventListener("change", () => {
-        const error = validateFile(els.fileInput.files[0]);
-        setFileError(error);
-    });
-
-    // ── Módulo: Upload / Submit ───────────────────────────────────────────────
-
-    /**
-     * Bloquea el botón de envío y muestra el spinner.
-     * @param {boolean} loading
-     */
-    function setSubmitting(loading) {
-        els.submitBtn.disabled = loading;
-
-        if (loading) {
-            els.submitSpinner.classList.remove("d-none");
-            els.submitLabel.textContent = "Procesando…";
-        } else {
-            els.submitSpinner.classList.add("d-none");
-            els.submitLabel.textContent = "Procesar archivo";
-        }
-    }
-
-    els.uploadForm.addEventListener("submit", async (e) => {
+    const digits = extractDigits(input.value);
+    if (/^\d$/.test(e.key) && digits.length >= MAX_DIGITS) {
         e.preventDefault();
+        showError(`Máximo ${MAX_DIGITS} dígitos permitidos.`);
+    }
+});
 
-        const file  = els.fileInput.files[0];
-        const error = validateFile(file);
+input.addEventListener('blur', () => {
+    if (input.value === '') clearError();
+});
 
-        if (error) {
-            setFileError(error);
-            return;
-        }
+// ─── Renderizado de Lista ─────────────────────────────────────────────────────
 
-        setFileError(null);
-        setSubmitting(true);
+/**
+ * Re-renderiza la grilla completa y sincroniza todos los controles de UI.
+ */
+function updateUI() {
+    listContainer.innerHTML = '';
 
-        const formData = new FormData();
-        formData.append("file", file);
+    emptyHint.textContent = numbers.length === 0 ? 'Aún no hay números cargados' : '';
 
-        try {
-            const response = await fetch("/upload", {
-                method: "POST",
-                body:   formData
-            });
-
-            const data = await response.json();
-
-            if (!data.success) {
-                setFileError(data.error ?? "Error desconocido al procesar el archivo.");
-                return;
-            }
-
-            showResults(data);
-
-        } catch {
-            setFileError("Error de conexión con el servidor. Revisá tu red e intentá de nuevo.");
-        } finally {
-            setSubmitting(false);
-        }
+    numbers.forEach((entry, i) => {
+        const col = document.createElement('div');
+        col.className = 'col-12 col-sm-6 col-xl-4';
+        col.innerHTML = buildItemHTML(entry, i);
+        listContainer.appendChild(col);
     });
 
-    // ── Módulo: Renderizado de resultados ────────────────────────────────────
+    const count = numbers.length;
+    badge.textContent = `${count} / 20`;
+    progressBar.style.width = `${(count / 20) * 100}%`;
+    progressBar.setAttribute('aria-valuenow', count);
 
-    /**
-     * Muestra la tarjeta de resultados con los datos recibidos del servidor.
-     * @param {object} data - Respuesta del servidor
-     */
-    function showResults(data) {
-        els.uploadCard.classList.add("d-none");
-        els.resultsCard.classList.remove("d-none");
-
-        els.totalCount.textContent     = data.total;
-        els.usefulCount.textContent    = data.useful;
-        els.nonUsefulCount.textContent = data.nonUseful;
-        els.percentage.textContent     = `${data.percentage}%`;
-
-        renderBadges(els.numberList,    data.usefulNumbers,    "badge-number",   "No se encontraron números útiles.");
-        renderBadges(els.factorialList, data.factorialNumbers, "badge-factorial","No se encontraron factoriales.");
-
-        els.downloadBtn.href = data.downloadUrl;
-
-        showSuccessToast();
-
-        setTimeout(() => {
-            els.resultsCard.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 100);
+    const atMax = count >= 20;
+    input.disabled = atMax;
+    addBtn.disabled = atMax;
+    if (atMax) {
+        clearError();
+        input.classList.remove('is-valid');
     }
 
-    /**
-     * Renderiza una lista de números como badges dentro de un contenedor.
-     * @param {HTMLElement} container
-     * @param {number[]}    numbers
-     * @param {string}      badgeClass
-     * @param {string}      emptyMsg
-     */
-    function renderBadges(container, numbers, badgeClass, emptyMsg) {
-        if (!numbers || numbers.length === 0) {
-            container.innerHTML = `<span class="empty-msg">${emptyMsg}</span>`;
-            return;
-        }
-
-        container.innerHTML = numbers
-            .map(num => `<span class="num-badge ${badgeClass}">${num}</span>`)
-            .join("");
+    // Exportar: visible desde 10 números y si no fue usado
+    if (count >= 10 && !exportBtn.dataset.used) {
+        exportBtn.classList.remove('d-none');
     }
 
-    /**
-     * Muestra el toast de éxito con animación de entrada y salida.
-     */
-    function showSuccessToast() {
-        const toast = els.successToast;
-        toast.classList.add("toast-visible");
+    // Limpiar: visible si hay al menos 1 número
+    clearBtn.classList.toggle('d-none', count === 0);
+}
 
-        setTimeout(() => {
-            toast.classList.remove("toast-visible");
-        }, 3000);
-    }
+/**
+ * Genera el HTML de una tarjeta de número.
+ * Incluye tres vistas: lectura, edición y confirmación de borrado individual.
+ * @param {NumberEntry} entry
+ * @param {number} i
+ * @returns {string}
+ */
+function buildItemHTML(entry, i) {
+    return `
+        <div class="number-card h-100 p-3">
 
-    // ── Módulo: Nuevo archivo ────────────────────────────────────────────────
-
-    els.newUploadBtn.addEventListener("click", () => {
-        els.uploadForm.reset();
-        setFileError(null);
-
-        els.numberList.innerHTML    = `<span class="empty-msg">No hay números</span>`;
-        els.factorialList.innerHTML = `<span class="empty-msg">No hay factoriales</span>`;
-        els.downloadBtn.href        = "#";
-
-        els.resultsCard.classList.add("d-none");
-        els.uploadCard.classList.remove("d-none");
-
-        // Esperar a que el DOM actualice antes de hacer scroll
-        setTimeout(() => {
-            els.uploadCard.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 50);
-
-        els.backToTop.classList.add("d-none");
-    });
-
-    // ── Módulo: Scroll / Volver arriba ───────────────────────────────────────
-
-    window.addEventListener("scroll", () => {
-        if (window.scrollY > 400) {
-            els.backToTop.classList.remove("d-none");
-        } else {
-            els.backToTop.classList.add("d-none");
-        }
-    }, { passive: true });
-
-    els.backToTop.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-    // ─────────────────────────────────────────────────────────────────────────────
-// BLOQUE: Historial de Resultados
-// Pegá esto al FINAL del DOMContentLoaded de main.js, antes del último });
-// ─────────────────────────────────────────────────────────────────────────────
-
-    // ── Módulo: Historial ────────────────────────────────────────────────────
-
-    const histEls = {
-        loading:    document.getElementById('historyLoading'),
-        empty:      document.getElementById('historyEmpty'),
-        error:      document.getElementById('historyError'),
-        list:       document.getElementById('historyList'),
-        items:      document.getElementById('historyItems'),
-        badge:      document.getElementById('historyBadge'),
-        refreshBtn: document.getElementById('refreshHistoryBtn'),
-    };
-
-    /**
-     * Formatea bytes a cadena legible.
-     * @param {number} bytes
-     * @returns {string}
-     */
-    function formatSize(bytes) {
-        if (bytes < 1024) return `${bytes} B`;
-        return `${(bytes / 1024).toFixed(1)} KB`;
-    }
-
-    /**
-     * Formatea fecha ISO a "DD/MM/AAAA HH:MM".
-     * @param {string} iso
-     * @returns {string}
-     */
-    function formatHistoryDate(iso) {
-        const d    = new Date(iso);
-        const dd   = String(d.getDate()).padStart(2, '0');
-        const mm   = String(d.getMonth() + 1).padStart(2, '0');
-        const aaaa = d.getFullYear();
-        const hh   = String(d.getHours()).padStart(2, '0');
-        const min  = String(d.getMinutes()).padStart(2, '0');
-        return `${dd}/${mm}/${aaaa} ${hh}:${min}`;
-    }
-
-    /**
-     * Calcula el tiempo restante antes de que el archivo expire.
-     * @param {string} iso - Fecha de modificación del archivo
-     * @returns {string}
-     */
-    function timeUntilExpiry(iso) {
-        const age     = Date.now() - new Date(iso).getTime();
-        const remaining = 10 * 60 * 1000 - age; // 10 min en ms
-        if (remaining <= 0) return 'expirado';
-        const mins = Math.ceil(remaining / 60000);
-        return `expira en ${mins} min`;
-    }
-
-    /**
-     * Genera el HTML de una fila del historial.
-     * @param {{ nombre: string, fecha: string, tamaño: number, expirado: boolean }} archivo
-     * @returns {string}
-     */
-    function buildHistoryItemHTML(archivo) {
-        const expiry = timeUntilExpiry(archivo.fecha);
-        const isExpired = expiry === 'expirado';
-
-        return `
-            <div class="col-12 col-md-6">
-                <div class="history-item ${isExpired ? 'history-item-expired' : ''}">
-                    <div class="history-item-info">
-                        <span class="history-item-icon">📄</span>
-                        <div>
-                            <p class="history-item-name">${archivo.nombre}</p>
-                            <span class="history-item-meta">
-                                ${formatHistoryDate(archivo.fecha)}
-                                · ${formatSize(archivo.tamaño)}
-                                · <span class="history-expiry ${isExpired ? 'expired' : ''}">${expiry}</span>
-                            </span>
-                        </div>
+            <!-- ── Vista de Lectura ── -->
+            <div class="d-flex justify-content-between align-items-center" id="view-${i}">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="item-index">#${i + 1}</span>
+                    <span class="item-value font-mono">${entry.value}</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="item-date">${entry.date}</span>
+                    <div class="btn-group btn-group-sm">
+                        <button
+                            class="btn btn-outline-warning btn-item"
+                            onclick="showEdit(${i})"
+                            aria-label="Modificar número ${i + 1}"
+                        >✏</button>
+                        <button
+                            class="btn btn-outline-danger btn-item"
+                            onclick="showDeleteConfirm(${i})"
+                            aria-label="Eliminar número ${i + 1}"
+                        >✕</button>
                     </div>
-                    ${isExpired
-                        ? `<span class="btn-history-dl disabled" aria-disabled="true" title="Archivo expirado">✕</span>`
-                        : `<a
-                                href="/redescargar/${encodeURIComponent(archivo.nombre)}"
-                                download="${archivo.nombre}"
-                                class="btn-history-dl"
-                                aria-label="Volver a descargar ${archivo.nombre}"
-                                title="Volver a descargar"
-                            >⬇</a>`
-                    }
                 </div>
             </div>
-        `;
-    }
 
-    /**
-     * Controla qué estado del panel se muestra.
-     * @param {'loading'|'empty'|'error'|'list'} state
-     * @param {Array} [items]
-     */
-    function renderHistoryState(state, items = []) {
-        histEls.loading.classList.add('d-none');
-        histEls.empty.classList.add('d-none');
-        histEls.error.classList.add('d-none');
-        histEls.list.classList.add('d-none');
+            <!-- ── Vista de Edición ── -->
+            <div class="d-none w-100" id="edit-container-${i}">
+                <label class="form-label small fw-semibold mb-1">Editar #${i + 1}</label>
+                <div class="input-group input-group-sm">
+                    <input
+                        type="number"
+                        class="form-control font-mono edit-input"
+                        id="edit-input-${i}"
+                        value="${entry.value}"
+                        step="1"
+                        aria-label="Nuevo valor para el número ${i + 1}"
+                    >
+                    <button class="btn btn-success" onclick="saveEdit(${i})" aria-label="Guardar">✓</button>
+                    <button class="btn btn-secondary" onclick="cancelEdit()" aria-label="Cancelar">✕</button>
+                </div>
+                <div class="edit-error-msg mt-1" id="edit-error-${i}"></div>
+            </div>
 
-        if (state === 'loading') {
-            histEls.loading.classList.remove('d-none');
+            <!-- ── Vista de Confirmación de Borrado Individual ── -->
+            <div class="d-none w-100" id="delete-confirm-${i}">
+                <div class="delete-confirm-box">
+                    <p class="delete-confirm-msg mb-2">
+                        ¿Borrar <span class="font-mono fw-bold">${entry.value}</span>?
+                    </p>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-danger btn-sm flex-grow-1 fw-bold" onclick="confirmDelete(${i})">Sí, borrar</button>
+                        <button class="btn btn-secondary btn-sm flex-grow-1" onclick="cancelDelete(${i})">Cancelar</button>
+                    </div>
+                </div>
+            </div>
 
-        } else if (state === 'empty') {
-            histEls.empty.classList.remove('d-none');
-            histEls.badge.classList.add('d-none');
+        </div>
+    `;
+}
 
-        } else if (state === 'error') {
-            histEls.error.classList.remove('d-none');
-            histEls.badge.classList.add('d-none');
+// ─── Acciones de Datos ────────────────────────────────────────────────────────
 
-        } else if (state === 'list') {
-            histEls.items.innerHTML = items.map(buildHistoryItemHTML).join('');
-            histEls.list.classList.remove('d-none');
-            histEls.badge.textContent = items.length;
-            histEls.badge.classList.remove('d-none');
+/** Agrega un nuevo número tras validación. */
+function addNumber() {
+    const raw = input.value;
+    const err = getValidationError(raw);
+    if (err) { showError(err); return; }
+
+    numbers.push({ value: parseInt(raw, 10), date: getTodayStr() });
+    input.value = '';
+    clearError();
+    input.classList.remove('is-valid');
+    updateUI();
+    input.focus();
+}
+
+addBtn.addEventListener('click', addNumber);
+
+/**
+ * Muestra el formulario de edición inline con validación en tiempo real.
+ * @param {number} i
+ */
+window.showEdit = (i) => {
+    document.getElementById(`view-${i}`).classList.add('d-none');
+    document.getElementById(`edit-container-${i}`).classList.remove('d-none');
+
+    const editInput = document.getElementById(`edit-input-${i}`);
+    editInput.focus();
+
+    editInput.addEventListener('input', () => {
+        const raw    = editInput.value;
+        const digits = extractDigits(raw);
+        const errEl  = document.getElementById(`edit-error-${i}`);
+
+        if (digits.length > MAX_DIGITS) {
+            const isNeg = raw.startsWith('-');
+            editInput.value = isNeg ? `-${digits.slice(0, MAX_DIGITS)}` : digits.slice(0, MAX_DIGITS);
         }
-    }
 
-    /**
-     * Obtiene la lista de resultados del servidor.
-     */
-    async function loadHistory() {
-        renderHistoryState('loading');
-        try {
-            const res  = await fetch('/listar-resultados');
-            const data = await res.json();
-
-            if (!res.ok) throw new Error(data.error || 'Error del servidor');
-
-            if (data.archivos.length === 0) {
-                renderHistoryState('empty');
-            } else {
-                renderHistoryState('list', data.archivos);
-            }
-        } catch (err) {
-            console.error('[historial] Error:', err);
-            renderHistoryState('error');
-        }
-    }
-
-    // Refresca el historial automáticamente luego de cada procesamiento exitoso
-    // Extendemos showResults para que lo llame después de renderizar
-    const _originalShowResults = showResults;
-    // No podemos wrappear showResults fácilmente porque es declarada con function,
-    // así que usamos el botón de descarga como señal: cuando aparece el card de
-    // resultados (lo detectamos con MutationObserver sobre resultsCard).
-
-    const resultsObserver = new MutationObserver(() => {
-        if (!els.resultsCard.classList.contains('d-none')) {
-            setTimeout(loadHistory, 500);
+        if (editInput.value === '') {
+            errEl.textContent = 'El campo no puede estar vacío.';
+            editInput.classList.add('is-invalid');
+        } else if (raw.includes('.') || raw.includes(',')) {
+            errEl.textContent = 'Solo se permiten enteros.';
+            editInput.classList.add('is-invalid');
+        } else {
+            errEl.textContent = '';
+            editInput.classList.remove('is-invalid');
         }
     });
-    resultsObserver.observe(els.resultsCard, { attributes: true, attributeFilter: ['class'] });
+};
 
-    // Botón de actualizar manual
-    histEls.refreshBtn.addEventListener('click', loadHistory);
+/** Cancela la edición en curso. */
+window.cancelEdit = () => updateUI();
 
-    // Carga inicial
+/**
+ * Guarda el valor editado tras validación. Mantiene la fecha original.
+ * @param {number} i
+ */
+window.saveEdit = (i) => {
+    const editInput = document.getElementById(`edit-input-${i}`);
+    const errorEl   = document.getElementById(`edit-error-${i}`);
+    const raw = editInput.value;
+
+    if (raw === '') {
+        errorEl.textContent = 'El campo no puede estar vacío.';
+        editInput.classList.add('is-invalid');
+        return;
+    }
+    if (raw.includes('.') || raw.includes(',')) {
+        errorEl.textContent = 'Solo se permiten enteros.';
+        editInput.classList.add('is-invalid');
+        return;
+    }
+    if (extractDigits(raw).length > MAX_DIGITS) {
+        errorEl.textContent = `Máximo ${MAX_DIGITS} dígitos permitidos.`;
+        editInput.classList.add('is-invalid');
+        return;
+    }
+    if (!Number.isInteger(Number(raw))) {
+        errorEl.textContent = 'Valor no válido.';
+        editInput.classList.add('is-invalid');
+        return;
+    }
+
+    numbers[i].value = parseInt(raw, 10);
+    updateUI();
+};
+
+/**
+ * Muestra la confirmación de borrado inline en la tarjeta i.
+ * @param {number} i
+ */
+window.showDeleteConfirm = (i) => {
+    document.getElementById(`view-${i}`).classList.add('d-none');
+    document.getElementById(`delete-confirm-${i}`).classList.remove('d-none');
+};
+
+/**
+ * Cancela el borrado individual y restaura la vista de lectura.
+ * @param {number} i
+ */
+window.cancelDelete = (i) => {
+    document.getElementById(`delete-confirm-${i}`).classList.add('d-none');
+    document.getElementById(`view-${i}`).classList.remove('d-none');
+};
+
+/**
+ * Confirma y ejecuta el borrado del ítem i.
+ * @param {number} i
+ */
+window.confirmDelete = (i) => {
+    numbers.splice(i, 1);
+    if (numbers.length < 10 && !exportBtn.dataset.used) {
+        exportBtn.classList.add('d-none');
+    }
+    updateUI();
+};
+
+// ─── Limpiar Todos ────────────────────────────────────────────────────────────
+
+/**
+ * Muestra una confirmación inline debajo del botón antes de limpiar.
+ * Una vez confirmado, vacía el arreglo y resetea toda la UI.
+ */
+clearBtn.addEventListener('click', () => {
+    // Evitar duplicar la caja de confirmación
+    if (document.getElementById('clear-confirm')) return;
+
+    const confirmBox = document.createElement('div');
+    confirmBox.id        = 'clear-confirm';
+    confirmBox.className = 'clear-confirm-box mt-2';
+    confirmBox.innerHTML = `
+        <p class="clear-confirm-msg mb-2">
+            ¿Borrar los <strong>${numbers.length}</strong> número${numbers.length !== 1 ? 's' : ''}?
+        </p>
+        <div class="d-flex gap-2">
+            <button class="btn btn-danger btn-sm flex-grow-1 fw-bold" id="clear-yes">Sí, limpiar</button>
+            <button class="btn btn-secondary btn-sm flex-grow-1" id="clear-no">Cancelar</button>
+        </div>
+    `;
+
+    clearBtn.insertAdjacentElement('afterend', confirmBox);
+
+    document.getElementById('clear-yes').addEventListener('click', () => {
+        numbers = [];
+        exportBtn.dataset.used = '';
+        exportBtn.classList.add('d-none');
+        confirmBox.remove();
+        updateUI();
+        input.focus();
+    });
+
+    document.getElementById('clear-no').addEventListener('click', () => {
+        confirmBox.remove();
+    });
+});
+
+// ─── Exportación .TXT ─────────────────────────────────────────────────────────
+
+/**
+ * Genera y descarga el archivo .txt con nombre numeros_DD-MM-AAAA.txt.
+ * Se oculta permanentemente tras el primer uso.
+ */
+/**
+ * Reemplazá SOLO el bloque de exportación actual por este.
+ * Hace ambas cosas:
+ * 1. Guarda en /descargados del servidor
+ * 2. Descarga el archivo al usuario
+ */
+
+exportBtn.addEventListener('click', async () => {
+    const content = numbers.map(e => e.value).join(',');
+
+    // Nombre del archivo con fecha actual
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const aaaa = now.getFullYear();
+
+    const fileName = `numeros_${dd}-${mm}-${aaaa}.txt`;
+
+    // ─── Guardar en servidor ─────────────────────────────
+
+    try {
+        const response = await fetch('/guardar-archivo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nombre: fileName,
+                contenido: content
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Error al guardar archivo');
+        }
+
+        console.log(data.mensaje);
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('No se pudo guardar el archivo en el servidor.');
+        return;
+    }
+
+    // ─── Descargar al usuario ────────────────────────────
+
+    const blob = new Blob([content], {
+        type: 'text/plain'
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+   // URL.revokeObjectURL(url);
+
+    // ─── Ocultar botón luego de exportar ─────────────────
+
+    //exportBtn.dataset.used = 'true';
+   // exportBtn.classList.add('d-none');
+});
+
+// ─── Tema Oscuro / Claro ──────────────────────────────────────────────────────
+
+toggleTheme.addEventListener('click', () => {
+    const isDark = themeLink.href.includes('dark');
+    themeLink.href = isDark ? '../styles/light.css' : '../styles/dark.css';
+    themeIcon.textContent = isDark ? '☀️' : '🌙';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+});
+
+// ─── Botón Scroll al Tope ─────────────────────────────────────────────────────
+
+window.addEventListener('scroll', () => {
+    scrollBtn.classList.toggle('d-none', window.scrollY < 300);
+});
+
+scrollBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ─── Inicialización ───────────────────────────────────────────────────────────
+
+updateUI();
+// ─────────────────────────────────────────────────────────────────────────────
+// BLOQUE: Historial de Exportaciones
+// Pegá esto al FINAL de main.js, después de updateUI()
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ─── Referencias DOM (historial) ─────────────────────────────────────────────
+
+const historyLoading    = document.getElementById('history-loading');
+const historyEmpty      = document.getElementById('history-empty');
+const historyError      = document.getElementById('history-error');
+const historyList       = document.getElementById('history-list');
+const historyItems      = document.getElementById('history-items');
+const historyBadge      = document.getElementById('history-badge');
+const refreshHistoryBtn = document.getElementById('refresh-history-btn');
+
+// ─── Cargar historial desde servidor ─────────────────────────────────────────
+
+/**
+ * Formatea bytes a una cadena legible (ej. "1.2 KB").
+ * @param {number} bytes
+ * @returns {string}
+ */
+function formatSize(bytes) {
+    if (bytes < 1024) return `${bytes} B`;
+    return `${(bytes / 1024).toFixed(1)} KB`;
+}
+
+/**
+ * Formatea una fecha ISO a "DD/MM/AAAA HH:MM".
+ * @param {string} iso
+ * @returns {string}
+ */
+function formatDate(iso) {
+    const d = new Date(iso);
+    const dd   = String(d.getDate()).padStart(2, '0');
+    const mm   = String(d.getMonth() + 1).padStart(2, '0');
+    const aaaa = d.getFullYear();
+    const hh   = String(d.getHours()).padStart(2, '0');
+    const min  = String(d.getMinutes()).padStart(2, '0');
+    return `${dd}/${mm}/${aaaa} ${hh}:${min}`;
+}
+
+/**
+ * Genera el HTML de una tarjeta de archivo guardado.
+ * @param {{ nombre: string, fecha: string, tamaño: number }} archivo
+ * @returns {string}
+ */
+function buildHistoryItemHTML(archivo) {
+    return `
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="history-card d-flex justify-content-between align-items-center p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="history-file-icon">📄</span>
+                    <div>
+                        <p class="history-file-name mb-0 font-mono">${archivo.nombre}</p>
+                        <span class="history-file-meta">${formatDate(archivo.fecha)} · ${formatSize(archivo.tamaño)}</span>
+                    </div>
+                </div>
+                <a
+                    href="/descargar-archivo/${encodeURIComponent(archivo.nombre)}"
+                    download="${archivo.nombre}"
+                    class="btn btn-history-download btn-sm"
+                    aria-label="Descargar ${archivo.nombre}"
+                    title="Volver a descargar"
+                >⬇</a>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Muestra el estado correcto del panel de historial y actualiza el badge.
+ * @param {'loading'|'empty'|'error'|'list'} state
+ * @param {Array} [items]
+ */
+function renderHistory(state, items = []) {
+    historyLoading.classList.add('d-none');
+    historyEmpty.classList.add('d-none');
+    historyError.classList.add('d-none');
+    historyList.classList.add('d-none');
+
+    if (state === 'loading') {
+        historyLoading.classList.remove('d-none');
+
+    } else if (state === 'empty') {
+        historyEmpty.classList.remove('d-none');
+        historyBadge.classList.add('d-none');
+
+    } else if (state === 'error') {
+        historyError.classList.remove('d-none');
+        historyBadge.classList.add('d-none');
+
+    } else if (state === 'list') {
+        historyItems.innerHTML = items.map(buildHistoryItemHTML).join('');
+        historyList.classList.remove('d-none');
+        historyBadge.textContent = items.length;
+        historyBadge.classList.remove('d-none');
+    }
+}
+
+/**
+ * Llama al servidor para obtener la lista de archivos guardados.
+ */
+async function loadHistory() {
+    renderHistory('loading');
+    try {
+        const res  = await fetch('/listar-archivos');
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Error del servidor');
+
+        if (data.archivos.length === 0) {
+            renderHistory('empty');
+        } else {
+            renderHistory('list', data.archivos);
+        }
+    } catch (err) {
+        console.error('Error al cargar historial:', err);
+        renderHistory('error');
+    }
+}
+
+// ─── Refrescar historial al exportar ─────────────────────────────────────────
+
+// Extendemos el listener del botón de exportación para que recargue el
+// historial luego de cada exportación exitosa.
+// Como main.js usa addEventListener, agregamos otro listener que se ejecuta
+// DESPUÉS del listener original (burbuja de eventos, mismo elemento).
+exportBtn.addEventListener('click', () => {
+    // Esperamos un momento a que el servidor termine de escribir el archivo
+    setTimeout(loadHistory, 800);
+});
+
+// ─── Botón "Actualizar" ───────────────────────────────────────────────────────
+
+refreshHistoryBtn.addEventListener('click', () => {
     loadHistory();
 });
+
+// ─── Carga inicial del historial ──────────────────────────────────────────────
+
+loadHistory();
