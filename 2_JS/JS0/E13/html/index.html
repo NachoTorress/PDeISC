@@ -1,87 +1,173 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/styles/style.css">
-  <title>sort() con Autodestrucción</title>
-</head>
-<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 p-3">
 
-<div class="container" style="max-width: 900px;">
-  <div class="card shadow-lg border-0">
+  <title>sort() con modo oscuro</title>
+</head>
+
+<body>
+
+<div class="app-container">
+
+  <!-- BOTON TEMA -->
+  <div class="theme-toggle-container">
+    <button id="themeToggle" class="btn btn-dark">
+      🌙 Modo oscuro
+    </button>
+  </div>
+
+  <div class="card shadow-lg main-card">
+
     <div class="card-header bg-primary text-white text-center py-3">
-      <h1 class="h3 mb-0">Método sort() - Ejecución Única</h1>
-      <p class="small mb-0 mt-1 text-light-50">Al elegir una opción, el control se eliminará para fijar el resultado</p>
+      <h1 class="h3 mb-0">
+        Método sort() - Ejecución Única
+      </h1>
+
+      <p class="small mb-0 mt-1 text-light">
+        Al elegir una opción, el control se elimina
+      </p>
     </div>
 
     <div class="card-body p-4">
-      <div class="row g-4">
+
+      <!-- HORIZONTAL -->
+      <div class="activities-row">
 
         <!-- NUMEROS -->
-        <div class="col-12">
-          <div class="exercise-row" id="containerNum">
-            <label class="h5 fw-bold text-primary">Listado de Números</label>
-            <div id="numeros" class="array-text mb-3"></div>
-            
-            <div id="wrapperNum">
-              <label for="selNum" class="form-label small fw-bold text-secondary">CONFIGURACIÓN: Ordenar de menor a mayor</label>
-              <select id="selNum" class="form-select border-primary mb-2">
-                <option value="">Seleccione para aplicar orden...</option>
-                <option value="asc">Ejecutar: Menor a mayor</option>
-              </select>
-            </div>
-            
-            <div id="resNum" class="resultado-sort mt-2">Estado: Pendiente de ordenamiento</div>
+        <div class="exercise-col">
+
+          <label class="h5 fw-bold title-num">
+            Listado de Números
+          </label>
+
+          <div id="numeros" class="array-text mb-3"></div>
+
+          <div id="wrapperNum">
+
+            <label
+              for="selNum"
+              class="form-label small fw-bold config-label"
+            >
+              CONFIGURACIÓN: Ordenar de menor a mayor
+            </label>
+
+            <select
+              id="selNum"
+              class="form-select border-primary mb-2 custom-select"
+            >
+              <option value="">
+                Seleccione para aplicar orden...
+              </option>
+
+              <option value="asc">
+                Ejecutar: Menor a mayor
+              </option>
+
+            </select>
+
           </div>
-          <hr class="mt-4 opacity-10">
+
+          <div id="resNum" class="resultado-sort mt-2">
+            Estado: Pendiente de ordenamiento
+          </div>
+
         </div>
 
         <!-- PALABRAS -->
-        <div class="col-12">
-          <div class="exercise-row" id="containerPal">
-            <label class="h5 fw-bold text-success">Listado de Palabras</label>
-            <div id="palabras" class="array-text mb-3"></div>
-            
-            <div id="wrapperPal">
-              <label for="selPal" class="form-label small fw-bold text-secondary">CONFIGURACIÓN: Ordenar alfabéticamente (A-Z)</label>
-              <select id="selPal" class="form-select border-success mb-2">
-                <option value="">Seleccione para aplicar orden...</option>
-                <option value="az">Ejecutar: A a la Z</option>
-              </select>
-            </div>
+        <div class="exercise-col">
 
-            <div id="resPal" class="resultado-sort mt-2">Estado: Pendiente de ordenamiento</div>
+          <label class="h5 fw-bold title-pal">
+            Listado de Palabras
+          </label>
+
+          <div id="palabras" class="array-text mb-3"></div>
+
+          <div id="wrapperPal">
+
+            <label
+              for="selPal"
+              class="form-label small fw-bold config-label"
+            >
+              CONFIGURACIÓN: Ordenar alfabéticamente
+            </label>
+
+            <select
+              id="selPal"
+              class="form-select border-success mb-2 custom-select"
+            >
+              <option value="">
+                Seleccione para aplicar orden...
+              </option>
+
+              <option value="az">
+                Ejecutar: A a la Z
+              </option>
+
+            </select>
+
           </div>
-          <hr class="mt-4 opacity-10">
+
+          <div id="resPal" class="resultado-sort mt-2">
+            Estado: Pendiente de ordenamiento
+          </div>
+
         </div>
 
         <!-- PERSONAS -->
-        <div class="col-12">
-          <div class="exercise-row" id="containerPer">
-            <label class="h5 fw-bold text-warning">Listado de Personas</label>
-            <div id="personas" class="array-text mb-3"></div>
-            
-            <div id="wrapperPer">
-              <label for="selPer" class="form-label small fw-bold text-secondary">CONFIGURACIÓN: Ordenar por Edad (Ascendente)</label>
-              <select id="selPer" class="form-select border-warning mb-2">
-                <option value="">Seleccione para aplicar orden...</option>
-                <option value="edad">Ejecutar: Por Edad</option>
-              </select>
-            </div>
+        <div class="exercise-col">
 
-            <div id="resPer" class="resultado-sort mt-2">Estado: Pendiente de ordenamiento</div>
+          <label class="h5 fw-bold title-per">
+            Listado de Personas
+          </label>
+
+          <div id="personas" class="array-text mb-3"></div>
+
+          <div id="wrapperPer">
+
+            <label
+              for="selPer"
+              class="form-label small fw-bold config-label"
+            >
+              CONFIGURACIÓN: Ordenar por edad
+            </label>
+
+            <select
+              id="selPer"
+              class="form-select border-warning mb-2 custom-select"
+            >
+              <option value="">
+                Seleccione para aplicar orden...
+              </option>
+
+              <option value="edad">
+                Ejecutar: Por edad
+              </option>
+
+            </select>
+
           </div>
+
+          <div id="resPer" class="resultado-sort mt-2">
+            Estado: Pendiente de ordenamiento
+          </div>
+
         </div>
 
       </div>
+
     </div>
 
-    <div class="card-footer text-center text-muted small">
-      Los inputs se eliminan del DOM tras su uso mediante e.target.remove() o remove() del contenedor
+    <div class="card-footer text-center small">
+      Ordenamiento de Arrays con sort()
     </div>
+
   </div>
+
 </div>
 
 <script src="/scripts/script.js"></script>

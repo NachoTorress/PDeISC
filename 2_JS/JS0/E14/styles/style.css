@@ -1,24 +1,285 @@
-.array-text {
-  font-family: 'Consolas', 'Monaco', monospace;
-  background-color: #f8f9fa;
-  padding: 12px 15px;
-  border-radius: 8px;
-  border: 1px solid #dee2e6;
-  width: 100%;
-  color: #2c3e50;
-  display: block;
+/* =========================
+   VARIABLES
+========================= */
+
+:root {
+
+  --bg-gradient:
+    linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  --card-bg: #ffffff;
+
+  --text-color: #212529;
+
+  --muted: #6c757d;
+
+  --array-bg: #f8f9fa;
+
+  --array-border: #dee2e6;
+
+  --array-text: #2c3e50;
+
+  --result-bg: #eef2f7;
+
+  --footer-text: #6c757d;
+
+  --title-let: #0d6efd;
+
+  --title-num: #198754;
+
+  --title-txt: #ffc107;
+
 }
+
+[data-theme="dark"] {
+
+  --bg-gradient:
+    linear-gradient(135deg, #141e30 0%, #243b55 100%);
+
+  --card-bg: #1f2937;
+
+  --text-color: #f1f5f9;
+
+  --muted: #cbd5e1;
+
+  --array-bg: #111827;
+
+  --array-border: #374151;
+
+  --array-text: #e5e7eb;
+
+  --result-bg: #0f172a;
+
+  --footer-text: #cbd5e1;
+
+  --title-let: #60a5fa;
+
+  --title-num: #4ade80;
+
+  --title-txt: #facc15;
+
+}
+
+/* =========================
+   BODY
+========================= */
+
+body {
+
+  background: var(--bg-gradient);
+
+  margin: 0;
+
+  min-height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 30px 15px;
+
+  transition: 0.3s ease;
+
+}
+
+/* =========================
+   CONTENEDOR
+========================= */
+
+.app-container {
+
+  width: 100%;
+
+  max-width: 1500px;
+
+}
+
+/* =========================
+   BOTON TEMA
+========================= */
+
+.theme-toggle-container {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  margin-bottom: 15px;
+
+}
+
+[data-theme="dark"] #themeToggle {
+
+  background-color: #f1f5f9 !important;
+
+  color: #111827 !important;
+
+  border-color: #f1f5f9 !important;
+
+}
+
+/* =========================
+   CARD
+========================= */
+
+.main-card {
+
+  border: none;
+
+  border-radius: 16px;
+
+  background-color: var(--card-bg);
+
+  color: var(--text-color);
+
+  transition: 0.3s ease;
+
+}
+
+/* =========================
+   HORIZONTAL
+========================= */
+
+.activities-row {
+
+  display: flex;
+
+  gap: 20px;
+
+  align-items: stretch;
+
+}
+
+.exercise-col {
+
+  flex: 1;
+
+  min-width: 0;
+
+}
+
+/* =========================
+   ARRAYS
+========================= */
+
+.array-text {
+
+  font-family: Consolas, monospace;
+
+  background-color: var(--array-bg);
+
+  border: 1px solid var(--array-border);
+
+  color: var(--array-text);
+
+  padding: 12px 15px;
+
+  border-radius: 8px;
+
+  min-height: 65px;
+
+  word-break: break-word;
+
+  transition: 0.3s ease;
+
+}
+
+/* =========================
+   LABELS
+========================= */
+
+.config-label {
+
+  color: var(--muted);
+
+}
+
+.title-let {
+
+  color: var(--title-let);
+
+}
+
+.title-num {
+
+  color: var(--title-num);
+
+}
+
+.title-txt {
+
+  color: var(--title-txt);
+
+}
+
+/* =========================
+   RESULTADOS
+========================= */
 
 .resultado-reverse {
-  font-family: 'Consolas', 'Monaco', monospace;
+
+  font-family: Consolas, monospace;
+
   font-weight: bold;
+
   padding: 12px;
-  border-radius: 5px;
-  background-color: #eef2f7;
-  border-left: 5px solid #212529;
-  min-height: 48px;
+
+  border-radius: 8px;
+
+  min-height: 90px;
+
+  background-color: var(--result-bg);
+
 }
 
-#resLet { border-left-color: #0d6efd; color: #084298; }
-#resNum { border-left-color: #198754; color: #0f5132; }
-#resTxt { border-left-color: #ffc107; color: #664d03; }
+#resLet {
+
+  border-left: 5px solid #0d6efd;
+
+  color: #60a5fa;
+
+}
+
+#resNum {
+
+  border-left: 5px solid #198754;
+
+  color: #4ade80;
+
+}
+
+#resTxt {
+
+  border-left: 5px solid #ffc107;
+
+  color: #facc15;
+
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.card-footer {
+
+  color: var(--footer-text) !important;
+
+  background: transparent;
+
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+  .activities-row {
+
+    flex-direction: column;
+
+  }
+
+}

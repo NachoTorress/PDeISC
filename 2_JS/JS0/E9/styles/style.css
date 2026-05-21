@@ -1,22 +1,176 @@
+/* =========================
+   VARIABLES DE TEMA
+========================= */
+
+:root {
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --card-bg: #ffffff;
+  --text-color: #212529;
+
+  --array-bg: #f8f9fa;
+  --array-border: #dee2e6;
+  --array-text: #2c3e50;
+
+  --result-bg: #e9ecef;
+  --result-border: #212529;
+  --result-text: #212529;
+
+  --footer-text: #6c757d;
+  --hr-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --bg-gradient: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+  --card-bg: #1f2937;
+  --text-color: #f1f5f9;
+
+  --array-bg: #111827;
+  --array-border: #374151;
+  --array-text: #e5e7eb;
+
+  --result-bg: #0f172a;
+  --result-border: #64748b;
+  --result-text: #f1f5f9;
+
+  --footer-text: #9ca3af;
+  --hr-color: rgba(255, 255, 255, 0.1);
+}
+
+/* =========================
+   BODY
+========================= */
+
+body {
+  background: var(--bg-gradient);
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 15px;
+
+  transition: background 0.3s ease;
+}
+
+/* =========================
+   CONTENEDOR
+========================= */
+
+.app-container {
+  width: 100%;
+  max-width: 1400px;
+}
+
+/* =========================
+   BOTÓN TEMA
+========================= */
+
+.theme-toggle-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.main-card {
+  border: none;
+  border-radius: 15px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* =========================
+   FILAS HORIZONTALES
+========================= */
+
+.activities-row {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.exercise-col {
+  flex: 1;
+  min-width: 0;
+}
+
+/* =========================
+   ARRAY
+========================= */
+
 .array-text {
   font-family: 'Consolas', 'Monaco', monospace;
-  background-color: #f8f9fa;
+  background-color: var(--array-bg);
   padding: 12px 15px;
   border-radius: 8px;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--array-border);
   width: 100%;
-  min-height: 50px;
-  color: #2c3e50;
+  min-height: 60px;
+  color: var(--array-text);
   margin-top: 5px;
   display: block;
+  word-break: break-word;
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
+
+/* =========================
+   RESULTADOS
+========================= */
 
 .resultado-iteracion {
   font-family: 'Consolas', 'Monaco', monospace;
-  white-space: pre-line; /* Mantiene los saltos de línea \n */
-  background-color: #e9ecef;
+  white-space: pre-line;
+  background-color: var(--result-bg);
+  color: var(--result-text);
   padding: 12px;
   border-radius: 8px;
-  border-left: 5px solid #212529;
+  border-left: 5px solid var(--result-border);
   font-weight: bold;
+  min-height: 120px;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.card-footer {
+  color: var(--footer-text) !important;
+  background-color: transparent;
+}
+
+/* =========================
+   HR
+========================= */
+
+hr {
+  opacity: 1;
+  border-color: var(--hr-color);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+  .activities-row {
+    flex-direction: column;
+  }
+
 }

@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const PORT = 3020;
+const PORT = 3014;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

@@ -1,47 +1,198 @@
+/* =========================
+   VARIABLES DE TEMA
+========================= */
+
+:root {
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  --card-bg: #ffffff;
+  --text-color: #212529;
+
+  --array-bg: #f8f9fa;
+  --array-border: #dee2e6;
+  --array-text: #2c3e50;
+
+  --mini-card-bg: #ffffff;
+  --mini-card-border: #e5e7eb;
+
+  --footer-text: #6c757d;
+}
+
+[data-theme="dark"] {
+  --bg-gradient: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+
+  --card-bg: #1f2937;
+  --text-color: #f1f5f9;
+
+  --array-bg: #111827;
+  --array-border: #374151;
+  --array-text: #e5e7eb;
+
+  --mini-card-bg: #273548;
+  --mini-card-border: #3b4a5e;
+
+  --footer-text: #9ca3af;
+}
+
+/* =========================
+   BODY
+========================= */
+
 body {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--bg-gradient);
+
   margin: 0;
   min-height: 100vh;
+
   display: flex;
   justify-content: center;
+
   padding: 40px 20px;
+
+  transition: background 0.3s ease;
 }
+
+/* =========================
+   CONTENEDOR
+========================= */
 
 .app-container {
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px;
 }
+
+/* =========================
+   BOTÓN TEMA
+========================= */
+
+.theme-toggle-container {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-bottom: 15px;
+}
+
+/* =========================
+   CARD PRINCIPAL
+========================= */
 
 .main-card {
   border: none;
-  border-radius: 15px;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  background-color: var(--card-bg);
+
+  color: var(--text-color);
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
+
+/* =========================
+   MINI CARDS
+========================= */
+
+.mini-card {
+  background-color: var(--mini-card-bg);
+
+  border: 1px solid var(--mini-card-border);
+
+  border-radius: 14px;
+
+  padding: 20px;
+
+  height: 100%;
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.mini-card:hover {
+  transform: translateY(-3px);
+}
+
+/* =========================
+   ARRAYS
+========================= */
 
 .array-text {
   font-family: 'Consolas', 'Monaco', monospace;
-  background-color: #f8f9fa;
-  padding: 12px 15px;
+
+  background-color: var(--array-bg);
+
+  border: 1px solid var(--array-border);
+
   border-radius: 8px;
-  border: 1px solid #dee2e6;
+
+  padding: 12px 15px;
+
   width: 100%;
-  min-height: 50px;
+
+  min-height: 90px;
+
   word-wrap: break-word;
   word-break: break-all;
-  color: #2c3e50;
-  margin-top: 5px;
+
+  color: var(--array-text);
+
+  margin-top: 10px;
+
   display: block;
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
-.exercise-row {
-  width: 100%;
+/* =========================
+   RANGE
+========================= */
+
+.form-range {
+  cursor: pointer;
 }
 
-hr {
-  opacity: 0.1;
-  margin: 10px 0;
+/* =========================
+   TEXT MUTED
+========================= */
+
+.main-card .text-muted {
+  color: var(--footer-text) !important;
 }
+
+/* =========================
+   FOOTER
+========================= */
+
+.card-footer {
+  background-color: transparent;
+
+  color: var(--footer-text) !important;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media (max-width: 768px) {
-  body { padding: 10px; }
-  .card-body { padding: 15px; }
+
+  body {
+    padding: 10px;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+
+  .mini-card {
+    padding: 16px;
+  }
+
 }

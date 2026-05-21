@@ -1,22 +1,232 @@
+/* =========================
+   VARIABLES DE TEMA
+========================= */
+
+:root {
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  --card-bg: #ffffff;
+
+  --text-color: #212529;
+  --text-muted: #6c757d;
+
+  --array-bg: #f8f9fa;
+  --array-border: #dee2e6;
+  --array-text: #2c3e50;
+
+  --result-bg: #e9ecef;
+  --result-border: #198754;
+  --result-text: #212529;
+
+  --footer-text: #6c757d;
+
+  --title-num: #0d6efd;
+  --title-pal: #198754;
+  --title-usu: #ffc107;
+}
+
+[data-theme="dark"] {
+  --bg-gradient: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+
+  --card-bg: #1f2937;
+
+  --text-color: #f1f5f9;
+  --text-muted: #cbd5e1;
+
+  --array-bg: #111827;
+  --array-border: #374151;
+  --array-text: #f1f5f9;
+
+  --result-bg: #0f172a;
+  --result-border: #22c55e;
+  --result-text: #f8fafc;
+
+  --footer-text: #cbd5e1;
+
+  --title-num: #60a5fa;
+  --title-pal: #4ade80;
+  --title-usu: #fde047;
+}
+
+/* =========================
+   BODY
+========================= */
+
+body {
+  background: var(--bg-gradient);
+  margin: 0;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px 15px;
+
+  color: var(--text-color);
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+/* =========================
+   CONTENEDOR
+========================= */
+
+.app-container {
+  width: 100%;
+  max-width: 1400px;
+}
+
+/* =========================
+   BOTON TEMA
+========================= */
+
+.theme-toggle-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+#themeToggle {
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] #themeToggle {
+  background-color: #f8fafc !important;
+  color: #111827 !important;
+  border-color: #f8fafc !important;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.main-card {
+  border: none;
+  border-radius: 15px;
+
+  background-color: var(--card-bg);
+  color: var(--text-color);
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* =========================
+   FILA HORIZONTAL
+========================= */
+
+.activities-row {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.exercise-col {
+  flex: 1;
+  min-width: 0;
+}
+
+/* =========================
+   TITULOS
+========================= */
+
+.title-numeros {
+  color: var(--title-num) !important;
+}
+
+.title-palabras {
+  color: var(--title-pal) !important;
+}
+
+.title-usuarios {
+  color: var(--title-usu) !important;
+}
+
+/* =========================
+   ARRAYS
+========================= */
+
 .array-text {
   font-family: 'Consolas', 'Monaco', monospace;
-  background-color: #f8f9fa;
+
+  background-color: var(--array-bg);
+
   padding: 12px 15px;
+
   border-radius: 8px;
-  border: 1px solid #dee2e6;
+
+  border: 1px solid var(--array-border);
+
   width: 100%;
-  min-height: 50px;
-  color: #2c3e50;
+
+  min-height: 60px;
+
+  color: var(--array-text);
+
   margin-top: 5px;
+
   display: block;
+
+  word-break: break-word;
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
+
+/* =========================
+   RESULTADOS
+========================= */
 
 .resultado-filter {
   font-family: 'Consolas', 'Monaco', monospace;
+
   font-weight: bold;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #e9ecef;
-  border-left: 5px solid #198754;
-  min-height: 45px;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  background-color: var(--result-bg);
+
+  border-left: 5px solid var(--result-border);
+
+  color: var(--result-text);
+
+  min-height: 90px;
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.card-footer {
+  color: var(--footer-text) !important;
+  background-color: transparent;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+  .activities-row {
+    flex-direction: column;
+  }
+
 }

@@ -1,37 +1,261 @@
+/* =========================
+   VARIABLES DE TEMA
+========================= */
+
+:root {
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --card-bg: #ffffff;
+  --text-color: #212529;
+
+  --array-bg: #f8f9fa;
+  --array-border: #dee2e6;
+  --array-text: #2c3e50;
+
+  --result-bg: #e9ecef;
+  --result-text: #212529;
+  --result-border: #6c757d;
+
+  --success-bg: #d4edda;
+  --success-text: #155724;
+  --success-border: #28a745;
+
+  --danger-bg: #f8d7da;
+  --danger-text: #721c24;
+  --danger-border: #dc3545;
+
+  --select-bg: #ffffff;
+  --select-text: #212529;
+  --select-border: #ced4da;
+
+  --footer-text: #6c757d;
+}
+
+[data-theme="dark"] {
+  --bg-gradient: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+  --card-bg: #1f2937;
+  --text-color: #f1f5f9;
+
+  --array-bg: #111827;
+  --array-border: #374151;
+  --array-text: #e5e7eb;
+
+  --result-bg: #111827;
+  --result-text: #e5e7eb;
+  --result-border: #6b7280;
+
+  --success-bg: #14532d;
+  --success-text: #dcfce7;
+  --success-border: #22c55e;
+
+  --danger-bg: #7f1d1d;
+  --danger-text: #fecaca;
+  --danger-border: #ef4444;
+
+  --select-bg: #111827;
+  --select-text: #f1f5f9;
+  --select-border: #374151;
+
+  --footer-text: #9ca3af;
+}
+
+/* =========================
+   BODY
+========================= */
+
+body {
+  background: var(--bg-gradient);
+
+  margin: 0;
+
+  min-height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  padding: 40px 20px;
+
+  transition: background 0.3s ease;
+}
+
+/* =========================
+   CONTENEDOR
+========================= */
+
+.app-container {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* =========================
+   BOTÓN TEMA
+========================= */
+
+.theme-toggle-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+/* =========================
+   CARD PRINCIPAL
+========================= */
+
+.main-card {
+  border: none;
+
+  border-radius: 15px;
+
+  background-color: var(--card-bg);
+
+  color: var(--text-color);
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* =========================
+   CARDS INTERNAS
+========================= */
+
+.exercise-card {
+  background-color: rgba(255,255,255,0.04);
+
+  border: 1px solid var(--array-border);
+
+  border-radius: 12px;
+
+  padding: 20px;
+}
+
+/* =========================
+   ARRAYS
+========================= */
+
 .array-text {
   font-family: 'Consolas', 'Monaco', monospace;
-  background-color: #f8f9fa;
+
+  background-color: var(--array-bg);
+
   padding: 12px 15px;
+
   border-radius: 8px;
-  border: 1px solid #dee2e6;
+
+  border: 1px solid var(--array-border);
+
   width: 100%;
+
   min-height: 50px;
+
   word-wrap: break-word;
   word-break: break-all;
-  color: #2c3e50;
+
+  color: var(--array-text);
+
   margin-top: 5px;
+
   display: block;
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
+
+/* =========================
+   RESULTADOS
+========================= */
 
 .resultado-verificacion {
   font-family: 'Consolas', 'Monaco', monospace;
+
   font-weight: bold;
+
   padding: 12px;
+
   border-radius: 5px;
-  background-color: #e9ecef;
-  border-left: 5px solid #6c757d;
+
+  background-color: var(--result-bg);
+
+  border-left: 5px solid var(--result-border);
+
+  color: var(--result-text);
+
   min-height: 48px;
+
   transition: all 0.3s ease;
 }
 
 .existe {
-  background-color: #d4edda !important;
-  color: #155724 !important;
-  border-left-color: #28a745 !important;
+  background-color: var(--success-bg) !important;
+  color: var(--success-text) !important;
+  border-left-color: var(--success-border) !important;
 }
 
 .no-existe {
-  background-color: #f8d7da !important;
-  color: #721c24 !important;
-  border-left-color: #dc3545 !important;
+  background-color: var(--danger-bg) !important;
+  color: var(--danger-text) !important;
+  border-left-color: var(--danger-border) !important;
+}
+
+/* =========================
+   SELECTS
+========================= */
+
+.form-select {
+  background-color: var(--select-bg);
+
+  color: var(--select-text);
+
+  border-color: var(--select-border);
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.form-select:focus {
+  background-color: var(--select-bg);
+
+  color: var(--select-text);
+
+  border-color: #86b7fe;
+
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.card-footer {
+  color: var(--footer-text) !important;
+
+  background-color: transparent;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+  .col-lg-4 {
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  body {
+    padding: 10px;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+
 }

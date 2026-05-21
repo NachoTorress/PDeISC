@@ -1,32 +1,30 @@
 /* ============================================================
-   DUAL STORAGE SYSTEM — style.css
-   Tema: Minimalismo editorial, blanco hueso + negro + verde lima
+   DUAL STORAGE SYSTEM — style-dark.css
+   Tema: Minimalismo editorial oscuro, Carbón + Negro + Verde Lima
    Fuentes: Fraunces (títulos) + Nunito (cuerpo)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Nunito:wght@400;500;600;700&display=swap');
-
-/* ─── VARIABLES ────────────────────────────────────────────── */
+/* ─── VARIABLES EN MODO OSCURO ─────────────────────────────── */
 :root {
-    --bg:            #f7f7f5;
-    --bg-card:       #ffffff;
-    --bg-field:      #f2f2f0;
-    --border:        #e0e0dc;
-    --accent:        #84cc16;          /* Verde lima */
-    --accent-dim:    rgba(132,204,22,0.12);
-    --accent-dark:   #65a30d;
-    --text:          #1a1a18;
-    --text-muted:    #6b6b66;
-    --text-dim:      #9b9b94;
-    --local-color:   #3b82f6;          /* Azul — LocalStorage */
-    --session-color: #f59e0b;          /* Amarillo — SessionStorage */
-    --success:       #16a34a;
-    --danger:        #dc2626;
-    --radius-sm:     6px;
-    --radius-md:     12px;
-    --radius-lg:     20px;
-    --shadow:        0 4px 24px rgba(0,0,0,0.07);
-    --transition:    0.2s ease;
+    --bg:             #121212;          /* Fondo oscuro profundo */
+    --bg-card:        #1a1a1a;          /* Tarjetas gris carbón */
+    --bg-field:       #242424;          /* Inputs gris medio */
+    --border:         #2d2d2d;          /* Bordes sutiles */
+    --accent:         #84cc16;          /* Verde lima (se mantiene vibrante) */
+    --accent-dim:     rgba(132, 204, 22, 0.15);
+    --accent-dark:    #a3e635;          /* Un poco más claro en oscuro para contraste */
+    --text:           #f3f4f6;          /* Texto principal casi blanco */
+    --text-muted:     #9ca3af;          /* Texto secundario */
+    --text-dim:       #6b7280;          /* Texto desactivado */
+    --local-color:    #60a5fa;          /* Azul suave */
+    --session-color:  #fbbf24;          /* Amarillo suave */
+    --success:        #4ade80;          /* Verde éxito brillante */
+    --danger:         #f87171;          /* Rojo error brillante */
+    --radius-sm:      6px;
+    --radius-md:      12px;
+    --radius-lg:      20px;
+    --shadow:         0 4px 24px rgba(0, 0, 0, 0.4);
+    --transition:     0.2s ease;
 }
 
 /* ─── RESET & BASE ─────────────────────────────────────────── */
@@ -34,8 +32,8 @@
 
 body {
     background-color: var(--bg);
-    /* Patrón de puntos editorial como fondo */
-    background-image: radial-gradient(circle, #d4d4c8 1px, transparent 1px);
+    /* Patrón de puntos editorial invertido para modo oscuro */
+    background-image: radial-gradient(circle, #2d2d2d 1px, transparent 1px);
     background-size: 24px 24px;
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
@@ -45,8 +43,8 @@ body {
 
 /* ─── HEADER ───────────────────────────────────────────────── */
 .main-header {
-    background: var(--text);                /* Negro */
-    border-bottom: 3px solid var(--accent); /* Línea verde lima */
+    background: #000000;                    /* Negro absoluto en el header */
+    border-bottom: 3px solid var(--accent);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -57,31 +55,7 @@ body {
     align-items: center;
     gap: 12px;
 }
-/* Modifica o agrega esto dentro de la sección de HEADER en tu style.css */
 
-.btn-theme {
-    background: rgba(255, 255, 255, 0.08); /* Fondo blanco ultra traslúcido */
-    border: 1.5px solid rgba(255, 255, 255, 0.15); /* Borde suave */
-    font-size: 1.1rem;
-    padding: 5px 10px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition);
-}
-
-.btn-theme:hover {
-    background: rgba(255, 255, 255, 0.18); /* Brillo más intenso al pasar el mouse */
-    border-color: var(--accent); /* Cambia al color verde lima */
-    transform: translateY(-1px);
-}
-
-.btn-theme:active {
-    transform: translateY(0);
-}
 .brand-icon { font-size: 1.8rem; line-height: 1; }
 
 .brand-title {
@@ -100,17 +74,30 @@ body {
     font-weight: 700;
 }
 
-/* Badge contador de usuarios */
+/* Botón de tema */
+.btn-theme {
+    background: var(--bg-field);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+.btn-theme:hover {
+    background: var(--border);
+}
+
+/* Badge contador */
 .user-badge {
     background: var(--accent);
-    color: var(--text);
+    color: #000000;
     font-family: 'Nunito', sans-serif;
     font-size: 12px;
     font-weight: 800;
     padding: 6px 18px;
     border-radius: 50px;
     letter-spacing: 0.04em;
-    transition: background var(--transition);
 }
 
 /* ─── CARDS ────────────────────────────────────────────────── */
@@ -122,7 +109,6 @@ body {
     box-shadow: var(--shadow);
 }
 
-/* Formulario fijo en desktop */
 .sticky-col {
     position: sticky;
     top: 68px;
@@ -151,7 +137,7 @@ body {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--text-dim);
+    color: var(--text-muted);
     border-bottom: 1px solid var(--border);
     padding-bottom: 5px;
     margin-bottom: 10px;
@@ -171,14 +157,6 @@ body {
     margin-bottom: 5px;
 }
 
-.opt {
-    font-weight: 400;
-    text-transform: none;
-    font-size: 10px;
-    color: var(--text-dim);
-    letter-spacing: 0;
-}
-
 .field-input {
     width: 100%;
     background: var(--bg-field);
@@ -196,7 +174,7 @@ body {
 .field-input:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-dim);
-    background: #fff;
+    background: #202020;
 }
 
 .field-input::placeholder { color: var(--text-dim); }
@@ -204,7 +182,7 @@ body {
 /* Estado de error */
 .input-error {
     border-color: var(--danger) !important;
-    box-shadow: 0 0 0 3px rgba(220,38,38,0.12) !important;
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15) !important;
 }
 
 .field-error {
@@ -220,43 +198,12 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance: textfield; }
 
-/* ─── PANEL INFO DUAL STORAGE ───────────────────────────────── */
-.storage-info {
-    background: var(--bg-field);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 0.75rem 1rem;
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.storage-info-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--text-muted);
-}
-
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.dot-local   { background: var(--local-color); }
-.dot-session { background: var(--session-color); }
-
 /* ─── BOTÓN SUBMIT ─────────────────────────────────────────── */
 .btn-submit {
     width: 100%;
-    background: var(--text);
+    background: #000000;
     color: #fff;
-    border: 2px solid var(--text);
+    border: 2px solid var(--border);
     border-radius: var(--radius-sm);
     font-family: 'Nunito', sans-serif;
     font-size: 13.5px;
@@ -271,7 +218,7 @@ input[type=number] { -moz-appearance: textfield; }
 .btn-submit:hover {
     background: var(--accent);
     border-color: var(--accent);
-    color: var(--text);
+    color: #000000;
     transform: translateY(-1px);
 }
 
@@ -281,7 +228,7 @@ input[type=number] { -moz-appearance: textfield; }
 .table { color: var(--text) !important; border-color: var(--border) !important; }
 
 .table thead th {
-    background: var(--bg) !important;
+    background: #141414 !important;
     color: var(--text-muted) !important;
     font-size: 11px;
     font-weight: 800;
@@ -299,9 +246,9 @@ input[type=number] { -moz-appearance: textfield; }
 }
 
 .table tbody tr { transition: background var(--transition); }
-.table tbody tr:hover td { background: #fafaf8 !important; }
+.table tbody tr:hover td { background: #222222 !important; }
 
-.user-name    { font-weight: 700; font-size: 13.5px; color: var(--text); }
+.user-name   { font-weight: 700; font-size: 13.5px; color: var(--text); }
 .user-address { font-size: 13px; color: var(--text); }
 .user-city    { font-size: 13px; font-weight: 600; color: var(--text); }
 .user-meta    { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
@@ -309,7 +256,7 @@ input[type=number] { -moz-appearance: textfield; }
 /* Botón eliminar */
 .btn-delete {
     background: transparent;
-    border: 1.5px solid rgba(220,38,38,0.35);
+    border: 1.5px solid rgba(248, 113, 113, 0.4);
     color: var(--danger);
     font-family: 'Nunito', sans-serif;
     font-size: 11px;
@@ -323,7 +270,7 @@ input[type=number] { -moz-appearance: textfield; }
 }
 
 .btn-delete:hover {
-    background: rgba(220,38,38,0.08);
+    background: rgba(248, 113, 113, 0.1);
     border-color: var(--danger);
 }
 
@@ -347,15 +294,15 @@ input[type=number] { -moz-appearance: textfield; }
 }
 
 .alert-success {
-    background: rgba(22,163,74,0.1);
+    background: rgba(74, 222, 128, 0.1);
     color: var(--success);
-    border: 1.5px solid rgba(22,163,74,0.3);
+    border: 1.5px solid rgba(74, 222, 128, 0.3);
 }
 
 .alert-danger {
-    background: rgba(220,38,38,0.08);
+    background: rgba(248, 111, 111, 0.08);
     color: var(--danger);
-    border: 1.5px solid rgba(220,38,38,0.25);
+    border: 1.5px solid rgba(248, 111, 111, 0.25);
 }
 
 /* ─── ANIMACIONES ───────────────────────────────────────────── */
@@ -374,15 +321,15 @@ input[type=number] { -moz-appearance: textfield; }
     right: 24px;
     width: 44px;
     height: 44px;
-    background: var(--text);
-    color: #fff;
+    background: var(--bg-card);
+    color: var(--text);
     border: 2px solid var(--accent);
     border-radius: 50%;
     font-size: 18px;
     font-weight: 700;
     cursor: pointer;
     z-index: 9999;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     transition: transform var(--transition), background var(--transition);
 }
 
@@ -395,7 +342,7 @@ input[type=number] { -moz-appearance: textfield; }
 
 #btnTop:hover {
     background: var(--accent);
-    color: var(--text);
+    color: #000000;
     transform: translateY(-3px) scale(1.08);
 }
 

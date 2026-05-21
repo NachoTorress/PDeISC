@@ -1,78 +1,149 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/styles/style.css">
+
   <title>Método reverse()</title>
 </head>
-<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 p-3">
 
-<div class="container" style="max-width: 900px;">
-  <div class="card shadow-lg border-0">
+<body>
+
+<div class="app-container">
+
+  <!-- BOTON MODO -->
+  <div class="theme-toggle-container">
+
+    <button id="themeToggle" class="btn btn-dark">
+      🌙 Modo oscuro
+    </button>
+
+  </div>
+
+  <div class="card shadow-lg main-card">
+
     <div class="card-header bg-dark text-white text-center py-3">
-      <h1 class="h3 mb-0">Método reverse() - Inversión de Datos</h1>
-      <p class="small mb-0 mt-1 text-info">Presioná el botón para invertir el orden de los elementos</p>
+
+      <h1 class="h3 mb-0">
+        Método reverse() - Inversión de Datos
+      </h1>
+
+      <p class="small mb-0 mt-1 text-light">
+        Presioná el botón para invertir el orden
+      </p>
+
     </div>
 
     <div class="card-body p-4">
-      <div class="row g-4">
+
+      <!-- HORIZONTAL -->
+      <div class="activities-row">
 
         <!-- LETRAS -->
-        <div class="col-12">
-          <div class="exercise-row">
-            <h3 class="h5 fw-bold text-primary">Array de Letras</h3>
-            <div id="letras" class="array-text mb-3"></div>
-            
-            <div id="wrapperLet">
-              <label class="form-label small fw-bold text-secondary">ACCIÓN: Invertir posiciones [A -> E]</label>
-              <button id="btnLet" class="btn btn-primary w-100">Ejecutar: Invertir Letras</button>
-            </div>
-            
-            <div id="resLet" class="resultado-reverse mt-2">Estado: Original</div>
+        <div class="exercise-col">
+
+          <h3 class="h5 fw-bold title-let">
+            Array de Letras
+          </h3>
+
+          <div id="letras" class="array-text mb-3"></div>
+
+          <div id="wrapperLet">
+
+            <label class="form-label small fw-bold config-label">
+              ACCIÓN: Invertir posiciones
+            </label>
+
+            <button
+              id="btnLet"
+              class="btn btn-primary w-100"
+            >
+              Ejecutar: Invertir Letras
+            </button>
+
           </div>
-          <hr class="mt-4 opacity-10">
+
+          <div id="resLet" class="resultado-reverse mt-2">
+            Estado: Original
+          </div>
+
         </div>
 
         <!-- NUMEROS -->
-        <div class="col-12">
-          <div class="exercise-row">
-            <h3 class="h5 fw-bold text-success">Array de Números</h3>
-            <div id="numeros" class="array-text mb-3"></div>
-            
-            <div id="wrapperNum">
-              <label class="form-label small fw-bold text-secondary">ACCIÓN: Invertir secuencia numérica</label>
-              <button id="btnNum" class="btn btn-success w-100">Ejecutar: Invertir Números</button>
-            </div>
+        <div class="exercise-col">
 
-            <div id="resNum" class="resultado-reverse mt-2">Estado: Original</div>
+          <h3 class="h5 fw-bold title-num">
+            Array de Números
+          </h3>
+
+          <div id="numeros" class="array-text mb-3"></div>
+
+          <div id="wrapperNum">
+
+            <label class="form-label small fw-bold config-label">
+              ACCIÓN: Invertir secuencia
+            </label>
+
+            <button
+              id="btnNum"
+              class="btn btn-success w-100"
+            >
+              Ejecutar: Invertir Números
+            </button>
+
           </div>
-          <hr class="mt-4 opacity-10">
+
+          <div id="resNum" class="resultado-reverse mt-2">
+            Estado: Original
+          </div>
+
         </div>
 
         <!-- TEXTO -->
-        <div class="col-12">
-          <div class="exercise-row">
-            <h3 class="h5 fw-bold text-warning">Cadena de Texto (String)</h3>
-            <div id="texto" class="array-text mb-3">JavaScript</div>
-            
-            <div id="wrapperTxt">
-              <label class="form-label small fw-bold text-secondary">ACCIÓN: split() + reverse() + join()</label>
-              <button id="btnTxt" class="btn btn-warning w-100">Ejecutar: Invertir Texto</button>
-            </div>
+        <div class="exercise-col">
 
-            <div id="resTxt" class="resultado-reverse mt-2">Estado: Original</div>
+          <h3 class="h5 fw-bold title-txt">
+            Cadena de Texto
+          </h3>
+
+          <div id="texto" class="array-text mb-3">
+            JavaScript
           </div>
+
+          <div id="wrapperTxt">
+
+            <label class="form-label small fw-bold config-label">
+              ACCIÓN: reverse() no funciona directamente en strings, por eso usamos split('') + join('')
+            </label>
+
+            <button
+              id="btnTxt"
+              class="btn btn-warning w-100"
+            >
+              Ejecutar: Invertir Texto
+            </button>
+
+          </div>
+
+          <div id="resTxt" class="resultado-reverse mt-2">
+            Estado: Original
+          </div>
+
         </div>
 
       </div>
+
     </div>
 
-    <div class="card-footer text-center text-muted small">
-      reverse() muta el array original, por lo que usamos el operador spread [...]
+    <div class="card-footer text-center small">
+      reverse() muta arrays, por eso usamos [...]
     </div>
+
   </div>
+
 </div>
 
 <script src="/scripts/script.js"></script>

@@ -1,125 +1,47 @@
-// Importa el modulo HTTP nativo de Node.js para crear el servidor
 import { createServer } from 'node:http';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-// Importa todas las funciones del modulo calculos.js (ejercicio 4)
-import * as calc from './modules/calculos.js';
+import { renderHomePage } from './pages/index.js';
 
-// =======================
-// FUNCIONES (Ejercicio 3)
-// =======================
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Funcion que suma dos numeros
-function suma(a, b) { return a + b; }
-
-// Funcion que resta dos numeros
-function resta(a, b) { return a - b; }
-
-// Funcion que multiplica dos numeros
-function multiplicacion(a, b) { return a * b; }
-
-// Funcion que divide dos numeros
-function division(a, b) { return a / b; }
-
-// =======================
-// CREACION DEL SERVIDOR
-// =======================
-
-// Se crea el servidor HTTP
 const server = createServer((req, res) => {
 
-  // Se define la cabecera indicando que la respuesta sera HTML
-  res.writeHead(200, { 'Content-Type': 'text/html' });
+  // CSS
+  if (req.url === '/styles/styles.css') {
+    const css = readFileSync(
+      path.join(__dirname, 'styles', 'styles.css'),
+      'utf-8'
+    );
 
-  // Se envia la respuesta al navegador
- res.end(`
-  <html>
-    <head>
-      <title>Ejercicios Node</title>
+    res.writeHead(200, { 'Content-Type': 'text/css' });
+    return res.end(css);
+  }
 
-      <!-- META RESPONSIVE -->
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+  // JS
+  if (req.url === '/scripts/theme.js') {
+    const js = readFileSync(
+      path.join(__dirname, 'scripts', 'theme.js'),
+      'utf-8'
+    );
 
-      <!-- Bootstrap CDN -->
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
+    res.writeHead(200, { 'Content-Type': 'application/javascript' });
+    return res.end(js);
+  }
 
-    <body class="bg-light">
+  // HOME
+  if (req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    return res.end(renderHomePage());
+  }
 
-      <div class="container py-4">
-
-        <!-- Texto -->
-        <div class="text-center mb-4">
-          <p class="fs-4">(Ejercicio 1) Hola mundo desde Node.js </p>
-          <p>Fin</p>
-        </div>
-
-        <!-- TABLA 1 -->
-        <h2 class="text-center">Resultados directos (Ejercicio 2)</h2>
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered text-center">
-            <thead class="table-dark">
-              <tr>
-                <th>Operacion</th>
-                <th>Resultado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>4 + 5</td><td>${4+5}</td></tr>
-              <tr><td>3 - 6</td><td>${3-6}</td></tr>
-              <tr><td>2 * 7</td><td>${2*7}</td></tr>
-              <tr><td>20 / 4</td><td>${20/4}</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- TABLA 2 -->
-        <h2 class="text-center mt-5">Resultados con funciones (Ejercicio 3)</h2>
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered text-center">
-            <thead class="table-dark">
-              <tr>
-                <th>Operacion</th>
-                <th>Resultado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>4 + 5</td><td>${suma(4,5)}</td></tr>
-              <tr><td>3 - 6</td><td>${resta(3,6)}</td></tr>
-              <tr><td>2 * 7</td><td>${multiplicacion(2,7)}</td></tr>
-              <tr><td>20 / 4</td><td>${division(20,4)}</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- TABLA 3 -->
-        <h2 class="text-center mt-5">Resultados con modulo (Ejercicio 4)</h2>
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered text-center">
-            <thead class="table-dark">
-              <tr>
-                <th>Operacion</th>
-                <th>Resultado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>5 + 3</td><td>${calc.suma(5,3)}</td></tr>
-              <tr><td>8 - 6</td><td>${calc.resta(8,6)}</td></tr>
-              <tr><td>3 * 11</td><td>${calc.multiplicacion(3,11)}</td></tr>
-              <tr><td>30 / 5</td><td>${calc.division(30,5)}</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-
-    </body>
-  </html>
-`)});
-
-// =======================
-// INICIO DEL SERVIDOR
-// =======================
-
+  // 404
+  res.writeHead(404, { 'Content-Type': 'text/html' });
+  res.end('<h1>404 - Página no encontrada</h1>');
+});
 
 server.listen(3004, '127.0.0.1', () => {
   console.log('http://127.0.0.1:3004');

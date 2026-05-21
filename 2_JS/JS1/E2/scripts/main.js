@@ -1,3 +1,46 @@
+// --- MODO OSCURO / CLARO ─────────────────────────────────────
+
+const themeToggle = document.getElementById('themeToggle');
+
+// Función que ajusta el icono inicial del botón según el estado cargado
+(function inicializarBotonTema() {
+    const themeStylesheet = document.getElementById('themeStylesheet');
+    if (themeStylesheet && themeStylesheet.href.includes('style-dark')) {
+        themeToggle.textContent = '☀️';
+    } else {
+        themeToggle.textContent = '🌙';
+    }
+})();
+
+function activarModoOscuro() {
+    const themeStylesheet = document.getElementById('themeStylesheet');
+    themeStylesheet.href = '../styles/style-dark.css';
+    themeToggle.textContent = '☀️';
+    localStorage.setItem('tema', 'oscuro');
+}
+
+function activarModoClaro() {
+    const themeStylesheet = document.getElementById('themeStylesheet');
+    themeStylesheet.href = '../styles/style.css';
+    themeToggle.textContent = '🌙';
+    localStorage.setItem('tema', 'claro');
+}
+
+themeToggle.addEventListener('click', () => {
+    const themeStylesheet = document.getElementById('themeStylesheet');
+    const esOscuro = themeStylesheet.href.includes('style-dark');
+
+    esOscuro
+        ? activarModoClaro()
+        : activarModoOscuro();
+});
+
+// ============================================================
+//  SISTEMA DE GESTIÓN DINÁMICA — Solo Memoria (Array)
+// ============================================================
+
+// El resto de tu código original (Referencias DOM, Validaciones, Submit, RenderTabla y Botón Top) se queda exactamente igual.
+
 // ============================================================
 //  SISTEMA DE GESTIÓN DINÁMICA — Solo Memoria (Array)
 // ============================================================
@@ -55,7 +98,7 @@ document.querySelectorAll('.input-no-e').forEach(input => {
 
 // --- MANEJO DEL SUBMIT ────────────────────────────────────────
 form.addEventListener('submit', (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
 
     const fd = new FormData(form);
     const data = Object.fromEntries(fd.entries());

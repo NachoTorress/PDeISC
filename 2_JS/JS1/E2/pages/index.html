@@ -3,140 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Registro | Gestión de Inventario</title>
+
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/style.css">
+
+    <!-- Tema Dinámico (Script anti-parpadeo blanco) -->
+    <script>
+        (function() {
+            const temaGuardado = localStorage.getItem('tema') || 'claro';
+            const link = document.createElement('link');
+            link.id = 'themeStylesheet';
+            link.rel = 'stylesheet';
+            link.href = temaGuardado === 'oscuro' ? '../styles/style-dark.css' : '../styles/style.css';
+            document.head.appendChild(link);
+        })();
+    </script>
 </head>
 <body>
 
-<!-- Botón volver arriba -->
 <button id="btnTop" title="Volver arriba">↑</button>
 
-<!-- HEADER -->
 <header class="main-header">
     <div class="container d-flex justify-content-between align-items-center py-3 flex-wrap gap-2">
+
         <div class="brand">
             <span class="brand-icon">📦</span>
+
             <div>
-                <h1 class="brand-title mb-0">Registro de Domicilios</h1>
-                <span class="brand-sub">Gestión de Memoria Dinámica</span>
+                <h1 class="brand-title mb-0">
+                    Registro de Domicilios
+                </h1>
+
+                <span class="brand-sub">
+                    Gestión de Memoria Dinámica
+                </span>
             </div>
         </div>
-        <div id="userBadge" class="user-badge">0 Registros</div>
+
+        <div class="d-flex align-items-center gap-2">
+
+            <div id="userBadge" class="user-badge">
+                0 Registros
+            </div>
+
+            <!-- Se agrega la clase btn-theme para estilizarlo correctamente -->
+            <button id="themeToggle" class="btn-theme" type="button">
+                🌙
+            </button>
+
+        </div>
     </div>
 </header>
 
-<!-- MAIN -->
 <main class="container py-4">
+
     <div class="row g-4">
 
-        <!-- FORMULARIO -->
+        <!-- FORM -->
         <div class="col-lg-5">
+
             <div class="card-custom sticky-col">
 
-                <div class="card-tag">Nuevo Registro</div>
-                <h2 class="card-title">Información Personal</h2>
+                <div class="card-tag">
+                    Nuevo Registro
+                </div>
+
+                <h2 class="card-title">
+                    Información Personal
+                </h2>
 
                 <div id="alertContainer" class="mb-3"></div>
 
                 <form id="userForm" novalidate autocomplete="off">
 
-                    <!-- DATOS PERSONALES -->
-                    <div class="section-divider">Identificación</div>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="field-group">
-                                <label class="field-label" for="nombre">Nombre *</label>
-                                <input type="text" id="nombre" name="nombre" class="field-input" placeholder="Ej: María">
-                                <div class="field-error" id="error-nombre">Mín. 3 letras (acepta ').</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="field-group">
-                                <label class="field-label" for="apellidos">Apellidos *</label>
-                                <input type="text" id="apellidos" name="apellidos" class="field-input" placeholder="Ej: O'Connor">
-                                <div class="field-error" id="error-apellidos">Mín. 3 letras (acepta ').</div>
-                            </div>
-                        </div>
+                    <div class="section-divider">
+                        Identificación
                     </div>
 
-                    <!-- DIRECCIÓN -->
-                    <div class="section-divider">Ubicación</div>
                     <div class="row g-2">
+
+                        <div class="col-md-6">
+                            <div class="field-group">
+
+                                <label class="field-label" for="nombre">
+                                    Nombre *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="nombre"
+                                    name="nombre"
+                                    class="field-input"
+                                    placeholder="Ej: María"
+                                >
+
+                                <div class="field-error" id="error-nombre">
+                                    Mín. 3 letras.
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="field-group">
+
+                                <label class="field-label" for="apellidos">
+                                    Apellidos *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="apellidos"
+                                    name="apellidos"
+                                    class="field-input"
+                                    placeholder="Ej: O'Connor"
+                                >
+
+                                <div class="field-error" id="error-apellidos">
+                                    Mín. 3 letras.
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="section-divider">
+                        Ubicación
+                    </div>
+
+                    <div class="row g-2">
+
                         <div class="col-md-8">
                             <div class="field-group">
-                                <label class="field-label" for="calle">Calle *</label>
-                                <input type="text" id="calle" name="calle" class="field-input" placeholder="Ej: Av. Colón">
-                                <div class="field-error" id="error-calle">Mín. 3 letras.</div>
+
+                                <label class="field-label" for="calle">
+                                    Calle *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="calle"
+                                    name="calle"
+                                    class="field-input"
+                                    placeholder="Ej: Av. Colón"
+                                >
+
+                                <div class="field-error" id="error-calle">
+                                    Mín. 3 letras.
+                                </div>
+
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="field-group">
-                                <label class="field-label" for="altura">Altura *</label>
-                                <input type="number" id="altura" name="altura" class="field-input input-no-e" placeholder="1234">
-                                <div class="field-error" id="error-altura">Requerido.</div>
+
+                                <label class="field-label" for="altura">
+                                    Altura *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="altura"
+                                    name="altura"
+                                    class="field-input input-no-e"
+                                    placeholder="1234"
+                                >
+
+                                <div class="field-error" id="error-altura">
+                                    Requerido.
+                                </div>
+
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="field-group">
-                                <label class="field-label" for="piso">Piso <span class="opt">(opcional)</span></label>
-                                <input type="text" id="piso" name="piso" class="field-input" placeholder="Ej: 4">
+
+                                <label class="field-label" for="piso">
+                                    Piso
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="piso"
+                                    name="piso"
+                                    class="field-input"
+                                    placeholder="Ej: 4"
+                                >
+
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="field-group">
-                                <label class="field-label" for="depto">Depto <span class="opt">(opcional)</span></label>
-                                <input type="text" id="depto" name="depto" class="field-input" placeholder="Ej: B">
+
+                                <label class="field-label" for="depto">
+                                    Depto
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="depto"
+                                    name="depto"
+                                    class="field-input"
+                                    placeholder="Ej: B"
+                                >
+
                             </div>
                         </div>
 
                         <div class="col-md-8">
                             <div class="field-group">
-                                <label class="field-label" for="ciudad">Ciudad *</label>
-                                <input type="text" id="ciudad" name="ciudad" class="field-input" placeholder="Ej: Mar del Plata">
-                                <div class="field-error" id="error-ciudad">Mín. 3 letras.</div>
+
+                                <label class="field-label" for="ciudad">
+                                    Ciudad *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="ciudad"
+                                    name="ciudad"
+                                    class="field-input"
+                                    placeholder="Ej: Mar del Plata"
+                                >
+
+                                <div class="field-error" id="error-ciudad">
+                                    Mín. 3 letras.
+                                </div>
+
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="field-group">
-                                <label class="field-label" for="cp">Cód. Postal *</label>
-                                <input type="number" id="cp" name="cp" class="field-input input-no-e" placeholder="7600">
-                                <div class="field-error" id="error-cp">Requerido.</div>
+
+                                <label class="field-label" for="cp">
+                                    Cód. Postal *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="cp"
+                                    name="cp"
+                                    class="field-input input-no-e"
+                                    placeholder="7600"
+                                >
+
+                                <div class="field-error" id="error-cp">
+                                    Requerido.
+                                </div>
+
                             </div>
                         </div>
+
                     </div>
 
-                    <!-- MÉTODO DE ARRAY -->
-                    <div class="section-divider text-primary">Lógica de Programación</div>
+                    <div class="section-divider text-primary">
+                        Lógica de Programación
+                    </div>
+
                     <div class="field-group">
-                        <label class="field-label" for="metodo">Posición en el Array *</label>
-                        <select id="metodo" name="metodo" class="field-input border-primary">
-                            <option value="push">Al Final (push)</option>
-                            <option value="unshift">Al Inicio (unshift)</option>
+
+                        <label class="field-label" for="metodo">
+                            Posición en el Array *
+                        </label>
+
+                        <select
+                            id="metodo"
+                            name="metodo"
+                            class="field-input"
+                        >
+                            <option value="push">
+                                Al Final (push)
+                            </option>
+
+                            <option value="unshift">
+                                Al Inicio (unshift)
+                            </option>
                         </select>
+
                     </div>
 
-                    <button type="submit" class="btn-submit mt-3">Guardar en Memoria</button>
+                    <button type="submit" class="btn-submit mt-3">
+                        Guardar en Memoria
+                    </button>
 
                 </form>
+
             </div>
+
         </div>
 
         <!-- TABLA -->
         <div class="col-lg-7">
+
             <div class="card-custom h-100">
 
-                <div class="card-tag">Vista en Tiempo Real</div>
-                <h2 class="card-title">Elementos del Array</h2>
+                <div class="card-tag">
+                    Vista en Tiempo Real
+                </div>
+
+                <h2 class="card-title">
+                    Elementos del Array
+                </h2>
 
                 <div class="table-responsive">
+
                     <table class="table align-middle mb-0">
+
                         <thead>
                             <tr>
                                 <th>Usuario</th>
@@ -145,8 +326,11 @@
                                 <th class="text-end">Acción</th>
                             </tr>
                         </thead>
+
                         <tbody id="tablaUsuarios"></tbody>
+
                     </table>
+
                 </div>
 
                 <div id="emptyMsg" class="empty-msg">
@@ -154,11 +338,14 @@
                 </div>
 
             </div>
+
         </div>
 
     </div>
+
 </main>
 
 <script type="module" src="../scripts/main.js"></script>
+
 </body>
 </html>

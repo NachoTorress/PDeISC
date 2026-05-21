@@ -16,5 +16,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🏥 Servidor Hospitalario activo en: http://localhost:${PORT}`);
+    console.log(`Servidor Huespedes activo en: http://localhost:${PORT}`);
 });

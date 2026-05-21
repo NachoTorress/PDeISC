@@ -8,14 +8,13 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Estilos personalizados -->
-    <link rel="stylesheet" href="../styles/style.css">
+    <!-- Hoja de estilos base (modo claro por defecto) -->
+    <link id="themeStylesheet" rel="stylesheet" href="../styles/style.css">
 </head>
 <body>
 
 <!-- ============================================================
      BOTÓN VOLVER ARRIBA
-     (visible solo cuando el usuario scrollea — activado por JS)
      ============================================================ -->
 <button id="btnScrollTop" title="Volver al inicio">&#8679;</button>
 
@@ -25,15 +24,21 @@
          ENCABEZADO
          ============================================================ -->
     <header class="mb-3">
-        <div class="text-center text-lg-start">
-            <h1 class="h2 fw-bold mb-1">
-                🏨 Registro de Ingreso de Huéspedes
-            </h1>
-            <p class="mb-0">
-                Sistema dinámico de check-in hotelero sin recarga de página
-            </p>
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+                <h1 class="h2 fw-bold mb-1">
+                    🏨 Registro de Ingreso de Huéspedes
+                </h1>
+                <p class="mb-0">
+                    Sistema dinámico de check-in hotelero sin recarga de página
+                </p>
+            </div>
+            <!-- Botón para cambiar entre modo claro y oscuro -->
+            <button id="themeToggle" title="Cambiar tema">🌙 Modo Oscuro</button>
         </div>
     </header>
+
+    <!-- ... resto del HTML sin cambios ... -->
 
     <div class="row g-3">
 

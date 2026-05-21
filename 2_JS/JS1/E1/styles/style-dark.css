@@ -1,33 +1,32 @@
 /* ============================================================
-   SISTEMA DE CHECK-IN HOTELERO — Hoja de estilos principal
-   Tema: Lujo refinado / Hotel boutique
-   Paleta: Azul medianoche + dorado + blancos cálidos
+   SISTEMA DE CHECK-IN HOTELERO — Tema OSCURO
+   Paleta: Azul profundo + dorado + grises oscuros
    ============================================================ */
 
-/* ---------- IMPORTAR FUENTES ---------- */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-/* ---------- VARIABLES GLOBALES ---------- */
+/* ---------- VARIABLES MODO OSCURO ---------- */
 :root {
-    --primary:       #1a3a5c;   /* Azul medianoche */
-    --primary-light: #2d5a8e;   /* Azul medio */
-    --accent:        #c9a84c;   /* Dorado */
-    --accent-light:  #e8c97a;   /* Dorado claro */
-    --bg:            #f5f3ee;   /* Blanco cálido */
-    --bg-card:       #ffffff;
-    --text:          #1c1c1e;
-    --text-muted:    #6b7280;
-    --border:        #e2ddd5;
-    --success:       #2d7a4f;
-    --danger:        #c0392b;
-    --monitor-bg:    #0d1117;
+    --primary:       #4a8fd4;   /* Azul claro (legible sobre oscuro) */
+    --primary-light: #6aaee0;
+    --accent:        #c9a84c;
+    --accent-light:  #e8c97a;
+    --bg:            #0f1117;
+    --bg-card:       #1a1d27;
+    --bg-fieldset:   #14172030;
+    --text:          #e8e8ec;
+    --text-muted:    #8b8fa8;
+    --border:        #2e3148;
+    --success:       #4caf82;
+    --danger:        #e05c5c;
+    --monitor-bg:    #070a0f;
     --monitor-green: #39d353;
     --radius-sm:     8px;
     --radius-md:     14px;
     --radius-lg:     20px;
-    --shadow-sm:     0 2px 8px rgba(26,58,92,0.08);
-    --shadow-md:     0 8px 32px rgba(26,58,92,0.12);
-    --shadow-gold:   0 4px 20px rgba(201,168,76,0.18);
+    --shadow-sm:     0 2px 8px rgba(0,0,0,0.35);
+    --shadow-md:     0 8px 32px rgba(0,0,0,0.5);
+    --shadow-gold:   0 4px 20px rgba(201,168,76,0.12);
     --transition:    0.22s ease;
 }
 
@@ -40,10 +39,9 @@
 
 body {
     background-color: var(--bg);
-    /* Patrón sutil de fondo para dar textura */
     background-image:
-        radial-gradient(circle at 20% 20%, rgba(201,168,76,0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(26,58,92,0.05) 0%, transparent 50%);
+        radial-gradient(circle at 20% 20%, rgba(74,143,212,0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 50%);
     min-height: 100vh;
     font-family: 'DM Sans', sans-serif;
     font-size: 14px;
@@ -52,7 +50,6 @@ body {
 
 /* ---------- HEADER ---------- */
 header {
-    /* Línea dorada decorativa debajo del header */
     border-bottom: 2px solid transparent;
     background: linear-gradient(var(--bg), var(--bg)) padding-box,
                 linear-gradient(90deg, transparent, var(--accent), transparent) border-box;
@@ -62,8 +59,8 @@ header {
 
 header h1 {
     font-family: 'Playfair Display', serif;
-    color: var(--primary) !important;
-    font-size: clamp(1.3rem, 3vw, 1.9rem); /* Responsivo */
+    color: var(--accent-light) !important;
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
     letter-spacing: -0.01em;
 }
 
@@ -79,12 +76,11 @@ header p {
 .card {
     border-radius: var(--radius-lg) !important;
     border: 1px solid var(--border) !important;
-    background: var(--bg-card);
+    background: var(--bg-card) !important;
     box-shadow: var(--shadow-md) !important;
     overflow: hidden;
 }
 
-/* Línea dorada superior en el card del formulario */
 .card.sticky-form {
     border-top: 3px solid var(--accent) !important;
 }
@@ -97,7 +93,7 @@ header p {
 
 /* ---------- FIELDSET / SECCIONES ---------- */
 fieldset {
-    background: #faf9f7;
+    background: #1e2235;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 0.9rem 1rem 0.6rem;
@@ -107,17 +103,16 @@ fieldset {
     font-family: 'Playfair Display', serif;
     font-size: 0.88rem;
     font-weight: 700;
-    color: var(--primary);
+    color: var(--accent-light);
     border-bottom: 1px solid var(--border);
     padding-bottom: 6px;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 6px;
-    width: 100%; /* Necesario para que el borde ocupe todo el ancho */
+    width: 100%;
 }
 
-/* Número de sección con estilo badge dorado */
 .section-title::before {
     content: attr(data-num);
     display: inline-flex;
@@ -126,7 +121,7 @@ fieldset {
     width: 20px;
     height: 20px;
     background: var(--accent);
-    color: #fff;
+    color: #1a1200;
     border-radius: 50%;
     font-size: 11px;
     font-family: 'DM Sans', sans-serif;
@@ -139,7 +134,7 @@ fieldset {
 .form-select {
     border-radius: var(--radius-sm) !important;
     border: 1.5px solid var(--border) !important;
-    background: #fff !important;
+    background: #0f1117 !important;
     color: var(--text) !important;
     font-family: 'DM Sans', sans-serif;
     font-size: 13px !important;
@@ -147,18 +142,29 @@ fieldset {
     padding: 0.38rem 0.65rem !important;
 }
 
+/* Opciones del select en oscuro */
+.form-select option {
+    background: #1a1d27;
+    color: var(--text);
+}
+
 .form-control:focus,
 .form-select:focus {
     border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.18) !important;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.2) !important;
     outline: none;
 }
 
-/* Estado inválido */
+/* Input de fecha: icono calendario en dark */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(0.7);
+    cursor: pointer;
+}
+
 .form-control.is-invalid,
 .form-select.is-invalid {
     border-color: var(--danger) !important;
-    box-shadow: 0 0 0 3px rgba(192,57,43,0.12) !important;
+    box-shadow: 0 0 0 3px rgba(224,92,92,0.15) !important;
 }
 
 .invalid-feedback {
@@ -167,9 +173,8 @@ fieldset {
     font-weight: 500;
 }
 
-/* Labels */
 .form-label {
-    color: var(--primary);
+    color: var(--accent-light);
     font-weight: 600 !important;
     font-size: 12px !important;
     letter-spacing: 0.03em;
@@ -189,8 +194,8 @@ input[type=number] {
 
 /* ---------- BOTÓN SUBMIT ---------- */
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--primary-light)) !important;
-    border: none !important;
+    background: linear-gradient(135deg, #1e3d6e, #2d5a8e) !important;
+    border: 1px solid var(--accent) !important;
     border-radius: var(--radius-sm) !important;
     font-family: 'DM Sans', sans-serif;
     font-weight: 600;
@@ -198,20 +203,20 @@ input[type=number] {
     letter-spacing: 0.05em;
     text-transform: uppercase;
     padding: 0.5rem 1rem;
+    color: #fff !important;
     box-shadow: var(--shadow-sm);
     transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
     position: relative;
     overflow: hidden;
 }
 
-/* Efecto brillo al hover */
 .btn-primary::after {
     content: '';
     position: absolute;
     top: 0; left: -100%;
     width: 60%;
     height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(120deg, transparent, rgba(201,168,76,0.15), transparent);
     transition: left 0.45s ease;
 }
 
@@ -222,11 +227,75 @@ input[type=number] {
 .btn-primary:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-md) !important;
-    opacity: 0.95;
 }
 
 .btn-primary:active {
     transform: translateY(0);
+}
+
+/* ---------- BOTONES DE ACCIÓN (confirm/cancel modal) ---------- */
+.btn-warning {
+    background: var(--accent) !important;
+    border: none !important;
+    color: #1a1200 !important;
+    font-weight: 600;
+    border-radius: var(--radius-sm) !important;
+    font-size: 13px;
+}
+
+.btn-secondary {
+    background: #2e3148 !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    font-weight: 500;
+    border-radius: var(--radius-sm) !important;
+    font-size: 13px;
+}
+
+/* ---------- MODAL DE CONFIRMACIÓN DE DNI DUPLICADO ---------- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: var(--shadow-md);
+    animation: slideUp 0.25s ease;
+}
+
+.modal-box h5 {
+    font-family: 'Playfair Display', serif;
+    color: var(--accent-light);
+    margin-bottom: 0.5rem;
+}
+
+.modal-box p {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
 }
 
 /* ---------- MONITOR TIEMPO REAL ---------- */
@@ -239,13 +308,12 @@ input[type=number] {
     min-height: 60px;
     font-size: 12.5px;
     padding: 0.6rem 0.8rem;
-    /* Efecto scanline sutil */
     background-image: repeating-linear-gradient(
         0deg,
         transparent,
         transparent 2px,
-        rgba(255,255,255,0.015) 2px,
-        rgba(255,255,255,0.015) 4px
+        rgba(255,255,255,0.01) 2px,
+        rgba(255,255,255,0.01) 4px
     );
 }
 
@@ -260,7 +328,6 @@ input[type=number] {
     text-transform: uppercase;
 }
 
-/* Cursor parpadeante en el monitor */
 #liveFeedback::after {
     content: '█';
     animation: blink 1s step-end infinite;
@@ -275,7 +342,7 @@ input[type=number] {
 
 /* ---------- TABLA ---------- */
 .card-header {
-    background: linear-gradient(135deg, var(--primary), var(--primary-light)) !important;
+    background: linear-gradient(135deg, #12243a, #1a3456) !important;
     border-bottom: 2px solid var(--accent) !important;
     padding: 0.75rem 1.2rem !important;
 }
@@ -284,10 +351,13 @@ input[type=number] {
     font-family: 'Playfair Display', serif;
     font-size: 1rem;
     letter-spacing: 0.02em;
-    color: #fff;
+    color: var(--accent-light);
 }
 
-/* Línea dorada izquierda al hacer hover en la fila */
+.table {
+    color: var(--text) !important;
+}
+
 .table tbody tr {
     border-left: 3px solid transparent;
     transition: border-color var(--transition), background var(--transition);
@@ -295,11 +365,11 @@ input[type=number] {
 
 .table tbody tr:hover {
     border-left-color: var(--accent);
-    background-color: #fdf8ef !important;
+    background-color: #1e2235 !important;
 }
 
 .table thead {
-    background: #f0ece4 !important;
+    background: #16192a !important;
 }
 
 .table thead th {
@@ -308,7 +378,7 @@ input[type=number] {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--primary);
+    color: var(--accent-light);
     padding: 0.65rem 1rem;
     border-bottom: 2px solid var(--border) !important;
 }
@@ -323,7 +393,7 @@ input[type=number] {
 
 .table td strong {
     font-weight: 600;
-    color: var(--primary);
+    color: var(--accent-light);
 }
 
 .table td .text-primary {
@@ -341,13 +411,13 @@ input[type=number] {
 }
 
 .alert-success {
-    background: #edf7f1 !important;
+    background: #0d2a1a !important;
     color: var(--success) !important;
     border-left: 4px solid var(--success) !important;
 }
 
 .alert-danger {
-    background: #fdf0ef !important;
+    background: #2a0d0d !important;
     color: var(--danger) !important;
     border-left: 4px solid var(--danger) !important;
 }
@@ -369,16 +439,15 @@ input[type=number] {
 }
 
 /* ---------- BOTÓN VOLVER ARRIBA ---------- */
-/* Se muestra solo cuando el usuario scrollea más de 300px */
 #btnScrollTop {
-    display: none; /* JS lo activa */
+    display: none;
     position: fixed;
     bottom: 24px;
     right: 24px;
     width: 44px;
     height: 44px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    color: #fff;
+    background: linear-gradient(135deg, #1e3d6e, #2d5a8e);
+    color: var(--accent-light);
     border: 2px solid var(--accent);
     border-radius: 50%;
     font-size: 18px;
@@ -400,16 +469,33 @@ input[type=number] {
     animation: fadeSlideIn 0.3s ease;
 }
 
-/* ---------- RESPONSIVE ---------- */
+/* ---------- TOGGLE TEMA ---------- */
+#themeToggle {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    color: var(--accent-light);
+    cursor: pointer;
+    transition: all var(--transition);
+    letter-spacing: 0.04em;
+}
 
-/* Tablet: <= 991px — quitar sticky del formulario */
+#themeToggle:hover {
+    border-color: var(--accent);
+    background: rgba(201,168,76,0.08);
+}
+
+/* ---------- RESPONSIVE ---------- */
 @media (max-width: 991px) {
     .sticky-form {
         position: static;
     }
 }
 
-/* Mobile: <= 576px — ajustes de espaciado y tipografía */
 @media (max-width: 576px) {
     body {
         font-size: 13px;
@@ -446,93 +532,68 @@ input[type=number] {
         height: 40px;
         font-size: 16px;
     }
-}
-/* ============================================================
-   AÑADIR AL FINAL DE style.css EXISTENTE
-   ============================================================ */
 
-/* ---------- TOGGLE TEMA ---------- */
-#themeToggle {
-    background: transparent;
-    border: 1.5px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    color: var(--primary);
-    cursor: pointer;
-    transition: all var(--transition);
-    letter-spacing: 0.04em;
+    .modal-box {
+        padding: 1.2rem;
+    }
 }
-
-#themeToggle:hover {
-    border-color: var(--accent);
-    background: rgba(201,168,76,0.08);
+/* ---------- PLACEHOLDERS ---------- */
+.form-control::placeholder,
+.form-select::placeholder,
+textarea::placeholder,
+input::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 1;
 }
+/* ---------- HISTORIAL / TABLA EN OSCURO ---------- */
 
-/* ---------- BOTONES DEL MODAL (tema claro) ---------- */
-.btn-warning {
-    background: var(--accent) !important;
-    border: none !important;
-    color: #fff !important;
-    font-weight: 600;
-    border-radius: var(--radius-sm) !important;
-    font-size: 13px;
-}
-
-.btn-secondary {
-    background: #e9e5de !important;
-    border: 1px solid var(--border) !important;
-    color: var(--primary) !important;
-    font-weight: 500;
-    border-radius: var(--radius-sm) !important;
-    font-size: 13px;
-}
-
-/* ---------- MODAL DE CONFIRMACIÓN DE DNI DUPLICADO ---------- */
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 9998;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.2s ease;
-}
-
-.modal-box {
+.table-responsive {
     background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--accent);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    max-width: 420px;
-    width: 90%;
-    box-shadow: var(--shadow-md);
-    animation: slideUp 0.25s ease;
+    border-radius: var(--radius-md);
 }
 
-.modal-box h5 {
-    font-family: 'Playfair Display', serif;
-    color: var(--primary);
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
+.table tbody tr {
+    background-color: transparent !important;
 }
 
-.modal-box p {
-    color: var(--text-muted);
-    font-size: 13px;
-    line-height: 1.6;
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: #161a24 !important;
+    color: var(--text) !important;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+.table-hover > tbody > tr:hover > * {
+    background-color: #22283a !important;
+    color: var(--text) !important;
 }
 
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to   { transform: translateY(0);    opacity: 1; }
+.table td,
+.table th {
+    background-color: transparent !important;
+}
+
+tbody,
+tr,
+td {
+    border-color: var(--border) !important;
+}
+/* ---------- TEXTO TABLA EN OSCURO ---------- */
+
+.table,
+.table tbody,
+.table tr,
+.table td,
+.table th {
+    color: var(--text) !important;
+}
+
+.table td strong {
+    color: var(--accent-light) !important;
+}
+
+.table td .text-muted {
+    color: var(--text-muted) !important;
+}
+
+.table td .text-primary {
+    color: var(--accent-light) !important;
 }

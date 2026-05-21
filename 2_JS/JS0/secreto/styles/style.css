@@ -1,76 +1,238 @@
-/* Reset y Base */
-* { box-sizing: border-box; }
+/* =========================
+   VARIABLES
+========================= */
+
+:root {
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+    --card-bg: #ffffff;
+    --text-color: #212529;
+    --muted-color: #6c757d;
+
+    --input-bg: #ffffff;
+    --input-border: #dfe3e8;
+    --input-text: #212529;
+    --placeholder-color: #6c757d;
+
+    --result-bg: #f8f9fa;
+    --result-border: #dee2e6;
+    --result-text: #212529;
+
+    --success-bg: #f8fff9;
+    --success-border: #198754;
+
+    --footer-color: #6c757d;
+}
+
+[data-theme="dark"] {
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+
+    --card-bg: #1f2937;
+    --text-color: #f1f5f9;
+    --muted-color: #9ca3af;
+
+    --input-bg: #111827;
+    --input-border: #374151;
+    --input-text: #f1f5f9;
+    --placeholder-color: #94a3b8;
+
+    --result-bg: #111827;
+    --result-border: #374151;
+    --result-text: #f1f5f9;
+
+    --success-bg: #052e16;
+    --success-border: #22c55e;
+
+    --footer-color: #9ca3af;
+}
+
+/* =========================
+   RESET
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+/* =========================
+   BODY
+========================= */
 
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-gradient);
     margin: 0;
     min-height: 100vh;
+
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 15px; /* Espacio para que no toque los bordes en móvil */
+    align-items: center;
+
+    padding: 20px;
+
     font-family: system-ui, -apple-system, sans-serif;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
 }
 
-/* Contenedor Principal */
+/* =========================
+   CONTENEDOR
+========================= */
+
 .app-container {
     width: 100%;
-    max-width: 1100px;
-    display: flex;
-    justify-content: center;
+    max-width: 1200px;
 }
 
+/* =========================
+   BOTÓN TEMA
+========================= */
+
+.theme-toggle-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+#themeToggle {
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] #themeToggle {
+    background-color: #f1f5f9 !important;
+    color: #111827 !important;
+    border-color: #f1f5f9 !important;
+}
+
+/* =========================
+   CARD
+========================= */
+
 .main-card {
-    width: 100%;
     border: none;
-    border-radius: 12px;
+    border-radius: 18px;
     overflow: hidden;
-    /* En PC limita el alto, en móvil crece según necesite */
-    max-height: 90vh; 
+
+    background-color: var(--card-bg);
+    color: var(--text-color);
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 .card-body {
-    padding: 1.5rem;
-    overflow: hidden; /* Evita scroll doble */
+    padding: 1.7rem;
 }
 
-/* Áreas de texto */
-textarea, #resultado {
-    font-family: 'Courier New', monospace;
-    font-size: 1.1rem;
-    resize: none;
-    border: 2px solid #e9ecef;
+.card-footer {
+    background-color: transparent;
+    color: var(--footer-color);
+
+    transition: color 0.3s ease;
 }
+
+/* =========================
+   LABELS
+========================= */
+
+.form-label,
+.result-label {
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+/* =========================
+   TEXTAREA
+========================= */
+
+textarea.form-control {
+    min-height: 320px;
+
+    resize: none;
+
+    background-color: var(--input-bg);
+    border: 2px solid var(--input-border);
+    color: var(--input-text);
+
+    font-family: 'Consolas', monospace;
+    font-size: 1.05rem;
+
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
+}
+
+textarea.form-control:focus {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+
+    border-color: #0d6efd;
+
+    box-shadow: none;
+}
+
+textarea.form-control::placeholder {
+    color: var(--placeholder-color);
+}
+
+/* =========================
+   RESULTADO
+========================= */
 
 #resultado {
-    white-space: pre-wrap;
+    min-height: 320px;
+
     overflow-y: auto;
-    border-left: 5px solid #dee2e6;
-    min-height: 120px; /* Asegura visibilidad en móvil */
+
+    background-color: var(--result-bg);
+    border: 2px solid var(--result-border);
+    border-left: 5px solid var(--result-border);
+
+    color: var(--result-text);
+
+    font-family: 'Consolas', monospace;
+    font-size: 1.05rem;
+
+    white-space: pre-wrap;
+
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
 }
 
-/* Estado de éxito */
+.placeholder-result {
+    color: var(--placeholder-color);
+}
+
+/* =========================
+   ÉXITO
+========================= */
+
 .border-success-custom {
-    border-left-color: #198754 !important;
-    background-color: #f8fff9 !important;
+    border-left-color: var(--success-border) !important;
+    background-color: var(--success-bg) !important;
 }
 
-/* Responsividad para móviles */
-@media (max-width: 767px) {
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 991px) {
+
     body {
-        align-items: flex-start; /* En móvil, que empiece desde arriba */
-        overflow-y: auto;
+        align-items: flex-start;
     }
-    
-    .main-card {
-        max-height: none; /* Que se expanda todo lo necesario */
+
+    textarea.form-control,
+    #resultado {
+        min-height: 220px;
     }
 
     .card-body {
         padding: 1rem;
-    }
-
-    textarea {
-        min-height: 150px;
     }
 }
