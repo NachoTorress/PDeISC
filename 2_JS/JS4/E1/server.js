@@ -1,7 +1,7 @@
 /**
  * server.js — Ejercicio 1
  * Sirve la página del ejercicio 1: GET de usuarios con fetch y axios.
- * Puerto: 3001
+ * Puerto: Variable (default 3001)
  */
 import express from "express";
 import path from "path";
@@ -18,4 +18,5 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "pages", "index.html"));
 });
 
-app.listen(3001, () => console.log("E1 corriendo en http://localhost:3001"));
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`E1 corriendo en http://localhost:${PORT}`));

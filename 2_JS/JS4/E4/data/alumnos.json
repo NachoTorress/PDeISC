@@ -2,7 +2,7 @@
   {
     "id": 1,
     "nombre": "Lucas Ramírez",
-    "email": "lucas@mail.com",
+    "email": "lucas@mail.cm",
     "materia": "Redes",
     "createdAt": "15/06/25"
   },
@@ -25,6 +25,20 @@
     "nombre": "nachubi",
     "email": "capoigt07@gmail.com",
     "materia": "relknfm",
+    "createdAt": "25/06/26"
+  },
+  {
+    "id": 5,
+    "nombre": "iGnacio gabriel torres carlomagno",
+    "email": "capoigt07@gmail.com",
+    "materia": "wegfk",
+    "createdAt": "25/06/26"
+  },
+  {
+    "id": 6,
+    "nombre": "oirg",
+    "email": "capoigt07@gmail.com",
+    "materia": "wegfk",
     "createdAt": "25/06/26"
   }
 ]

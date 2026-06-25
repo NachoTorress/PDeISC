@@ -1,39 +1,42 @@
 /*
  * styles/light.css
- * Tema claro de la aplicación API Demo.
- * Paleta: blanco roto #f6f8fa, superficie #ffffff, acento verde #0e7a3c, azul axios #0550ae
+ * Tema claro mejorado — paleta pastel suave, bajo contraste agresivo,
+ * colores accesibles con ratio WCAG AA en texto principal.
+ * Fondo: crema #faf7f4, superficies cálidas, acentos verdes/azules desaturados
  */
 
+/* ─────────────────────── TOKENS ─────────────────────── */
 :root {
-  --bg:            #f6f8fa;
+  --bg:            #faf7f4;
   --surface:       #ffffff;
-  --surface-2:     #f0f2f5;
-  --surface-3:     #e8eaed;
-  --border:        #d1d9e0;
-  --border-light:  #b8c4cc;
-  --text-primary:  #0d1117;
-  --text-secondary:#57606a;
-  --text-muted:    #8c959f;
-  --fetch:         #0e7a3c;
-  --fetch-dim:     #0a5e2e;
-  --fetch-bg:      rgba(14,122,60,0.07);
-  --axios:         #0550ae;
-  --axios-dim:     #033d8a;
-  --axios-bg:      rgba(5,80,174,0.07);
-  --error:         #cf222e;
-  --error-bg:      rgba(207,34,46,0.06);
-  --success:       #1a7f37;
-  --warning:       #9a6700;
+  --surface-2:     #f4f0ec;
+  --surface-3:     #ede8e2;
+  --border:        #ddd8d1;
+  --border-light:  #cec8c0;
+  --text-primary:  #2c2825;
+  --text-secondary:#6b6460;
+  --text-muted:    #9e9890;
+  --fetch:         #2d7a52;
+  --fetch-dim:     #235f3f;
+  --fetch-bg:      rgba(45,122,82,0.08);
+  --axios:         #3a68b0;
+  --axios-dim:     #2d528c;
+  --axios-bg:      rgba(58,104,176,0.08);
+  --error:         #b84040;
+  --error-bg:      rgba(184,64,64,0.07);
+  --success:       #2d7a52;
+  --warning:       #8a6200;
   --font-mono:     'JetBrains Mono', monospace;
   --font-sans:     'Inter', system-ui, sans-serif;
   --radius-sm:     6px;
   --radius:        10px;
   --radius-lg:     16px;
-  --shadow:        0 4px 16px rgba(0,0,0,0.08);
-  --shadow-lg:     0 8px 32px rgba(0,0,0,0.14);
+  --shadow:        0 4px 16px rgba(44,40,37,0.07);
+  --shadow-lg:     0 8px 32px rgba(44,40,37,0.12);
   --transition:    0.2s ease;
 }
 
+/* ─────────────────────── RESET / BASE ─────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
@@ -46,8 +49,9 @@ body {
   line-height: 1.6;
 }
 
+/* ─────────────────────── NAVBAR ─────────────────────── */
 #mainNav {
-  background: rgba(246,248,250,0.92);
+  background: rgba(250,247,244,0.93);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   padding: 0.6rem 0;
@@ -57,7 +61,7 @@ body {
 .brand-icon {
   width: 34px; height: 34px;
   background: var(--fetch-bg);
-  border: 1px solid var(--fetch);
+  border: 1px solid rgba(45,122,82,0.35);
   border-radius: var(--radius-sm);
   display: flex; align-items: center; justify-content: center;
   color: var(--fetch);
@@ -110,10 +114,11 @@ body {
   color: var(--text-primary);
 }
 
+/* ─────────────────────── HERO ─────────────────────── */
 .hero-section {
   padding: 4rem 0 3rem;
   border-bottom: 1px solid var(--border);
-  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(14,122,60,0.05) 0%, transparent 60%);
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(45,122,82,0.06) 0%, transparent 60%);
 }
 .hero-badge {
   display: inline-flex;
@@ -170,16 +175,17 @@ body {
   display: flex; align-items: center; gap: 6px;
 }
 .pill-fetch {
-  background: var(--fetch-bg);
+  background: #e8f4ee;
   color: var(--fetch);
-  border: 1px solid rgba(14,122,60,0.25);
+  border: 1px solid rgba(45,122,82,0.25);
 }
 .pill-axios {
-  background: var(--axios-bg);
+  background: #e6eef8;
   color: var(--axios);
-  border: 1px solid rgba(5,80,174,0.25);
+  border: 1px solid rgba(58,104,176,0.25);
 }
 
+/* ─────────────────────── LAYOUT ─────────────────────── */
 .main-content { padding: 2rem 0 5rem; }
 
 .exercise-tabs-wrapper { margin-bottom: 2rem; overflow-x: auto; padding-bottom: 4px; }
@@ -239,8 +245,8 @@ body {
 .panel-desc code {
   font-family: var(--font-mono);
   font-size: 0.82em;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  background: #eef6f1;
+  border: 1px solid rgba(45,122,82,0.2);
   padding: 1px 6px;
   border-radius: 4px;
   color: var(--fetch);
@@ -255,6 +261,7 @@ body {
   .dual-panel { grid-template-columns: 1fr; }
 }
 
+/* ─────────────────────── CARDS ─────────────────────── */
 .impl-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -263,7 +270,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  transition: border-color var(--transition);
+  box-shadow: var(--shadow);
 }
 .impl-fetch { border-top: 3px solid var(--fetch); }
 .impl-axios { border-top: 3px solid var(--axios); }
@@ -277,16 +284,17 @@ body {
   display: flex; align-items: center; gap: 5px;
 }
 .fetch-badge {
-  background: var(--fetch-bg);
+  background: #e8f4ee;
   color: var(--fetch);
-  border: 1px solid rgba(14,122,60,0.3);
+  border: 1px solid rgba(45,122,82,0.3);
 }
 .axios-badge {
-  background: var(--axios-bg);
+  background: #e6eef8;
   color: var(--axios);
-  border: 1px solid rgba(5,80,174,0.3);
+  border: 1px solid rgba(58,104,176,0.3);
 }
 
+/* ─────────────────────── BOTONES ─────────────────────── */
 .btn-run {
   font-family: var(--font-mono);
   font-size: 0.8rem; font-weight: 600;
@@ -302,7 +310,7 @@ body {
 }
 .btn-run:hover { background: var(--fetch-dim); transform: translateY(-1px); }
 .btn-run:active { transform: translateY(0); }
-.btn-run:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-run:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 .btn-run-axios { background: var(--axios); }
 .btn-run-axios:hover { background: var(--axios-dim); }
@@ -322,8 +330,9 @@ body {
 }
 .btn-secondary-custom:hover { background: var(--surface-3); color: var(--text-primary); }
 
+/* ─────────────────────── TERMINAL ─────────────────────── */
 .terminal {
-  background: #f0f2f5;
+  background: #f2ede8;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1rem;
@@ -357,6 +366,7 @@ body {
 .response-id { font-size: 1.2rem; color: var(--fetch); font-weight: 700; }
 .response-label { color: var(--text-muted); font-size: 0.75rem; }
 
+/* ─────────────────────── FORMULARIOS ─────────────────────── */
 .field-wrap { display: flex; flex-direction: column; gap: 5px; }
 label {
   font-size: 0.8rem; font-weight: 500;
@@ -376,11 +386,11 @@ label {
 }
 .custom-input:focus {
   border-color: var(--fetch);
-  box-shadow: 0 0 0 3px rgba(14,122,60,0.12);
+  box-shadow: 0 0 0 3px rgba(45,122,82,0.12);
 }
 .custom-input.input-error {
   border-color: var(--error) !important;
-  box-shadow: 0 0 0 3px rgba(207,34,46,0.1) !important;
+  box-shadow: 0 0 0 3px rgba(184,64,64,0.1) !important;
 }
 .custom-input:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -399,11 +409,13 @@ label {
 }
 .search-input { padding-left: 2.2rem !important; }
 
+/* ─────────────────────── E4 — ALUMNOS ─────────────────────── */
 .add-form-wrapper {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
+  box-shadow: var(--shadow);
 }
 .sub-section-title {
   font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700;
@@ -415,14 +427,14 @@ label {
 .alumnos-list { display: flex; flex-direction: column; gap: 0.6rem; min-height: 180px; }
 
 .alumno-card {
-  background: var(--surface-2);
+  background: #f6f2ee;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 0.85rem 1rem;
   display: flex; align-items: flex-start; gap: 0.75rem;
-  transition: border-color var(--transition);
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
-.alumno-card:hover { border-color: var(--border-light); }
+.alumno-card:hover { border-color: var(--border-light); box-shadow: var(--shadow); }
 .alumno-info { flex: 1; min-width: 0; }
 .alumno-nombre { font-family: var(--font-mono); font-weight: 700; color: var(--fetch); font-size: 0.88rem; }
 .alumno-email { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary); }
@@ -441,14 +453,16 @@ label {
   transition: all var(--transition);
 }
 .btn-icon:hover { background: var(--surface-2); }
-.btn-icon.edit:hover { color: var(--axios); border-color: var(--axios); }
-.btn-icon.delete:hover { color: var(--error); border-color: var(--error); }
+.btn-icon.edit:hover { color: var(--axios); border-color: rgba(58,104,176,0.5); }
+.btn-icon.delete:hover { color: var(--error); border-color: rgba(184,64,64,0.5); }
 
+/* ─────────────────────── MODAL ─────────────────────── */
 .custom-modal {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
 }
 .modal-header { border-bottom: 1px solid var(--border); padding: 1.25rem 1.5rem; }
 .modal-title { font-family: var(--font-mono); font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0; }
@@ -466,6 +480,7 @@ label {
 }
 .btn-close-custom:hover { color: var(--text-primary); }
 
+/* ─────────────────────── SCROLL TOP ─────────────────────── */
 .scroll-top-btn {
   position: fixed; bottom: 2rem; right: 2rem;
   width: 44px; height: 44px;
@@ -481,6 +496,7 @@ label {
 .scroll-top-btn.visible { opacity: 1; pointer-events: all; }
 .scroll-top-btn:hover { background: var(--surface-2); color: var(--text-primary); transform: translateY(-2px); }
 
+/* ─────────────────────── TOAST ─────────────────────── */
 .toast-container {
   position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
   z-index: 9999; pointer-events: none;
@@ -496,9 +512,10 @@ label {
 .app-toast.toast-success { border-color: var(--success); color: var(--success); }
 .app-toast.toast-error { border-color: var(--error); color: var(--error); }
 
+/* ─────────────────────── SPINNER ─────────────────────── */
 .spinner {
   display: inline-block; width: 14px; height: 14px;
-  border: 2px solid rgba(14,122,60,0.25);
+  border: 2px solid rgba(45,122,82,0.2);
   border-top-color: var(--fetch);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -508,8 +525,9 @@ label {
 
 .form-group-custom { display: flex; flex-direction: column; gap: 0.75rem; }
 
+/* ─────────────────────── MOBILE ─────────────────────── */
 @media (max-width: 576px) {
   .hero-section { padding: 2.5rem 0 2rem; }
   .hero-title { font-size: 2.2rem; letter-spacing: -1px; }
   .scroll-top-btn { bottom: 1rem; right: 1rem; }
-}
+} 

@@ -47,6 +47,9 @@ router.post("/", (req, res) => {
   }
 
   const alumno = addAlumno({ nombre: nombre.trim(), email: email.trim(), materia: materia.trim() });
+  if (!alumno) {
+    return res.status(400).json({ error: "Ya existe un registro con el mismo email y materia." });
+  }
   res.status(201).json(alumno);
 });
 

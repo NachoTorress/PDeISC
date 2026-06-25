@@ -69,6 +69,12 @@ export function getAlumnos() {
  */
 export function addAlumno(data) {
   const alumnos = leerDB();
+  const exists = alumnos.some(
+    (a) => a.email.toLowerCase() === data.email.toLowerCase() && a.materia.toLowerCase() === data.materia.toLowerCase()
+  );
+
+  if (exists) return null;
+
   const alumno = { id: nextId(alumnos), ...data, createdAt: formatDate() };
   alumnos.push(alumno);
   escribirDB(alumnos);

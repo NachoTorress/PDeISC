@@ -1,7 +1,7 @@
 /**
  * server.js — Ejercicio 4
  * Sirve la página del ejercicio 4 y expone la API /api/alumnos.
- * Puerto: 3004
+ * Puerto: Variable (default 3004)
  */
 import express from "express";
 import path from "path";
@@ -21,4 +21,5 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "pages", "index.html"));
 });
 
-app.listen(3004, () => console.log("E4 corriendo en http://localhost:3004"));
+const PORT = process.env.PORT || 3004;
+app.listen(PORT, () => console.log(`E4 corriendo en http://localhost:${PORT}`));
