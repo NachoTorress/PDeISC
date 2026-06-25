@@ -1,44 +1,16 @@
 [
   {
     "id": 1,
-    "nombre": "Lucas Ramírez",
-    "email": "lucas@mail.cm",
-    "materia": "Redes",
-    "createdAt": "15/06/25"
+    "nombre": "nacho",
+    "email": "capoigt07@gmail.com",
+    "materia": "faj",
+    "createdAt": "25/06/26"
   },
   {
     "id": 2,
-    "nombre": "Valentina Torres",
-    "email": "valen@mail.com",
-    "materia": "Programación",
-    "createdAt": "16/06/25"
-  },
-  {
-    "id": 3,
-    "nombre": "Mateo Gómez",
-    "email": "mateo@mail.com",
-    "materia": "Base de Datos",
-    "createdAt": "20/06/25"
-  },
-  {
-    "id": 4,
-    "nombre": "nachubi",
-    "email": "capoigt07@gmail.com",
-    "materia": "relknfm",
-    "createdAt": "25/06/26"
-  },
-  {
-    "id": 5,
-    "nombre": "iGnacio gabriel torres carlomagno",
-    "email": "capoigt07@gmail.com",
-    "materia": "wegfk",
-    "createdAt": "25/06/26"
-  },
-  {
-    "id": 6,
-    "nombre": "oirg",
-    "email": "capoigt07@gmail.com",
-    "materia": "wegfk",
+    "nombre": "asjk",
+    "email": "askjd@fmec.c",
+    "materia": "nachu",
     "createdAt": "25/06/26"
   }
 ]

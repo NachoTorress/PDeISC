@@ -116,13 +116,14 @@ body {
 
 /* ─────────────────────── HERO ─────────────────────── */
 .hero-section {
+  
   padding: 4rem 0 3rem;
   border-bottom: 1px solid var(--border);
   background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(45,122,82,0.06) 0%, transparent 60%);
 }
 .hero-badge {
   display: inline-flex;
-  align-items: center;
+
   gap: 8px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -145,6 +146,7 @@ body {
 }
 
 .hero-title {
+   
   font-family: var(--font-mono);
   font-size: clamp(2.4rem, 6vw, 5rem);
   font-weight: 700;
@@ -160,6 +162,7 @@ body {
 .hero-vs { color: var(--text-muted); font-size: 0.5em; font-weight: 400; }
 .hero-axios { color: var(--axios); }
 .hero-subtitle {
+
   font-size: 1.05rem;
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
@@ -530,4 +533,20 @@ label {
   .hero-section { padding: 2.5rem 0 2rem; }
   .hero-title { font-size: 2.2rem; letter-spacing: -1px; }
   .scroll-top-btn { bottom: 1rem; right: 1rem; }
+}
+
+/* Centrar hero */
+.hero-title{
+    justify-content: center;
+    text-align: center;
+}
+
+.hero-subtitle{
+    max-width: none;
+    width: 100%;
+    text-align: center;
+}
+
+.hero-pills{
+    justify-content: center;
 }

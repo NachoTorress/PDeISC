@@ -675,3 +675,48 @@ label {
   .toast-container { width: 90%; }
   .app-toast { white-space: normal; text-align: center; }
 }
+/* Centrar hero */
+.hero-title{
+    justify-content: center;
+    text-align: center;
+}
+
+.hero-subtitle{
+    max-width: none;
+    width: 100%;
+    text-align: center;
+}
+
+.hero-pills{
+    justify-content: center;
+}
+.delete-confirm{
+    margin-top:10px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.delete-confirm p{
+    margin:0;
+    width:100%;
+    font-size:.9rem;
+}
+
+.btn-confirm{
+    border:none;
+    padding:4px 10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn-confirm.yes{
+    background:#d9534f;
+    color:white;
+}
+
+.btn-confirm.no{
+    background:#6c757d;
+    color:white;
+}

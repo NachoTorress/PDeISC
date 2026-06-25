@@ -61,9 +61,24 @@ function renderAlumnos(containerId, alumnos, method) {
   container.querySelectorAll(".btn-icon.edit").forEach((btn) => {
     btn.addEventListener("click", () => openEditModal(btn));
   });
+  
+  // Registrar listeners de borrado (con confirmación intermedia)
   container.querySelectorAll(".btn-icon.delete").forEach((btn) => {
-    btn.addEventListener("click", () => deleteAlumno(btn.dataset.id, btn.dataset.method));
+    btn.addEventListener("click", () => handleConfirmDelete(btn));
   });
+}
+
+// ─────────────────────── MANEJADOR DE BORRADO ───────────────────────
+/**
+ * Intercepta el clic de borrado para pedir confirmación antes de proceder.
+ */
+function handleConfirmDelete(btn) {
+  const nombre = btn.closest('.alumno-card').querySelector('.alumno-nombre').textContent;
+  const isConfirmed = confirm(`¿Estás seguro de que quieres eliminar a "${nombre}"?`);
+  
+  if (isConfirmed) {
+    deleteAlumno(btn.dataset.id, btn.dataset.method);
+  }
 }
 
 // ─────────────────────── GET ───────────────────────
