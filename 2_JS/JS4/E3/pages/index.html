@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E3 — Búsqueda por nombre</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link id="theme-stylesheet" rel="stylesheet" href="/styles/dark.css" />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNav">
+      <div class="container-fluid px-4">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+          <span class="brand-icon"><i class="bi bi-search"></i></span>
+          <span class="brand-text">E3 — <span class="brand-accent">Búsqueda</span></span>
+        </a>
+        <div class="d-flex align-items-center gap-2">
+          <a href="http://localhost:3001" class="nav-link">E1</a>
+          <a href="http://localhost:3002" class="nav-link">E2</a>
+          <a href="http://localhost:3004" class="nav-link">E4</a>
+          <button class="btn btn-theme-toggle ms-2" id="themeToggle" aria-label="Cambiar tema">
+            <i class="bi bi-moon-fill" id="themeIcon"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero-section">
+      <div class="container-fluid px-4">
+        <div class="hero-content">
+          <div class="hero-badge"><span class="badge-dot"></span><span>Ejercicio 3</span></div>
+          <h1 class="hero-title">Búsqueda <span class="hero-fetch">en tiempo real</span></h1>
+          <p class="hero-subtitle">
+            Carga todos los usuarios y filtra el array localmente mientras escribís. Sin peticiones extra.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <main class="main-content">
+      <div class="container-fluid px-4">
+        <div class="dual-panel">
+          <!-- FETCH -->
+          <div class="impl-card impl-fetch">
+            <div class="impl-header">
+              <span class="impl-badge fetch-badge"><i class="bi bi-lightning-fill"></i> Fetch</span>
+              <button class="btn-run btn-sm-run" id="ex3-fetch-load">
+                <i class="bi bi-cloud-download-fill"></i> Cargar
+              </button>
+            </div>
+            <div class="field-wrap mt-2">
+              <label for="ex3f-search">Buscar por nombre</label>
+              <div class="search-input-wrap">
+                <i class="bi bi-search search-icon"></i>
+                <input type="search" id="ex3f-search" class="custom-input search-input" placeholder="Escribí para filtrar..." disabled />
+              </div>
+            </div>
+            <div class="terminal user-list-terminal" id="ex3-fetch-output">
+              <span class="terminal-placeholder">// Primero cargá los datos...</span>
+            </div>
+          </div>
+          <!-- AXIOS -->
+          <div class="impl-card impl-axios">
+            <div class="impl-header">
+              <span class="impl-badge axios-badge"><i class="bi bi-box-fill"></i> Axios</span>
+              <button class="btn-run btn-sm-run" id="ex3-axios-load">
+                <i class="bi bi-cloud-download-fill"></i> Cargar
+              </button>
+            </div>
+            <div class="field-wrap mt-2">
+              <label for="ex3a-search">Buscar por nombre</label>
+              <div class="search-input-wrap">
+                <i class="bi bi-search search-icon"></i>
+                <input type="search" id="ex3a-search" class="custom-input search-input" placeholder="Escribí para filtrar..." disabled />
+              </div>
+            </div>
+            <div class="terminal user-list-terminal" id="ex3-axios-output">
+              <span class="terminal-placeholder">// Primero cargá los datos...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Volver arriba">
+      <i class="bi bi-arrow-up-short"></i>
+    </button>
+    <div class="toast-container">
+      <div id="appToast" class="app-toast" role="status" aria-live="polite">
+        <span id="toastMsg"></span>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="/scripts/main.js"></script>
+  </body>
+</html>

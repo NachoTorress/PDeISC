@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "nombre": "Lucas Ramírez",
+    "email": "lucas@mail.com",
+    "materia": "Redes",
+    "createdAt": "15/06/25"
+  },
+  {
+    "id": 2,
+    "nombre": "Valentina Torres",
+    "email": "valen@mail.com",
+    "materia": "Programación",
+    "createdAt": "16/06/25"
+  },
+  {
+    "id": 3,
+    "nombre": "Mateo Gómez",
+    "email": "mateo@mail.com",
+    "materia": "Base de Datos",
+    "createdAt": "20/06/25"
+  },
+  {
+    "id": 4,
+    "nombre": "nachubi",
+    "email": "capoigt07@gmail.com",
+    "materia": "relknfm",
+    "createdAt": "25/06/26"
+  }
+]
