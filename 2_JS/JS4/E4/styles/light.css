@@ -576,3 +576,59 @@ label {
     background:#6c757d;
     color:white;
 }
+
+/* ───────── FIX MOBILE DESFASE FETCH / AXIOS ───────── */
+
+.dual-panel {
+  align-items: stretch;
+}
+
+/* evita saltos de layout entre cards */
+.impl-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+/* header estable (evita cambios de altura en mobile) */
+.impl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 42px;
+  flex-wrap: nowrap;
+}
+
+/* evita que botones o badges rompan layout */
+.impl-header > * {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* lista estable dentro de la card */
+.alumnos-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  overflow-y: auto;
+  min-height: 0; /* clave para flex en mobile */
+}
+
+/* evita overflow raro en cards internas */
+.alumno-card {
+  min-width: 0;
+}
+
+/* mobile safety */
+@media (max-width: 576px) {
+  .impl-card {
+    height: auto;
+  }
+
+  .impl-header {
+    flex-wrap: nowrap;
+  }
+}

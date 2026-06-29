@@ -1,16 +1,16 @@
 [
   {
     "id": 1,
-    "nombre": "nacho",
+    "nombre": "wdf",
     "email": "capoigt07@gmail.com",
-    "materia": "faj",
+    "materia": "KJFEWH",
     "createdAt": "25/06/26"
   },
   {
     "id": 2,
-    "nombre": "asjk",
-    "email": "askjd@fmec.c",
-    "materia": "nachu",
+    "nombre": "Nacho",
+    "email": "capoigt07@gmail.com",
+    "materia": "Proyectos",
     "createdAt": "25/06/26"
   }
 ]
