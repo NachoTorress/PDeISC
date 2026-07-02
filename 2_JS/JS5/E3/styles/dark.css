@@ -1,0 +1,163 @@
+/* ============================================================
+   dark.css — Tema oscuro (proyecto alumnos-consumidor)
+   ============================================================ */
+
+:root {
+  --bg: #0f1218;
+  --bg-alt: #161a22;
+  --text: #e9e7e1;
+  --text-muted: #9a9791;
+  --card-bg: #1a1f29;
+  --border: #2a2f3a;
+  --primary: #5fae9c;
+  --primary-soft: #16241f;
+  --primary-hover: #4d9684;
+  --accent: #e0a868;
+  --danger: #d97066;
+  --success: #6bbf7b;
+  --input-bg: #1f2530;
+  --input-border: #333a46;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --shadow-strong: rgba(0, 0, 0, 0.6);
+}
+
+* { scrollbar-color: var(--border) transparent; }
+
+body {
+  background-image: radial-gradient(circle at 10% 0%, var(--primary-soft) 0%, var(--bg) 45%);
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
+  min-height: 100vh;
+  transition: background-color .2s ease, color .2s ease;
+  letter-spacing: .1px;
+}
+
+.topbar {
+  background: linear-gradient(120deg, #16241f 0%, #1c2b26 100%);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 14px var(--shadow-strong);
+}
+.navbar-brand {
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: .3px;
+}
+.navbar-brand::before {
+  content: "🔎";
+  margin-right: .5rem;
+}
+
+.btn-theme {
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .15s ease, background .15s ease;
+}
+.btn-theme:hover { background: var(--bg-alt); transform: rotate(15deg); }
+
+.form-label { color: var(--text-muted); font-weight: 600; font-size: .88rem; }
+
+.form-control {
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  border-radius: 9px;
+  padding: .55rem .8rem;
+}
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 .2rem rgba(95, 174, 156, .2);
+  background-color: var(--input-bg);
+  color: var(--text);
+}
+
+.contador-badge {
+  background-color: var(--primary);
+  color: #0d1116;
+  font-size: .85rem;
+  padding: .45rem .8rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.alumno-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 4px 18px var(--shadow);
+  padding: 1.15rem 1.3rem;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.alumno-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--primary), var(--accent));
+}
+.alumno-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px var(--shadow-strong);
+}
+.alumno-card .alumno-nombre { font-weight: 700; font-size: 1.06rem; color: var(--text); }
+.alumno-id { font-weight: 500; font-size: .78rem; color: var(--text-muted); }
+.alumno-card .alumno-meta { color: var(--text-muted); font-size: .85rem; }
+.alumno-card .alumno-fecha { color: var(--text-muted); font-size: .76rem; }
+
+.toast-container {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  z-index: 1080;
+}
+.toast-custom {
+  min-width: 240px;
+  max-width: 320px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 10px;
+  padding: .75rem 1rem;
+  box-shadow: 0 6px 20px var(--shadow-strong);
+  color: var(--text);
+  animation: toast-in .25s ease-out;
+}
+.toast-custom.toast-error { border-left-color: var(--danger); }
+.toast-custom.toast-success { border-left-color: var(--success); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-scroll-top {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: #0d1116;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 14px var(--shadow-strong);
+  z-index: 1070;
+  transition: transform .15s ease;
+}
+.btn-scroll-top:hover { transform: translateY(-3px); }
+
+@media (min-width: 992px) {
+  .container-fluid { max-width: 100%; }
+}

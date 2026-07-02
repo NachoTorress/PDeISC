@@ -1,0 +1,13 @@
+{
+  "name": "alumnos-consumidor",
+  "version": "1.0.0",
+  "description": "Consume la API REST de alumnos-api y muestra los datos en pantalla.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

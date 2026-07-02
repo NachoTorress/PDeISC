@@ -400,7 +400,7 @@ function insertarFilaTabla(data) {
     tabla.prepend(row);
 }
 
-// ---------- SUBMIT DEL FORMULARIO ----------
+// ---------- IT DEL FORMULARIO ----------
 
 /**
  * Maneja el envío del formulario.
