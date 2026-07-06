@@ -13,5 +13,5 @@ export const DB_CONFIG = {
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '1234',
   database: process.env.DB_NAME || 'alumnosdb',
-  port: process.env.DB_PORT || 3306,
+  port: process.env.DB_PORT || 3310,
 };
