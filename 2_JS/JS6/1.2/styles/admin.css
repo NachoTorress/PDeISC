@@ -1,0 +1,63 @@
+/* =========================================================
+   styles/admin.css
+   ---------------------------------------------------------
+   Estilos propios de pages/admin.html (login centrado,
+   grilla del panel y detalles del navbar de usuario).
+   Usa las mismas variables de tema definidas en
+   light.css / dark.css.
+   ========================================================= */
+
+.pantalla-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+}
+
+.panel-login {
+    width: 100%;
+    max-width: 420px;
+}
+
+.enlace-olvide {
+    color: var(--color-acento);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.enlace-olvide:hover {
+    text-decoration: underline;
+}
+
+.alert-info-suave {
+    background-color: var(--color-acento-suave);
+    color: var(--color-acento-texto);
+    border: 1px solid var(--color-acento);
+    border-radius: 0.6rem;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.texto-usuario {
+    color: var(--color-texto);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.grid-admin {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 991px) {
+    .grid-admin {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-nueva-palabra .form-control {
+    margin-bottom: 0.2rem;
+}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administracion - El Ahorcado</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+
+    <link rel="stylesheet" href="/styles/light.css" />
+    <link rel="stylesheet" href="/styles/dark.css" />
+    <link rel="stylesheet" href="/styles/base.css" />
+    <link rel="stylesheet" href="/styles/admin.css" />
+</head>
+<body>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar navbar-expand-lg navbar-app sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="/">🪢 El Ahorcado</a>
+            <span class="navbar-text text-secondary d-none d-md-inline">Panel de administracion</span>
+
+            <div class="d-flex align-items-center gap-3 ms-auto">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-moon-stars-fill" id="icono-tema"></i>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input form-check-input-tema" type="checkbox" id="switch-tema" role="switch" />
+                    </div>
+                </div>
+
+                <div id="bloque-usuario" class="d-none align-items-center gap-2">
+                    <span class="texto-usuario"><i class="bi bi-person-circle"></i> <span id="usuario-actual"></span></span>
+                    <button type="button" id="btn-logout" class="btn btn-app btn-secundario btn-sm">
+                        <i class="bi bi-box-arrow-right"></i> Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="contenedor-app">
+
+        <!-- ==================== PANTALLA DE LOGIN ==================== -->
+        <section id="pantalla-login" class="pantalla-login">
+            <div class="panel panel-login">
+                <h2 class="text-center mb-1"><i class="bi bi-shield-lock-fill"></i> Acceso administrador</h2>
+                <p class="text-center texto-pista mb-4">Ingresa tus credenciales para gestionar el juego.</p>
+
+                <form id="form-login" novalidate>
+                    <label for="input-usuario" class="label-formulario">Usuario</label>
+                    <input type="text" id="input-usuario" class="form-control" autocomplete="username" />
+                    <div id="error-usuario" class="mensaje-error"></div>
+
+                    <label for="input-contrasena" class="label-formulario mt-2">Contraseña</label>
+                    <input type="password" id="input-contrasena" class="form-control" autocomplete="current-password" />
+
+                    <div id="error-login-general" class="mensaje-error"></div>
+
+                    <button type="submit" id="btn-ingresar" class="btn btn-app btn-primario w-100 mt-3">
+                        <i class="bi bi-box-arrow-in-right"></i> Ingresar
+                    </button>
+                </form>
+
+                <p class="text-center mt-3 mb-0">
+                    <a href="#" id="enlace-olvide-password" class="enlace-olvide">¿Olvidaste tu contraseña?</a>
+                </p>
+                <div id="mensaje-olvide-password" class="alert-info-suave d-none mt-2"></div>
+            </div>
+        </section>
+
+        <!-- ==================== PANEL DE ADMINISTRACION ==================== -->
+        <section id="pantalla-admin" class="d-none">
+
+            <div class="grid-admin">
+
+                <!-- ---------- Gestion de palabras ---------- -->
+                <div class="panel">
+                    <h3 class="mb-3"><i class="bi bi-book-fill"></i> Banco de palabras</h3>
+
+                    <form id="form-nueva-palabra" class="form-nueva-palabra" novalidate>
+                        <div class="row g-2">
+                            <div class="col-12 col-md-4">
+                                <label for="input-nueva-palabra" class="label-formulario">Palabra</label>
+                                <input type="text" id="input-nueva-palabra" class="form-control" autocomplete="off" />
+                                <div id="error-nueva-palabra" class="mensaje-error"></div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label for="input-nueva-categoria" class="label-formulario">Categoria</label>
+                                <input type="text" id="input-nueva-categoria" class="form-control" autocomplete="off" />
+                                <div id="error-nueva-categoria" class="mensaje-error"></div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label for="input-nueva-pista" class="label-formulario">Pista</label>
+                                <input type="text" id="input-nueva-pista" class="form-control" autocomplete="off" />
+                                <div id="error-nueva-pista" class="mensaje-error"></div>
+                            </div>
+                        </div>
+                        <button type="submit" id="btn-crear-palabra" class="btn btn-app btn-primario mt-2">
+                            <i class="bi bi-plus-lg"></i> Agregar palabra
+                        </button>
+                    </form>
+
+                    <hr class="separador" />
+
+                    <div id="lista-palabras-admin" class="lista-posiciones"></div>
+                </div>
+
+                <!-- ---------- Gestion de puntajes ---------- -->
+                <div class="panel">
+                    <h3 class="mb-3"><i class="bi bi-list-ol"></i> Tabla de posiciones</h3>
+                    <div id="lista-scores-admin" class="lista-posiciones"></div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <button type="button" id="btn-subir-arriba" title="Subir arriba">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="/scripts/adminMain.js"></script>
+</body>
+</html>

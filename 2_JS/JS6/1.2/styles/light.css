@@ -1,0 +1,33 @@
+/* =========================================================
+   styles/light.css
+   ---------------------------------------------------------
+   Variables de color para el modo claro. Se activan cuando
+   <html data-theme="claro">. Se usa un tono suave (no blanco
+   puro) para no cansar la vista.
+   ========================================================= */
+
+html[data-theme='claro'] {
+    --color-fondo: #f4f1fa;
+    --color-superficie: #fdfcff;
+    --color-tarjeta: #ffffff;
+    --color-input: #ffffff;
+    --color-tecla: #ece7f7;
+    --color-borde: #ded6ef;
+    --color-sombra: rgba(90, 60, 150, 0.08);
+
+    --color-texto: #2c2540;
+    --color-texto-secundario: #6b6480;
+
+    --color-acento: #7c3aed;
+    --color-acento-suave: #ede3fd;
+    --color-acento-texto: #6d28d9;
+    --color-en-acento: #ffffff;
+
+    --color-exito: #16a34a;
+    --color-exito-fondo: #e6f6ec;
+    --color-exito-texto: #157a3a;
+
+    --color-peligro: #dc2626;
+    --color-peligro-fondo: #fbe9e9;
+    --color-peligro-texto: #b91c1c;
+}

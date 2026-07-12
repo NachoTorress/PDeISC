@@ -1,0 +1,33 @@
+/* =========================================================
+   styles/dark.css
+   ---------------------------------------------------------
+   Variables de color para el modo oscuro. Se activan cuando
+   <html data-theme="oscuro">. Contraste cuidado para que
+   ningun texto quede oscuro sobre fondo oscuro.
+   ========================================================= */
+
+html[data-theme='oscuro'] {
+    --color-fondo: #171225;
+    --color-superficie: #1f1a33;
+    --color-tarjeta: #241d3b;
+    --color-input: #2a2340;
+    --color-tecla: #2d2646;
+    --color-borde: #3c3459;
+    --color-sombra: rgba(0, 0, 0, 0.35);
+
+    --color-texto: #f1eefb;
+    --color-texto-secundario: #b3a9d4;
+
+    --color-acento: #a78bfa;
+    --color-acento-suave: #362a56;
+    --color-acento-texto: #d8c9ff;
+    --color-en-acento: #1f1433;
+
+    --color-exito: #4ade80;
+    --color-exito-fondo: #1c3326;
+    --color-exito-texto: #86efac;
+
+    --color-peligro: #f87171;
+    --color-peligro-fondo: #3a2020;
+    --color-peligro-texto: #fca5a5;
+}

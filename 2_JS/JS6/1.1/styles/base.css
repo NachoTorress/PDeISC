@@ -1,0 +1,500 @@
+/* =========================================================
+   styles/base.css
+   ---------------------------------------------------------
+   Estructura y componentes de la pagina. Todos los colores
+   se resuelven mediante variables CSS (--variable) que son
+   definidas en styles/light.css y styles/dark.css segun el
+   atributo data-theme del <html>.
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    padding-bottom: 3rem;
+}
+
+/* ---------- Navbar ---------- */
+.navbar-app {
+    background-color: var(--color-superficie);
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.navbar-app .navbar-brand {
+    color: var(--color-texto);
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.navbar-app .nav-link {
+    color: var(--color-texto-secundario) !important;
+}
+
+.form-check-input-tema {
+    width: 2.6em;
+    height: 1.4em;
+    cursor: pointer;
+}
+
+#icono-tema {
+    font-size: 1.2rem;
+    color: var(--color-acento);
+}
+
+/* ---------- Layout principal ---------- */
+.contenedor-app {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.grid-juego {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 991px) {
+    .grid-juego {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel {
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px var(--color-sombra);
+}
+
+.panel h2,
+.panel h3 {
+    color: var(--color-texto);
+}
+
+/* ---------- Zona de juego ---------- */
+.info-palabra {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.badge-categoria {
+    display: inline-block;
+    background-color: var(--color-acento-suave);
+    color: var(--color-acento-texto);
+    padding: 0.3rem 0.9rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.texto-pista {
+    color: var(--color-texto-secundario);
+    font-style: italic;
+}
+
+.contenedor-dibujo {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.svg-ahorcado {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+}
+
+.base-ahorcado {
+    stroke: var(--color-texto-secundario);
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+.parte-ahorcado {
+    stroke: var(--color-peligro);
+    fill: var(--color-peligro);
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+circle.parte-ahorcado {
+    fill: transparent;
+}
+
+.palabra-oculta {
+    text-align: center;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    letter-spacing: 0.35rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    color: var(--color-texto);
+    margin: 1rem 0;
+    word-break: break-all;
+}
+
+.info-partida {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.info-partida .dato {
+    text-align: center;
+}
+
+.info-partida .dato span {
+    display: block;
+}
+
+.info-partida .valor {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-acento);
+}
+
+.info-partida .etiqueta {
+    font-size: 0.8rem;
+    color: var(--color-texto-secundario);
+    text-transform: uppercase;
+}
+
+/* ---------- Teclado virtual ---------- */
+.teclado {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+    gap: 0.4rem;
+    margin: 1.2rem 0;
+}
+
+.boton-letra {
+    background-color: var(--color-tecla);
+    color: var(--color-texto);
+    border: 1px solid var(--color-borde);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0;
+    font-weight: 600;
+    transition: all 0.15s ease;
+}
+
+.boton-letra:hover:not(:disabled) {
+    background-color: var(--color-acento);
+    color: var(--color-en-acento);
+    transform: translateY(-2px);
+}
+
+.boton-letra:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.boton-letra.acierto {
+    background-color: var(--color-exito);
+    color: var(--color-en-acento);
+    border-color: var(--color-exito);
+}
+
+.boton-letra.error {
+    background-color: var(--color-peligro);
+    color: var(--color-en-acento);
+    border-color: var(--color-peligro);
+}
+
+/* ---------- Alertas de fin de partida (sin usar alert()) ---------- */
+.alert-exito {
+    background-color: var(--color-exito-fondo);
+    color: var(--color-exito-texto);
+    border: 1px solid var(--color-exito);
+    border-radius: 0.7rem;
+    padding: 1rem;
+}
+
+.alert-fallo {
+    background-color: var(--color-peligro-fondo);
+    color: var(--color-peligro-texto);
+    border: 1px solid var(--color-peligro);
+    border-radius: 0.7rem;
+    padding: 1rem;
+}
+
+#mensaje-final {
+    margin-bottom: 1rem;
+}
+
+/* ---------- Panel de resultado / guardar puntaje ---------- */
+.label-formulario {
+    color: var(--color-texto);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.form-control {
+    background-color: var(--color-input);
+    color: var(--color-texto);
+    border: 1px solid var(--color-borde);
+}
+
+.form-control:focus {
+    background-color: var(--color-input);
+    color: var(--color-texto);
+    border-color: var(--color-acento);
+    box-shadow: 0 0 0 0.2rem var(--color-acento-suave);
+}
+
+.form-control.is-invalid {
+    border-color: var(--color-peligro);
+}
+
+.form-control.is-valid {
+    border-color: var(--color-exito);
+}
+
+.mensaje-error {
+    color: var(--color-peligro-texto);
+    font-size: 0.85rem;
+    min-height: 1.1rem;
+    margin-top: 0.2rem;
+}
+
+.resumen-resultado {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.btn-app {
+    border: none;
+    border-radius: 0.6rem;
+    padding: 0.55rem 1.2rem;
+    font-weight: 600;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-app:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primario {
+    background-color: var(--color-acento);
+    color: var(--color-en-acento);
+}
+
+.btn-secundario {
+    background-color: var(--color-tecla);
+    color: var(--color-texto);
+    border: 1px solid var(--color-borde);
+}
+
+.btn-exito {
+    background-color: var(--color-exito);
+    color: var(--color-en-acento);
+}
+
+/* ---------- Tabla de posiciones (tarjetas) ---------- */
+.lista-posiciones {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.tarjeta-score {
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: 0.9rem;
+    padding: 1.1rem;
+    position: relative;
+    box-shadow: 0 2px 8px var(--color-sombra);
+}
+
+.posicion-badge {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.9rem;
+    background-color: var(--color-acento-suave);
+    color: var(--color-acento-texto);
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 1rem;
+}
+
+.nombre-jugador {
+    color: var(--color-texto);
+    margin-bottom: 0.6rem;
+    padding-right: 2.2rem;
+}
+
+.detalle-score {
+    color: var(--color-texto-secundario);
+    margin-bottom: 0.25rem;
+    font-size: 0.92rem;
+}
+
+.detalle-score i {
+    color: var(--color-acento);
+    width: 1.2rem;
+}
+
+.acciones-tarjeta {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.btn-editar,
+.btn-borrar,
+.btn-guardar-edicion,
+.btn-cancelar-edicion,
+.btn-confirmar-si,
+.btn-confirmar-no {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-borde);
+    font-weight: 600;
+}
+
+.btn-editar {
+    background-color: var(--color-acento-suave);
+    color: var(--color-acento-texto);
+}
+
+.btn-borrar {
+    background-color: var(--color-peligro-fondo);
+    color: var(--color-peligro-texto);
+}
+
+.btn-guardar-edicion,
+.btn-confirmar-si {
+    background-color: var(--color-exito);
+    color: var(--color-en-acento);
+    border: none;
+}
+
+.btn-cancelar-edicion,
+.btn-confirmar-no {
+    background-color: var(--color-tecla);
+    color: var(--color-texto);
+}
+
+.label-edicion {
+    color: var(--color-texto-secundario);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.15rem;
+}
+
+.input-edicion {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.9rem;
+}
+
+.texto-confirmacion {
+    color: var(--color-peligro-texto);
+    font-size: 0.9rem;
+}
+
+.texto-vacio {
+    color: var(--color-texto-secundario);
+    text-align: center;
+    grid-column: 1 / -1;
+    padding: 2rem 0;
+}
+
+/* ---------- Boton subir arriba ---------- */
+#btn-subir-arriba {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: var(--color-acento);
+    color: var(--color-en-acento);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(15px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    box-shadow: 0 4px 12px var(--color-sombra);
+    z-index: 1000;
+}
+
+#btn-subir-arriba.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* ---------- Spinner de carga ---------- */
+.contenedor-carga {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--color-texto-secundario);
+}
+
+hr.separador {
+    border-color: var(--color-borde);
+    margin: 2.5rem 0;
+}
+
+/* ---------- Top 3 ---------- */
+.lista-top3 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.item-top3 {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: 0.7rem;
+    padding: 0.6rem 0.9rem;
+}
+
+.item-top3 .medalla {
+    font-size: 1.4rem;
+}
+
+.item-top3 .info-top3 {
+    flex: 1;
+}
+
+.item-top3 .nombre-top3 {
+    font-weight: 700;
+    color: var(--color-texto);
+}
+
+.item-top3 .detalle-top3 {
+    font-size: 0.82rem;
+    color: var(--color-texto-secundario);
+}
+
+.item-top3 .puntos-top3 {
+    font-weight: 700;
+    color: var(--color-acento);
+    font-size: 1.1rem;
+}
