@@ -1,0 +1,39 @@
+.subir-arriba {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+
+    box-shadow: var(--shadow);
+    animation: aparecer 0.25s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.subir-arriba:hover {
+    transform: translateY(-4px);
+    opacity: 0.9;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

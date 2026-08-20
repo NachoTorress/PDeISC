@@ -1,0 +1,17 @@
+.theme-button {
+    padding: 10px 22px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+
+    background-color: var(--code-bg);
+    color: var(--text-h);
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}

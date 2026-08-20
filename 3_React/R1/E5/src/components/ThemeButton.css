@@ -1,0 +1,23 @@
+.theme-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--code-bg);
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-button:hover {
+    transform: translateY(-2px) rotate(15deg);
+    box-shadow: var(--shadow);
+}

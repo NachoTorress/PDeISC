@@ -1,0 +1,70 @@
+.form-card {
+    width: min(560px, 92vw);
+    padding: clamp(28px, 8vw, 56px);
+    border-radius: 24px;
+
+    background: var(--code-bg);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.form-card h1 {
+    font-size: clamp(22px, 6vw, 30px);
+    margin-bottom: 8px;
+}
+
+.form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-card label {
+    text-align: left;
+    font-size: 15px;
+    color: var(--text);
+}
+
+.form-card input {
+    padding: clamp(12px, 3vw, 16px) 18px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-h);
+    font-size: clamp(15px, 4vw, 18px);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-card input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.form-card button {
+    padding: clamp(12px, 3vw, 16px) 22px;
+    border: none;
+    border-radius: 12px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: clamp(15px, 4vw, 17px);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.form-card button:hover {
+    opacity: 0.85;
+}
+
+.form-card button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.bienvenida {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

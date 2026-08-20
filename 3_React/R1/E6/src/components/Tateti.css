@@ -1,0 +1,89 @@
+.tateti-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+
+    padding: 48px 56px;
+    border-radius: 28px;
+
+    background: var(--code-bg);
+    box-shadow: var(--shadow);
+}
+
+.tateti-card h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.tateti-mensaje {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    min-height: 28px;
+}
+
+.tateti-mensaje.ganador {
+    color: var(--accent);
+}
+
+.tateti-tablero {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.tateti-casillero {
+    width: 96px;
+    height: 96px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 48px;
+    font-weight: 700;
+    font-family: var(--mono);
+
+    border: none;
+    border-radius: 16px;
+    background: var(--accent-bg);
+    color: var(--text-h);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.tateti-casillero:not(:disabled):hover {
+    background: var(--accent-border);
+    transform: translateY(-2px);
+}
+
+.tateti-casillero:disabled {
+    cursor: default;
+}
+
+.tateti-casillero.ficha-x {
+    color: #06b6d4;
+}
+
+.tateti-casillero.ficha-o {
+    color: #f472b6;
+}
+
+.tateti-reiniciar {
+    padding: 12px 26px;
+    border: none;
+    border-radius: 999px;
+
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.tateti-reiniciar:hover {
+    opacity: 0.85;
+}

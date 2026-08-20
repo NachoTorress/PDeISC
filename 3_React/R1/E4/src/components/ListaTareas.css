@@ -1,0 +1,126 @@
+.tareas-card {
+    width: min(720px, 92vw);
+    padding: clamp(24px, 6vw, 48px);
+    border-radius: 24px;
+
+    background: var(--code-bg);
+    box-shadow: var(--shadow);
+    text-align: left;
+}
+
+.tareas-card h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: clamp(22px, 6vw, 32px);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+.tareas-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.tareas-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-h);
+    font-size: 15px;
+}
+
+.tareas-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.tareas-form button {
+    padding: 0 16px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.tareas-form button:hover {
+    opacity: 0.85;
+}
+
+.tareas-vacio {
+    text-align: center;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.tareas-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tareas-lista li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--bg);
+}
+
+.tareas-lista li label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    flex: 1;
+    color: var(--text-h);
+    min-width: 0;
+    word-break: break-word;
+}
+
+.tareas-lista li.completada span {
+    text-decoration: line-through;
+    color: var(--text);
+}
+
+.tareas-eliminar {
+    border: none;
+    background: transparent;
+    color: #e5484d;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease;
+}
+
+.tareas-eliminar:hover {
+    background: rgba(229, 72, 77, 0.15);
+}
+
+.tareas-contador {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text);
+}

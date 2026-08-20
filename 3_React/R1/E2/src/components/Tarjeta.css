@@ -1,0 +1,57 @@
+.tarjeta {
+    position: relative;
+    width: min(680px, 92vw);
+    padding-bottom: 48px;
+
+    border-radius: 32px;
+    overflow: hidden;
+    background: var(--code-bg);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+/* Franja superior con degradado, hace de fondo decorativo */
+.tarjeta-banner {
+    height: 160px;
+    background: linear-gradient(120deg, #7c3aed, #06b6d4 60%, #f472b6);
+}
+
+/* Foto circular, se superpone al banner */
+.tarjeta-foto {
+    width: clamp(120px, 35vw, 200px);
+    height: clamp(120px, 35vw, 200px);
+    margin-top: calc(clamp(120px, 35vw, 200px) / -2);
+
+    border-radius: 50%;
+    border: 6px solid var(--code-bg);
+    object-fit: cover;
+    box-shadow: var(--shadow);
+}
+
+.tarjeta-info {
+    margin-top: 20px;
+    padding: 0 clamp(16px, 5vw, 40px);
+}
+
+.tarjeta-info h2 {
+    margin: 0 0 14px;
+    font-size: clamp(26px, 7vw, 44px);
+    color: var(--text-h);
+}
+
+.tarjeta-profesion {
+    display: inline-block;
+    padding: 8px clamp(14px, 4vw, 28px);
+    border-radius: 999px;
+
+    font-size: clamp(15px, 4vw, 20px);
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-bg);
+}
+
+@media (max-width: 480px) {
+    .tarjeta-banner {
+        height: 120px;
+    }
+}

@@ -1,0 +1,92 @@
+.hola-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+
+.hola-titulo {
+    margin: 0;
+    font-size: clamp(36px, 7vw, 72px);
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -1px;
+}
+
+/* Estilo 1: texto con degradado animado */
+.estilo-degradado {
+    background: linear-gradient(90deg, #7c3aed, #06b6d4, #f472b6, #7c3aed);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: mover-degradado 6s linear infinite;
+}
+
+@keyframes mover-degradado {
+    to {
+        background-position: 300% center;
+    }
+}
+
+/* Estilo 2: efecto neon con resplandor */
+.estilo-neon {
+    color: #4339ff;
+    text-shadow:
+        0 0 6px #4339ff,
+        0 0 18px #4339ff,
+        0 0 36px #4339ff;
+    animation: parpadeo-neon 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes parpadeo-neon {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.85;
+    }
+}
+
+/* Estilo 3: solo contorno, relleno transparente */
+.estilo-contorno {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--text-h);
+}
+
+/* Estilo 4: texto con relieve tipo capas superpuestas */
+.estilo-relieve {
+    position: relative;
+    color: var(--text-h);
+}
+
+.estilo-relieve::before {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: var(--accent);
+    transform: translate(4px, 4px);
+    z-index: -1;
+}
+
+.hola-boton {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-h);
+    background: var(--accent-bg);
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.hola-boton span {
+    color: var(--accent);
+    text-transform: capitalize;
+}
+
+.hola-boton:hover {
+    background: var(--accent-border);
+    transform: translateY(-2px);
+}

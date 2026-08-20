@@ -1,0 +1,62 @@
+.contador-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(24px, 5vw, 40px);
+
+    padding: clamp(32px, 8vw, 65px) clamp(24px, 8vw, 65px);
+    border-radius: 32px;
+
+    background: var(--code-bg);
+    box-shadow: var(--shadow);
+}
+
+.contador-card h1 {
+    font-size: clamp(24px, 6vw, 42px);
+    margin: 0;
+}
+
+.contador-valor {
+    font-size: clamp(60px, 18vw, 100px);
+    font-weight: 600;
+    font-family: var(--mono);
+    color: var(--accent);
+    min-width: clamp(140px, 40vw, 220px);
+    text-align: center;
+    line-height: 1;
+}
+
+.contador-valor.negativo {
+    color: #e5484d;
+}
+
+.contador-botones {
+    display: flex;
+    gap: clamp(12px, 4vw, 24px);
+}
+
+.contador-botones button {
+    min-width: clamp(60px, 18vw, 96px);
+    height: clamp(56px, 16vw, 84px);
+    padding: 0 clamp(16px, 5vw, 32px);
+
+    font-size: clamp(26px, 8vw, 40px);
+    font-weight: 600;
+    color: var(--text-h);
+
+    border: none;
+    border-radius: 18px;
+    background: var(--accent-bg);
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.contador-botones button:hover {
+    background: var(--accent-border);
+    transform: translateY(-2px);
+}
+
+.contador-botones button.reiniciar {
+    font-size: clamp(14px, 4vw, 22px);
+    color: var(--text);
+}

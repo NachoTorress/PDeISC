@@ -1,0 +1,23 @@
+/* Reset basico + tipografia general de la app */
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, Consolas, monospace;
+}
+
+html,
+body,
+#root {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+}
+
+body {
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

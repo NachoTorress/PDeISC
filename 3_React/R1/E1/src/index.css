@@ -1,0 +1,32 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.light {
+    background-color: white;
+    color: black;
+    min-height: 100vh;
+}
+
+.dark {
+    background-color: #222;
+    color: white;
+    min-height: 100vh;
+}
+.light,
+.dark {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
