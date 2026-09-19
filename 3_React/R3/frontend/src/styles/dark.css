@@ -1,0 +1,40 @@
+:root[data-app-theme='dark'] {
+  --app-bg: #0f131a;
+  --app-bg-soft: #17231f;
+  --app-surface: #171c26;
+  --app-input: #10151f;
+  --app-text: #f3f6fb;
+  --app-muted: #a8b3c7;
+  --app-border: #303848;
+  --app-primary: #6ea8fe;
+  --app-accent: #5eead4;
+  --app-focus: rgba(110, 168, 254, 0.24);
+  --app-danger-bg: #35151b;
+  --app-danger-border: #7f1d1d;
+  --app-danger-text: #fecdd3;
+  --app-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+  --app-shadow-strong: 0 18px 36px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-app-theme='dark'] .app-navbar .navbar-toggler {
+  border-color: var(--app-border);
+}
+
+:root[data-app-theme='dark'] .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+:root[data-app-theme='dark'] .btn-primary {
+  --bs-btn-bg: #3b82f6;
+  --bs-btn-border-color: #3b82f6;
+  --bs-btn-hover-bg: #2563eb;
+  --bs-btn-hover-border-color: #2563eb;
+}
+
+:root[data-app-theme='dark'] .btn-outline-secondary {
+  --bs-btn-color: #d7deeb;
+  --bs-btn-border-color: #64748b;
+  --bs-btn-hover-bg: #263142;
+  --bs-btn-hover-border-color: #94a3b8;
+}
+

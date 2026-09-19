@@ -1,0 +1,31 @@
+/**
+ * dark.css
+ * -----------------------------------------------------------------------
+ * De donde viene: importado en `main.jsx`.
+ * A donde va: se activa cuando `document.documentElement` tiene el
+ *   atributo `data-theme="dark"` (controlado por `ThemeContext.jsx`).
+ * -----------------------------------------------------------------------
+ * Paleta oscura con buen contraste: todos los textos se revisaron para
+ * que no queden oscuros sobre fondo oscuro.
+ */
+
+:root[data-theme="dark"] {
+  --color-bg: #16171d;
+  --color-bg-elevated: #1f2129;
+  --color-bg-navbar: #1a1b22;
+  --color-text: #eeeef1;
+  --color-text-muted: #a6a7b0;
+  --color-border: #2d2f3a;
+  --color-primary: #9b8afb;
+  --color-primary-hover: #ab9dfc;
+  --color-primary-contrast: #16171d;
+  --color-accent-soft: #2a2647;
+  --color-danger: #ff7b7b;
+  --color-danger-soft: #3a2226;
+  --color-success: #58d3a0;
+  --color-success-soft: #1d3a30;
+  --color-warning-soft: #3a2f18;
+  --color-warning-text: #f0c26b;
+  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.5);
+}

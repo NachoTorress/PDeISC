@@ -1,0 +1,262 @@
+/**
+ * index.css
+ * -----------------------------------------------------------------------
+ * De donde viene: importado en `main.jsx`, después de `light.css` y
+ *   `dark.css` (para poder usar las variables que ellos definen).
+ * A donde va: aplica a toda la aplicación.
+ * -----------------------------------------------------------------------
+ */
+
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+}
+
+/* ----------------------------- Navbar ----------------------------- */
+
+.app-navbar {
+  background-color: var(--color-bg-navbar);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+}
+
+.app-navbar .navbar-brand,
+.app-navbar .nav-link {
+  color: var(--color-text) !important;
+}
+
+.app-navbar .nav-link.active {
+  color: var(--color-primary) !important;
+  font-weight: 600;
+}
+
+.btn-outline-theme {
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+}
+
+.btn-outline-theme:hover {
+  background-color: var(--color-accent-soft);
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
+.btn-theme-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-primary-contrast);
+  font-weight: 600;
+}
+
+.btn-theme-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: var(--color-primary-contrast);
+}
+
+.btn-theme-primary:disabled {
+  opacity: 0.55;
+}
+
+/* ------------------------------ Title ------------------------------ */
+
+.page-title {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.text-muted {
+  color: var(--color-text-muted) !important;
+}
+
+/* ------------------------------ Cards ------------------------------ */
+
+.task-card,
+.detail-card,
+.empty-state,
+.confirm-delete-box {
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  height: 100%;
+}
+
+.task-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+}
+
+.task-card--done {
+  opacity: 0.85;
+}
+
+.task-card__titulo {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.task-card__titulo:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.task-card__descripcion {
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+  flex: 1;
+}
+
+.task-card__fecha {
+  color: var(--color-text-muted);
+}
+
+.detail-card {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.detail-card--form {
+  max-width: 640px;
+}
+
+.detail-card__descripcion {
+  color: var(--color-text);
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.back-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--color-text-muted);
+}
+
+/* ------------------------------ Badges ------------------------------ */
+
+.badge-done {
+  background-color: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.badge-pending {
+  background-color: var(--color-warning-soft);
+  color: var(--color-warning-text);
+}
+
+/* --------------------------- Confirm delete -------------------------- */
+
+.confirm-delete-box {
+  background-color: var(--color-danger-soft);
+  border-color: var(--color-danger);
+  color: var(--color-text);
+}
+
+/* ------------------------------- Forms ------------------------------- */
+
+.form-label {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.form-control,
+.form-select {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.form-control:focus {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem var(--color-accent-soft);
+}
+
+.form-control.is-invalid {
+  border-color: var(--color-danger);
+}
+
+.form-control.is-valid {
+  border-color: var(--color-success);
+}
+
+.invalid-feedback {
+  color: var(--color-danger);
+}
+
+.form-check-input:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* --------------------------- Scroll to top --------------------------- */
+
+.scroll-top-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-primary);
+  color: var(--color-primary-contrast);
+  font-size: 1.4rem;
+  box-shadow: var(--shadow-elevated);
+  z-index: 1050;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.scroll-top-btn:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-3px);
+}
