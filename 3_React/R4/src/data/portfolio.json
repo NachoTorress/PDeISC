@@ -1,0 +1,98 @@
+{
+  "profile": {
+    "email": "ignaciogatorres@gmail.com",
+    "headline": "Estudiante de Informática, programación competitiva y proyectos con IA/hardware",
+    "summary": "Portfolio personal construido a partir de una plantilla existente. Reúne mi formación técnica, participación en competencias y proyectos mencionados en la consigna, sin agregar datos no verificados."
+  },
+  "education": [
+    {
+      "id": "tecnicatura",
+      "title": "Tecnicatura en Informática Profesional y Personal",
+      "description": "Estudiante de 6.º año.",
+      "meta": "Promedio: 9,15"
+    }
+  ],
+  "achievements": [
+    {
+      "id": "oia",
+      "title": "Olimpiada Informática Argentina",
+      "description": "Participación en competencia de informática."
+    },
+    {
+      "id": "matematica",
+      "title": "Olimpiadas de Matemática",
+      "description": "Participación en olimpíadas de matemática."
+    },
+    {
+      "id": "calico",
+      "title": "CALICO",
+      "description": "Participación en competencia CALICO."
+    }
+  ],
+  "projects": [
+    {
+      "id": "snake",
+      "title": "Snake en GitHub",
+      "description": "Proyecto de juego Snake publicado en GitHub, usado como práctica de lógica, estado de juego y control de interacción.",
+      "tags": ["Programación", "Juego", "GitHub"],
+      "accent": "Algoritmos",
+      "githubUrl": "https://github.com/tizianomegnini/JS3Juegos/tree/main/Snake_1.2"
+    },
+    {
+      "id": "hardware",
+      "title": "Proyectos con Arduino/ESP32",
+      "description": "Trabajos orientados a hardware, microcontroladores y conexión entre componentes físicos y software.",
+      "tags": ["Arduino", "ESP32", "Hardware"],
+      "accent": "Electrónica"
+    },
+    {
+      "id": "ai-jetson",
+      "title": "IA con Jetson, Ollama y Qwen",
+      "description": "Proyecto de inteligencia artificial que combina Jetson, Ollama, Qwen y herramientas para experimentar con modelos y automatización local.",
+      "tags": ["IA", "Jetson", "Ollama", "Qwen"],
+      "accent": "Inteligencia artificial"
+    }
+  ],
+  "skillCategories": [
+    {
+      "id": "programacion",
+      "title": "Programación",
+      "icon": "code",
+      "skills": [
+        { "name": "C++", "icon": "cplusplus" },
+        { "name": "Python", "icon": "python" },
+        { "name": "Algoritmos", "icon": "code" },
+        { "name": "Programación competitiva", "icon": "brain" }
+      ]
+    },
+    {
+      "id": "web-datos",
+      "title": "Web y datos",
+      "icon": "react",
+      "skills": [
+        { "name": "TypeScript", "icon": "typescript" },
+        { "name": "React", "icon": "react" },
+        { "name": "Node.js", "icon": "node" },
+        { "name": "SQL", "icon": "sql" }
+      ]
+    },
+    {
+      "id": "herramientas",
+      "title": "Herramientas e intereses",
+      "icon": "microchip",
+      "skills": [
+        { "name": "Git", "icon": "git" },
+        { "name": "Docker", "icon": "docker" },
+        { "name": "Linux", "icon": "linux" },
+        { "name": "IA y hardware", "icon": "microchip" }
+      ]
+    }
+  ],
+  "navSections": [
+    { "id": "hero", "name": "Inicio" },
+    { "id": "about", "name": "Sobre mí" },
+    { "id": "projects", "name": "Proyectos" },
+    { "id": "skills", "name": "Tecnologías" },
+    { "id": "contact", "name": "Contacto" }
+  ]
+}
