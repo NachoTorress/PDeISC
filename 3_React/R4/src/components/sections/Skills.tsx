@@ -1,6 +1,16 @@
+/**
+ * Skills Section Component.
+ * Renders categorized skill grid with icons and Admin CRUD.
+ */
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import { skillCategories } from '../../data/portfolio';
+import { useState } from 'react';
+import { FaBrain, FaCode, FaDocker, FaGitAlt, FaLinux, FaMicrochip, FaNodeJs, FaPlus, FaReact, FaServer, FaTrash, FaEdit } from 'react-icons/fa';
+import { SiCplusplus, SiPython, SiSqlite, SiTypescript } from 'react-icons/si';
+import { useData } from '../../contexts/DataContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { ConfirmDeleteCard } from '../common/ConfirmDeleteCard';
+import { AdminCrudModal } from '../admin/AdminCrudModal';
 import { theme } from '../../styles/theme';
 
 const SkillsSection = styled.section`
@@ -8,30 +18,29 @@ const SkillsSection = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   position: relative;
   overflow: hidden;
   color: ${theme.colors.textLight};
-  padding: ${theme.spacing.xl} ${theme.spacing.md};
+  padding: ${theme.spacing.xl} 0;
+`;
+
+const HeaderRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${theme.spacing.lg};
 `;
 
 const SectionTitle = styled(motion.h2)`
-  text-align: center;
   font-size: clamp(2rem, 4vw, 2.5rem);
-  margin-bottom: ${theme.spacing.xl};
   color: ${theme.colors.light};
-  position: relative;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -${theme.spacing.md};
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background-color: ${theme.colors.accent};
-    border-radius: 2px;
+  svg {
+    color: ${theme.colors.accent};
   }
 `;
 
@@ -40,8 +49,6 @@ const SkillsContainer = styled.div`
   grid-template-columns: repeat(1, 1fr);
   gap: ${theme.spacing.lg};
   width: 100%;
-  max-width: 1280px;
-  margin-top: ${theme.spacing.xl};
 
   @media (min-width: ${theme.breakpoints.md}) {
     grid-template-columns: repeat(3, 1fr);
@@ -50,8 +57,8 @@ const SkillsContainer = styled.div`
 
 const SkillCategory = styled(motion.article)`
   background: ${theme.colors.glass.background};
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
   padding: ${theme.spacing.lg};
   transition: all ${theme.transitions.default};
   height: 100%;
@@ -63,125 +70,224 @@ const SkillCategory = styled(motion.article)`
 
   &:hover {
     transform: translateY(-5px);
+    border-color: ${theme.colors.accent}55;
   }
 `;
 
+const CategoryHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: ${theme.spacing.md};
+  padding-bottom: ${theme.spacing.sm};
+  border-bottom: 1px solid ${theme.colors.glass.border};
+`;
+
 const CategoryTitle = styled.h3`
-  font-size: clamp(1.35rem, 3vw, 1.65rem);
-  margin-bottom: ${theme.spacing.xl};
+  font-size: clamp(1.2rem, 2.2vw, 1.45rem);
   color: ${theme.colors.light};
   display: flex;
   align-items: center;
-  gap: ${theme.spacing.sm};
-  font-weight: 600;
-  position: relative;
-  padding-bottom: ${theme.spacing.md};
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 40px;
-    height: 3px;
-    background-color: ${theme.colors.accent};
-    border-radius: 2px;
-  }
+  gap: 0.5rem;
+  font-weight: 700;
+  margin: 0;
 
   svg {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     color: ${theme.colors.accent};
   }
+`;
+
+const AddSkillBtn = styled.button`
+  background: ${theme.colors.gradient.accent};
+  color: ${theme.colors.textDark};
+  border: none;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
 `;
 
 const SkillsList = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: ${theme.spacing.md};
+  gap: 0.65rem;
   flex: 1;
   width: 100%;
 `;
 
 const SkillItem = styled(motion.div)`
+  position: relative;
   display: flex;
   align-items: center;
-  gap: ${theme.spacing.sm};
-  font-size: clamp(0.88rem, 2vw, 1rem);
-  padding: ${theme.spacing.md};
+  justify-content: space-between;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 0.65rem 0.85rem;
   border-radius: 12px;
   transition: all ${theme.transitions.default};
   background: ${theme.colors.glass.card};
   border: 1px solid ${theme.colors.glass.border};
-  min-height: 62px;
-
-  svg {
-    font-size: 1.35rem;
-    color: ${theme.colors.accent};
-    flex-shrink: 0;
-    transition: all ${theme.transitions.default};
-  }
 
   &:hover {
     background: ${theme.colors.gradient.glass};
-    transform: translateX(5px);
-
-    svg {
-      transform: scale(1.1) rotate(5deg);
-      color: ${theme.colors.light};
-    }
+    transform: translateX(3px);
   }
 `;
 
+const SkillLabelGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  svg {
+    font-size: 1.25rem;
+    color: ${theme.colors.accent};
+    flex-shrink: 0;
+  }
+`;
+
+const AdminSkillActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+`;
+
+const IconBtn = styled.button<{ danger?: boolean }>`
+  background: transparent;
+  color: ${(props) => (props.danger ? '#ff6b6b' : theme.colors.accent)};
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0.15rem;
+
+  &:hover {
+    color: ${(props) => (props.danger ? '#e63946' : theme.colors.light)};
+  }
+`;
+
+const iconMap: Record<string, any> = {
+  code: FaCode,
+  brain: FaBrain,
+  cplusplus: SiCplusplus,
+  typescript: SiTypescript,
+  python: SiPython,
+  sql: SiSqlite,
+  node: FaNodeJs,
+  docker: FaDocker,
+  git: FaGitAlt,
+  linux: FaLinux,
+  microchip: FaMicrochip,
+  react: FaReact,
+};
+
 const Skills = () => {
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  const { skillCategories, deleteSkill } = useData();
+  const { isAdmin } = useAuth();
+
+  const [deletingId, setDeletingId] = useState<string | number | null>(null);
+  const [targetCategory, setTargetCategory] = useState<string | number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingSkill, setEditingSkill] = useState<any>(null);
+
+  const openAddModal = (catId: string | number) => {
+    setEditingSkill(null);
+    setTargetCategory(catId);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (skill: any) => {
+    setEditingSkill(skill);
+    setIsModalOpen(true);
   };
 
   return (
     <SkillsSection id="skills" role="region" aria-label="Tecnologías e intereses">
-      <SectionTitle
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        Tecnologías e intereses
-      </SectionTitle>
-      <SkillsContainer role="list">
-        {skillCategories.map((category) => {
-          const CategoryIcon = category.icon;
+      <div className="container-fluid px-3 px-md-4">
+        <HeaderRow>
+          <SectionTitle
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <FaServer /> Tecnologías e Intereses
+          </SectionTitle>
+        </HeaderRow>
+        <SkillsContainer role="list">
+          {skillCategories.map((category) => {
+            const CategoryIcon = iconMap[category.icon] || FaCode;
 
-          return (
-            <SkillCategory
-              key={category.title}
-              variants={itemVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              role="listitem"
-              aria-labelledby={`category-title-${category.title}`}
-            >
-              <CategoryTitle id={`category-title-${category.title}`}>
-                <CategoryIcon aria-hidden="true" />
-                {category.title}
-              </CategoryTitle>
-              <SkillsList role="list" aria-label={`${category.title}`}>
-                {category.skills.map((skill) => {
-                  const SkillIcon = skill.icon;
+            return (
+              <SkillCategory
+                key={category.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                role="listitem"
+              >
+                <CategoryHeader>
+                  <CategoryTitle>
+                    <CategoryIcon aria-hidden="true" />
+                    {category.title}
+                  </CategoryTitle>
+                  {isAdmin && (
+                    <AddSkillBtn onClick={() => openAddModal(category.id)}>
+                      <FaPlus /> Habilidad
+                    </AddSkillBtn>
+                  )}
+                </CategoryHeader>
+                <SkillsList role="list">
+                  {category.skills.map((skill) => {
+                    const SkillIcon = iconMap[skill.icon] || FaCode;
 
-                  return (
-                    <SkillItem key={skill.name} variants={itemVariants} role="listitem">
-                      <SkillIcon aria-hidden="true" />
-                      <span>{skill.name}</span>
-                    </SkillItem>
-                  );
-                })}
-              </SkillsList>
-            </SkillCategory>
-          );
-        })}
-      </SkillsContainer>
+                    return (
+                      <SkillItem key={skill.id} role="listitem">
+                        {deletingId === skill.id && (
+                          <ConfirmDeleteCard
+                            title={skill.name}
+                            onConfirm={() => {
+                              deleteSkill(skill.id);
+                              setDeletingId(null);
+                            }}
+                            onCancel={() => setDeletingId(null)}
+                          />
+                        )}
+                        <SkillLabelGroup>
+                          <SkillIcon aria-hidden="true" />
+                          <span>{skill.name}</span>
+                        </SkillLabelGroup>
+                        {isAdmin && (
+                          <AdminSkillActions>
+                            <IconBtn onClick={() => openEditModal(skill)} title="Editar habilidad">
+                              <FaEdit />
+                            </IconBtn>
+                            <IconBtn danger onClick={() => setDeletingId(skill.id)} title="Eliminar habilidad">
+                              <FaTrash />
+                            </IconBtn>
+                          </AdminSkillActions>
+                        )}
+                      </SkillItem>
+                    );
+                  })}
+                </SkillsList>
+              </SkillCategory>
+            );
+          })}
+        </SkillsContainer>
+      </div>
+
+      <AdminCrudModal
+        type="skill"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        categoryId={targetCategory ?? undefined}
+        editItem={editingSkill}
+      />
     </SkillsSection>
   );
 };

@@ -1,12 +1,12 @@
 /**
  * Projects Section Component.
- * Displays project cards with tags, single-use detail toggle hiding,
- * and Admin CRUD / styled deletion confirmation cards.
+ * Displays project cards with tech tags, single-use detail toggle hiding,
+ * and Admin CRUD (Add, Edit, Delete with styled inline confirmation cards).
  */
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaChevronDown, FaGithub, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaChevronDown, FaGithub, FaPlus, FaTrash, FaEdit, FaFolder } from 'react-icons/fa';
 import { useData } from '../../contexts/DataContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { ConfirmDeleteCard } from '../common/ConfirmDeleteCard';
@@ -24,28 +24,23 @@ const ProjectsSection = styled.section`
 
 const HeaderRow = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: calc(${theme.spacing.xl} * 1.2);
-  position: relative;
+  margin-bottom: calc(${theme.spacing.xl} * 0.8);
+  flex-wrap: wrap;
+  gap: ${theme.spacing.md};
 `;
 
 const SectionTitle = styled(motion.h2)`
-  text-align: center;
   font-size: clamp(2rem, 4vw, 2.5rem);
-  color: ${theme.colors.textLight};
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -${theme.spacing.md};
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background-color: ${theme.colors.accent};
-    border-radius: 2px;
+  color: ${theme.colors.light};
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  svg {
+    color: ${theme.colors.accent};
   }
 `;
 
@@ -54,13 +49,12 @@ const AddProjectBtn = styled.button`
   color: ${theme.colors.textDark};
   border: none;
   border-radius: 999px;
-  padding: 0.6rem 1.2rem;
+  padding: 0.55rem 1.1rem;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: ${theme.spacing.lg};
+  gap: 0.4rem;
   cursor: pointer;
   transition: transform 0.2s;
 
@@ -71,7 +65,7 @@ const AddProjectBtn = styled.button`
 
 const ProjectGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: ${theme.spacing.lg};
   width: 100%;
 `;
@@ -79,8 +73,8 @@ const ProjectGrid = styled.div`
 const ProjectCard = styled(motion.article)`
   position: relative;
   background: ${theme.colors.glass.background};
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
   overflow: hidden;
   color: ${theme.colors.textLight};
   transition: all ${theme.transitions.default};
@@ -91,28 +85,56 @@ const ProjectCard = styled(motion.article)`
   box-shadow: var(--shadow-card);
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
+    border-color: ${theme.colors.accent}66;
   }
 `;
 
 const ProjectTop = styled.div`
-  min-height: 120px;
-  padding: ${theme.spacing.lg};
+  min-height: 100px;
+  padding: ${theme.spacing.md} ${theme.spacing.lg};
   display: flex;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   background:
-    radial-gradient(circle at 20% 20%, ${theme.colors.accent}38, transparent 38%),
+    radial-gradient(circle at 20% 20%, ${theme.colors.accent}28, transparent 50%),
     ${theme.colors.gradient.glass};
+  border-bottom: 1px solid ${theme.colors.glass.border};
 `;
 
 const ProjectAccent = styled.span`
-  width: fit-content;
   color: ${theme.colors.textDark};
   background: ${theme.colors.gradient.accent};
-  padding: 0.4rem 0.75rem;
+  padding: 0.3rem 0.75rem;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
+`;
+
+const AdminIconGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+`;
+
+const IconBtn = styled.button<{ danger?: boolean }>`
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: ${(props) => (props.danger ? 'rgba(230, 57, 70, 0.2)' : theme.colors.glass.card)};
+  color: ${(props) => (props.danger ? '#ff6b6b' : theme.colors.light)};
+  border: 1px solid ${(props) => (props.danger ? 'rgba(230, 57, 70, 0.4)' : theme.colors.glass.border)};
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+    background: ${(props) => (props.danger ? '#e63946' : theme.colors.accent)};
+    color: ${(props) => (props.danger ? '#ffffff' : theme.colors.textDark)};
+  }
 `;
 
 const ProjectContent = styled.div`
@@ -123,24 +145,24 @@ const ProjectContent = styled.div`
 `;
 
 const ProjectTitle = styled.h3`
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
-  margin-bottom: ${theme.spacing.sm};
+  font-size: clamp(1.25rem, 2.5vw, 1.45rem);
+  margin-bottom: ${theme.spacing.xs};
   color: ${theme.colors.light};
-  font-weight: 600;
+  font-weight: 700;
 `;
 
 const ProjectDescription = styled.p`
   color: var(--color-muted);
-  margin-bottom: ${theme.spacing.lg};
-  font-size: 1rem;
-  line-height: 1.65;
+  margin-bottom: ${theme.spacing.md};
+  font-size: 0.95rem;
+  line-height: 1.6;
   flex: 1;
 `;
 
 const TechStack = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: ${theme.spacing.xs};
+  gap: 0.4rem;
   margin-bottom: ${theme.spacing.md};
 `;
 
@@ -148,30 +170,28 @@ const TechTag = styled.span`
   background: ${theme.colors.glass.card};
   color: ${theme.colors.accent};
   border: 1px solid ${theme.colors.glass.border};
-  padding: 5px 11px;
+  padding: 3px 10px;
   border-radius: 999px;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
 `;
 
 const ActionRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: ${theme.spacing.sm};
   margin-top: auto;
 `;
 
 const ProjectButton = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: ${theme.spacing.sm};
+  gap: 0.5rem;
   color: ${theme.colors.textDark};
   background: ${theme.colors.gradient.accent};
   border-radius: 999px;
-  padding: 0.6rem 1rem;
+  padding: 0.5rem 1rem;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   border: none;
   cursor: pointer;
   transition: all ${theme.transitions.default};
@@ -184,13 +204,13 @@ const ProjectButton = styled.button`
 const ProjectLink = styled.a`
   display: inline-flex;
   align-items: center;
-  gap: ${theme.spacing.sm};
+  gap: 0.5rem;
   color: ${theme.colors.textDark};
   background: ${theme.colors.gradient.accent};
   border-radius: 999px;
-  padding: 0.6rem 1rem;
+  padding: 0.5rem 1rem;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   transition: all ${theme.transitions.default};
 
   &:hover {
@@ -199,30 +219,15 @@ const ProjectLink = styled.a`
   }
 `;
 
-const DeleteBtn = styled.button`
-  background: rgba(230, 57, 70, 0.2);
-  color: #ff6b6b;
-  border: 1px solid rgba(230, 57, 70, 0.4);
-  padding: 0.5rem 0.8rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-
-  &:hover {
-    background: rgba(230, 57, 70, 0.4);
-    color: #ffffff;
-  }
-`;
-
 const ProjectNote = styled(motion.p)`
   color: var(--color-muted);
   margin-top: ${theme.spacing.md};
   margin-bottom: 0;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
+  background: ${theme.colors.glass.card};
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid ${theme.colors.glass.border};
 `;
 
 const Projects = () => {
@@ -233,6 +238,7 @@ const Projects = () => {
   const [usedButtons, setUsedButtons] = useState<Record<string | number, boolean>>({});
   const [deletingId, setDeletingId] = useState<string | number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<any>(null);
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -244,9 +250,19 @@ const Projects = () => {
     setUsedButtons((prev) => ({ ...prev, [projectId]: true }));
   };
 
+  const openAddModal = () => {
+    setEditingProject(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (project: any) => {
+    setEditingProject(project);
+    setIsModalOpen(true);
+  };
+
   return (
     <ProjectsSection id="projects" role="region" aria-label="Proyectos">
-      <div className="container-fluid">
+      <div className="container-fluid px-3 px-md-4">
         <HeaderRow>
           <SectionTitle
             initial={{ opacity: 0, y: -20 }}
@@ -254,10 +270,10 @@ const Projects = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            Proyectos Realizados
+            <FaFolder /> Proyectos
           </SectionTitle>
           {isAdmin && (
-            <AddProjectBtn onClick={() => setIsModalOpen(true)}>
+            <AddProjectBtn onClick={openAddModal}>
               <FaPlus /> Agregar Proyecto
             </AddProjectBtn>
           )}
@@ -288,6 +304,16 @@ const Projects = () => {
                 )}
                 <ProjectTop>
                   <ProjectAccent>{project.accent}</ProjectAccent>
+                  {isAdmin && (
+                    <AdminIconGroup>
+                      <IconBtn onClick={() => openEditModal(project)} title="Editar proyecto">
+                        <FaEdit />
+                      </IconBtn>
+                      <IconBtn danger onClick={() => setDeletingId(project.id)} title="Eliminar proyecto">
+                        <FaTrash />
+                      </IconBtn>
+                    </AdminIconGroup>
+                  )}
                 </ProjectTop>
                 <ProjectContent>
                   <ProjectTitle>{project.title}</ProjectTitle>
@@ -302,8 +328,7 @@ const Projects = () => {
                   <ActionRow>
                     {project.githubUrl ? (
                       <ProjectLink href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                        Ver en GitHub
-                        <FaGithub aria-hidden="true" />
+                        Ver en GitHub <FaGithub aria-hidden="true" />
                       </ProjectLink>
                     ) : (
                       !isSingleUseConsumed && (
@@ -312,16 +337,9 @@ const Projects = () => {
                           onClick={() => handleSingleUseClick(project.id)}
                           aria-expanded={isOpen}
                         >
-                          Ver detalle
-                          <FaChevronDown aria-hidden="true" />
+                          Ver detalle <FaChevronDown aria-hidden="true" />
                         </ProjectButton>
                       )
-                    )}
-
-                    {isAdmin && (
-                      <DeleteBtn onClick={() => setDeletingId(project.id)} aria-label="Eliminar proyecto">
-                        <FaTrash /> Eliminar
-                      </DeleteBtn>
                     )}
                   </ActionRow>
 
@@ -330,8 +348,7 @@ const Projects = () => {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                     >
-                      Detalles técnicos adicionales: Proyecto desarrollado con arquitectura modular en C++ / React,
-                      utilizando controladores atomizados y estructuras de datos eficientes.
+                      Detalles técnicos: Desarrollado con arquitectura C++ / React, controladores modularizados y lógica optimizada.
                     </ProjectNote>
                   )}
                 </ProjectContent>
@@ -341,7 +358,12 @@ const Projects = () => {
         </ProjectGrid>
       </div>
 
-      <AdminCrudModal type="project" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <AdminCrudModal
+        type="project"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        editItem={editingProject}
+      />
     </ProjectsSection>
   );
 };

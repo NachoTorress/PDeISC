@@ -67,24 +67,16 @@ const LayoutWrapper = styled.div`
 
 const Header = styled.header`
   background: ${theme.colors.glass.background};
-  backdrop-filter: blur(8px);
-  padding: ${theme.spacing.md} 0;
+  backdrop-filter: blur(12px);
+  padding: 0.85rem 0;
   position: fixed;
   width: 100%;
   top: 0;
   z-index: 1000;
+  border-bottom: 1px solid ${theme.colors.glass.border};
 
   @media print {
     display: none;
-  }
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background: linear-gradient(to bottom, ${theme.colors.glass.background}, transparent);
   }
 `;
 
@@ -93,59 +85,45 @@ const Nav = styled.nav`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 ${theme.spacing.lg};
+    padding: 0 1.5rem;
     width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
   }
 `;
 
 const Logo = styled(motion.div)`
   color: ${theme.colors.light};
   font-family: ${theme.fonts.heading};
-  font-size: clamp(1.05rem, 3vw, 1.5rem);
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
   font-weight: 700;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 const NavActions = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.spacing.sm};
+  gap: 0.75rem;
 `;
 
-const AdminBadgeBtn = styled.button<{ active?: boolean }>`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: ${(props) => (props.active ? theme.colors.textDark : theme.colors.textLight)};
-  background: ${(props) => (props.active ? theme.colors.gradient.accent : theme.colors.glass.card)};
-  border: 1px solid ${(props) => (props.active ? 'transparent' : theme.colors.glass.border)};
-  cursor: pointer;
-  transition: all ${theme.transitions.default};
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-card);
-  }
-`;
-
-const IconButton = styled.button`
-  width: 42px;
-  height: 42px;
+const IconButton = styled.button<{ active?: boolean }>`
+  width: 40px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  color: ${theme.colors.textLight};
-  background: ${theme.colors.glass.card};
-  border: 1px solid ${theme.colors.glass.border};
+  color: ${(props) => (props.active ? theme.colors.textDark : theme.colors.textLight)};
+  background: ${(props) => (props.active ? theme.colors.gradient.accent : theme.colors.glass.card)};
+  border: 1px solid ${(props) => (props.active ? 'transparent' : theme.colors.glass.border)};
   transition: all ${theme.transitions.default};
   cursor: pointer;
 
   &:hover {
-    color: ${theme.colors.light};
+    color: ${(props) => (props.active ? theme.colors.textDark : theme.colors.light)};
     transform: translateY(-2px);
     box-shadow: var(--shadow-card);
   }
@@ -153,14 +131,16 @@ const IconButton = styled.button`
 
 const NavLinks = styled.div<{ open: boolean }>`
   display: flex;
-  gap: ${theme.spacing.lg};
+  align-items: center;
+  gap: ${theme.spacing.md};
 
   a {
     color: ${theme.colors.textLight};
     transition: all ${theme.transitions.default};
-    font-weight: 500;
-    padding: ${theme.spacing.xs} ${theme.spacing.sm};
-    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
 
     &:hover {
       color: ${theme.colors.light};
@@ -170,14 +150,15 @@ const NavLinks = styled.div<{ open: boolean }>`
 
   @media (max-width: ${theme.breakpoints.md}) {
     position: fixed;
-    top: 4.5rem;
+    top: 4rem;
     left: 0;
     right: 0;
     display: ${(props) => (props.open ? 'flex' : 'none')};
     flex-direction: column;
-    gap: ${theme.spacing.sm};
+    gap: ${theme.spacing.xs};
     padding: ${theme.spacing.md};
     background: ${theme.colors.glass.background};
+    backdrop-filter: blur(16px);
     border-bottom: 1px solid ${theme.colors.glass.border};
     box-shadow: var(--shadow-card);
 
@@ -190,7 +171,7 @@ const NavLinks = styled.div<{ open: boolean }>`
 
 const Main = styled.main`
   flex: 1;
-  margin-top: 4.5rem;
+  margin-top: 4.2rem;
   width: 100%;
   overflow-x: hidden;
 `;
@@ -216,31 +197,7 @@ const Footer = styled.footer`
   color: ${theme.colors.textLight};
   padding: ${theme.spacing.lg} 0;
   text-align: center;
-  position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background: linear-gradient(to top, ${theme.colors.glass.background}, transparent);
-  }
-`;
-
-const FooterAdminLink = styled.button`
-  background: transparent;
-  border: none;
-  color: ${theme.colors.accent};
-  font-weight: 600;
-  font-size: 0.88rem;
-  cursor: pointer;
-  margin-top: 0.5rem;
-  text-decoration: underline;
-
-  &:hover {
-    color: ${theme.colors.light};
-  }
+  border-top: 1px solid ${theme.colors.glass.border};
 `;
 
 export const Layout = ({ children }: LayoutProps) => {
@@ -256,7 +213,7 @@ export const Layout = ({ children }: LayoutProps) => {
       <SkipLink href="#main-content">Saltar al contenido principal</SkipLink>
 
       <Header role="banner">
-        <Nav role="navigation" aria-label="Main navigation">
+        <Nav role="navigation" aria-label="Navegación principal">
           <div className="container-fluid">
             <Logo
               initial={{ opacity: 0, x: -20 }}
@@ -265,7 +222,7 @@ export const Layout = ({ children }: LayoutProps) => {
               role="heading"
               aria-level={1}
             >
-              Portfolio personal
+              Portfolio Personal
             </Logo>
             <NavActions>
               <NavLinks open={isMenuOpen} role="list">
@@ -281,19 +238,19 @@ export const Layout = ({ children }: LayoutProps) => {
                   </a>
                 ))}
               </NavLinks>
-              <AdminBadgeBtn
+              <IconButton
                 type="button"
                 active={isAdmin}
                 onClick={isAdmin ? logout : openLoginModal}
-                aria-label={isAdmin ? 'Cerrar sesión de admin' : 'Iniciar sesión de admin'}
+                aria-label={isAdmin ? 'Cerrar sesión admin' : 'Iniciar sesión admin'}
+                title={isAdmin ? 'Modo Admin activo (Clic para salir)' : 'Acceso Admin (CRUD)'}
               >
                 {isAdmin ? <FaUnlock aria-hidden="true" /> : <FaLock aria-hidden="true" />}
-                <span>{isAdmin ? 'Admin Activo' : 'Acceso Admin'}</span>
-              </AdminBadgeBtn>
+              </IconButton>
               <IconButton
                 type="button"
                 onClick={toggleTheme}
-                aria-label={themeMode === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
+                aria-label={themeMode === 'dark' ? 'Modo claro' : 'Modo oscuro'}
                 title={themeMode === 'dark' ? 'Modo claro' : 'Modo oscuro'}
               >
                 {themeMode === 'dark' ? <FaSun aria-hidden="true" /> : <FaMoon aria-hidden="true" />}
@@ -318,10 +275,9 @@ export const Layout = ({ children }: LayoutProps) => {
       <AdminLoginModal />
       <Footer role="contentinfo">
         <div className="container-fluid">
-          <p>© {new Date().getFullYear()} Portfolio personal. Construido con React, Vite, Node.js y TypeScript.</p>
-          <FooterAdminLink onClick={isAdmin ? logout : openLoginModal}>
-            {isAdmin ? '🔒 Salir del Modo Administrador' : '🔑 Acceso Administrador (CRUD)'}
-          </FooterAdminLink>
+          <p style={{ margin: 0, fontSize: '0.9rem' }}>
+            © {new Date().getFullYear()} Portfolio Personal. React, Vite & Node.js.
+          </p>
         </div>
       </Footer>
     </LayoutWrapper>
