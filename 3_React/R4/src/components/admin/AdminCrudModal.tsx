@@ -1,11 +1,11 @@
 /**
  * Admin CRUD Modal Component.
- * Dynamic form for creating skills, projects, and achievements with real-time field validation.
+ * Dynamic form for creating and editing skills, projects, and achievements with real-time field validation.
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import { FaPlus, FaTimes } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTimes } from 'react-icons/fa';
 import { useData } from '../../contexts/DataContext';
 import { FormField } from '../common/FormField';
 import { validateName, validateBirthDateAndCalculateAge } from '../../utils/validation';
@@ -16,6 +16,7 @@ interface AdminCrudModalProps {
   isOpen: boolean;
   onClose: () => void;
   categoryId?: string | number;
+  editItem?: any;
 }
 
 const Backdrop = styled(motion.div)`
@@ -112,8 +113,23 @@ const AgeDisplay = styled.div`
   margin-bottom: ${theme.spacing.md};
 `;
 
-export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({ type, isOpen, onClose, categoryId }) => {
-  const { addSkill, addProject, addExperience, addAchievement } = useData();
+export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({
+  type,
+  isOpen,
+  onClose,
+  categoryId,
+  editItem,
+}) => {
+  const {
+    addSkill,
+    updateSkill,
+    addProject,
+    updateProject,
+    addExperience,
+    updateExperience,
+    addAchievement,
+    updateAchievement,
+  } = useData();
 
   const [skillName, setSkillName] = useState('');
   const [skillError, setSkillError] = useState('');
@@ -129,6 +145,34 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({ type, isOpen, on
   const [calculatedAge, setCalculatedAge] = useState<number | null>(null);
   const [ageError, setAgeError] = useState('');
   const [meta, setMeta] = useState('');
+
+  useEffect(() => {
+    if (editItem) {
+      if (type === 'skill') {
+        setSkillName(editItem.name || '');
+      } else if (type === 'project') {
+        setTitle(editItem.title || '');
+        setDescription(editItem.description || '');
+        setAccent(editItem.accent || '');
+        setGithubUrl(editItem.githubUrl || '');
+        setTags(Array.isArray(editItem.tags) ? editItem.tags.join(', ') : editItem.tags || '');
+      } else {
+        setTitle(editItem.title || '');
+        setDescription(editItem.description || '');
+        setMeta(editItem.meta || '');
+      }
+    } else {
+      setSkillName('');
+      setTitle('');
+      setDescription('');
+      setAccent('');
+      setGithubUrl('');
+      setTags('');
+      setBirthDate('');
+      setCalculatedAge(null);
+      setMeta('');
+    }
+  }, [editItem, type, isOpen]);
 
   if (!isOpen) return null;
 
@@ -159,18 +203,25 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({ type, isOpen, on
         setSkillError(v.errorMessage);
         return;
       }
-      if (categoryId) {
+      if (editItem) {
+        await updateSkill(editItem.id, skillName);
+      } else if (categoryId) {
         await addSkill(categoryId, skillName);
       }
     } else if (type === 'project') {
       if (!title || !description || !accent) return;
-      await addProject({
+      const projectPayload = {
         title,
         description,
         accent,
         githubUrl: githubUrl || undefined,
         tags: tags ? tags.split(',').map((t) => t.trim()) : ['General'],
-      });
+      };
+      if (editItem) {
+        await updateProject(editItem.id, projectPayload);
+      } else {
+        await addProject(projectPayload);
+      }
     } else if (type === 'experience') {
       if (!title || !description) return;
       if (birthDate) {
@@ -180,25 +231,27 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({ type, isOpen, on
           return;
         }
       }
-      await addExperience({
-        type: 'education',
+      const expPayload = {
+        type: 'education' as const,
         title,
         description,
         meta: calculatedAge ? `(Edad calculada: ${calculatedAge} años) ${meta}` : meta,
-      });
+      };
+      if (editItem) {
+        await updateExperience(editItem.id, expPayload);
+      } else {
+        await addExperience(expPayload);
+      }
     } else if (type === 'achievement') {
       if (!title || !description) return;
-      await addAchievement({ title, description });
+      const achPayload = { title, description };
+      if (editItem) {
+        await updateAchievement(editItem.id, achPayload);
+      } else {
+        await addAchievement(achPayload);
+      }
     }
 
-    setSkillName('');
-    setTitle('');
-    setDescription('');
-    setAccent('');
-    setGithubUrl('');
-    setTags('');
-    setBirthDate('');
-    setCalculatedAge(null);
     onClose();
   };
 
@@ -209,12 +262,13 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({ type, isOpen, on
           <FaTimes />
         </CloseButton>
         <Header>
-          <FaPlus />
+          {editItem ? <FaEdit /> : <FaPlus />}
           <h3>
-            {type === 'skill' && 'Agregar Nueva Habilidad'}
-            {type === 'project' && 'Agregar Nuevo Proyecto'}
-            {type === 'experience' && 'Agregar Formación / Experiencia'}
-            {type === 'achievement' && 'Agregar Logro'}
+            {editItem ? 'Editar' : 'Agregar'}{' '}
+            {type === 'skill' && 'Habilidad'}
+            {type === 'project' && 'Proyecto'}
+            {type === 'experience' && 'Formación / Experiencia'}
+            {type === 'achievement' && 'Logro'}
           </h3>
         </Header>
         <form onSubmit={handleSubmit}>
@@ -315,7 +369,7 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({ type, isOpen, on
             </>
           )}
 
-          <SubmitBtn type="submit">Guardar</SubmitBtn>
+          <SubmitBtn type="submit">{editItem ? 'Guardar Cambios' : 'Guardar'}</SubmitBtn>
         </form>
       </ModalCard>
     </Backdrop>

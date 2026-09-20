@@ -1,12 +1,12 @@
 /**
  * About Section Component.
- * Displays education history, competencies, and achievements.
- * Supports Admin CRUD and inline delete confirmation cards.
+ * Displays education history, competencies, and achievements with sleek card layout.
+ * Supports Admin CRUD (Add, Edit with pre-filled fields, Delete with inline confirmation).
  */
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaMedal, FaSchool, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaGraduationCap, FaTrophy, FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 import { useData } from '../../contexts/DataContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { ConfirmDeleteCard } from '../common/ConfirmDeleteCard';
@@ -25,21 +25,75 @@ const SectionTitle = styled(motion.h2)`
   font-size: clamp(2rem, 4vw, 2.5rem);
   margin-bottom: ${theme.spacing.lg};
   color: ${theme.colors.light};
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  svg {
+    color: ${theme.colors.accent};
+  }
 `;
 
 const InfoCard = styled(motion.article)`
   position: relative;
   height: 100%;
   padding: ${theme.spacing.lg};
-  border-radius: 16px;
+  border-radius: 20px;
   background: ${theme.colors.glass.background};
+  backdrop-filter: blur(12px);
   border: 1px solid ${theme.colors.glass.border};
   box-shadow: var(--shadow-card);
+  transition: transform ${theme.transitions.default};
 
-  svg {
-    color: ${theme.colors.accent};
-    font-size: 2rem;
-    margin-bottom: ${theme.spacing.md};
+  &:hover {
+    transform: translateY(-4px);
+    border-color: ${theme.colors.accent}55;
+  }
+`;
+
+const CardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: ${theme.spacing.md};
+  padding-bottom: ${theme.spacing.sm};
+  border-bottom: 1px solid ${theme.colors.glass.border};
+
+  h3 {
+    margin: 0;
+    font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+    color: ${theme.colors.light};
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    svg {
+      color: ${theme.colors.accent};
+      font-size: 1.4rem;
+      margin: 0;
+    }
+  }
+`;
+
+const AddButton = styled.button`
+  background: ${theme.colors.gradient.accent};
+  color: ${theme.colors.textDark};
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(246, 177, 122, 0.2);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(246, 177, 122, 0.35);
   }
 `;
 
@@ -51,11 +105,16 @@ const InfoList = styled.ul`
 
   li {
     position: relative;
-    padding: ${theme.spacing.sm} ${theme.spacing.md};
-    border-radius: 8px;
+    padding: ${theme.spacing.md};
+    border-radius: 12px;
     background: ${theme.colors.glass.card};
     border: 1px solid ${theme.colors.glass.border};
     margin-bottom: ${theme.spacing.sm};
+    transition: all ${theme.transitions.default};
+
+    &:hover {
+      background: ${theme.colors.gradient.glass};
+    }
   }
 `;
 
@@ -63,42 +122,44 @@ const ItemHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: ${theme.spacing.sm};
 `;
 
-const AddButton = styled.button`
-  background: ${theme.colors.gradient.accent};
-  color: ${theme.colors.textDark};
-  border: none;
-  border-radius: 999px;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.82rem;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-left: auto;
-  cursor: pointer;
-`;
+const ItemText = styled.div`
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.5;
 
-const DeleteBtn = styled.button`
-  background: transparent;
-  color: #ff6b6b;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0.2rem;
-  margin-left: 0.5rem;
-
-  &:hover {
-    color: #e63946;
+  strong {
+    color: ${theme.colors.light};
   }
 `;
 
-const CardHeader = styled.div`
+const ActionIcons = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: ${theme.spacing.md};
+  gap: 0.35rem;
+  flex-shrink: 0;
+`;
+
+const IconBtn = styled.button<{ danger?: boolean }>`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: ${(props) => (props.danger ? 'rgba(230, 57, 70, 0.18)' : 'rgba(246, 177, 122, 0.18)')};
+  color: ${(props) => (props.danger ? '#ff6b6b' : theme.colors.accent)};
+  border: 1px solid ${(props) => (props.danger ? 'rgba(230, 57, 70, 0.35)' : 'rgba(246, 177, 122, 0.35)')};
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+    background: ${(props) => (props.danger ? '#e63946' : theme.colors.accent)};
+    color: ${(props) => (props.danger ? '#ffffff' : theme.colors.textDark)};
+  }
 `;
 
 const About = () => {
@@ -109,15 +170,23 @@ const About = () => {
   const [deleteType, setDeleteType] = useState<'exp' | 'ach' | null>(null);
   const [crudModalOpen, setCrudModalOpen] = useState(false);
   const [crudType, setCrudType] = useState<'experience' | 'achievement'>('experience');
+  const [editingItem, setEditingItem] = useState<any>(null);
 
   const openAddModal = (type: 'experience' | 'achievement') => {
+    setEditingItem(null);
+    setCrudType(type);
+    setCrudModalOpen(true);
+  };
+
+  const openEditModal = (type: 'experience' | 'achievement', item: any) => {
+    setEditingItem(item);
     setCrudType(type);
     setCrudModalOpen(true);
   };
 
   return (
     <AboutSection id="about" role="region" aria-label="Sobre mí">
-      <div className="container-fluid">
+      <div className="container-fluid px-3 px-md-4">
         <SectionTitle
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -130,13 +199,12 @@ const About = () => {
           <div className="col-12 col-lg-5">
             <InfoCard initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <CardHeader>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <FaSchool aria-hidden="true" />
-                  <h3 style={{ margin: 0 }}>Formación</h3>
-                </div>
+                <h3>
+                  <FaGraduationCap /> Formación
+                </h3>
                 {isAdmin && (
                   <AddButton onClick={() => openAddModal('experience')}>
-                    <FaPlus /> Agregar
+                    <FaPlus /> Agregar Formación
                   </AddButton>
                 )}
               </CardHeader>
@@ -154,19 +222,25 @@ const About = () => {
                       />
                     )}
                     <ItemHeader>
-                      <div>
+                      <ItemText>
                         <strong>{item.title}:</strong> {item.description} {item.meta}
-                      </div>
+                      </ItemText>
                       {isAdmin && (
-                        <DeleteBtn
-                          onClick={() => {
-                            setDeletingId(item.id);
-                            setDeleteType('exp');
-                          }}
-                          aria-label={`Eliminar ${item.title}`}
-                        >
-                          <FaTrash />
-                        </DeleteBtn>
+                        <ActionIcons>
+                          <IconBtn onClick={() => openEditModal('experience', item)} title="Editar información">
+                            <FaEdit />
+                          </IconBtn>
+                          <IconBtn
+                            danger
+                            onClick={() => {
+                              setDeletingId(item.id);
+                              setDeleteType('exp');
+                            }}
+                            title="Eliminar información"
+                          >
+                            <FaTrash />
+                          </IconBtn>
+                        </ActionIcons>
                       )}
                     </ItemHeader>
                   </li>
@@ -174,6 +248,7 @@ const About = () => {
               </InfoList>
             </InfoCard>
           </div>
+
           <div className="col-12 col-lg-7">
             <InfoCard
               initial={{ opacity: 0, y: 18 }}
@@ -182,13 +257,12 @@ const About = () => {
               transition={{ delay: 0.1 }}
             >
               <CardHeader>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <FaMedal aria-hidden="true" />
-                  <h3 style={{ margin: 0 }}>Competencias y participación</h3>
-                </div>
+                <h3>
+                  <FaTrophy /> Competencias y Participación
+                </h3>
                 {isAdmin && (
                   <AddButton onClick={() => openAddModal('achievement')}>
-                    <FaPlus /> Agregar
+                    <FaPlus /> Agregar Logro
                   </AddButton>
                 )}
               </CardHeader>
@@ -206,19 +280,25 @@ const About = () => {
                       />
                     )}
                     <ItemHeader>
-                      <div>
+                      <ItemText>
                         <strong>{item.title}:</strong> {item.description}
-                      </div>
+                      </ItemText>
                       {isAdmin && (
-                        <DeleteBtn
-                          onClick={() => {
-                            setDeletingId(item.id);
-                            setDeleteType('ach');
-                          }}
-                          aria-label={`Eliminar ${item.title}`}
-                        >
-                          <FaTrash />
-                        </DeleteBtn>
+                        <ActionIcons>
+                          <IconBtn onClick={() => openEditModal('achievement', item)} title="Editar logro">
+                            <FaEdit />
+                          </IconBtn>
+                          <IconBtn
+                            danger
+                            onClick={() => {
+                              setDeletingId(item.id);
+                              setDeleteType('ach');
+                            }}
+                            title="Eliminar logro"
+                          >
+                            <FaTrash />
+                          </IconBtn>
+                        </ActionIcons>
                       )}
                     </ItemHeader>
                   </li>
@@ -229,7 +309,12 @@ const About = () => {
         </div>
       </div>
 
-      <AdminCrudModal type={crudType} isOpen={crudModalOpen} onClose={() => setCrudModalOpen(false)} />
+      <AdminCrudModal
+        type={crudType}
+        isOpen={crudModalOpen}
+        onClose={() => setCrudModalOpen(false)}
+        editItem={editingItem}
+      />
     </AboutSection>
   );
 };
