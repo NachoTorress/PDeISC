@@ -1,11 +1,17 @@
+/**
+ * Layout Component for Portfolio Application.
+ * Includes Header, Navigation, Admin Access trigger, Theme Mode Toggle, Footer, and Floating Navigation.
+ */
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { ReactNode, useState } from 'react';
-import { FaBars, FaMoon, FaSun, FaTimes } from 'react-icons/fa';
+import { FaBars, FaMoon, FaSun, FaTimes, FaLock, FaUnlock } from 'react-icons/fa';
 import { theme } from '../../styles/theme';
 import { FloatingNav } from '../navigation/FloatingNav';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import { useThemeMode } from '../../hooks/useThemeMode';
+import { useAuth } from '../../contexts/AuthContext';
+import { AdminLoginModal } from '../admin/AdminLoginModal';
 import { navSections } from '../../data/portfolio';
 
 interface LayoutProps {
@@ -83,14 +89,12 @@ const Header = styled.header`
 `;
 
 const Nav = styled.nav`
-  .container {
+  .container-fluid {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 ${theme.spacing.md};
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 90%;
+    padding: 0 ${theme.spacing.lg};
+    width: 100%;
   }
 `;
 
@@ -107,6 +111,26 @@ const NavActions = styled.div`
   gap: ${theme.spacing.sm};
 `;
 
+const AdminBadgeBtn = styled.button<{ active?: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: ${(props) => (props.active ? theme.colors.textDark : theme.colors.textLight)};
+  background: ${(props) => (props.active ? theme.colors.gradient.accent : theme.colors.glass.card)};
+  border: 1px solid ${(props) => (props.active ? 'transparent' : theme.colors.glass.border)};
+  cursor: pointer;
+  transition: all ${theme.transitions.default};
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+  }
+`;
+
 const IconButton = styled.button`
   width: 42px;
   height: 42px;
@@ -118,6 +142,7 @@ const IconButton = styled.button`
   background: ${theme.colors.glass.card};
   border: 1px solid ${theme.colors.glass.border};
   transition: all ${theme.transitions.default};
+  cursor: pointer;
 
   &:hover {
     color: ${theme.colors.light};
@@ -203,22 +228,36 @@ const Footer = styled.footer`
   }
 `;
 
+const FooterAdminLink = styled.button`
+  background: transparent;
+  border: none;
+  color: ${theme.colors.accent};
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  text-decoration: underline;
+
+  &:hover {
+    color: ${theme.colors.light};
+  }
+`;
+
 export const Layout = ({ children }: LayoutProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { themeMode, toggleTheme } = useThemeMode();
+  const { isAdmin, logout, openLoginModal } = useAuth();
   useKeyboardNavigation();
 
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <LayoutWrapper>
-      <SkipLink href="#main-content">
-        Saltar al contenido principal
-      </SkipLink>
+      <SkipLink href="#main-content">Saltar al contenido principal</SkipLink>
 
       <Header role="banner">
         <Nav role="navigation" aria-label="Main navigation">
-          <div className="container">
+          <div className="container-fluid">
             <Logo
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -242,6 +281,15 @@ export const Layout = ({ children }: LayoutProps) => {
                   </a>
                 ))}
               </NavLinks>
+              <AdminBadgeBtn
+                type="button"
+                active={isAdmin}
+                onClick={isAdmin ? logout : openLoginModal}
+                aria-label={isAdmin ? 'Cerrar sesión de admin' : 'Iniciar sesión de admin'}
+              >
+                {isAdmin ? <FaUnlock aria-hidden="true" /> : <FaLock aria-hidden="true" />}
+                <span>{isAdmin ? 'Admin Activo' : 'Acceso Admin'}</span>
+              </AdminBadgeBtn>
               <IconButton
                 type="button"
                 onClick={toggleTheme}
@@ -267,9 +315,13 @@ export const Layout = ({ children }: LayoutProps) => {
         {children}
       </Main>
       <FloatingNav />
+      <AdminLoginModal />
       <Footer role="contentinfo">
-        <div className="container">
-          <p>© {new Date().getFullYear()} Portfolio personal. Construido con React, Vite y TypeScript.</p>
+        <div className="container-fluid">
+          <p>© {new Date().getFullYear()} Portfolio personal. Construido con React, Vite, Node.js y TypeScript.</p>
+          <FooterAdminLink onClick={isAdmin ? logout : openLoginModal}>
+            {isAdmin ? '🔒 Salir del Modo Administrador' : '🔑 Acceso Administrador (CRUD)'}
+          </FooterAdminLink>
         </div>
       </Footer>
     </LayoutWrapper>
