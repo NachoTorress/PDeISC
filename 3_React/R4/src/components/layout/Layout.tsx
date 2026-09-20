@@ -155,12 +155,11 @@ const NavLinks = styled.div<{ open: boolean }>`
     right: 0;
     display: flex;
     flex-direction: column;
-    gap: ${theme.spacing.xs};
-    padding: ${theme.spacing.md};
-    background: ${theme.colors.glass.background};
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid ${theme.colors.glass.border};
-    box-shadow: var(--shadow-card);
+    gap: 0.5rem;
+    padding: 1.25rem 1rem;
+    background: #ffffff;
+    border-bottom: 2px solid ${theme.colors.accent};
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     opacity: ${(props) => (props.open ? 1 : 0)};
     visibility: ${(props) => (props.open ? 'visible' : 'hidden')};
     transform: ${(props) => (props.open ? 'translateY(0)' : 'translateY(-10px)')};
@@ -169,8 +168,18 @@ const NavLinks = styled.div<{ open: boolean }>`
 
     a {
       width: 100%;
-      padding: ${theme.spacing.md};
+      padding: 0.85rem 1rem;
       text-align: center;
+      color: #0f172a !important;
+      font-weight: 700;
+      font-size: 1.05rem;
+      background: #f1f5f9;
+      border-radius: 10px;
+
+      &:hover, &:focus {
+        background: ${theme.colors.accent};
+        color: #0f172a !important;
+      }
     }
   }
 `;
