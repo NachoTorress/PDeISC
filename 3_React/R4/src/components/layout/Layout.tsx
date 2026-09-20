@@ -222,7 +222,7 @@ export const Layout = ({ children }: LayoutProps) => {
               role="heading"
               aria-level={1}
             >
-              Portfolio Personal
+              Ignacio Torres
             </Logo>
             <NavActions>
               <NavLinks open={isMenuOpen} role="list">
