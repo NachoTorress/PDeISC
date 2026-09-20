@@ -10,13 +10,13 @@ import { profile } from '../../data/portfolio';
 import { theme } from '../../styles/theme';
 
 const HeroSection = styled.section`
-  min-height: calc(100vh - 4.2rem);
+  min-height: auto;
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
   color: ${theme.colors.textLight};
-  padding: ${theme.spacing.xl} 0;
+  padding: calc(${theme.spacing.xl} * 0.5) 0;
 `;
 
 const HeroContent = styled.div`

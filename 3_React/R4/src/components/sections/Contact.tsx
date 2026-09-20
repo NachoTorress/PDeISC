@@ -8,12 +8,12 @@ import { theme } from '../../styles/theme';
 const ContactSection = styled.section`
   position: relative;
   overflow: hidden;
-  min-height: 80vh;
+  min-height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   color: ${theme.colors.textLight};
-  padding: ${theme.spacing.xl} 0;
+  padding: ${theme.spacing.lg} 0 ${theme.spacing.xl} 0;
 
   .container {
     position: relative;

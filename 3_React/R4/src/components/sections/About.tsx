@@ -14,11 +14,11 @@ import { AdminCrudModal } from '../admin/AdminCrudModal';
 import { theme } from '../../styles/theme';
 
 const AboutSection = styled.section`
-  min-height: 72vh;
+  min-height: auto;
   display: flex;
   align-items: center;
   color: ${theme.colors.textLight};
-  padding: ${theme.spacing.xl} 0;
+  padding: ${theme.spacing.lg} 0;
 `;
 
 const SectionTitle = styled(motion.h2)`

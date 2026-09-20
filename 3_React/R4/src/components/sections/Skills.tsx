@@ -14,14 +14,14 @@ import { AdminCrudModal } from '../admin/AdminCrudModal';
 import { theme } from '../../styles/theme';
 
 const SkillsSection = styled.section`
-  min-height: 100vh;
+  min-height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
   overflow: hidden;
   color: ${theme.colors.textLight};
-  padding: ${theme.spacing.xl} 0;
+  padding: ${theme.spacing.lg} 0;
 `;
 
 const HeaderRow = styled.div`
