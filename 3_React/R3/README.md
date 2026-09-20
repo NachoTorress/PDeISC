@@ -1,21 +1,15 @@
 # Sistema de usuarios SQL + API + React
 
-Proyecto completo con dos sistemas equivalentes de usuarios:
+Proyecto completo con un backend unificado y dos frontends independientes:
 
-- Frontend con React Router.
-- Frontend con navegacion manejada por `useState`.
-- API en Node + Express usando ES modules (`import`).
-- Base de datos SQL relacional normalizada, separada en cuentas, perfiles, roles y tipos de documento.
-- Contraseñas protegidas con hash `bcrypt`.
-- CRUD de usuarios con proteccion por token JWT.
-- Persistencia en `localStorage` para sesion y tema visual.
-- Validaciones en tiempo real en el frontend y validaciones repetidas en el backend.
-- CSS separado para modo claro y modo oscuro.
+- **Frontend React Router** (`frontend-router/`): Manejo de pantallas y protección de rutas con `react-router-dom`. (Puerto `5173`)
+- **Frontend useState** (`frontend-state/`): Navegación mediante estado local de React sin router. (Puerto `5174`)
+- **Backend API** (`backend/`): Node + Express con MySQL, JWT y Bcrypt. (Puerto `3001`)
 
 ## Estructura
 
 ```txt
-sistema-usuarios-sql-react/
+R3/
   backend/
     src/
       config/
@@ -26,18 +20,25 @@ sistema-usuarios-sql-react/
       services/
       utils/
       validators/
-  frontend/
+  frontend-router/
     src/
       components/
       contexts/
-      hooks/
+      pages/
+      services/
+      styles/
+      types/
+  frontend-state/
+    src/
+      components/
+      contexts/
       pages/
       services/
       styles/
       types/
 ```
 
-## Instalacion del backend
+## Instalación del backend
 
 Desde la carpeta `backend` ejecutar:
 
@@ -45,31 +46,17 @@ Desde la carpeta `backend` ejecutar:
 npm install
 ```
 
-Si tenes que instalar dependencia por dependencia, estos son los comandos:
+Si tenés que instalar dependencia por dependencia, estos son los comandos:
 
 ```bash
 npm install express cors dotenv helmet morgan bcryptjs jsonwebtoken mysql2 express-rate-limit
 npm install -D nodemon
 ```
 
-Despues crear el archivo `.env` copiando `.env.example` y completar los datos de MySQL:
+Después crear el archivo `.env` copiando `.env.example` y completar los datos de MySQL:
 
 ```bash
 cp .env.example .env
-```
-
-En Windows tambien podes copiarlo manualmente desde el explorador.
-
-Crear la base con el archivo:
-
-```txt
-backend/src/database/schema.sql
-```
-
-Ejemplo con MySQL CLI:
-
-```bash
-mysql -u root -p < src/database/schema.sql
 ```
 
 Levantar la API:
@@ -78,72 +65,43 @@ Levantar la API:
 npm run dev
 ```
 
-La API queda por defecto en:
+La API queda por defecto en: `http://localhost:3001/api`
 
-```txt
-http://localhost:3001/api
-```
+---
 
-## Instalacion del frontend
+## Instalación del Frontend con React Router (`frontend-router`)
 
-Desde la carpeta `frontend` ejecutar:
+Desde la carpeta `frontend-router` ejecutar:
 
 ```bash
 npm install
-```
-
-Si tenes que instalar dependencia por dependencia, estos son los comandos:
-
-```bash
-npm install react react-dom react-router-dom react-hook-form bootstrap lucide-react
-npm install -D vite typescript @vitejs/plugin-react eslint @eslint/js typescript-eslint @types/react @types/react-dom
-```
-
-Crear `.env.local` copiando `.env.example` si queres cambiar la URL de la API:
-
-```txt
-VITE_API_URL=http://localhost:3001/api
-```
-
-Levantar React:
-
-```bash
 npm run dev
 ```
 
-El frontend queda por defecto en:
+El frontend React Router queda disponible en: `http://localhost:5173`
 
-```txt
-http://localhost:5173
+---
+
+## Instalación del Frontend con useState (`frontend-state`)
+
+Desde la carpeta `frontend-state` ejecutar:
+
+```bash
+npm install
+npm run dev
 ```
+
+El frontend useState queda disponible en: `http://localhost:5174`
+
+---
 
 ## Uso recomendado
 
 1. Crear la base de datos con `schema.sql`.
-2. Levantar el backend.
-3. Levantar el frontend.
-4. Registrar el primer usuario.
-5. El primer usuario queda como administrador automaticamente.
-6. Desde ese usuario administrador se pueden crear, editar y eliminar usuarios.
-
-## Seguridad y datos
-
-- Las contraseñas nunca se guardan en texto plano.
-- El backend nunca devuelve `password_hash`.
-- Las rutas de usuarios requieren token JWT.
-- Las validaciones del frontend se repiten en el backend para evitar confiar solo en el navegador.
-- La API cierra el pool de conexiones de MySQL al recibir una senal de apagado.
-- No hay funcionalidades de descarga en esta version; por eso no se generan logs locales de descargas.
-
-## Validaciones incluidas
-
-- Nombres y apellidos: letras, espacios y apostrofes; sin numeros.
-- Fechas de nacimiento: no futuras y edad maxima de 120 anios.
-- Edad: calculada automaticamente, no se guarda como dato duplicado.
-- Email: formato valido.
-- Documento: solo numeros positivos, entre 6 y 12 digitos.
-- Telefono: opcional, solo numeros y `+` al inicio.
-- Password: minimo 8 caracteres con mayuscula, minuscula, numero y simbolo.
+2. Levantar el backend (`cd backend && npm run dev`).
+3. Levantar cualquiera de los dos frontends (o ambos en paralelo en distintas pestañas).
+4. Registrar el primer usuario (queda como administrador automáticamente).
+5. Administrar usuarios desde el panel de control de cualquiera de los dos frontends.
 
 ## Rutas principales de la API
 
@@ -159,4 +117,3 @@ POST   /api/users
 PUT    /api/users/:id
 DELETE /api/users/:id
 ```
-

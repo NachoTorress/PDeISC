@@ -2,26 +2,20 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const requiredVariables = ['DB_HOST', 'DB_USER', 'DB_NAME', 'JWT_SECRET'];
-
-for (const variable of requiredVariables) {
-  if (!process.env[variable]) {
-    throw new Error(`Falta configurar la variable de entorno ${variable}`);
-  }
-}
+const rawOrigins = process.env.CLIENT_ORIGIN ?? 'http://localhost:5173,http://localhost:5174';
+const clientOrigins = rawOrigins.split(',').map((origin) => origin.trim());
 
 export const env = {
   port: Number(process.env.PORT ?? 3001),
-  clientOrigin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173',
+  clientOrigins,
   db: {
-    host: process.env.DB_HOST,
+    host: process.env.DB_HOST ?? 'localhost',
     port: Number(process.env.DB_PORT ?? 3306),
-    user: process.env.DB_USER,
+    user: process.env.DB_USER ?? 'root',
     password: process.env.DB_PASSWORD ?? '',
-    database: process.env.DB_NAME,
+    database: process.env.DB_NAME ?? 'user_system_db',
   },
-  jwtSecret: process.env.JWT_SECRET,
+  jwtSecret: process.env.JWT_SECRET ?? 'supersecretjwtkey_change_me_in_production',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '2h',
   saltRounds: Number(process.env.BCRYPT_SALT_ROUNDS ?? 12),
 };
-

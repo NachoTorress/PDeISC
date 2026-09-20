@@ -4,16 +4,28 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { env } from './config/env.js';
+import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 import { authRoutes } from './routes/authRoutes.js';
 import { userRoutes } from './routes/userRoutes.js';
-import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 
 export const app = express();
 
 app.use(helmet());
 app.use(
   cors({
-    origin: env.clientOrigin,
+    origin: (origin, callback) => {
+      if (!origin || env.clientOrigins.includes(origin) || env.clientOrigins.includes('*')) {
+        callback(null, true);
+      } else {
+        // En desarrollo local o si difiere el puerto, permitir peticiones HTTP locales
+        if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+          callback(null, true);
+        } else {
+          callback(new Error('Bloqueado por política CORS'));
+        }
+      }
+    },
+    credentials: true,
   }),
 );
 app.use(
@@ -35,4 +47,3 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use(notFound);
 app.use(errorHandler);
-
