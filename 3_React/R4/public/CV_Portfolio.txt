@@ -1,0 +1,19 @@
+===================================================
+CURRICULUM VITAE - IGNACIO TORRES
+===================================================
+Email: nachotorress2006@gmail.com
+Carrera: Ciencias de la Computación (UBA)
+
+ESTUDIOS:
+- Colegio Nacional de Buenos Aires (2018 - 2023)
+- Universidad de Buenos Aires - Ciencias de la Computación (2024 - Presente)
+
+HABILIDADES TÉCNICAS:
+- C++, TypeScript, Node.js, Python, SQL / SQLite, React UI, Docker, Git, Linux.
+
+LOGROS DESTACADOS:
+- Olimpíada Argentina de Informática (OAI)
+- Olimpíada de Filosofía
+
+===================================================
+Descargado desde el Portfolio Web Personal.
