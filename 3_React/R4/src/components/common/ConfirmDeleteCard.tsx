@@ -1,11 +1,11 @@
 /**
  * In-card deletion confirmation component.
- * Displays styled inline confirmation prompt inside item card without using native browser confirm().
+ * Theme-aware overlay card styled cleanly for both Dark and Light modes.
  */
 import React from 'react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import { theme } from '../../styles/theme';
+import { FaExclamationTriangle } from 'react-icons/fa';
 
 interface ConfirmDeleteCardProps {
   onConfirm: () => void;
@@ -19,67 +19,110 @@ const OverlayBox = styled(motion.div)`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(20, 22, 34, 0.92);
-  backdrop-filter: blur(6px);
-  border-radius: 14px;
+  background: var(--confirm-bg, #0f172a);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: ${theme.spacing.md};
+  padding: 1.25rem;
   text-align: center;
-  z-index: 10;
-  border: 1px solid rgba(230, 57, 70, 0.5);
+  z-index: 50;
+  border: 2px solid #ef4444;
+  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.25);
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.15);
+  }
+`;
+
+const WarningIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
 `;
 
 const QuestionText = styled.p`
-  color: ${theme.colors.light};
+  color: var(--confirm-text, #f8fafc);
   font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: ${theme.spacing.md};
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+
+  [data-theme='light'] & {
+    color: #0f172a;
+  }
 `;
 
 const ButtonRow = styled.div`
   display: flex;
-  gap: ${theme.spacing.sm};
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const ConfirmBtn = styled.button`
-  background: #e63946;
+  background: #ef4444;
   color: #ffffff;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.1rem;
   border-radius: 999px;
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 
   &:hover {
-    transform: scale(1.05);
-    background: #d62839;
+    transform: translateY(-2px);
+    background: #dc2626;
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.45);
   }
 `;
 
 const CancelBtn = styled.button`
-  background: ${theme.colors.glass.card};
-  color: ${theme.colors.textLight};
-  border: 1px solid ${theme.colors.glass.border};
-  padding: 0.5rem 1rem;
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--cancel-text, #cbd5e1);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  padding: 0.5rem 1.1rem;
   border-radius: 999px;
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
+  transition: all 0.2s ease;
+
+  [data-theme='light'] & {
+    background: #f1f5f9;
+    color: #334155;
+    border-color: #cbd5e1;
+  }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    background: rgba(148, 163, 184, 0.3);
+
+    [data-theme='light'] & {
+      background: #e2e8f0;
+    }
   }
 `;
 
 export const ConfirmDeleteCard: React.FC<ConfirmDeleteCardProps> = ({ onConfirm, onCancel, title }) => {
   return (
-    <OverlayBox initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-      <QuestionText>¿Estás seguro que querés eliminar {title ? `"${title}"` : 'este elemento'}?</QuestionText>
+    <OverlayBox initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
+      <WarningIcon>
+        <FaExclamationTriangle />
+      </WarningIcon>
+      <QuestionText>¿Eliminar {title ? `"${title}"` : 'este elemento'}?</QuestionText>
       <ButtonRow>
         <ConfirmBtn type="button" onClick={onConfirm}>
           Sí, eliminar
