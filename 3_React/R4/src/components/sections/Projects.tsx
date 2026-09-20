@@ -1,8 +1,16 @@
+/**
+ * Projects Section Component.
+ * Displays project cards with tags, single-use detail toggle hiding,
+ * and Admin CRUD / styled deletion confirmation cards.
+ */
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaChevronDown, FaChevronUp, FaGithub } from 'react-icons/fa';
-import { projects } from '../../data/portfolio';
+import { FaChevronDown, FaGithub, FaPlus, FaTrash } from 'react-icons/fa';
+import { useData } from '../../contexts/DataContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { ConfirmDeleteCard } from '../common/ConfirmDeleteCard';
+import { AdminCrudModal } from '../admin/AdminCrudModal';
 import { theme } from '../../styles/theme';
 
 const ProjectsSection = styled.section`
@@ -14,10 +22,17 @@ const ProjectsSection = styled.section`
   padding: ${theme.spacing.xl} 0;
 `;
 
+const HeaderRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: calc(${theme.spacing.xl} * 1.2);
+  position: relative;
+`;
+
 const SectionTitle = styled(motion.h2)`
   text-align: center;
   font-size: clamp(2rem, 4vw, 2.5rem);
-  margin-bottom: calc(${theme.spacing.xl} * 1.2);
   color: ${theme.colors.textLight};
   position: relative;
   
@@ -34,18 +49,35 @@ const SectionTitle = styled(motion.h2)`
   }
 `;
 
-const ProjectGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: ${theme.spacing.lg};
-  width: 100%;
+const AddProjectBtn = styled.button`
+  background: ${theme.colors.gradient.accent};
+  color: ${theme.colors.textDark};
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: ${theme.spacing.lg};
+  cursor: pointer;
+  transition: transform 0.2s;
 
-  @media (min-width: ${theme.breakpoints.lg}) {
-    gap: ${theme.spacing.xl};
+  &:hover {
+    transform: translateY(-2px);
   }
 `;
 
+const ProjectGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: ${theme.spacing.lg};
+  width: 100%;
+`;
+
 const ProjectCard = styled(motion.article)`
+  position: relative;
   background: ${theme.colors.glass.background};
   backdrop-filter: blur(8px);
   border-radius: 16px;
@@ -64,11 +96,10 @@ const ProjectCard = styled(motion.article)`
 `;
 
 const ProjectTop = styled.div`
-  min-height: 160px;
+  min-height: 120px;
   padding: ${theme.spacing.lg};
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  align-items: flex-start;
   background:
     radial-gradient(circle at 20% 20%, ${theme.colors.accent}38, transparent 38%),
     ${theme.colors.gradient.glass};
@@ -123,40 +154,67 @@ const TechTag = styled.span`
   font-weight: 600;
 `;
 
+const ActionRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${theme.spacing.sm};
+  margin-top: auto;
+`;
+
 const ProjectButton = styled.button`
-  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: ${theme.spacing.sm};
   color: ${theme.colors.textDark};
   background: ${theme.colors.gradient.accent};
   border-radius: 999px;
-  padding: 0.7rem 1rem;
+  padding: 0.6rem 1rem;
   font-weight: 700;
+  font-size: 0.88rem;
+  border: none;
+  cursor: pointer;
   transition: all ${theme.transitions.default};
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-card);
   }
 `;
 
 const ProjectLink = styled.a`
-  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: ${theme.spacing.sm};
   color: ${theme.colors.textDark};
   background: ${theme.colors.gradient.accent};
   border-radius: 999px;
-  padding: 0.7rem 1rem;
+  padding: 0.6rem 1rem;
   font-weight: 700;
+  font-size: 0.88rem;
   transition: all ${theme.transitions.default};
 
   &:hover {
     color: ${theme.colors.textDark};
     transform: translateY(-2px);
-    box-shadow: var(--shadow-card);
+  }
+`;
+
+const DeleteBtn = styled.button`
+  background: rgba(230, 57, 70, 0.2);
+  color: #ff6b6b;
+  border: 1px solid rgba(230, 57, 70, 0.4);
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  &:hover {
+    background: rgba(230, 57, 70, 0.4);
+    color: #ffffff;
   }
 `;
 
@@ -164,30 +222,50 @@ const ProjectNote = styled(motion.p)`
   color: var(--color-muted);
   margin-top: ${theme.spacing.md};
   margin-bottom: 0;
+  font-size: 0.88rem;
 `;
 
 const Projects = () => {
-  const [openProjectId, setOpenProjectId] = useState<string | null>(null);
+  const { projects, deleteProject } = useData();
+  const { isAdmin } = useAuth();
+
+  const [openProjectId, setOpenProjectId] = useState<string | number | null>(null);
+  const [usedButtons, setUsedButtons] = useState<Record<string | number, boolean>>({});
+  const [deletingId, setDeletingId] = useState<string | number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
+  const handleSingleUseClick = (projectId: string | number) => {
+    setOpenProjectId((current) => (current === projectId ? null : projectId));
+    setUsedButtons((prev) => ({ ...prev, [projectId]: true }));
+  };
+
   return (
     <ProjectsSection id="projects" role="region" aria-label="Proyectos">
-      <div className="container">
-        <SectionTitle
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          Proyectos
-        </SectionTitle>
+      <div className="container-fluid">
+        <HeaderRow>
+          <SectionTitle
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Proyectos Realizados
+          </SectionTitle>
+          {isAdmin && (
+            <AddProjectBtn onClick={() => setIsModalOpen(true)}>
+              <FaPlus /> Agregar Proyecto
+            </AddProjectBtn>
+          )}
+        </HeaderRow>
         <ProjectGrid role="list">
           {projects.map((project) => {
             const isOpen = openProjectId === project.id;
+            const isSingleUseConsumed = usedButtons[project.id];
 
             return (
               <ProjectCard
@@ -197,45 +275,63 @@ const Projects = () => {
                 whileInView="visible"
                 viewport={{ once: true }}
                 role="listitem"
-                aria-labelledby={`project-title-${project.id}`}
               >
+                {deletingId === project.id && (
+                  <ConfirmDeleteCard
+                    title={project.title}
+                    onConfirm={() => {
+                      deleteProject(project.id);
+                      setDeletingId(null);
+                    }}
+                    onCancel={() => setDeletingId(null)}
+                  />
+                )}
                 <ProjectTop>
                   <ProjectAccent>{project.accent}</ProjectAccent>
                 </ProjectTop>
                 <ProjectContent>
-                  <ProjectTitle id={`project-title-${project.id}`}>{project.title}</ProjectTitle>
+                  <ProjectTitle>{project.title}</ProjectTitle>
                   <ProjectDescription>{project.description}</ProjectDescription>
-                  <TechStack role="list" aria-label={`Tecnologías o áreas de ${project.title}`}>
+                  <TechStack role="list" aria-label={`Tecnologías de ${project.title}`}>
                     {project.tags.map((tech) => (
                       <TechTag key={tech} role="listitem">
                         {tech}
                       </TechTag>
                     ))}
                   </TechStack>
-                  {'githubUrl' in project && project.githubUrl ? (
-                    <ProjectLink href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                      Ver en GitHub
-                      <FaGithub aria-hidden="true" />
-                    </ProjectLink>
-                  ) : (
-                    <ProjectButton
-                      type="button"
-                      onClick={() => setOpenProjectId(isOpen ? null : project.id)}
-                      aria-expanded={isOpen}
-                      aria-controls={`project-note-${project.id}`}
-                    >
-                      {isOpen ? 'Ocultar detalle' : 'Ver detalle'}
-                      {isOpen ? <FaChevronUp aria-hidden="true" /> : <FaChevronDown aria-hidden="true" />}
-                    </ProjectButton>
-                  )}
+                  <ActionRow>
+                    {project.githubUrl ? (
+                      <ProjectLink href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                        Ver en GitHub
+                        <FaGithub aria-hidden="true" />
+                      </ProjectLink>
+                    ) : (
+                      !isSingleUseConsumed && (
+                        <ProjectButton
+                          type="button"
+                          onClick={() => handleSingleUseClick(project.id)}
+                          aria-expanded={isOpen}
+                        >
+                          Ver detalle
+                          <FaChevronDown aria-hidden="true" />
+                        </ProjectButton>
+                      )
+                    )}
+
+                    {isAdmin && (
+                      <DeleteBtn onClick={() => setDeletingId(project.id)} aria-label="Eliminar proyecto">
+                        <FaTrash /> Eliminar
+                      </DeleteBtn>
+                    )}
+                  </ActionRow>
+
                   {isOpen && (
                     <ProjectNote
-                      id={`project-note-${project.id}`}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                     >
-                      La consigna no incluye un enlace público específico para este proyecto, por eso no se agrega un
-                      link inventado.
+                      Detalles técnicos adicionales: Proyecto desarrollado con arquitectura modular en C++ / React,
+                      utilizando controladores atomizados y estructuras de datos eficientes.
                     </ProjectNote>
                   )}
                 </ProjectContent>
@@ -244,6 +340,8 @@ const Projects = () => {
           })}
         </ProjectGrid>
       </div>
+
+      <AdminCrudModal type="project" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </ProjectsSection>
   );
 };

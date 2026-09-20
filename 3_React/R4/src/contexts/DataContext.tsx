@@ -45,12 +45,16 @@ interface DataContextType {
   education: ItemData[];
   achievements: ItemData[];
   addSkill: (categoryId: string | number, name: string, icon?: string) => Promise<void>;
+  updateSkill: (skillId: string | number, name: string, icon?: string) => Promise<void>;
   deleteSkill: (skillId: string | number) => Promise<void>;
   addProject: (project: Omit<ProjectData, 'id'>) => Promise<void>;
+  updateProject: (id: string | number, project: Omit<ProjectData, 'id'>) => Promise<void>;
   deleteProject: (id: string | number) => Promise<void>;
   addExperience: (exp: Omit<ItemData, 'id'>) => Promise<void>;
+  updateExperience: (id: string | number, exp: Omit<ItemData, 'id'>) => Promise<void>;
   deleteExperience: (id: string | number) => Promise<void>;
   addAchievement: (ach: Omit<ItemData, 'id'>) => Promise<void>;
+  updateAchievement: (id: string | number, ach: Omit<ItemData, 'id'>) => Promise<void>;
   deleteAchievement: (id: string | number) => Promise<void>;
   recordDownload: (fileName: string) => Promise<void>;
 }
@@ -66,7 +70,6 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [achievements, setAchievements] = useState<ItemData[]>([]);
 
   useEffect(() => {
-    // Initial static load
     setSkillCategories(
       (portfolioData.skillCategories as any[]).map((cat, index) => ({
         id: index + 1,
@@ -109,7 +112,6 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }))
     );
 
-    // Sync with backend API if available
     const syncFromAPI = async () => {
       try {
         const [skillsRes, projRes, expRes, achRes] = await Promise.all([
@@ -183,7 +185,6 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const addSkill = async (categoryId: string | number, name: string, icon = 'code') => {
     const newId = Date.now();
-    // Instant local state update
     setSkillCategories((prev) =>
       prev.map((cat) =>
         cat.id === categoryId
@@ -195,7 +196,6 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       )
     );
 
-    // Optional API sync
     try {
       await fetch(`${API_BASE}/skills`, {
         method: 'POST',
@@ -205,8 +205,24 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch {}
   };
 
+  const updateSkill = async (skillId: string | number, name: string, icon = 'code') => {
+    setSkillCategories((prev) =>
+      prev.map((cat) => ({
+        ...cat,
+        skills: cat.skills.map((s) => (s.id === skillId ? { ...s, name, icon } : s)),
+      }))
+    );
+
+    try {
+      await fetch(`${API_BASE}/skills/${skillId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, icon }),
+      });
+    } catch {}
+  };
+
   const deleteSkill = async (skillId: string | number) => {
-    // Instant local state update
     setSkillCategories((prev) =>
       prev.map((cat) => ({
         ...cat,
@@ -226,6 +242,24 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       await fetch(`${API_BASE}/projects`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: project.title,
+          description: project.description,
+          accent: project.accent,
+          github_url: project.githubUrl,
+          tags: project.tags,
+        }),
+      });
+    } catch {}
+  };
+
+  const updateProject = async (id: string | number, project: Omit<ProjectData, 'id'>) => {
+    setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, ...project } : p)));
+
+    try {
+      await fetch(`${API_BASE}/projects/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: project.title,
@@ -263,6 +297,23 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch {}
   };
 
+  const updateExperience = async (id: string | number, exp: Omit<ItemData, 'id'>) => {
+    setEducation((prev) => prev.map((e) => (e.id === id ? { ...e, ...exp } : e)));
+
+    try {
+      await fetch(`${API_BASE}/experiences/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: exp.type || 'education',
+          title: exp.title,
+          description: exp.description,
+          meta: exp.meta,
+        }),
+      });
+    } catch {}
+  };
+
   const deleteExperience = async (id: string | number) => {
     setEducation((prev) => prev.filter((e) => e.id !== id));
     try {
@@ -277,6 +328,18 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       await fetch(`${API_BASE}/achievements`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: ach.title, description: ach.description }),
+      });
+    } catch {}
+  };
+
+  const updateAchievement = async (id: string | number, ach: Omit<ItemData, 'id'>) => {
+    setAchievements((prev) => prev.map((a) => (a.id === id ? { ...a, ...ach } : a)));
+
+    try {
+      await fetch(`${API_BASE}/achievements/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: ach.title, description: ach.description }),
       });
@@ -308,12 +371,16 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         education,
         achievements,
         addSkill,
+        updateSkill,
         deleteSkill,
         addProject,
+        updateProject,
         deleteProject,
         addExperience,
+        updateExperience,
         deleteExperience,
         addAchievement,
+        updateAchievement,
         deleteAchievement,
         recordDownload,
       }}
