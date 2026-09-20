@@ -1,12 +1,10 @@
 /**
  * In-card deletion confirmation component.
- * Compact, responsive overlay styled cleanly for both Dark and Light modes.
- * Adapts layout dynamically based on container height (compact mode for small items like skills).
+ * Minimalist, ultra-clean inline overlay for list items and cards in both Dark and Light modes.
  */
 import React from 'react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import { FaExclamationTriangle } from 'react-icons/fa';
 
 interface ConfirmDeleteCardProps {
   onConfirm: () => void;
@@ -21,8 +19,8 @@ const OverlayBox = styled(motion.div)<{ compact?: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--confirm-bg, #0f172a);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(6px);
   border-radius: ${(props) => (props.compact ? '10px' : '16px')};
   display: flex;
   flex-direction: ${(props) => (props.compact ? 'row' : 'column')};
@@ -31,42 +29,21 @@ const OverlayBox = styled(motion.div)<{ compact?: boolean }>`
   padding: ${(props) => (props.compact ? '0.4rem 0.75rem' : '1.25rem')};
   text-align: ${(props) => (props.compact ? 'left' : 'center')};
   z-index: 50;
-  border: 2px solid #ef4444;
-  box-shadow: 0 4px 18px rgba(239, 68, 68, 0.25);
+  border: 1.5 solid #ef4444;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
   gap: 0.5rem;
 
   [data-theme='light'] & {
-    background: #ffffff;
-    box-shadow: 0 4px 18px rgba(239, 68, 68, 0.15);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15);
   }
 `;
 
-const ContentGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  overflow: hidden;
-`;
-
-const WarningIcon = styled.div<{ compact?: boolean }>`
-  width: ${(props) => (props.compact ? '26px' : '40px')};
-  height: ${(props) => (props.compact ? '26px' : '40px')};
-  border-radius: 50%;
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: ${(props) => (props.compact ? '0.85rem' : '1.25rem')};
-  flex-shrink: 0;
-  margin-bottom: ${(props) => (props.compact ? '0' : '0.5rem')};
-`;
-
 const QuestionText = styled.p<{ compact?: boolean }>`
-  color: var(--confirm-text, #f8fafc);
+  color: #f8fafc;
   font-weight: 700;
-  font-size: ${(props) => (props.compact ? '0.82rem' : '0.95rem')};
-  margin-bottom: ${(props) => (props.compact ? '0' : '1rem')};
+  font-size: ${(props) => (props.compact ? '0.84rem' : '0.95rem')};
+  margin: 0;
   line-height: 1.3;
   white-space: ${(props) => (props.compact ? 'nowrap' : 'normal')};
   text-overflow: ellipsis;
@@ -87,7 +64,7 @@ const ConfirmBtn = styled.button<{ compact?: boolean }>`
   background: #ef4444;
   color: #ffffff;
   border: none;
-  padding: ${(props) => (props.compact ? '0.25rem 0.65rem' : '0.5rem 1.1rem')};
+  padding: ${(props) => (props.compact ? '0.3rem 0.75rem' : '0.5rem 1.1rem')};
   border-radius: 999px;
   font-weight: 700;
   font-size: ${(props) => (props.compact ? '0.78rem' : '0.85rem')};
@@ -102,10 +79,10 @@ const ConfirmBtn = styled.button<{ compact?: boolean }>`
 `;
 
 const CancelBtn = styled.button<{ compact?: boolean }>`
-  background: rgba(148, 163, 184, 0.15);
-  color: var(--cancel-text, #cbd5e1);
+  background: rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
   border: 1px solid rgba(148, 163, 184, 0.3);
-  padding: ${(props) => (props.compact ? '0.25rem 0.65rem' : '0.5rem 1.1rem')};
+  padding: ${(props) => (props.compact ? '0.3rem 0.75rem' : '0.5rem 1.1rem')};
   border-radius: 999px;
   font-weight: 600;
   font-size: ${(props) => (props.compact ? '0.78rem' : '0.85rem')};
@@ -131,12 +108,7 @@ export const ConfirmDeleteCard: React.FC<ConfirmDeleteCardProps> = ({ onConfirm,
   if (compact) {
     return (
       <OverlayBox compact initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-        <ContentGroup>
-          <WarningIcon compact>
-            <FaExclamationTriangle />
-          </WarningIcon>
-          <QuestionText compact>¿Eliminar {title ? `"${title}"` : ''}?</QuestionText>
-        </ContentGroup>
+        <QuestionText compact>¿Eliminar {title ? `"${title}"` : 'este elemento'}?</QuestionText>
         <ButtonRow compact>
           <ConfirmBtn compact type="button" onClick={onConfirm}>
             Eliminar
@@ -151,9 +123,6 @@ export const ConfirmDeleteCard: React.FC<ConfirmDeleteCardProps> = ({ onConfirm,
 
   return (
     <OverlayBox initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-      <WarningIcon>
-        <FaExclamationTriangle />
-      </WarningIcon>
       <QuestionText>¿Eliminar {title ? `"${title}"` : 'este elemento'}?</QuestionText>
       <ButtonRow>
         <ConfirmBtn type="button" onClick={onConfirm}>

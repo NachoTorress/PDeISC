@@ -215,6 +215,7 @@ const About = () => {
                   <li key={item.id}>
                     {deletingId === item.id && deleteType === 'exp' && (
                       <ConfirmDeleteCard
+                        compact
                         title={item.title}
                         onConfirm={() => {
                           deleteExperience(item.id);
@@ -273,6 +274,7 @@ const About = () => {
                   <li key={item.id}>
                     {deletingId === item.id && deleteType === 'ach' && (
                       <ConfirmDeleteCard
+                        compact
                         title={item.title}
                         onConfirm={() => {
                           deleteAchievement(item.id);
