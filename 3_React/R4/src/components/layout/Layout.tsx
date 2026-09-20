@@ -5,12 +5,11 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { ReactNode, useState } from 'react';
-import { FaBars, FaMoon, FaSun, FaTimes, FaLock, FaUnlock } from 'react-icons/fa';
+import { FaBars, FaMoon, FaSun, FaTimes } from 'react-icons/fa';
 import { theme } from '../../styles/theme';
 import { FloatingNav } from '../navigation/FloatingNav';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import { useThemeMode } from '../../hooks/useThemeMode';
-import { useAuth } from '../../contexts/AuthContext';
 import { AdminLoginModal } from '../admin/AdminLoginModal';
 import { navSections } from '../../data/portfolio';
 
@@ -218,7 +217,6 @@ const Footer = styled.footer`
 export const Layout = ({ children }: LayoutProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { themeMode, toggleTheme } = useThemeMode();
-  const { isAdmin, logout, openLoginModal } = useAuth();
   useKeyboardNavigation();
 
   const closeMenu = () => setIsMenuOpen(false);

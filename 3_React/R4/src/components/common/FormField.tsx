@@ -17,6 +17,7 @@ interface FormFieldProps {
   isValid?: boolean;
   required?: boolean;
   rows?: number;
+  disabled?: boolean;
 }
 
 const FieldContainer = styled.div`
@@ -82,6 +83,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   isValid = true,
   required = false,
   rows = 3,
+  disabled = false,
 }) => {
   const isInvalid = isValid === false || Boolean(errorMessage);
 
@@ -96,6 +98,7 @@ export const FormField: React.FC<FormFieldProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
+          disabled={disabled}
           isInvalid={isInvalid}
           rows={rows}
           aria-invalid={isInvalid}
@@ -108,6 +111,7 @@ export const FormField: React.FC<FormFieldProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
+          disabled={disabled}
           isInvalid={isInvalid}
           aria-invalid={isInvalid}
           aria-describedby={isInvalid ? `${id}-error` : undefined}
