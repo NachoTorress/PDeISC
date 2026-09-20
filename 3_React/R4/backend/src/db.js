@@ -1,9 +1,8 @@
 /**
- * Database module supporting both Neon / Vercel Postgres and fallback SQLite.
- * Uses @neondatabase/serverless for cloud Postgres compatibility and better-sqlite3 for local fallback.
+ * Database module supporting Neon / Vercel Postgres and fallback dynamic import for SQLite.
+ * Avoids top-level import of 'better-sqlite3' to prevent Vercel Serverless Function build errors.
  */
 import { neon } from '@neondatabase/serverless';
-import Database from 'better-sqlite3';
 import bcrypt from 'bcryptjs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -16,11 +15,6 @@ let sqliteDb = null;
 
 if (isPostgres) {
   sqlClient = neon(connectionString);
-} else {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const dbPath = path.join(__dirname, 'portfolio.db');
-  sqliteDb = new Database(dbPath);
 }
 
 export async function initDatabase() {
@@ -105,7 +99,7 @@ export async function initDatabase() {
       await sqlClient`INSERT INTO admin_users (username, password_hash) VALUES ('admin', ${hash});`;
     }
 
-    // Seed Skill Categories & Skills exact match with portfolio.json
+    // Seed Skill Categories & Skills
     const catRows = await sqlClient`SELECT COUNT(*)::int as count FROM skill_categories;`;
     if (catRows[0].count === 0) {
       const cat1 = await sqlClient`INSERT INTO skill_categories (category_key, title, icon) VALUES ('programacion', 'Programación', 'code') RETURNING id;`;
@@ -130,7 +124,7 @@ export async function initDatabase() {
       await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat3Id}, 'IA y hardware', 'microchip');`;
     }
 
-    // Seed Projects (Snake, Hardware Arduino/ESP32, AI Jetson)
+    // Seed Projects
     const projRows = await sqlClient`SELECT COUNT(*)::int as count FROM projects;`;
     if (projRows[0].count === 0) {
       await sqlClient`
@@ -141,7 +135,7 @@ export async function initDatabase() {
       `;
     }
 
-    // Seed Education / Experiences
+    // Seed Education
     const expRows = await sqlClient`SELECT COUNT(*)::int as count FROM experiences;`;
     if (expRows[0].count === 0) {
       await sqlClient`
@@ -161,7 +155,13 @@ export async function initDatabase() {
       `;
     }
   } else {
-    // SQLite Fallback
+    // Dynamic import for local SQLite fallback
+    const { default: Database } = await import('better-sqlite3');
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const dbPath = path.join(__dirname, 'portfolio.db');
+    sqliteDb = new Database(dbPath);
+
     sqliteDb.exec(`
       CREATE TABLE IF NOT EXISTS admin_users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
