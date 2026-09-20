@@ -1,0 +1,25 @@
+:root[data-app-theme='light'] {
+  --app-bg: #f7f9fc;
+  --app-bg-soft: #eef6f4;
+  --app-surface: #ffffff;
+  --app-input: #ffffff;
+  --app-text: #1f2937;
+  --app-muted: #667085;
+  --app-border: #d9e2ec;
+  --app-primary: #2563eb;
+  --app-accent: #0f766e;
+  --app-focus: rgba(37, 99, 235, 0.2);
+  --app-danger-bg: #fff1f2;
+  --app-danger-border: #fecdd3;
+  --app-danger-text: #9f1239;
+  --app-shadow: 0 16px 40px rgba(31, 41, 55, 0.08);
+  --app-shadow-strong: 0 18px 36px rgba(31, 41, 55, 0.22);
+}
+
+:root[data-app-theme='light'] .btn-primary {
+  --bs-btn-bg: #2563eb;
+  --bs-btn-border-color: #2563eb;
+  --bs-btn-hover-bg: #1d4ed8;
+  --bs-btn-hover-border-color: #1d4ed8;
+}
+
