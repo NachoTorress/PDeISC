@@ -106,11 +106,13 @@ const InfoList = styled.ul`
   li {
     position: relative;
     padding: ${theme.spacing.md};
+    min-height: 56px;
     border-radius: 12px;
     background: ${theme.colors.glass.card};
     border: 1px solid ${theme.colors.glass.border};
     margin-bottom: ${theme.spacing.sm};
     transition: all ${theme.transitions.default};
+    overflow: hidden;
 
     &:hover {
       background: ${theme.colors.gradient.glass};

@@ -127,11 +127,13 @@ const SkillItem = styled(motion.div)`
   justify-content: space-between;
   font-size: 0.92rem;
   font-weight: 600;
-  padding: 0.65rem 0.85rem;
+  padding: 0.75rem 0.9rem;
+  min-height: 52px;
   border-radius: 12px;
   transition: all ${theme.transitions.default};
   background: ${theme.colors.glass.card};
   border: 1px solid ${theme.colors.glass.border};
+  overflow: hidden;
 
   &:hover {
     background: ${theme.colors.gradient.glass};
@@ -249,6 +251,7 @@ const Skills = () => {
                       <SkillItem key={skill.id} role="listitem">
                         {deletingId === skill.id && (
                           <ConfirmDeleteCard
+                            compact
                             title={skill.name}
                             onConfirm={() => {
                               deleteSkill(skill.id);
