@@ -255,15 +255,6 @@ export const Layout = ({ children }: LayoutProps) => {
               </NavLinks>
               <IconButton
                 type="button"
-                active={isAdmin}
-                onClick={isAdmin ? logout : openLoginModal}
-                aria-label={isAdmin ? 'Cerrar sesión admin' : 'Iniciar sesión admin'}
-                title={isAdmin ? 'Modo Admin activo (Clic para salir)' : 'Acceso Admin (CRUD)'}
-              >
-                {isAdmin ? <FaUnlock aria-hidden="true" /> : <FaLock aria-hidden="true" />}
-              </IconButton>
-              <IconButton
-                type="button"
                 onClick={toggleTheme}
                 aria-label={themeMode === 'dark' ? 'Modo claro' : 'Modo oscuro'}
                 title={themeMode === 'dark' ? 'Modo claro' : 'Modo oscuro'}

@@ -103,15 +103,18 @@ const ErrorAlert = styled.div`
 `;
 
 export const AdminLoginModal: React.FC = () => {
-  const { isLoginModalOpen, closeLoginModal, login } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, login, remainingAttempts } = useAuth();
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isLoginModalOpen) return null;
 
+  const isBlocked = remainingAttempts <= 0;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isBlocked) return;
     if (!password) {
       setErrorMessage('Por favor ingresá la contraseña.');
       return;
@@ -139,21 +142,27 @@ export const AdminLoginModal: React.FC = () => {
           <FaLock />
           <h3>Acceso Administrador</h3>
         </Header>
-        {errorMessage && <ErrorAlert role="alert">{errorMessage}</ErrorAlert>}
+        {isBlocked && (
+          <ErrorAlert role="alert">
+            Has superado el límite de 3 intentos diarios. El acceso está bloqueado hasta mañana por seguridad.
+          </ErrorAlert>
+        )}
+        {!isBlocked && errorMessage && <ErrorAlert role="alert">{errorMessage}</ErrorAlert>}
         <form onSubmit={handleSubmit}>
           <FormField
             id="admin-password"
-            label="Contraseña del Administrador"
+            label={`Contraseña (Intentos restantes hoy: ${remainingAttempts}/3)`}
             type="password"
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
               setErrorMessage('');
             }}
+            disabled={isBlocked || isSubmitting}
             required
           />
-          <SubmitBtn type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Verificando...' : 'Iniciar Sesión'}
+          <SubmitBtn type="submit" disabled={isBlocked || isSubmitting}>
+            {isSubmitting ? 'Verificando...' : isBlocked ? 'Acceso Bloqueado por Hoy' : 'Iniciar Sesión'}
           </SubmitBtn>
         </form>
       </ModalCard>
