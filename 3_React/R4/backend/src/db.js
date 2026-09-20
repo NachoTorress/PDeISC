@@ -23,20 +23,6 @@ if (isPostgres) {
   sqliteDb = new Database(dbPath);
 }
 
-export async function query(text, params = []) {
-  if (isPostgres) {
-    return await sqlClient(text, params);
-  } else {
-    const stmt = sqliteDb.prepare(text);
-    if (text.trim().toUpperCase().startsWith('SELECT')) {
-      return stmt.all(...params);
-    } else {
-      const info = stmt.run(...params);
-      return [{ id: info.lastInsertRowid, ...info }];
-    }
-  }
-}
-
 export async function initDatabase() {
   const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
   const salt = bcrypt.genSaltSync(10);
@@ -119,39 +105,59 @@ export async function initDatabase() {
       await sqlClient`INSERT INTO admin_users (username, password_hash) VALUES ('admin', ${hash});`;
     }
 
-    // Seed Skill Categories
+    // Seed Skill Categories & Skills exact match with portfolio.json
     const catRows = await sqlClient`SELECT COUNT(*)::int as count FROM skill_categories;`;
     if (catRows[0].count === 0) {
-      const cat1 = await sqlClient`INSERT INTO skill_categories (category_key, title, icon) VALUES ('lenguajes', 'Lenguajes y runtime', 'code') RETURNING id;`;
+      const cat1 = await sqlClient`INSERT INTO skill_categories (category_key, title, icon) VALUES ('programacion', 'Programación', 'code') RETURNING id;`;
       const cat1Id = cat1[0].id;
       await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat1Id}, 'C++', 'cplusplus');`;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat1Id}, 'TypeScript', 'typescript');`;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat1Id}, 'Node.js', 'node');`;
       await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat1Id}, 'Python', 'python');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat1Id}, 'Algoritmos', 'code');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat1Id}, 'Programación competitiva', 'brain');`;
 
-      const cat2 = await sqlClient`INSERT INTO skill_categories (category_key, title, icon) VALUES ('infraestructura', 'Bases de datos e infra', 'sql') RETURNING id;`;
+      const cat2 = await sqlClient`INSERT INTO skill_categories (category_key, title, icon) VALUES ('web-datos', 'Web y datos', 'react') RETURNING id;`;
       const cat2Id = cat2[0].id;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat2Id}, 'SQL / Postgres', 'sql');`;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat2Id}, 'Docker', 'docker');`;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat2Id}, 'Git', 'git');`;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat2Id}, 'Linux', 'linux');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat2Id}, 'TypeScript', 'typescript');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat2Id}, 'React', 'react');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat2Id}, 'Node.js', 'node');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat2Id}, 'SQL', 'sql');`;
 
-      const cat3 = await sqlClient`INSERT INTO skill_categories (category_key, title, icon) VALUES ('intereses', 'Intereses principales', 'brain') RETURNING id;`;
+      const cat3 = await sqlClient`INSERT INTO skill_categories (category_key, title, icon) VALUES ('herramientas', 'Herramientas e intereses', 'microchip') RETURNING id;`;
       const cat3Id = cat3[0].id;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat3Id}, 'Algoritmos', 'code');`;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat3Id}, 'Inteligencia Artificial', 'brain');`;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat3Id}, 'Hardware', 'microchip');`;
-      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat3Id}, 'React UI', 'react');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat3Id}, 'Git', 'git');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat3Id}, 'Docker', 'docker');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat3Id}, 'Linux', 'linux');`;
+      await sqlClient`INSERT INTO skills (category_id, name, icon) VALUES (${cat3Id}, 'IA y hardware', 'microchip');`;
     }
 
-    // Seed Projects
+    // Seed Projects (Snake, Hardware Arduino/ESP32, AI Jetson)
     const projRows = await sqlClient`SELECT COUNT(*)::int as count FROM projects;`;
     if (projRows[0].count === 0) {
       await sqlClient`
         INSERT INTO projects (title, description, accent, github_url, tags) VALUES 
-        ('Snake en JS (GitHub)', 'Juego clásico Snake desplegado y desarrollado como práctica de programación en JavaScript.', 'Juegos / JS', 'https://github.com/tizianomegnini/JS3Juegos/tree/main/Snake_1.2', 'JavaScript,HTML,CSS,Game'),
-        ('Resolución de Sudoku y N-Reinas', 'Implementación en C++ de algoritmos de backtracking y análisis de complejidad sintáctica.', 'C++ / Algoritmos', NULL, 'C++,Algoritmos,Backtracking'),
-        ('IA con Jetson, Ollama y Qwen', 'Experimentos con modelos LLM locales ejecutándose sobre hardware Jetson.', 'IA / Hardware', NULL, 'IA,Jetson,Ollama,Qwen');
+        ('Snake en GitHub', 'Proyecto de juego Snake publicado en GitHub, usado como práctica de lógica, estado de juego y control de interacción.', 'Algoritmos', 'https://github.com/tizianomegnini/JS3Juegos/tree/main/Snake_1.2', 'Programación,Juego,GitHub'),
+        ('Proyectos con Arduino/ESP32', 'Trabajos orientados a hardware, microcontroladores y conexión entre componentes físicos y software.', 'Electrónica', NULL, 'Arduino,ESP32,Hardware'),
+        ('IA con Jetson, Ollama y Qwen', 'Proyecto de inteligencia artificial que combina Jetson, Ollama, Qwen y herramientas para experimentar con modelos y automatización local.', 'Inteligencia artificial', NULL, 'IA,Jetson,Ollama,Qwen');
+      `;
+    }
+
+    // Seed Education / Experiences
+    const expRows = await sqlClient`SELECT COUNT(*)::int as count FROM experiences;`;
+    if (expRows[0].count === 0) {
+      await sqlClient`
+        INSERT INTO experiences (type, title, description, meta) VALUES
+        ('education', 'Tecnicatura en Informática Profesional y Personal', 'Estudiante de 6.º año.', 'Promedio: 9,15');
+      `;
+    }
+
+    // Seed Achievements
+    const achRows = await sqlClient`SELECT COUNT(*)::int as count FROM achievements;`;
+    if (achRows[0].count === 0) {
+      await sqlClient`
+        INSERT INTO achievements (title, description) VALUES
+        ('Olimpiada Informática Argentina', 'Participación en competencia de informática.'),
+        ('Olimpiadas de Matemática', 'Participación en olimpíadas de matemática.'),
+        ('CALICO', 'Participación en competencia CALICO.');
       `;
     }
   } else {
