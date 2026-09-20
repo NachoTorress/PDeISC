@@ -1,0 +1,22 @@
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-primary: #2a2d3e;
+  --color-secondary: #454964;
+  --color-accent: #f6b17a;
+  --color-title: #f6b17a;
+  --color-text: #f7f3ef;
+  --color-muted: rgba(247, 243, 239, 0.78);
+  --color-text-inverted: #252838;
+  --color-border: rgba(255, 255, 255, 0.13);
+  --glass-background: rgba(255, 255, 255, 0.06);
+  --glass-card: rgba(42, 45, 62, 0.38);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --gradient-main: linear-gradient(135deg, #262939 0%, #454964 50%, #242736 100%);
+  --gradient-accent: linear-gradient(135deg, #f6b17a 0%, #f8c396 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.05) 100%);
+  --overlay-light: rgba(255, 255, 255, 0.1);
+  --overlay-dark: rgba(18, 20, 31, 0.38);
+  --input-background: rgba(255, 255, 255, 0.08);
+  --shadow-card: 0 18px 42px rgba(0, 0, 0, 0.2);
+}
