@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaClipboard, FaCheck, FaArrowUp, FaEnvelope } from 'react-icons/fa';
+import { FaClipboard, FaCheck, FaArrowUp, FaEnvelope, FaLinkedin } from 'react-icons/fa';
 import { education, profile } from '../../data/portfolio';
 import { theme } from '../../styles/theme';
 
@@ -123,8 +123,9 @@ const Contact = () => {
   const summary = [
     ...education.map((item) => `${item.title}: ${item.description} ${item.meta ?? ''}`.trim()),
     `Email: ${profile.email}.`,
+    profile.linkedin ? `LinkedIn: ${profile.linkedin}.` : '',
     'Intereses: C++, TypeScript, React, Node.js, Python, SQL, Git, Docker, Linux, algoritmos, IA y hardware.',
-  ].join(' ');
+  ].filter(Boolean).join(' ');
 
   const copySummary = async () => {
     try {
@@ -152,18 +153,24 @@ const Contact = () => {
           viewport={{ once: true }}
         >
           <ContactText>
-            Si querés contactarme, podés escribirme por mail. No se agregan redes sociales porque no fueron provistas.
+            Podés escribirme directamente por correo electrónico o conectar conmigo en LinkedIn.
           </ContactText>
           <ButtonGroup>
             <ContactLink href={`mailto:${profile.email}`} variant="primary">
               <FaEnvelope aria-hidden="true" />
-              {profile.email}
+              Enviar Email
             </ContactLink>
-            <ContactButton type="button" variant="primary" onClick={copySummary}>
+            {profile.linkedin && (
+              <ContactLink href={profile.linkedin} target="_blank" rel="noopener noreferrer" variant="primary">
+                <FaLinkedin aria-hidden="true" />
+                Perfil de LinkedIn
+              </ContactLink>
+            )}
+            <ContactButton type="button" variant="secondary" onClick={copySummary}>
               {copyStatus ? <FaCheck aria-hidden="true" /> : <FaClipboard aria-hidden="true" />}
               Copiar resumen
             </ContactButton>
-            <ContactButton type="button" onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}>
+            <ContactButton type="button" variant="secondary" onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}>
               <FaArrowUp aria-hidden="true" />
               Volver al inicio
             </ContactButton>

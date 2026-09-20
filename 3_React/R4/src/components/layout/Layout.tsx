@@ -150,10 +150,10 @@ const NavLinks = styled.div<{ open: boolean }>`
 
   @media (max-width: ${theme.breakpoints.md}) {
     position: fixed;
-    top: 4rem;
+    top: 4.2rem;
     left: 0;
     right: 0;
-    display: ${(props) => (props.open ? 'flex' : 'none')};
+    display: flex;
     flex-direction: column;
     gap: ${theme.spacing.xs};
     padding: ${theme.spacing.md};
@@ -161,10 +161,16 @@ const NavLinks = styled.div<{ open: boolean }>`
     backdrop-filter: blur(16px);
     border-bottom: 1px solid ${theme.colors.glass.border};
     box-shadow: var(--shadow-card);
+    opacity: ${(props) => (props.open ? 1 : 0)};
+    visibility: ${(props) => (props.open ? 'visible' : 'hidden')};
+    transform: ${(props) => (props.open ? 'translateY(0)' : 'translateY(-10px)')};
+    transition: all ${theme.transitions.default};
+    pointer-events: ${(props) => (props.open ? 'auto' : 'none')};
 
     a {
       width: 100%;
       padding: ${theme.spacing.md};
+      text-align: center;
     }
   }
 `;
