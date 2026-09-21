@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { env } from '../config/env.js';
 import { handleOAuthCallback, login, logout, me, register } from '../controllers/authController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 
@@ -14,7 +15,7 @@ authRoutes.post('/logout', protect, logout);
 authRoutes.get('/github', passport.authenticate('github', { session: false }));
 authRoutes.get(
   '/github/callback',
-  passport.authenticate('github', { session: false, failureRedirect: '/login?error=github_failed' }),
+  passport.authenticate('github', { session: false, failureRedirect: `${env.frontendUrl}/login?error=github_failed` }),
   handleOAuthCallback,
 );
 
@@ -22,7 +23,7 @@ authRoutes.get(
 authRoutes.get('/google', passport.authenticate('google', { session: false, scope: ['profile', 'email'] }));
 authRoutes.get(
   '/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: '/login?error=google_failed' }),
+  passport.authenticate('google', { session: false, failureRedirect: `${env.frontendUrl}/login?error=google_failed` }),
   handleOAuthCallback,
 );
 
@@ -30,6 +31,6 @@ authRoutes.get(
 authRoutes.get('/discord', passport.authenticate('discord', { session: false }));
 authRoutes.get(
   '/discord/callback',
-  passport.authenticate('discord', { session: false, failureRedirect: '/login?error=discord_failed' }),
+  passport.authenticate('discord', { session: false, failureRedirect: `${env.frontendUrl}/login?error=discord_failed` }),
   handleOAuthCallback,
 );

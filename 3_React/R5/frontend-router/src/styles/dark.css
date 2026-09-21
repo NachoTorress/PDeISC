@@ -38,3 +38,12 @@
   --bs-btn-hover-border-color: #94a3b8;
 }
 
+:root[data-app-theme='dark'] .btn-outline-dark {
+  --bs-btn-color: #f3f6fb;
+  --bs-btn-border-color: #475569;
+  --bs-btn-hover-color: #0f131a;
+  --bs-btn-hover-bg: #f8fafc;
+  --bs-btn-hover-border-color: #f8fafc;
+  --bs-btn-active-color: #0f131a;
+  --bs-btn-active-bg: #e2e8f0;
+}
