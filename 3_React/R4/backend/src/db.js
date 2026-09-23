@@ -1,8 +1,11 @@
 import mysql from 'mysql2/promise';
 import { neon } from '@neondatabase/serverless';
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+dotenv.config();
 
 const connectionString = process.env.MYSQL_URL || process.env.POSTGRES_URL || process.env.DATABASE_URL;
 
@@ -20,6 +23,7 @@ const isMysql = Boolean(
 );
 
 const isRemote = isPg || isMysql;
+const useDirectMysqlConnection = process.env.VERCEL === '1';
 
 let pool = null;
 let pgSql = null;
@@ -38,8 +42,8 @@ if (isPg) {
     },
     waitForConnections: true,
     connectionLimit: 5,
-    maxIdle: 0,
-    idleTimeout: 1000,
+    maxIdle: 5,
+    idleTimeout: 60000,
     enableKeepAlive: true,
     keepAliveInitialDelay: 0
   });
@@ -126,6 +130,20 @@ const safeSqlClient = {
       const rows = await pgSql(pgQuery, params);
       return [rows];
     } else if (isMysql) {
+      if (useDirectMysqlConnection) {
+        const conn = await mysql.createConnection({
+          uri: connectionString,
+          ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: false },
+          connectTimeout: 10000,
+          enableKeepAlive: false
+        });
+        try {
+          return await conn.query(sqlStr, params);
+        } finally {
+          await conn.end().catch(() => {});
+        }
+      }
+
       try {
         return await pool.query(sqlStr, params);
       } catch (err) {
