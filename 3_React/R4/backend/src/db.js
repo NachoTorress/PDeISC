@@ -12,7 +12,13 @@ let sqliteDb = null;
 if (isMysql) {
   pool = mysql.createPool({
     uri: connectionString,
-    ssl: { rejectUnauthorized: false }
+    ssl: {
+      minVersion: 'TLSv1.2',
+      rejectUnauthorized: false,
+      checkServerIdentity: () => undefined
+    },
+    waitForConnections: true,
+    connectionLimit: 5
   });
 }
 
