@@ -69,6 +69,7 @@ app.get('/api/skills', async (_req, res) => {
       return res.json(result);
     }
   } catch (err) {
+    console.error('Error GET /api/skills:', err);
     return res.status(500).json({ success: false, message: err.message });
   }
 });

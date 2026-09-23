@@ -10,13 +10,7 @@ let pool = null;
 let sqliteDb = null;
 
 if (isMysql) {
-  pool = mysql.createPool({
-    uri: connectionString,
-    ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: false },
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-  });
+  pool = mysql.createPool(connectionString);
 }
 
 export async function initDatabase() {
