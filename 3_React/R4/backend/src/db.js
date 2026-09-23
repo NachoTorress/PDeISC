@@ -29,13 +29,18 @@ let pool = null;
 let pgSql = null;
 let sqliteDb = null;
 
+let cleanConnectionString = connectionString;
+if (cleanConnectionString && cleanConnectionString.includes('minVersion')) {
+  cleanConnectionString = cleanConnectionString.replace(/"minVersion"\s*:\s*"[^"]*"\s*,?/g, '').replace(/,\s*}/g, '}');
+}
+
 if (isPg) {
   console.log('✅ Inicializando conexión a Neon Postgres (vía HTTP Serverless).');
-  pgSql = neon(connectionString);
+  pgSql = neon(cleanConnectionString);
 } else if (isMysql) {
   console.log('✅ Inicializando conexión a TiDB / MySQL (mysql2 pool).');
   pool = mysql.createPool({
-    uri: connectionString,
+    uri: cleanConnectionString,
     ssl: { rejectUnauthorized: false },
     waitForConnections: true,
     connectionLimit: 5,
@@ -129,7 +134,7 @@ const safeSqlClient = {
     } else if (isMysql) {
       if (useDirectMysqlConnection) {
         const conn = await mysql.createConnection({
-          uri: connectionString,
+          uri: cleanConnectionString,
           ssl: { rejectUnauthorized: false },
           connectTimeout: 10000,
           enableKeepAlive: false
@@ -150,7 +155,7 @@ const safeSqlClient = {
         ) {
           console.warn('⚠️ Conexión congelada detectada en Vercel. Reintentando con conexión directa...');
           const conn = await mysql.createConnection({
-            uri: connectionString,
+            uri: cleanConnectionString,
             ssl: { rejectUnauthorized: false }
           });
           try {

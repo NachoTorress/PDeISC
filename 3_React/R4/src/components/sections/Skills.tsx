@@ -125,6 +125,7 @@ const SkillItem = styled(motion.div)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
   font-size: 0.92rem;
   font-weight: 600;
   padding: 0.75rem 0.9rem;
@@ -145,11 +146,19 @@ const SkillLabelGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
+  flex: 1;
 
   svg {
     font-size: 1.25rem;
     color: ${theme.colors.accent};
     flex-shrink: 0;
+  }
+
+  span {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.25;
   }
 `;
 
@@ -157,6 +166,7 @@ const AdminSkillActions = styled.div`
   display: flex;
   align-items: center;
   gap: 0.2rem;
+  flex-shrink: 0;
 `;
 
 const IconBtn = styled.button<{ danger?: boolean }>`

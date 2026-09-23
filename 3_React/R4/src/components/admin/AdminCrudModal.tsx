@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { FaPlus, FaEdit, FaTimes } from 'react-icons/fa';
 import { useData } from '../../contexts/DataContext';
 import { FormField } from '../common/FormField';
-import { validateName, validateBirthDateAndCalculateAge } from '../../utils/validation';
+import { validateName } from '../../utils/validation';
 import { theme } from '../../styles/theme';
 
 interface AdminCrudModalProps {
@@ -94,23 +94,9 @@ const SubmitBtn = styled.button`
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: ${theme.spacing.md};
-  transition: transform 0.2s;
-
   &:hover {
     transform: translateY(-2px);
   }
-`;
-
-const AgeDisplay = styled.div`
-  background: rgba(246, 177, 122, 0.15);
-  border: 1px solid ${theme.colors.accent};
-  color: ${theme.colors.accent};
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: ${theme.spacing.md};
 `;
 
 export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({
@@ -141,9 +127,6 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({
   const [githubUrl, setGithubUrl] = useState('');
   const [tags, setTags] = useState('');
 
-  const [birthDate, setBirthDate] = useState('');
-  const [calculatedAge, setCalculatedAge] = useState<number | null>(null);
-  const [ageError, setAgeError] = useState('');
   const [meta, setMeta] = useState('');
 
   useEffect(() => {
@@ -168,8 +151,6 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({
       setAccent('');
       setGithubUrl('');
       setTags('');
-      setBirthDate('');
-      setCalculatedAge(null);
       setMeta('');
     }
   }, [editItem, type, isOpen]);
@@ -180,18 +161,6 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({
     setter(val);
     const result = validateName(val);
     errorSetter(result.isValid ? '' : result.errorMessage);
-  };
-
-  const handleBirthDateChange = (dateVal: string) => {
-    setBirthDate(dateVal);
-    if (!dateVal) {
-      setCalculatedAge(null);
-      setAgeError('');
-      return;
-    }
-    const { age, result } = validateBirthDateAndCalculateAge(dateVal);
-    setCalculatedAge(age);
-    setAgeError(result.isValid ? '' : result.errorMessage);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -224,18 +193,11 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({
       }
     } else if (type === 'experience') {
       if (!title || !description) return;
-      if (birthDate) {
-        const { result } = validateBirthDateAndCalculateAge(birthDate);
-        if (!result.isValid) {
-          setAgeError(result.errorMessage);
-          return;
-        }
-      }
       const expPayload = {
         type: 'education' as const,
         title,
         description,
-        meta: calculatedAge ? `(Edad calculada: ${calculatedAge} años) ${meta}` : meta,
+        meta,
       };
       if (editItem) {
         await updateExperience(editItem.id, expPayload);
@@ -345,26 +307,12 @@ export const AdminCrudModal: React.FC<AdminCrudModalProps> = ({
                 required
               />
               {type === 'experience' && (
-                <>
-                  <FormField
-                    id="item-birthdate"
-                    label="Fecha de Nacimiento del Participante (para Cálculo de Edad)"
-                    type="date"
-                    value={birthDate}
-                    onChange={(e) => handleBirthDateChange(e.target.value)}
-                    errorMessage={ageError}
-                    isValid={!ageError}
-                  />
-                  {calculatedAge !== null && !ageError && (
-                    <AgeDisplay>Edad calculada automáticamente: {calculatedAge} años</AgeDisplay>
-                  )}
-                  <FormField
-                    id="item-meta"
-                    label="Detalles adicionales / Período (ej: 2024 - Presente)"
-                    value={meta}
-                    onChange={(e) => setMeta(e.target.value)}
-                  />
-                </>
+                <FormField
+                  id="item-meta"
+                  label="Detalles adicionales / Período (ej: 2024 - Presente)"
+                  value={meta}
+                  onChange={(e) => setMeta(e.target.value)}
+                />
               )}
             </>
           )}

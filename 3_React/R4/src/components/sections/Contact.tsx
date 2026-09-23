@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaClipboard, FaCheck, FaArrowUp, FaEnvelope, FaLinkedin } from 'react-icons/fa';
+import { FaClipboard, FaCheck, FaArrowUp, FaEnvelope, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { education, profile } from '../../data/portfolio';
 import { theme } from '../../styles/theme';
 
@@ -64,6 +64,20 @@ const ContactText = styled.p`
   line-height: 1.8;
 `;
 
+const EmailBadge = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: ${theme.spacing.sm};
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid ${theme.colors.glass.border};
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  margin-top: ${theme.spacing.sm};
+  font-family: monospace;
+  font-size: 1.1rem;
+  color: ${theme.colors.light};
+`;
+
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: center;
@@ -120,19 +134,31 @@ const StatusText = styled.p`
 const Contact = () => {
   const [copyStatus, setCopyStatus] = useState('');
 
+  const githubUrl = (profile as any).github || 'https://github.com/NachoTorress';
+
   const summary = [
     ...education.map((item) => `${item.title}: ${item.description} ${item.meta ?? ''}`.trim()),
     `Email: ${profile.email}.`,
     profile.linkedin ? `LinkedIn: ${profile.linkedin}.` : '',
+    `GitHub: ${githubUrl}.`,
     'Intereses: C++, TypeScript, React, Node.js, Python, SQL, Git, Docker, Linux, algoritmos, IA y hardware.',
   ].filter(Boolean).join(' ');
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopyStatus('Email copiado al portapapeles.');
+    } catch {
+      setCopyStatus('El navegador no permitió copiar.');
+    }
+  };
 
   const copySummary = async () => {
     try {
       await navigator.clipboard.writeText(summary);
-      setCopyStatus('Resumen copiado.');
+      setCopyStatus('Resumen copiado al portapapeles.');
     } catch {
-      setCopyStatus('El navegador no permitió copiar automáticamente.');
+      setCopyStatus('El navegador no permitió copiar.');
     }
   };
 
@@ -153,28 +179,43 @@ const Contact = () => {
           viewport={{ once: true }}
         >
           <ContactText>
-            Podés escribirme directamente por correo electrónico o conectar conmigo en LinkedIn.
-          </ContactText>
-          <ButtonGroup>
-            <ContactLink href={`mailto:${profile.email}`} variant="primary">
+            Podés ponerte en contacto conmigo a través de mi correo electrónico o mis redes profesionales:
+            <br />
+            <EmailBadge>
               <FaEnvelope aria-hidden="true" />
-              Enviar Email
+              {profile.email}
+            </EmailBadge>
+          </ContactText>
+
+          <ButtonGroup>
+            <ContactButton type="button" variant="primary" onClick={copyEmail}>
+              <FaClipboard aria-hidden="true" />
+              Copiar Email
+            </ContactButton>
+
+            <ContactLink href={githubUrl} target="_blank" rel="noopener noreferrer" variant="primary">
+              <FaGithub aria-hidden="true" />
+              GitHub
             </ContactLink>
+
             {profile.linkedin && (
               <ContactLink href={profile.linkedin} target="_blank" rel="noopener noreferrer" variant="primary">
                 <FaLinkedin aria-hidden="true" />
-                Perfil de LinkedIn
+                LinkedIn
               </ContactLink>
             )}
+
             <ContactButton type="button" variant="secondary" onClick={copySummary}>
-              {copyStatus ? <FaCheck aria-hidden="true" /> : <FaClipboard aria-hidden="true" />}
+              {copyStatus.includes('Resumen') ? <FaCheck aria-hidden="true" /> : <FaClipboard aria-hidden="true" />}
               Copiar resumen
             </ContactButton>
+
             <ContactButton type="button" variant="secondary" onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}>
               <FaArrowUp aria-hidden="true" />
               Volver al inicio
             </ContactButton>
           </ButtonGroup>
+
           <StatusText role="status" aria-live="polite">
             {copyStatus}
           </StatusText>

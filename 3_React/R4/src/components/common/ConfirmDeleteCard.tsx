@@ -26,12 +26,12 @@ const OverlayBox = styled(motion.div)<{ compact?: boolean }>`
   flex-direction: ${(props) => (props.compact ? 'row' : 'column')};
   justify-content: space-between;
   align-items: center;
-  padding: ${(props) => (props.compact ? '0.4rem 0.75rem' : '1.25rem')};
+  padding: ${(props) => (props.compact ? '0.4rem 0.6rem' : '1.25rem')};
   text-align: ${(props) => (props.compact ? 'left' : 'center')};
   z-index: 50;
-  border: 1.5 solid #ef4444;
+  border: 1.5px solid #ef4444;
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
-  gap: 0.5rem;
+  gap: 0.4rem;
 
   [data-theme='light'] & {
     background: rgba(255, 255, 255, 0.98);
@@ -42,12 +42,13 @@ const OverlayBox = styled(motion.div)<{ compact?: boolean }>`
 const QuestionText = styled.p<{ compact?: boolean }>`
   color: #f8fafc;
   font-weight: 700;
-  font-size: ${(props) => (props.compact ? '0.84rem' : '0.95rem')};
+  font-size: ${(props) => (props.compact ? '0.8rem' : '0.95rem')};
   margin: 0;
-  line-height: 1.3;
-  white-space: ${(props) => (props.compact ? 'nowrap' : 'normal')};
-  text-overflow: ellipsis;
-  overflow: hidden;
+  line-height: 1.2;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  flex: 1;
+  min-width: 0;
 
   [data-theme='light'] & {
     color: #0f172a;
@@ -64,13 +65,14 @@ const ConfirmBtn = styled.button<{ compact?: boolean }>`
   background: #ef4444;
   color: #ffffff;
   border: none;
-  padding: ${(props) => (props.compact ? '0.3rem 0.75rem' : '0.5rem 1.1rem')};
+  padding: ${(props) => (props.compact ? '0.25rem 0.55rem' : '0.5rem 1.1rem')};
   border-radius: 999px;
   font-weight: 700;
-  font-size: ${(props) => (props.compact ? '0.78rem' : '0.85rem')};
+  font-size: ${(props) => (props.compact ? '0.74rem' : '0.85rem')};
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  white-space: nowrap;
 
   &:hover {
     transform: translateY(-1px);
@@ -82,12 +84,13 @@ const CancelBtn = styled.button<{ compact?: boolean }>`
   background: rgba(148, 163, 184, 0.2);
   color: #cbd5e1;
   border: 1px solid rgba(148, 163, 184, 0.3);
-  padding: ${(props) => (props.compact ? '0.3rem 0.75rem' : '0.5rem 1.1rem')};
+  padding: ${(props) => (props.compact ? '0.25rem 0.55rem' : '0.5rem 1.1rem')};
   border-radius: 999px;
   font-weight: 600;
-  font-size: ${(props) => (props.compact ? '0.78rem' : '0.85rem')};
+  font-size: ${(props) => (props.compact ? '0.74rem' : '0.85rem')};
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 
   [data-theme='light'] & {
     background: #f1f5f9;
