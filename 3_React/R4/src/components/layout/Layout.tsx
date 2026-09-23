@@ -5,11 +5,12 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { ReactNode, useState } from 'react';
-import { FaBars, FaMoon, FaSun, FaTimes } from 'react-icons/fa';
+import { FaBars, FaMoon, FaSun, FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import { theme } from '../../styles/theme';
 import { FloatingNav } from '../navigation/FloatingNav';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import { useThemeMode } from '../../hooks/useThemeMode';
+import { useAuth } from '../../contexts/AuthContext';
 import { AdminLoginModal } from '../admin/AdminLoginModal';
 import { navSections } from '../../data/portfolio';
 
@@ -217,6 +218,7 @@ const Footer = styled.footer`
 export const Layout = ({ children }: LayoutProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { themeMode, toggleTheme } = useThemeMode();
+  const { isAdmin, logout } = useAuth();
   useKeyboardNavigation();
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -251,6 +253,17 @@ export const Layout = ({ children }: LayoutProps) => {
                   </a>
                 ))}
               </NavLinks>
+              {isAdmin && (
+                <IconButton
+                  type="button"
+                  onClick={logout}
+                  aria-label="Cerrar sesión de administrador"
+                  title="Cerrar sesión de administrador"
+                  style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.4)' }}
+                >
+                  <FaSignOutAlt aria-hidden="true" />
+                </IconButton>
+              )}
               <IconButton
                 type="button"
                 onClick={toggleTheme}
