@@ -53,12 +53,11 @@ app.get('/api/skills', async (_req, res) => {
   try {
     if (isMysql) {
       const [categories] = await sqlClient.query('SELECT * FROM skill_categories ORDER BY id ASC');
-      const result = await Promise.all(
-        categories.map(async (cat) => {
-          const [skills] = await sqlClient.query('SELECT * FROM skills WHERE category_id = ? ORDER BY id ASC', [cat.id]);
-          return { ...cat, skills };
-        })
-      );
+      const [skills] = await sqlClient.query('SELECT * FROM skills ORDER BY id ASC');
+      const result = categories.map((cat) => ({
+        ...cat,
+        skills: skills.filter((s) => s.category_id === cat.id),
+      }));
       return res.json(result);
     } else {
       const categories = db.prepare('SELECT * FROM skill_categories ORDER BY id ASC').all();
