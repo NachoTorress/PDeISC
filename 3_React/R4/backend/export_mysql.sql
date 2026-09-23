@@ -1,7 +1,9 @@
--- SCRIPT DE MIGRACIÓN DE NEON POSTGRES A MYSQL / MARIADB
+-- SCRIPT DE MIGRACIÓN DE NEON POSTGRES A MYSQL / MARIADB / TIDB
+
+CREATE DATABASE IF NOT EXISTS portfolio_db;
+USE portfolio_db;
 
 SET FOREIGN_KEY_CHECKS = 0;
-
 
 CREATE TABLE IF NOT EXISTS admin_users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,39 +62,41 @@ CREATE TABLE IF NOT EXISTS download_logs (
   ip_address VARCHAR(255)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Datos para admin_users
-INSERT INTO admin_users (id, username, password_hash, created_at) VALUES (2, 'admin', '$2a$10$GRWL0jqI3PDFEv.O6aDYE.nonkB1S19Uei2U0NoYGI1yR78bqC.yu', '2026-09-23 23:36:18');
+-- Datos para admin_users (Contraseña: nacho87)
+INSERT INTO admin_users (id, username, password_hash, created_at) 
+VALUES (1, 'admin', '$2a$10$vy9wYf6ksF/JM0r4ni3Wwuk/QpID7Ix8Bfw1JAHKKYyBeT/bDMPv.', CURRENT_TIMESTAMP)
+ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash);
 
 -- Datos para skill_categories
-INSERT INTO skill_categories (id, category_key, title, icon, created_at) VALUES (4, 'programacion', 'Programación', 'code', '2026-09-23 23:36:18');
-INSERT INTO skill_categories (id, category_key, title, icon, created_at) VALUES (5, 'web-datos', 'Web y datos', 'react', '2026-09-23 23:36:18');
-INSERT INTO skill_categories (id, category_key, title, icon, created_at) VALUES (6, 'herramientas', 'Herramientas e intereses', 'microchip', '2026-09-23 23:36:19');
+INSERT INTO skill_categories (id, category_key, title, icon, created_at) VALUES (1, 'programacion', 'Programación', 'code', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
+INSERT INTO skill_categories (id, category_key, title, icon, created_at) VALUES (2, 'web-datos', 'Web y datos', 'react', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
+INSERT INTO skill_categories (id, category_key, title, icon, created_at) VALUES (3, 'herramientas', 'Herramientas e intereses', 'microchip', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
 
 -- Datos para skills
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (13, 4, 'C++', 'cplusplus', '2026-09-23 23:36:18');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (14, 4, 'Python', 'python', '2026-09-23 23:36:18');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (15, 4, 'Algoritmos', 'code', '2026-09-23 23:36:18');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (16, 4, 'Programación competitiva', 'brain', '2026-09-23 23:36:18');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (17, 5, 'TypeScript', 'typescript', '2026-09-23 23:36:19');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (18, 5, 'React', 'react', '2026-09-23 23:36:19');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (19, 5, 'Node.js', 'node', '2026-09-23 23:36:19');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (20, 5, 'SQL', 'sql', '2026-09-23 23:36:19');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (21, 6, 'Git', 'git', '2026-09-23 23:36:19');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (22, 6, 'Docker', 'docker', '2026-09-23 23:36:19');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (23, 6, 'Linux', 'linux', '2026-09-23 23:36:19');
-INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (24, 6, 'IA y hardware', 'microchip', '2026-09-23 23:36:19');
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (1, 1, 'C++', 'cplusplus', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (2, 1, 'Python', 'python', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (3, 1, 'Algoritmos', 'code', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (4, 1, 'Programación competitiva', 'brain', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (5, 2, 'TypeScript', 'typescript', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (6, 2, 'React', 'react', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (7, 2, 'Node.js', 'node', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (8, 2, 'SQL', 'sql', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (9, 3, 'Git', 'git', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (10, 3, 'Docker', 'docker', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (11, 3, 'Linux', 'linux', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO skills (id, category_id, name, icon, created_at) VALUES (12, 3, 'IA y hardware', 'microchip', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE name=VALUES(name);
 
 -- Datos para projects
-INSERT INTO projects (id, title, description, accent, github_url, tags, created_at) VALUES (5, 'Snake en GitHub', 'Proyecto de juego Snake publicado en GitHub, usado como práctica de lógica, estado de juego y control de interacción.', 'Algoritmos', 'https://github.com/tizianomegnini/JS3Juegos/tree/main/Snake_1.2', 'Programación,Juego,GitHub', '2026-09-23 23:36:19');
-INSERT INTO projects (id, title, description, accent, github_url, tags, created_at) VALUES (6, 'Proyectos con Arduino/ESP32', 'Trabajos orientados a hardware, microcontroladores y conexión entre componentes físicos y software.', 'Electrónica', NULL, 'Arduino,ESP32,Hardware', '2026-09-23 23:36:19');
-INSERT INTO projects (id, title, description, accent, github_url, tags, created_at) VALUES (7, 'IA con Jetson, Ollama y Qwen', 'Proyecto de inteligencia artificial que combina Jetson, Ollama, Qwen y herramientas para experimentar con modelos y automatización local.', 'Inteligencia artificial', NULL, 'IA,Jetson,Ollama,Qwen', '2026-09-23 23:36:19');
+INSERT INTO projects (id, title, description, accent, github_url, tags, created_at) VALUES (1, 'Snake en GitHub', 'Proyecto de juego Snake publicado en GitHub, usado como práctica de lógica, estado de juego y control de interacción.', 'Algoritmos', 'https://github.com/tizianomegnini/JS3Juegos/tree/main/Snake_1.2', 'Programación,Juego,GitHub', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
+INSERT INTO projects (id, title, description, accent, github_url, tags, created_at) VALUES (2, 'Proyectos con Arduino/ESP32', 'Trabajos orientados a hardware, microcontroladores y conexión entre componentes físicos y software.', 'Electrónica', NULL, 'Arduino,ESP32,Hardware', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
+INSERT INTO projects (id, title, description, accent, github_url, tags, created_at) VALUES (3, 'IA con Jetson, Ollama y Qwen', 'Proyecto de inteligencia artificial que combina Jetson, Ollama, Qwen y herramientas para experimentar con modelos y automatización local.', 'Inteligencia artificial', NULL, 'IA,Jetson,Ollama,Qwen', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
 
 -- Datos para experiences
-INSERT INTO experiences (id, type, title, description, meta, created_at) VALUES (3, 'education', 'Tecnicatura en Informática Profesional y Personal', 'Estudiante de 6.º año.', 'Promedio: 9,15', '2026-09-23 23:36:19');
+INSERT INTO experiences (id, type, title, description, meta, created_at) VALUES (1, 'education', 'Tecnicatura en Informática Profesional y Personal', 'Estudiante de 6.º año.', 'Promedio: 9,15', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
 
 -- Datos para achievements
-INSERT INTO achievements (id, title, description, created_at) VALUES (4, 'Olimpiada Informática Argentina', 'Participación en competencia de informática.', '2026-09-23 23:36:19');
-INSERT INTO achievements (id, title, description, created_at) VALUES (5, 'Olimpiadas de Matemática', 'Participación en olimpíadas de matemática.', '2026-09-23 23:36:19');
-INSERT INTO achievements (id, title, description, created_at) VALUES (6, 'CALICO', 'Participación en competencia CALICO.', '2026-09-23 23:36:19');
+INSERT INTO achievements (id, title, description, created_at) VALUES (1, 'Olimpiada Informática Argentina', 'Participación en competencia de informática.', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
+INSERT INTO achievements (id, title, description, created_at) VALUES (2, 'Olimpiadas de Matemática', 'Participación en olimpíadas de matemática.', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
+INSERT INTO achievements (id, title, description, created_at) VALUES (3, 'CALICO', 'Participación en competencia CALICO.', CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE title=VALUES(title);
 
 SET FOREIGN_KEY_CHECKS = 1;

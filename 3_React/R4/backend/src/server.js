@@ -1,12 +1,12 @@
 /**
  * Express Server for Portfolio REST API.
- * Connected to Neon Serverless Postgres with bcrypt authentication and secure environment variables.
+ * Connected to TiDB / MySQL with bcrypt authentication.
  */
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
-import { isPostgres, sqlClient, initDatabase } from './db.js';
+import { isMysql, sqlClient, initDatabase } from './db.js';
 
 dotenv.config();
 
@@ -27,8 +27,8 @@ app.post('/api/auth/login', async (req, res) => {
     }
 
     let user = null;
-    if (isPostgres) {
-      const rows = await sqlClient`SELECT * FROM admin_users WHERE username = ${username}`;
+    if (isMysql) {
+      const [rows] = await sqlClient.query('SELECT * FROM admin_users WHERE username = ?', [username]);
       user = rows[0];
     } else {
       user = db.prepare('SELECT * FROM admin_users WHERE username = ?').get(username);
@@ -51,11 +51,11 @@ app.post('/api/auth/login', async (req, res) => {
 
 app.get('/api/skills', async (_req, res) => {
   try {
-    if (isPostgres) {
-      const categories = await sqlClient`SELECT * FROM skill_categories ORDER BY id ASC`;
+    if (isMysql) {
+      const [categories] = await sqlClient.query('SELECT * FROM skill_categories ORDER BY id ASC');
       const result = await Promise.all(
         categories.map(async (cat) => {
-          const skills = await sqlClient`SELECT * FROM skills WHERE category_id = ${cat.id} ORDER BY id ASC`;
+          const [skills] = await sqlClient.query('SELECT * FROM skills WHERE category_id = ? ORDER BY id ASC', [cat.id]);
           return { ...cat, skills };
         })
       );
@@ -80,11 +80,13 @@ app.post('/api/skills', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Campos requeridos faltantes' });
     }
 
-    if (isPostgres) {
-      const rows = await sqlClient`
-        INSERT INTO skills (category_id, name, icon) VALUES (${category_id}, ${name}, ${icon || 'code'}) RETURNING *
-      `;
-      return res.status(201).json(rows[0]);
+    if (isMysql) {
+      const [result] = await sqlClient.query(
+        'INSERT INTO skills (category_id, name, icon) VALUES (?, ?, ?)',
+        [category_id, name, icon || 'code']
+      );
+      const [created] = await sqlClient.query('SELECT * FROM skills WHERE id = ?', [result.insertId]);
+      return res.status(201).json(created[0]);
     } else {
       const stmt = db.prepare('INSERT INTO skills (category_id, name, icon) VALUES (?, ?, ?)');
       const info = stmt.run(category_id, name, icon || 'code');
@@ -99,8 +101,8 @@ app.post('/api/skills', async (req, res) => {
 app.delete('/api/skills/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    if (isPostgres) {
-      await sqlClient`DELETE FROM skills WHERE id = ${id}`;
+    if (isMysql) {
+      await sqlClient.query('DELETE FROM skills WHERE id = ?', [id]);
     } else {
       db.prepare('DELETE FROM skills WHERE id = ?').run(id);
     }
@@ -113,8 +115,9 @@ app.delete('/api/skills/:id', async (req, res) => {
 app.get('/api/projects', async (_req, res) => {
   try {
     let projects = [];
-    if (isPostgres) {
-      projects = await sqlClient`SELECT * FROM projects ORDER BY id DESC`;
+    if (isMysql) {
+      const [rows] = await sqlClient.query('SELECT * FROM projects ORDER BY id DESC');
+      projects = rows;
     } else {
       projects = db.prepare('SELECT * FROM projects ORDER BY id DESC').all();
     }
@@ -137,12 +140,12 @@ app.post('/api/projects', async (req, res) => {
     }
     const tagsStr = Array.isArray(tags) ? tags.join(',') : tags || '';
 
-    if (isPostgres) {
-      const rows = await sqlClient`
-        INSERT INTO projects (title, description, accent, github_url, tags)
-        VALUES (${title}, ${description}, ${accent}, ${github_url || null}, ${tagsStr})
-        RETURNING *
-      `;
+    if (isMysql) {
+      const [result] = await sqlClient.query(
+        'INSERT INTO projects (title, description, accent, github_url, tags) VALUES (?, ?, ?, ?, ?)',
+        [title, description, accent, github_url || null, tagsStr]
+      );
+      const [rows] = await sqlClient.query('SELECT * FROM projects WHERE id = ?', [result.insertId]);
       const created = rows[0];
       return res.status(201).json({ ...created, githubUrl: created.github_url, tags: created.tags ? created.tags.split(',') : [] });
     } else {
@@ -161,8 +164,8 @@ app.post('/api/projects', async (req, res) => {
 app.delete('/api/projects/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    if (isPostgres) {
-      await sqlClient`DELETE FROM projects WHERE id = ${id}`;
+    if (isMysql) {
+      await sqlClient.query('DELETE FROM projects WHERE id = ?', [id]);
     } else {
       db.prepare('DELETE FROM projects WHERE id = ?').run(id);
     }
@@ -175,8 +178,9 @@ app.delete('/api/projects/:id', async (req, res) => {
 app.get('/api/experiences', async (_req, res) => {
   try {
     let list = [];
-    if (isPostgres) {
-      list = await sqlClient`SELECT * FROM experiences ORDER BY id ASC`;
+    if (isMysql) {
+      const [rows] = await sqlClient.query('SELECT * FROM experiences ORDER BY id ASC');
+      list = rows;
     } else {
       list = db.prepare('SELECT * FROM experiences ORDER BY id ASC').all();
     }
@@ -193,12 +197,12 @@ app.post('/api/experiences', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Campos requeridos faltantes' });
     }
 
-    if (isPostgres) {
-      const rows = await sqlClient`
-        INSERT INTO experiences (type, title, description, meta)
-        VALUES (${type}, ${title}, ${description}, ${meta || ''})
-        RETURNING *
-      `;
+    if (isMysql) {
+      const [result] = await sqlClient.query(
+        'INSERT INTO experiences (type, title, description, meta) VALUES (?, ?, ?, ?)',
+        [type, title, description, meta || '']
+      );
+      const [rows] = await sqlClient.query('SELECT * FROM experiences WHERE id = ?', [result.insertId]);
       return res.status(201).json(rows[0]);
     } else {
       const stmt = db.prepare('INSERT INTO experiences (type, title, description, meta) VALUES (?, ?, ?, ?)');
@@ -214,8 +218,8 @@ app.post('/api/experiences', async (req, res) => {
 app.delete('/api/experiences/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    if (isPostgres) {
-      await sqlClient`DELETE FROM experiences WHERE id = ${id}`;
+    if (isMysql) {
+      await sqlClient.query('DELETE FROM experiences WHERE id = ?', [id]);
     } else {
       db.prepare('DELETE FROM experiences WHERE id = ?').run(id);
     }
@@ -228,8 +232,9 @@ app.delete('/api/experiences/:id', async (req, res) => {
 app.get('/api/achievements', async (_req, res) => {
   try {
     let list = [];
-    if (isPostgres) {
-      list = await sqlClient`SELECT * FROM achievements ORDER BY id ASC`;
+    if (isMysql) {
+      const [rows] = await sqlClient.query('SELECT * FROM achievements ORDER BY id ASC');
+      list = rows;
     } else {
       list = db.prepare('SELECT * FROM achievements ORDER BY id ASC').all();
     }
@@ -246,13 +251,15 @@ app.post('/api/achievements', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Campos requeridos faltantes' });
     }
 
-    if (isPostgres) {
-      const rows = await sqlClient`
-        INSERT INTO achievements (title, description) VALUES (${title}, ${description}) RETURNING *
-      `;
+    if (isMysql) {
+      const [result] = await sqlClient.query(
+        'INSERT INTO achievements (title, description) VALUES (?, ?)',
+        [title, description]
+      );
+      const [rows] = await sqlClient.query('SELECT * FROM achievements WHERE id = ?', [result.insertId]);
       return res.status(201).json(rows[0]);
     } else {
-      const stmt = db.prepare('INSERT INTO achievements (title, description) VALUES (?, ?, ?)');
+      const stmt = db.prepare('INSERT INTO achievements (title, description) VALUES (?, ?)');
       const info = stmt.run(title, description);
       const created = db.prepare('SELECT * FROM achievements WHERE id = ?').get(info.lastInsertRowid);
       return res.status(201).json(created);
@@ -265,8 +272,8 @@ app.post('/api/achievements', async (req, res) => {
 app.delete('/api/achievements/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    if (isPostgres) {
-      await sqlClient`DELETE FROM achievements WHERE id = ${id}`;
+    if (isMysql) {
+      await sqlClient.query('DELETE FROM achievements WHERE id = ?', [id]);
     } else {
       db.prepare('DELETE FROM achievements WHERE id = ?').run(id);
     }
@@ -281,10 +288,11 @@ app.post('/api/download/log', async (req, res) => {
     const { fileName } = req.body;
     const ip = req.ip || req.headers['x-forwarded-for'] || '127.0.0.1';
 
-    if (isPostgres) {
-      await sqlClient`
-        INSERT INTO download_logs (file_name, ip_address) VALUES (${fileName || 'CV_Portfolio.pdf'}, ${String(ip)})
-      `;
+    if (isMysql) {
+      await sqlClient.query(
+        'INSERT INTO download_logs (file_name, ip_address) VALUES (?, ?)',
+        [fileName || 'CV_Portfolio.pdf', String(ip)]
+      );
     } else {
       const stmt = db.prepare('INSERT INTO download_logs (file_name, ip_address) VALUES (?, ?)');
       stmt.run(fileName || 'CV_Portfolio.pdf', String(ip));
