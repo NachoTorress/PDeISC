@@ -35,5 +35,25 @@ export const env = {
       clientSecret: process.env.DISCORD_CLIENT_SECRET || '',
       callbackUrl: process.env.DISCORD_CALLBACK_URL || 'http://localhost:3001/api/auth/discord/callback',
     },
+    twitter: {
+      clientId: process.env.TWITTER_CLIENT_ID || process.env.X_CLIENT_ID || '',
+      clientSecret: process.env.TWITTER_CLIENT_SECRET || process.env.X_CLIENT_SECRET || '',
+      callbackUrl: process.env.TWITTER_CALLBACK_URL || process.env.X_CALLBACK_URL || 'http://127.0.0.1:3001/api/auth/twitter/callback',
+    },
+    twitch: {
+      clientId: process.env.TWITCH_CLIENT_ID || '',
+      clientSecret: process.env.TWITCH_CLIENT_SECRET || '',
+      callbackUrl: process.env.TWITCH_CALLBACK_URL || 'http://localhost:3001/api/auth/twitch/callback',
+    },
+    facebook: {
+      clientId: process.env.FACEBOOK_CLIENT_ID || '',
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || '',
+      callbackUrl: process.env.FACEBOOK_CALLBACK_URL || 'http://localhost:3001/api/auth/facebook/callback',
+    },
+    meta: {
+      clientId: process.env.META_CLIENT_ID || '',
+      clientSecret: process.env.META_CLIENT_SECRET || '',
+      callbackUrl: process.env.META_CALLBACK_URL || 'http://localhost:3001/api/auth/meta/callback',
+    },
   },
 };

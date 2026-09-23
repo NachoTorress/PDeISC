@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS user_accounts (
   role_id TINYINT UNSIGNED NOT NULL,
   email VARCHAR(120) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NULL,
-  provider ENUM('local', 'github', 'google', 'discord') NOT NULL DEFAULT 'local',
+  provider ENUM('local', 'github', 'google', 'discord', 'twitter', 'x', 'twitch', 'facebook', 'meta') NOT NULL DEFAULT 'local',
   provider_id VARCHAR(100) NULL,
   status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

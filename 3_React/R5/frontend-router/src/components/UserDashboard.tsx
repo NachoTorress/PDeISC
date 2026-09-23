@@ -203,6 +203,10 @@ export function UserDashboard({ title, description }: UserDashboardProps) {
               <option value="github">GitHub</option>
               <option value="google">Google</option>
               <option value="discord">Discord</option>
+              <option value="twitter">X / Twitter</option>
+              <option value="twitch">Twitch</option>
+              <option value="facebook">Facebook</option>
+              <option value="meta">Meta</option>
             </select>
           </div>
 

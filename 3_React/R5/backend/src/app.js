@@ -4,6 +4,7 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import passport from 'passport';
+import session from 'express-session';
 import { env } from './config/env.js';
 import { setupPassport } from './config/passport.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
@@ -13,6 +14,14 @@ import { userRoutes } from './routes/userRoutes.js';
 export const app = express();
 
 setupPassport();
+
+app.use(
+  session({
+    secret: env.jwtSecret,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
 
 app.use(helmet());
 app.use(
