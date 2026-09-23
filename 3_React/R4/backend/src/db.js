@@ -98,5 +98,35 @@ export async function initDatabase() {
   }
 }
 
-export { isMysql, pool as sqlClient };
-export default isMysql ? pool : sqliteDb;
+const safeSqlClient = isMysql
+  ? {
+      async query(sql, params) {
+        try {
+          return await pool.query(sql, params);
+        } catch (err) {
+          if (
+            err.code === 'ERR_OUT_OF_RANGE' ||
+            (err.message && err.message.includes('out of range'))
+          ) {
+            console.warn('⚠️ Conexión congelada detectada en Vercel. Reintentando con conexión directa...');
+            const conn = await mysql.createConnection({
+              uri: connectionString,
+              ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: false }
+            });
+            try {
+              const res = await conn.query(sql, params);
+              await conn.end().catch(() => {});
+              return res;
+            } catch (retryErr) {
+              await conn.end().catch(() => {});
+              throw retryErr;
+            }
+          }
+          throw err;
+        }
+      }
+    }
+  : null;
+
+export { isMysql, safeSqlClient as sqlClient };
+export default isMysql ? safeSqlClient : sqliteDb;
