@@ -14,8 +14,7 @@ if (isMysql) {
     uri: connectionString,
     ssl: {
       minVersion: 'TLSv1.2',
-      rejectUnauthorized: false,
-      checkServerIdentity: () => undefined
+      rejectUnauthorized: false
     },
     waitForConnections: true,
     connectionLimit: 5
