@@ -1,15 +1,35 @@
 import mysql from 'mysql2/promise';
+import { neon } from '@neondatabase/serverless';
 import bcrypt from 'bcryptjs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const connectionString = process.env.MYSQL_URL || process.env.DATABASE_URL;
-const isMysql = Boolean(connectionString);
+const connectionString = process.env.MYSQL_URL || process.env.POSTGRES_URL || process.env.DATABASE_URL;
+
+const isPg = Boolean(
+  connectionString &&
+    (connectionString.startsWith('postgres://') ||
+      connectionString.startsWith('postgresql://') ||
+      Boolean(process.env.POSTGRES_URL))
+);
+
+const isMysql = Boolean(
+  (process.env.MYSQL_URL || connectionString) &&
+    !isPg &&
+    (connectionString ? connectionString.startsWith('mysql://') || connectionString.startsWith('mysql2://') : false)
+);
+
+const isRemote = isPg || isMysql;
 
 let pool = null;
+let pgSql = null;
 let sqliteDb = null;
 
-if (isMysql) {
+if (isPg) {
+  console.log('✅ Inicializando conexión a Neon Postgres (vía HTTP Serverless).');
+  pgSql = neon(connectionString);
+} else if (isMysql) {
+  console.log('✅ Inicializando conexión a TiDB / MySQL (mysql2 pool).');
   pool = mysql.createPool({
     uri: connectionString,
     ssl: {
@@ -26,8 +46,8 @@ if (isMysql) {
 }
 
 export async function initDatabase() {
-  if (isMysql) {
-    console.log('✅ Base de datos MySQL / TiDB conectada.');
+  if (isRemote) {
+    console.log(`✅ Base de datos remota activa (${isPg ? 'Neon Postgres' : 'TiDB MySQL'}).`);
   } else {
     const { default: Database } = await import('better-sqlite3');
     const __filename = fileURLToPath(import.meta.url);
@@ -98,35 +118,42 @@ export async function initDatabase() {
   }
 }
 
-const safeSqlClient = isMysql
-  ? {
-      async query(sql, params) {
-        try {
-          return await pool.query(sql, params);
-        } catch (err) {
-          if (
-            err.code === 'ERR_OUT_OF_RANGE' ||
-            (err.message && err.message.includes('out of range'))
-          ) {
-            console.warn('⚠️ Conexión congelada detectada en Vercel. Reintentando con conexión directa...');
-            const conn = await mysql.createConnection({
-              uri: connectionString,
-              ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: false }
-            });
-            try {
-              const res = await conn.query(sql, params);
-              await conn.end().catch(() => {});
-              return res;
-            } catch (retryErr) {
-              await conn.end().catch(() => {});
-              throw retryErr;
-            }
+const safeSqlClient = {
+  async query(sqlStr, params = []) {
+    if (isPg) {
+      let paramIdx = 1;
+      const pgQuery = sqlStr.replace(/\?/g, () => `$${paramIdx++}`);
+      const rows = await pgSql(pgQuery, params);
+      return [rows];
+    } else if (isMysql) {
+      try {
+        return await pool.query(sqlStr, params);
+      } catch (err) {
+        if (
+          err.code === 'ERR_OUT_OF_RANGE' ||
+          (err.message && err.message.includes('out of range'))
+        ) {
+          console.warn('⚠️ Conexión congelada detectada en Vercel. Reintentando con conexión directa...');
+          const conn = await mysql.createConnection({
+            uri: connectionString,
+            ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: false }
+          });
+          try {
+            const res = await conn.query(sqlStr, params);
+            await conn.end().catch(() => {});
+            return res;
+          } catch (retryErr) {
+            await conn.end().catch(() => {});
+            throw retryErr;
           }
-          throw err;
         }
+        throw err;
       }
+    } else {
+      throw new Error('No hay base de datos remota configurada.');
     }
-  : null;
+  }
+};
 
-export { isMysql, safeSqlClient as sqlClient };
-export default isMysql ? safeSqlClient : sqliteDb;
+export { isRemote as isMysql, safeSqlClient as sqlClient };
+export default isRemote ? safeSqlClient : sqliteDb;
