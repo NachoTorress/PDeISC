@@ -121,12 +121,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           fetch(`${API_BASE}/achievements`),
         ]);
 
-        if (skillsRes.ok && projRes.ok && expRes.ok && achRes.ok) {
+        if (skillsRes.ok) {
           const skillsData = await skillsRes.json();
-          const projData = await projRes.json();
-          const expData = await expRes.json();
-          const achData = await achRes.json();
-
           if (Array.isArray(skillsData) && skillsData.length > 0) {
             setSkillCategories(
               skillsData.map((cat: any) => ({
@@ -141,7 +137,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               }))
             );
           }
+        }
 
+        if (projRes.ok) {
+          const projData = await projRes.json();
           if (Array.isArray(projData) && projData.length > 0) {
             setProjects(
               projData.map((p: any) => ({
@@ -154,7 +153,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               }))
             );
           }
+        }
 
+        if (expRes.ok) {
+          const expData = await expRes.json();
           if (Array.isArray(expData) && expData.length > 0) {
             setEducation(
               expData.map((e: any) => ({
@@ -166,7 +168,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               }))
             );
           }
+        }
 
+        if (achRes.ok) {
+          const achData = await achRes.json();
           if (Array.isArray(achData) && achData.length > 0) {
             setAchievements(
               achData.map((a: any) => ({
