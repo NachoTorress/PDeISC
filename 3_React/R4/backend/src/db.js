@@ -36,10 +36,7 @@ if (isPg) {
   console.log('✅ Inicializando conexión a TiDB / MySQL (mysql2 pool).');
   pool = mysql.createPool({
     uri: connectionString,
-    ssl: {
-      minVersion: 'TLSv1.2',
-      rejectUnauthorized: false
-    },
+    ssl: { rejectUnauthorized: false },
     waitForConnections: true,
     connectionLimit: 5,
     maxIdle: 5,
@@ -133,7 +130,7 @@ const safeSqlClient = {
       if (useDirectMysqlConnection) {
         const conn = await mysql.createConnection({
           uri: connectionString,
-          ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: false },
+          ssl: { rejectUnauthorized: false },
           connectTimeout: 10000,
           enableKeepAlive: false
         });
@@ -154,7 +151,7 @@ const safeSqlClient = {
           console.warn('⚠️ Conexión congelada detectada en Vercel. Reintentando con conexión directa...');
           const conn = await mysql.createConnection({
             uri: connectionString,
-            ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: false }
+            ssl: { rejectUnauthorized: false }
           });
           try {
             const res = await conn.query(sqlStr, params);

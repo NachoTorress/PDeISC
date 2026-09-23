@@ -123,7 +123,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (skillsRes.ok) {
           const skillsData = await skillsRes.json();
-          if (Array.isArray(skillsData) && skillsData.length > 0) {
+          if (Array.isArray(skillsData)) {
             setSkillCategories(
               skillsData.map((cat: any) => ({
                 id: cat.id,
@@ -141,15 +141,20 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (projRes.ok) {
           const projData = await projRes.json();
-          if (Array.isArray(projData) && projData.length > 0) {
+          console.log('🔄 Sincronizados proyectos desde la API:', projData);
+          if (Array.isArray(projData)) {
             setProjects(
               projData.map((p: any) => ({
                 id: p.id,
                 title: p.title,
                 description: p.description,
                 accent: p.accent,
-                githubUrl: p.github_url || undefined,
-                tags: p.tags || [],
+                githubUrl: p.githubUrl || p.github_url || '',
+                tags: Array.isArray(p.tags)
+                  ? p.tags
+                  : typeof p.tags === 'string'
+                  ? p.tags.split(',').filter(Boolean)
+                  : [],
               }))
             );
           }
@@ -157,7 +162,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (expRes.ok) {
           const expData = await expRes.json();
-          if (Array.isArray(expData) && expData.length > 0) {
+          if (Array.isArray(expData)) {
             setEducation(
               expData.map((e: any) => ({
                 id: e.id,
@@ -172,7 +177,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (achRes.ok) {
           const achData = await achRes.json();
-          if (Array.isArray(achData) && achData.length > 0) {
+          if (Array.isArray(achData)) {
             setAchievements(
               achData.map((a: any) => ({
                 id: a.id,
