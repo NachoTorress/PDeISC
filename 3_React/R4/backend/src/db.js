@@ -17,7 +17,11 @@ if (isMysql) {
       rejectUnauthorized: false
     },
     waitForConnections: true,
-    connectionLimit: 5
+    connectionLimit: 5,
+    maxIdle: 0,
+    idleTimeout: 1000,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0
   });
 }
 
