@@ -1,7 +1,7 @@
 export type UserRole = 'admin' | 'user';
 export type UserStatus = 'active' | 'inactive';
 export type DocumentType = 'DNI' | 'PAS' | 'LC';
-export type AuthProviderType = 'local' | 'github' | 'google' | 'discord' | 'twitter' | 'x' | 'twitch' | 'facebook' | 'meta';
+export type AuthProviderType = 'local' | 'github' | 'google' | 'discord';
 
 export interface User {
   id: number;

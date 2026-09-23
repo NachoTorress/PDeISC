@@ -358,6 +358,12 @@ select {
   background: var(--app-surface);
 }
 
+@media (min-width: 768px) {
+  .border-end-md {
+    border-right: 1px solid var(--app-border) !important;
+  }
+}
+
 @media (min-width: 992px) {
   .navbar-actions {
     padding-top: 0;

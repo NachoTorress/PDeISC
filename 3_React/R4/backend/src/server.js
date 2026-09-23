@@ -53,17 +53,15 @@ app.get('/api/skills', async (_req, res) => {
   try {
     console.log('🔍 GET /api/skills convocado. isMysql:', isMysql);
     if (isMysql) {
-      console.log('Ejecutando query SELECT * FROM skill_categories...');
-      const [categories] = await sqlClient.query('SELECT * FROM skill_categories ORDER BY id ASC');
-      console.log('Skill Categories obtenidas:', categories.length, categories);
+      const [categories = []] = await sqlClient.query('SELECT * FROM skill_categories ORDER BY id ASC');
+      const [skills = []] = await sqlClient.query('SELECT * FROM skills ORDER BY id ASC');
 
-      console.log('Ejecutando query SELECT * FROM skills...');
-      const [skills] = await sqlClient.query('SELECT * FROM skills ORDER BY id ASC');
-      console.log('Skills obtenidas:', skills.length, skills);
+      const safeCats = Array.isArray(categories) ? categories : [];
+      const safeSkills = Array.isArray(skills) ? skills : [];
 
-      const result = categories.map((cat) => ({
+      const result = safeCats.map((cat) => ({
         ...cat,
-        skills: skills.filter((s) => s.category_id === cat.id),
+        skills: safeSkills.filter((s) => Number(s.category_id) === Number(cat.id)),
       }));
       return res.json(result);
     } else {
@@ -75,18 +73,11 @@ app.get('/api/skills', async (_req, res) => {
       return res.json(result);
     }
   } catch (err) {
-    console.error('❌ ERROR GRAVE EN GET /api/skills:', {
-      message: err.message,
-      code: err.code,
-      sqlState: err.sqlState,
-      stack: err.stack
-    });
+    console.error('❌ ERROR EN GET /api/skills:', err);
     return res.status(500).json({ 
       success: false, 
       message: err.message, 
-      code: err.code,
-      sqlState: err.sqlState,
-      detail: String(err)
+      code: err.code
     });
   }
 });

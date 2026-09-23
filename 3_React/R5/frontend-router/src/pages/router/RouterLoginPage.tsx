@@ -5,7 +5,7 @@ export function RouterLoginPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="narrow-page">
+    <div className="wide-page">
       <LoginForm onSuccess={() => navigate('/users')} />
       <p className="switch-copy">
         ¿No tenés cuenta? <Link to="/register">Registrate</Link>
