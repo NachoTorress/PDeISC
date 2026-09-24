@@ -210,7 +210,7 @@ const Contact = () => {
               Copiar resumen
             </ContactButton>
 
-            <ContactButton type="button" variant="secondary" onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}>
+            <ContactButton type="button" variant="secondary" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <FaArrowUp aria-hidden="true" />
               Volver al inicio
             </ContactButton>

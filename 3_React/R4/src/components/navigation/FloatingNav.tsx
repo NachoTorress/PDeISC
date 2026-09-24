@@ -209,7 +209,7 @@ export const FloatingNav = () => {
       {showTopButton && (
         <TopButton
           type="button"
-          onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}

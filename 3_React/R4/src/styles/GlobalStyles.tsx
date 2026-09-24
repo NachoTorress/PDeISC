@@ -12,6 +12,7 @@ const globalStyles = css`
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 85px;
     font-size: 16px;
     overflow-x: hidden;
     width: 100%;
@@ -70,6 +71,7 @@ const globalStyles = css`
 
   section {
     width: 100%;
+    scroll-margin-top: 85px;
     position: relative;
     margin: 0;
     padding: 0;
