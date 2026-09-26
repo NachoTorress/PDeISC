@@ -69,6 +69,7 @@ function DetailPage() {
             <TaskForm
               valoresIniciales={tarea}
               textoBoton="Guardar cambios"
+              esEdicion
               onGuardar={manejarGuardar}
               onCancelar={() => setEditando(false)}
             />
@@ -108,13 +109,15 @@ function DetailPage() {
               >
                 ✏️ Editar
               </button>
-              <button
-                type="button"
-                className="btn btn-outline-danger"
-                onClick={() => setPidiendoConfirmacion(true)}
-              >
-                🗑️ Eliminar
-              </button>
+              {tarea.completada && (
+                <button
+                  type="button"
+                  className="btn btn-outline-danger"
+                  onClick={() => setPidiendoConfirmacion(true)}
+                >
+                  🗑️ Eliminar
+                </button>
+              )}
             </div>
           </>
         )}

@@ -66,14 +66,16 @@ function TaskCard({ tarea }) {
               >
                 {tarea.completada ? "Marcar incompleta" : "Marcar completa"}
               </button>
-              <button
-                type="button"
-                className="btn btn-sm btn-outline-danger"
-                onClick={() => setPidiendoConfirmacion(true)}
-                aria-label={`Eliminar tarea ${tarea.titulo}`}
-              >
-                🗑️
-              </button>
+              {tarea.completada && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => setPidiendoConfirmacion(true)}
+                  aria-label={`Eliminar tarea ${tarea.titulo}`}
+                >
+                  🗑️
+                </button>
+              )}
             </div>
           </div>
         </>

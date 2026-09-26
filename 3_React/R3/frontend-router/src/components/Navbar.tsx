@@ -10,6 +10,10 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   async function handleLogout() {
+    if (!window.confirm('¿Seguro que quieres cerrar sesión?')) {
+      return;
+    }
+
     await logout();
     setMenuOpen(false);
     navigate('/login');

@@ -37,7 +37,7 @@ export function TasksProvider({ children }) {
       id: Date.now(),
       titulo: datos.titulo.trim(),
       descripcion: datos.descripcion.trim(),
-      completada: datos.completada,
+      completada: false,
       fechaCreacion: new Date().toISOString(),
     };
     setTareas((previas) => [nuevaTarea, ...previas]);
@@ -62,7 +62,9 @@ export function TasksProvider({ children }) {
    * @param {number} id
    */
   const eliminarTarea = (id) => {
-    setTareas((previas) => previas.filter((tarea) => tarea.id !== id));
+    setTareas((previas) =>
+      previas.filter((tarea) => tarea.id !== id || !tarea.completada)
+    );
   };
 
   /**

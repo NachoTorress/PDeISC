@@ -15,7 +15,13 @@
 import { useState } from "react";
 import { validarTitulo, validarDescripcion } from "../utils/validators";
 
-function TaskForm({ valoresIniciales, textoBoton, onGuardar, onCancelar }) {
+function TaskForm({
+  valoresIniciales,
+  textoBoton,
+  onGuardar,
+  onCancelar,
+  esEdicion = false,
+}) {
   const [titulo, setTitulo] = useState(valoresIniciales?.titulo ?? "");
   const [descripcion, setDescripcion] = useState(
     valoresIniciales?.descripcion ?? ""
@@ -52,7 +58,7 @@ function TaskForm({ valoresIniciales, textoBoton, onGuardar, onCancelar }) {
 
     if (errorTitulo || errorDescripcion) return;
 
-    onGuardar({ titulo, descripcion, completada });
+    onGuardar({ titulo, descripcion, ...(esEdicion && { completada }) });
   };
 
   return (
@@ -103,18 +109,20 @@ function TaskForm({ valoresIniciales, textoBoton, onGuardar, onCancelar }) {
         )}
       </div>
 
-      <div className="form-check mb-4">
-        <input
-          id="campo-completada"
-          type="checkbox"
-          className="form-check-input"
-          checked={completada}
-          onChange={(e) => setCompletada(e.target.checked)}
-        />
-        <label htmlFor="campo-completada" className="form-check-label">
-          Marcar como completa
-        </label>
-      </div>
+      {esEdicion && (
+        <div className="form-check mb-4">
+          <input
+            id="campo-completada"
+            type="checkbox"
+            className="form-check-input"
+            checked={completada}
+            onChange={(e) => setCompletada(e.target.checked)}
+          />
+          <label htmlFor="campo-completada" className="form-check-label">
+            Marcar como completa
+          </label>
+        </div>
+      )}
 
       <div className="d-flex gap-2">
         <button

@@ -1,3 +1,4 @@
+/* ListaTareas.css */
 .tareas-card {
     width: min(720px, 92vw);
     padding: clamp(24px, 6vw, 48px);
@@ -14,21 +15,32 @@
     font-size: clamp(22px, 6vw, 32px);
 }
 
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-}
-
+/* ---------- Formulario ---------- */
 .tareas-form {
-    display: flex;
-    gap: 8px;
     margin-bottom: 20px;
 }
 
-.tareas-form input {
+.tareas-campo,
+.tareas-edicion {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.tareas-campo label,
+.tareas-edicion label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-h);
+}
+
+.tareas-fila {
+    display: flex;
+    gap: 8px;
+}
+
+.tareas-card input[type="text"] {
     flex: 1;
     min-width: 0;
     padding: 10px 14px;
@@ -37,14 +49,27 @@
     background: var(--bg);
     color: var(--text-h);
     font-size: 15px;
+    transition: border-color 0.2s ease;
 }
 
-.tareas-form input:focus {
+.tareas-card input[type="text"]:focus {
     outline: none;
     border-color: var(--accent);
 }
 
-.tareas-form button {
+/* Validación en tiempo real */
+.tareas-card input[type="text"].invalido,
+.tareas-card input[type="text"].invalido:focus {
+    border-color: #e5484d;
+    box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.18);
+}
+
+.tareas-error {
+    color: #e5484d;
+    font-size: 13px;
+}
+
+.tareas-form button[type="submit"] {
     padding: 0 16px;
     border: none;
     border-radius: 10px;
@@ -57,7 +82,7 @@
     transition: opacity 0.2s ease;
 }
 
-.tareas-form button:hover {
+.tareas-form button[type="submit"]:hover {
     opacity: 0.85;
 }
 
@@ -67,6 +92,7 @@
     font-size: 14px;
 }
 
+/* ---------- Lista ---------- */
 .tareas-lista {
     list-style: none;
     padding: 0;
@@ -86,12 +112,19 @@
     background: var(--bg);
 }
 
+.tareas-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
 .tareas-lista li label {
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    flex: 1;
     color: var(--text-h);
     min-width: 0;
     word-break: break-word;
@@ -102,20 +135,105 @@
     color: var(--text);
 }
 
-.tareas-eliminar {
+.tareas-fecha {
+    margin-left: 28px;
+    font-size: 12px;
+    color: var(--text);
+}
+
+/* ---------- Botones de cada tarea ---------- */
+.tareas-botones {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.tareas-eliminar,
+.tareas-editar {
     border: none;
     background: transparent;
-    color: #e5484d;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
     padding: 4px 8px;
     border-radius: 6px;
-    flex-shrink: 0;
     transition: background-color 0.2s ease;
+}
+
+.tareas-eliminar {
+    color: #e5484d;
 }
 
 .tareas-eliminar:hover {
     background: rgba(229, 72, 77, 0.15);
+}
+
+.tareas-editar {
+    color: var(--accent);
+}
+
+.tareas-editar:hover {
+    background: rgba(128, 128, 128, 0.18);
+}
+
+/* ---------- Edición y confirmación dentro de la tarjeta ---------- */
+.tareas-confirmar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    padding: 4px 2px;
+}
+
+.tareas-confirmar p {
+    margin: 0;
+    font-weight: 600;
+    color: #e5484d;
+}
+
+.tareas-texto-conf {
+    color: var(--text-h);
+    word-break: break-word;
+    text-decoration: none !important;
+}
+
+.tareas-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.tareas-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-h);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.tareas-btn:hover:not(:disabled) {
+    opacity: 0.8;
+}
+
+.tareas-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.tareas-btn.primario {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.tareas-btn.peligro {
+    background: #e5484d;
+    border-color: #e5484d;
+    color: #fff;
 }
 
 .tareas-contador {
