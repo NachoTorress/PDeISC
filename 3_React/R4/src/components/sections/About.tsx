@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { FaGraduationCap, FaTrophy, FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 import { useData } from '../../contexts/DataContext';
+import type { ItemData } from '../../contexts/DataContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { ConfirmDeleteCard } from '../common/ConfirmDeleteCard';
 import { AdminCrudModal } from '../admin/AdminCrudModal';
@@ -22,12 +23,16 @@ const AboutSection = styled.section`
 `;
 
 const SectionTitle = styled(motion.h2)`
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-size: 2rem;
   margin-bottom: ${theme.spacing.lg};
   color: ${theme.colors.light};
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 2.5rem;
+  }
 
   svg {
     color: ${theme.colors.accent};
@@ -36,9 +41,8 @@ const SectionTitle = styled(motion.h2)`
 
 const InfoCard = styled(motion.article)`
   position: relative;
-  height: 100%;
   padding: ${theme.spacing.lg};
-  border-radius: 20px;
+  border-radius: 16px;
   background: ${theme.colors.glass.background};
   backdrop-filter: blur(12px);
   border: 1px solid ${theme.colors.glass.border};
@@ -58,15 +62,21 @@ const CardHeader = styled.div`
   margin-bottom: ${theme.spacing.md};
   padding-bottom: ${theme.spacing.sm};
   border-bottom: 1px solid ${theme.colors.glass.border};
+  flex-wrap: wrap;
+  gap: ${theme.spacing.sm};
 
   h3 {
     margin: 0;
-    font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+    font-size: 1.25rem;
     color: ${theme.colors.light};
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
+    @media (min-width: ${theme.breakpoints.md}) {
+      font-size: 1.4rem;
+    }
 
     svg {
       color: ${theme.colors.accent};
@@ -82,7 +92,8 @@ const AddButton = styled.button`
   border: none;
   border-radius: 999px;
   padding: 0.45rem 0.95rem;
-  font-size: 0.82rem;
+  min-height: 44px;
+  font-size: 1rem;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
@@ -105,19 +116,18 @@ const InfoList = styled.ul`
 
   li {
     position: relative;
-    padding: ${theme.spacing.md};
-    min-height: 56px;
-    border-radius: 12px;
-    background: ${theme.colors.glass.card};
-    border: 1px solid ${theme.colors.glass.border};
-    margin-bottom: ${theme.spacing.sm};
-    transition: all ${theme.transitions.default};
-    overflow: hidden;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid ${theme.colors.glass.border};
 
-    &:hover {
-      background: ${theme.colors.gradient.glass};
+    &:last-child {
+      border-bottom: 0;
     }
   }
+`;
+
+const EmptyInfo = styled.li`
+  color: var(--color-muted);
+  font-style: italic;
 `;
 
 const ItemHeader = styled.div`
@@ -129,7 +139,8 @@ const ItemHeader = styled.div`
 
 const ItemText = styled.div`
   flex: 1;
-  font-size: 0.95rem;
+  min-width: 0;
+  font-size: 1rem;
   line-height: 1.5;
 
   strong {
@@ -145,8 +156,8 @@ const ActionIcons = styled.div`
 `;
 
 const IconBtn = styled.button<{ danger?: boolean }>`
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -172,7 +183,7 @@ const About = () => {
   const [deleteType, setDeleteType] = useState<'exp' | 'ach' | null>(null);
   const [crudModalOpen, setCrudModalOpen] = useState(false);
   const [crudType, setCrudType] = useState<'experience' | 'achievement'>('experience');
-  const [editingItem, setEditingItem] = useState<any>(null);
+  const [editingItem, setEditingItem] = useState<ItemData | null>(null);
 
   const openAddModal = (type: 'experience' | 'achievement') => {
     setEditingItem(null);
@@ -180,7 +191,7 @@ const About = () => {
     setCrudModalOpen(true);
   };
 
-  const openEditModal = (type: 'experience' | 'achievement', item: any) => {
+  const openEditModal = (type: 'experience' | 'achievement', item: ItemData) => {
     setEditingItem(item);
     setCrudType(type);
     setCrudModalOpen(true);
@@ -211,6 +222,7 @@ const About = () => {
                 )}
               </CardHeader>
               <InfoList>
+                {education.length === 0 && <EmptyInfo role="status">Todavía no hay formación cargada.</EmptyInfo>}
                 {education.map((item) => (
                   <li key={item.id}>
                     {deletingId === item.id && deleteType === 'exp' && (
@@ -270,6 +282,7 @@ const About = () => {
                 )}
               </CardHeader>
               <InfoList>
+                {achievements.length === 0 && <EmptyInfo role="status">Todavía no hay participaciones cargadas.</EmptyInfo>}
                 {achievements.map((item) => (
                   <li key={item.id}>
                     {deletingId === item.id && deleteType === 'ach' && (

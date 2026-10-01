@@ -1,8 +1,7 @@
 {
   "profile": {
+    "name": "Ignacio Torres",
     "email": "ignaciogatorres@gmail.com",
-    "linkedin": "https://www.linkedin.com/in/ignacio-torres0787",
-    "github": "https://github.com/NachoTorress",
     "headline": "Estudiante de Informática, programación competitiva y proyectos con IA/hardware",
     "summary": "Este portfolio presenta mi recorrido académico y técnico, junto con una selección de proyectos, experiencias y participaciones en competencias que reflejan mis conocimientos, habilidades e intereses dentro del ámbito tecnológico."
   },
@@ -35,7 +34,7 @@
     {
       "id": "snake",
       "title": "Snake en GitHub",
-      "description": "Proyecto de juego Snake publicado en GitHub, usado como práctica de lógica, estado de juego y control de interacción.",
+      "description": "Proyecto Snake publicado en GitHub.",
       "tags": ["Programación", "Juego", "GitHub"],
       "accent": "Algoritmos",
       "githubUrl": "https://github.com/tizianomegnini/JS3Juegos/tree/main/Snake_1.2"
@@ -43,14 +42,14 @@
     {
       "id": "hardware",
       "title": "Proyectos con Arduino/ESP32",
-      "description": "Trabajos orientados a hardware, microcontroladores y conexión entre componentes físicos y software.",
+      "description": "Proyectos realizados con Arduino y ESP32.",
       "tags": ["Arduino", "ESP32", "Hardware"],
       "accent": "Electrónica"
     },
     {
       "id": "ai-jetson",
       "title": "IA con Jetson, Ollama y Qwen",
-      "description": "Proyecto de inteligencia artificial que combina Jetson, Ollama, Qwen y herramientas para experimentar con modelos y automatización local.",
+      "description": "Proyecto de inteligencia artificial con Jetson, Ollama, Qwen y herramientas.",
       "tags": ["IA", "Jetson", "Ollama", "Qwen"],
       "accent": "Inteligencia artificial"
     }

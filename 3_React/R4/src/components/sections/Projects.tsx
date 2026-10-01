@@ -6,7 +6,8 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaChevronDown, FaGithub, FaPlus, FaTrash, FaEdit, FaFolder } from 'react-icons/fa';
+import { FaGithub, FaPlus, FaTrash, FaEdit, FaFolder } from 'react-icons/fa';
+import type { ProjectData } from '../../contexts/DataContext';
 import { useData } from '../../contexts/DataContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { ConfirmDeleteCard } from '../common/ConfirmDeleteCard';
@@ -32,12 +33,16 @@ const HeaderRow = styled.div`
 `;
 
 const SectionTitle = styled(motion.h2)`
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-size: 2rem;
   color: ${theme.colors.light};
   margin: 0;
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 2.5rem;
+  }
 
   svg {
     color: ${theme.colors.accent};
@@ -50,6 +55,7 @@ const AddProjectBtn = styled.button`
   border: none;
   border-radius: 999px;
   padding: 0.55rem 1.1rem;
+  min-height: 44px;
   font-weight: 700;
   font-size: 0.88rem;
   display: inline-flex;
@@ -70,11 +76,19 @@ const ProjectGrid = styled.div`
   width: 100%;
 `;
 
+const EmptyProjects = styled.p`
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: ${theme.spacing.lg};
+  color: var(--color-muted);
+  text-align: center;
+`;
+
 const ProjectCard = styled(motion.article)`
   position: relative;
   background: ${theme.colors.glass.background};
   backdrop-filter: blur(12px);
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
   color: ${theme.colors.textLight};
   transition: all ${theme.transitions.default};
@@ -91,7 +105,7 @@ const ProjectCard = styled(motion.article)`
 `;
 
 const ProjectTop = styled.div`
-  min-height: 100px;
+  min-height: 76px;
   padding: ${theme.spacing.md} ${theme.spacing.lg};
   display: flex;
   justify-content: space-between;
@@ -107,7 +121,7 @@ const ProjectAccent = styled.span`
   background: ${theme.colors.gradient.accent};
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 700;
 `;
 
@@ -118,8 +132,8 @@ const AdminIconGroup = styled.div`
 `;
 
 const IconBtn = styled.button<{ danger?: boolean }>`
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -145,16 +159,20 @@ const ProjectContent = styled.div`
 `;
 
 const ProjectTitle = styled.h3`
-  font-size: clamp(1.25rem, 2.5vw, 1.45rem);
+  font-size: 1.25rem;
   margin-bottom: ${theme.spacing.xs};
   color: ${theme.colors.light};
   font-weight: 700;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 1.45rem;
+  }
 `;
 
 const ProjectDescription = styled.p`
   color: var(--color-muted);
   margin-bottom: ${theme.spacing.md};
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.6;
   flex: 1;
 `;
@@ -172,7 +190,7 @@ const TechTag = styled.span`
   border: 1px solid ${theme.colors.glass.border};
   padding: 3px 10px;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 600;
 `;
 
@@ -180,25 +198,6 @@ const ActionRow = styled.div`
   display: flex;
   align-items: center;
   margin-top: auto;
-`;
-
-const ProjectButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: ${theme.colors.textDark};
-  background: ${theme.colors.gradient.accent};
-  border-radius: 999px;
-  padding: 0.5rem 1rem;
-  font-weight: 700;
-  font-size: 0.85rem;
-  border: none;
-  cursor: pointer;
-  transition: all ${theme.transitions.default};
-
-  &:hover {
-    transform: translateY(-2px);
-  }
 `;
 
 const ProjectLink = styled.a`
@@ -209,8 +208,9 @@ const ProjectLink = styled.a`
   background: ${theme.colors.gradient.accent};
   border-radius: 999px;
   padding: 0.5rem 1rem;
+  min-height: 44px;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 1rem;
   transition: all ${theme.transitions.default};
 
   &:hover {
@@ -219,35 +219,17 @@ const ProjectLink = styled.a`
   }
 `;
 
-const ProjectNote = styled(motion.p)`
-  color: var(--color-muted);
-  margin-top: ${theme.spacing.md};
-  margin-bottom: 0;
-  font-size: 0.85rem;
-  background: ${theme.colors.glass.card};
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: 1px solid ${theme.colors.glass.border};
-`;
-
 const Projects = () => {
   const { projects, deleteProject } = useData();
   const { isAdmin } = useAuth();
 
-  const [openProjectId, setOpenProjectId] = useState<string | number | null>(null);
-  const [usedButtons, setUsedButtons] = useState<Record<string | number, boolean>>({});
   const [deletingId, setDeletingId] = useState<string | number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProject, setEditingProject] = useState<any>(null);
+  const [editingProject, setEditingProject] = useState<ProjectData | null>(null);
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
-
-  const handleSingleUseClick = (projectId: string | number) => {
-    setOpenProjectId((current) => (current === projectId ? null : projectId));
-    setUsedButtons((prev) => ({ ...prev, [projectId]: true }));
   };
 
   const openAddModal = () => {
@@ -255,7 +237,7 @@ const Projects = () => {
     setIsModalOpen(true);
   };
 
-  const openEditModal = (project: any) => {
+  const openEditModal = (project: ProjectData) => {
     setEditingProject(project);
     setIsModalOpen(true);
   };
@@ -278,11 +260,10 @@ const Projects = () => {
             </AddProjectBtn>
           )}
         </HeaderRow>
-        <ProjectGrid role="list">
-          {projects.map((project) => {
-            const isOpen = openProjectId === project.id;
-            const isSingleUseConsumed = usedButtons[project.id];
-
+        <ProjectGrid role={projects.length > 0 ? 'list' : 'status'} aria-label="Proyectos">
+          {projects.length === 0 ? (
+            <EmptyProjects>Todavía no hay proyectos cargados.</EmptyProjects>
+          ) : projects.map((project) => {
             return (
               <ProjectCard
                 key={project.id}
@@ -325,31 +306,12 @@ const Projects = () => {
                       </TechTag>
                     ))}
                   </TechStack>
-                  <ActionRow>
-                    {project.githubUrl ? (
+                  {project.githubUrl && (
+                    <ActionRow>
                       <ProjectLink href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                         Ver en GitHub <FaGithub aria-hidden="true" />
                       </ProjectLink>
-                    ) : (
-                      !isSingleUseConsumed && (
-                        <ProjectButton
-                          type="button"
-                          onClick={() => handleSingleUseClick(project.id)}
-                          aria-expanded={isOpen}
-                        >
-                          Ver detalle <FaChevronDown aria-hidden="true" />
-                        </ProjectButton>
-                      )
-                    )}
-                  </ActionRow>
-
-                  {isOpen && (
-                    <ProjectNote
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                    >
-                      Detalles técnicos: Desarrollado con arquitectura C++ / React, controladores modularizados y lógica optimizada.
-                    </ProjectNote>
+                    </ActionRow>
                   )}
                 </ProjectContent>
               </ProjectCard>

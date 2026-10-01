@@ -129,7 +129,7 @@ const safeSqlClient = {
     if (isPg) {
       let paramIdx = 1;
       const pgQuery = sqlStr.replace(/\?/g, () => `$${paramIdx++}`);
-      const rows = await pgSql(pgQuery, params);
+      const rows = await pgSql.query(pgQuery, params);
       return [rows];
     } else if (isMysql) {
       if (useDirectMysqlConnection) {

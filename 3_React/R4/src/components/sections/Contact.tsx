@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaClipboard, FaCheck, FaArrowUp, FaEnvelope, FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaClipboard, FaCheck, FaArrowUp, FaEnvelope } from 'react-icons/fa';
 import { education, profile } from '../../data/portfolio';
 import { theme } from '../../styles/theme';
 
@@ -23,10 +23,14 @@ const ContactSection = styled.section`
 
 const SectionTitle = styled(motion.h2)`
   text-align: center;
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-size: 2rem;
   margin-bottom: ${theme.spacing.lg};
   color: ${theme.colors.light};
   position: relative;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 2.5rem;
+  }
 
   &::after {
     content: '';
@@ -42,7 +46,7 @@ const SectionTitle = styled(motion.h2)`
 `;
 
 const ContactContent = styled(motion.article)`
-  max-width: 760px;
+  width: min(100%, 760px);
   margin: ${theme.spacing.xl} auto 0;
   text-align: center;
   background: ${theme.colors.glass.background};
@@ -58,24 +62,52 @@ const ContactContent = styled(motion.article)`
 `;
 
 const ContactText = styled.p`
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  margin-bottom: ${theme.spacing.lg};
+  max-width: 58ch;
+  margin: 0 auto ${theme.spacing.lg};
+  font-size: 1rem;
   color: var(--color-muted);
   line-height: 1.8;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 1.1rem;
+  }
 `;
 
-const EmailBadge = styled.div`
-  display: inline-flex;
+const EmailBadge = styled.a`
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: ${theme.spacing.sm};
+  width: fit-content;
+  max-width: 100%;
+  min-height: 48px;
+  margin: ${theme.spacing.sm} auto ${theme.spacing.lg};
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid ${theme.colors.glass.border};
-  padding: 0.6rem 1.2rem;
-  border-radius: 12px;
-  margin-top: ${theme.spacing.sm};
-  font-family: monospace;
-  font-size: 1.1rem;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  line-height: 1.35;
   color: ${theme.colors.light};
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  transition: border-color ${theme.transitions.default}, background ${theme.transitions.default};
+
+  &:hover {
+    color: ${theme.colors.light};
+    background: ${theme.colors.glass.card};
+    border-color: ${theme.colors.accent};
+  }
+
+  svg {
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 360px) {
+    gap: 0.45rem;
+    padding-inline: 0.7rem;
+    font-size: 1rem;
+  }
 `;
 
 const ButtonGroup = styled.div`
@@ -83,6 +115,16 @@ const ButtonGroup = styled.div`
   justify-content: center;
   flex-wrap: wrap;
   gap: ${theme.spacing.md};
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: ${theme.spacing.sm};
+
+    > * {
+      width: 100%;
+      min-height: 48px;
+    }
+  }
 `;
 
 const ContactButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
@@ -95,30 +137,11 @@ const ContactButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
   border: 1px solid ${(props) => (props.variant === 'primary' ? 'transparent' : theme.colors.glass.border)};
   border-radius: 999px;
   padding: 0.8rem 1.1rem;
+  min-height: 48px;
   font-weight: 700;
   transition: all ${theme.transitions.default};
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-card);
-  }
-`;
-
-const ContactLink = styled.a<{ variant?: 'primary' | 'secondary' }>`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${theme.spacing.sm};
-  color: ${(props) => (props.variant === 'primary' ? theme.colors.textDark : theme.colors.textLight)};
-  background: ${(props) => (props.variant === 'primary' ? theme.colors.gradient.accent : theme.colors.glass.card)};
-  border: 1px solid ${(props) => (props.variant === 'primary' ? 'transparent' : theme.colors.glass.border)};
-  border-radius: 999px;
-  padding: 0.8rem 1.1rem;
-  font-weight: 700;
-  transition: all ${theme.transitions.default};
-
-  &:hover {
-    color: ${(props) => (props.variant === 'primary' ? theme.colors.textDark : theme.colors.textLight)};
     transform: translateY(-3px);
     box-shadow: var(--shadow-card);
   }
@@ -134,15 +157,11 @@ const StatusText = styled.p`
 const Contact = () => {
   const [copyStatus, setCopyStatus] = useState('');
 
-  const githubUrl = (profile as any).github || 'https://github.com/NachoTorress';
-
   const summary = [
     ...education.map((item) => `${item.title}: ${item.description} ${item.meta ?? ''}`.trim()),
     `Email: ${profile.email}.`,
-    profile.linkedin ? `LinkedIn: ${profile.linkedin}.` : '',
-    `GitHub: ${githubUrl}.`,
     'Intereses: C++, TypeScript, React, Node.js, Python, SQL, Git, Docker, Linux, algoritmos, IA y hardware.',
-  ].filter(Boolean).join(' ');
+  ].join(' ');
 
   const copyEmail = async () => {
     try {
@@ -163,7 +182,7 @@ const Contact = () => {
   };
 
   return (
-    <ContactSection id="contact" role="region" aria-label="Contacto">
+    <ContactSection id="contact" aria-label="Contacto">
       <div className="container">
         <SectionTitle
           initial={{ opacity: 0, y: -20 }}
@@ -179,31 +198,19 @@ const Contact = () => {
           viewport={{ once: true }}
         >
           <ContactText>
-            Podés ponerte en contacto conmigo a través de mi correo electrónico o mis redes profesionales:
-            <br />
-            <EmailBadge>
-              <FaEnvelope aria-hidden="true" />
-              {profile.email}
-            </EmailBadge>
+            Podés ponerte en contacto conmigo a través de mi correo electrónico.
           </ContactText>
+
+          <EmailBadge href={`mailto:${profile.email}`} aria-label={`Enviar correo a ${profile.email}`}>
+            <FaEnvelope aria-hidden="true" />
+            <span>{profile.email}</span>
+          </EmailBadge>
 
           <ButtonGroup>
             <ContactButton type="button" variant="primary" onClick={copyEmail}>
               <FaClipboard aria-hidden="true" />
               Copiar Email
             </ContactButton>
-
-            <ContactLink href={githubUrl} target="_blank" rel="noopener noreferrer" variant="primary">
-              <FaGithub aria-hidden="true" />
-              GitHub
-            </ContactLink>
-
-            {profile.linkedin && (
-              <ContactLink href={profile.linkedin} target="_blank" rel="noopener noreferrer" variant="primary">
-                <FaLinkedin aria-hidden="true" />
-                LinkedIn
-              </ContactLink>
-            )}
 
             <ContactButton type="button" variant="secondary" onClick={copySummary}>
               {copyStatus.includes('Resumen') ? <FaCheck aria-hidden="true" /> : <FaClipboard aria-hidden="true" />}

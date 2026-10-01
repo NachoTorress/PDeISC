@@ -5,9 +5,11 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaBrain, FaCode, FaDocker, FaGitAlt, FaLinux, FaMicrochip, FaNodeJs, FaPlus, FaReact, FaServer, FaTrash, FaEdit } from 'react-icons/fa';
-import { SiCplusplus, SiPython, SiSqlite, SiTypescript } from 'react-icons/si';
+import type { IconType } from 'react-icons';
+import { FaBrain, FaCode, FaDatabase, FaDocker, FaGitAlt, FaLinux, FaMicrochip, FaNodeJs, FaPlus, FaReact, FaServer, FaTrash, FaEdit } from 'react-icons/fa';
+import { SiCplusplus, SiPython, SiTypescript } from 'react-icons/si';
 import { useData } from '../../contexts/DataContext';
+import type { SkillItemData } from '../../contexts/DataContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { ConfirmDeleteCard } from '../common/ConfirmDeleteCard';
 import { AdminCrudModal } from '../admin/AdminCrudModal';
@@ -32,12 +34,16 @@ const HeaderRow = styled.div`
 `;
 
 const SectionTitle = styled(motion.h2)`
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-size: 2rem;
   color: ${theme.colors.light};
   margin: 0;
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 2.5rem;
+  }
 
   svg {
     color: ${theme.colors.accent};
@@ -55,10 +61,18 @@ const SkillsContainer = styled.div`
   }
 `;
 
+const EmptyCategories = styled.p`
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: ${theme.spacing.lg};
+  color: var(--color-muted);
+  text-align: center;
+`;
+
 const SkillCategory = styled(motion.article)`
   background: ${theme.colors.glass.background};
   backdrop-filter: blur(12px);
-  border-radius: 20px;
+  border-radius: 16px;
   padding: ${theme.spacing.lg};
   transition: all ${theme.transitions.default};
   height: 100%;
@@ -81,16 +95,22 @@ const CategoryHeader = styled.div`
   margin-bottom: ${theme.spacing.md};
   padding-bottom: ${theme.spacing.sm};
   border-bottom: 1px solid ${theme.colors.glass.border};
+  flex-wrap: wrap;
+  gap: ${theme.spacing.sm};
 `;
 
 const CategoryTitle = styled.h3`
-  font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+  font-size: 1.2rem;
   color: ${theme.colors.light};
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-weight: 700;
   margin: 0;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 1.4rem;
+  }
 
   svg {
     font-size: 1.4rem;
@@ -104,7 +124,8 @@ const AddSkillBtn = styled.button`
   border: none;
   border-radius: 999px;
   padding: 0.35rem 0.75rem;
-  font-size: 0.78rem;
+  font-size: 0.95rem;
+  min-height: 44px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
@@ -113,32 +134,40 @@ const AddSkillBtn = styled.button`
 `;
 
 const SkillsList = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.65rem;
-  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.35rem 0.5rem;
   width: 100%;
+`;
+
+const EmptySkills = styled.p`
+  width: 100%;
+  margin: 0;
+  padding: ${theme.spacing.sm} 0;
+  color: var(--color-muted);
+  font-style: italic;
 `;
 
 const SkillItem = styled(motion.div)`
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: 0.5rem;
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-weight: 600;
-  padding: 0.75rem 0.9rem;
-  min-height: 52px;
-  border-radius: 12px;
+  padding: 0.55rem 0.6rem;
+  min-height: 44px;
+  max-width: 100%;
+  border-radius: 8px;
   transition: all ${theme.transitions.default};
-  background: ${theme.colors.glass.card};
-  border: 1px solid ${theme.colors.glass.border};
-  overflow: hidden;
+  background: transparent;
+  border: 1px solid transparent;
 
   &:hover {
-    background: ${theme.colors.gradient.glass};
-    transform: translateX(3px);
+    background: ${theme.colors.glass.card};
+    border-color: ${theme.colors.glass.border};
   }
 `;
 
@@ -156,8 +185,9 @@ const SkillLabelGroup = styled.div`
   }
 
   span {
-    word-break: break-word;
-    overflow-wrap: anywhere;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: manual;
     line-height: 1.25;
   }
 `;
@@ -175,20 +205,24 @@ const IconBtn = styled.button<{ danger?: boolean }>`
   border: none;
   cursor: pointer;
   font-size: 0.8rem;
-  padding: 0.15rem;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     color: ${(props) => (props.danger ? '#e63946' : theme.colors.light)};
   }
 `;
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, IconType> = {
   code: FaCode,
   brain: FaBrain,
   cplusplus: SiCplusplus,
   typescript: SiTypescript,
   python: SiPython,
-  sql: SiSqlite,
+  sql: FaDatabase,
   node: FaNodeJs,
   docker: FaDocker,
   git: FaGitAlt,
@@ -204,7 +238,7 @@ const Skills = () => {
   const [deletingId, setDeletingId] = useState<string | number | null>(null);
   const [targetCategory, setTargetCategory] = useState<string | number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingSkill, setEditingSkill] = useState<any>(null);
+  const [editingSkill, setEditingSkill] = useState<SkillItemData | null>(null);
 
   const openAddModal = (catId: string | number) => {
     setEditingSkill(null);
@@ -212,7 +246,7 @@ const Skills = () => {
     setIsModalOpen(true);
   };
 
-  const openEditModal = (skill: any) => {
+  const openEditModal = (skill: SkillItemData) => {
     setEditingSkill(skill);
     setIsModalOpen(true);
   };
@@ -230,8 +264,10 @@ const Skills = () => {
             <FaServer /> Tecnologías e Intereses
           </SectionTitle>
         </HeaderRow>
-        <SkillsContainer role="list">
-          {skillCategories.map((category) => {
+        <SkillsContainer role={skillCategories.length > 0 ? 'list' : 'status'} aria-label="Categorías de habilidades">
+          {skillCategories.length === 0 ? (
+            <EmptyCategories>Todavía no hay categorías de habilidades cargadas.</EmptyCategories>
+          ) : skillCategories.map((category) => {
             const CategoryIcon = iconMap[category.icon] || FaCode;
 
             return (
@@ -253,8 +289,10 @@ const Skills = () => {
                     </AddSkillBtn>
                   )}
                 </CategoryHeader>
-                <SkillsList role="list">
-                  {category.skills.map((skill) => {
+                <SkillsList role={category.skills.length > 0 ? 'list' : 'status'} aria-label={`Habilidades de ${category.title}`}>
+                  {category.skills.length === 0 ? (
+                    <EmptySkills>Todavía no hay habilidades en esta categoría.</EmptySkills>
+                  ) : category.skills.map((skill) => {
                     const SkillIcon = iconMap[skill.icon] || FaCode;
 
                     return (

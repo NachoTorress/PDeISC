@@ -313,7 +313,7 @@ app.post('/api/download/log', async (req, res) => {
 });
 
 if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
-  app.listen(PORT, () => {
+  app.listen(PORT, '127.0.0.1', () => {
     console.log(`[Backend Portfolio] Servidor ejecutándose en el puerto ${PORT}`);
   });
 }

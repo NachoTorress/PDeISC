@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { motion, useMotionValueEvent, useScroll, useSpring } from 'framer-motion';
 import { theme } from '../../styles/theme';
 import { useEffect, useState } from 'react';
 import { FaArrowUp } from 'react-icons/fa';
@@ -12,13 +12,14 @@ const NavContainer = styled(motion.nav)`
   top: 50%;
   transform: translateY(-50%);
   z-index: 1000;
-  background: var(--color-card, #1e293b);
-  padding: 0.6rem 0.4rem;
+  background: ${theme.colors.glass.background};
+  backdrop-filter: blur(12px);
+  padding: 0.35rem;
   border-radius: 999px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  gap: 0.1rem;
+  box-shadow: var(--shadow-card);
   border: 1px solid ${theme.colors.glass.border};
 
   @media print {
@@ -31,19 +32,31 @@ const NavContainer = styled(motion.nav)`
 `;
 
 const NavDot = styled(motion.button)<{ active: boolean }>`
-  width: 10px;
-  height: 10px;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
   border-radius: 50%;
-  background: ${(props) => (props.active ? theme.colors.accent : 'rgba(255, 255, 255, 0.35)')};
+  background: transparent;
   border: none;
   cursor: pointer;
   position: relative;
-  transition: all 0.2s ease;
-  transform: ${(props) => (props.active ? 'scale(1.3)' : 'scale(1)')};
+  transition: background ${theme.transitions.default};
 
-  &:hover {
+  &::after {
+    content: '';
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: ${(props) => (props.active ? theme.colors.accent : theme.colors.secondary)};
+    transition: transform ${theme.transitions.default}, background ${theme.transitions.default};
+  }
+
+  &:hover::after {
     background: ${theme.colors.accent};
-    transform: scale(1.4);
+    transform: scale(1.3);
   }
 
   &:focus-visible {
@@ -57,7 +70,8 @@ const NavDot = styled(motion.button)<{ active: boolean }>`
     right: 20px;
     top: 50%;
     transform: translateY(-50%) translateX(6px);
-    background: var(--color-card, #1e293b);
+    background: ${theme.colors.glass.background};
+    backdrop-filter: blur(12px);
     color: ${theme.colors.light};
     padding: 4px 10px;
     border-radius: 6px;
@@ -123,12 +137,17 @@ const TopButton = styled(motion.button)`
 
 export const FloatingNav = () => {
   const [activeSection, setActiveSection] = useState('hero');
+  const [progress, setProgress] = useState(0);
   const showTopButton = useScrollVisibility(600);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
+  });
+
+  useMotionValueEvent(scrollYProgress, 'change', (value) => {
+    setProgress(Math.round(value * 100));
   });
 
   useEffect(() => {
@@ -143,14 +162,14 @@ export const FloatingNav = () => {
             setActiveSection(id);
             const liveRegion = document.getElementById('section-announcer');
             if (liveRegion) {
-              liveRegion.textContent = `Current section: ${name}`;
+              liveRegion.textContent = `Sección actual: ${name}`;
             }
           }
         }
       });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -175,10 +194,10 @@ export const FloatingNav = () => {
       <ProgressBar 
         style={{ scaleX }} 
         role="progressbar" 
-        aria-label="Reading progress"
+        aria-label="Progreso de lectura"
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-valuenow={Math.round(scrollYProgress.get() * 100)}
+        aria-valuenow={progress}
       />
       <div 
         id="section-announcer" 
@@ -188,21 +207,20 @@ export const FloatingNav = () => {
       />
       <NavContainer
         role="navigation"
-        aria-label="Section navigation"
+        aria-label="Navegación por secciones"
       >
         {navSections.map(({ id, name }) => (
           <NavDot
             key={id}
+          type="button"
             active={activeSection === id}
             onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}
             onKeyDown={(e) => handleKeyDown(e, id)}
             data-tooltip={name}
             tabIndex={0}
-            aria-label={`${name} section ${activeSection === id ? '(current section)' : ''}`}
-            aria-current={activeSection === id ? 'true' : undefined}
-            whileHover={{ scale: 1.2 }}
+            aria-label={`${name}${activeSection === id ? ', sección actual' : ', ir a la sección'}`}
+            aria-current={activeSection === id ? 'location' : undefined}
             whileTap={{ scale: 0.9 }}
-            role="button"
           />
         ))}
       </NavContainer>

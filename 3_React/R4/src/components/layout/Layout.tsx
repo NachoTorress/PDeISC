@@ -12,7 +12,7 @@ import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import { useThemeMode } from '../../hooks/useThemeMode';
 import { useAuth } from '../../contexts/AuthContext';
 import { AdminLoginModal } from '../admin/AdminLoginModal';
-import { navSections } from '../../data/portfolio';
+import { navSections, profile } from '../../data/portfolio';
 
 interface LayoutProps {
   children: ReactNode;
@@ -92,15 +92,18 @@ const Nav = styled.nav`
   }
 `;
 
-const Logo = styled(motion.div)`
+const Logo = styled(motion.a)`
   color: ${theme.colors.light};
   font-family: ${theme.fonts.heading};
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-size: 1.15rem;
   font-weight: 700;
-  letter-spacing: -0.5px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 1.4rem;
+  }
 `;
 
 const NavActions = styled.div`
@@ -110,8 +113,9 @@ const NavActions = styled.div`
 `;
 
 const IconButton = styled.button<{ active?: boolean }>`
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -157,9 +161,10 @@ const NavLinks = styled.div<{ open: boolean }>`
     flex-direction: column;
     gap: 0.5rem;
     padding: 1.25rem 1rem;
-    background: #ffffff;
+    background: ${theme.colors.glass.background};
+    backdrop-filter: blur(16px);
     border-bottom: 2px solid ${theme.colors.accent};
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--shadow-card);
     opacity: ${(props) => (props.open ? 1 : 0)};
     visibility: ${(props) => (props.open ? 'visible' : 'hidden')};
     transform: ${(props) => (props.open ? 'translateY(0)' : 'translateY(-10px)')};
@@ -170,15 +175,15 @@ const NavLinks = styled.div<{ open: boolean }>`
       width: 100%;
       padding: 0.85rem 1rem;
       text-align: center;
-      color: #0f172a !important;
+      color: ${theme.colors.textLight} !important;
       font-weight: 700;
       font-size: 1.05rem;
-      background: #f1f5f9;
+      background: ${theme.colors.glass.card};
       border-radius: 10px;
 
       &:hover, &:focus {
-        background: ${theme.colors.accent};
-        color: #0f172a !important;
+        background: ${theme.colors.gradient.accent};
+        color: ${theme.colors.textDark} !important;
       }
     }
   }
@@ -234,18 +239,18 @@ export const Layout = ({ children }: LayoutProps) => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              role="heading"
-              aria-level={1}
+              href="#hero"
+              aria-label={`${profile.name}, ir al inicio`}
+            title="Ir al inicio"
             >
-              Ignacio Torres
+              {profile.name}
             </Logo>
             <NavActions>
-              <NavLinks open={isMenuOpen} role="list">
+              <NavLinks open={isMenuOpen}>
                 {navSections.slice(1).map((section) => (
                   <a
                     key={section.id}
                     href={`#${section.id}`}
-                    role="listitem"
                     aria-label={`Ir a ${section.name}`}
                     onClick={closeMenu}
                   >
@@ -292,7 +297,7 @@ export const Layout = ({ children }: LayoutProps) => {
       <AdminLoginModal />
       <Footer role="contentinfo">
         <div className="container-fluid">
-          <p style={{ margin: 0, fontSize: '0.9rem' }}>
+          <p style={{ margin: 0, fontSize: '1rem' }}>
             © {new Date().getFullYear()} Portfolio Personal. React, Vite & Node.js.
           </p>
         </div>

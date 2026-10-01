@@ -48,12 +48,18 @@ const globalStyles = css`
   a {
     color: inherit;
     text-decoration: none;
+    text-underline-offset: 0.2em;
   }
 
   a:focus-visible,
   button:focus-visible {
     outline: 3px solid ${theme.colors.accent};
     outline-offset: 3px;
+  }
+
+  ::selection {
+    color: ${theme.colors.textDark};
+    background: ${theme.colors.accent};
   }
 
   button {
@@ -88,12 +94,6 @@ const globalStyles = css`
     margin-inline: auto;
     padding-inline: ${theme.spacing.md};
     position: relative;
-  }
-
-  @media (max-width: ${theme.breakpoints.sm}) {
-    html {
-      font-size: 14px;
-    }
   }
 
   @media print {

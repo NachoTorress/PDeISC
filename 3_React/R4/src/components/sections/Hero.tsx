@@ -4,8 +4,8 @@
  */
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
-import { FaArrowDown, FaCode, FaDocker, FaGitAlt, FaLinux, FaNodeJs, FaReact, FaServer } from 'react-icons/fa';
-import { SiCplusplus, SiPython, SiSqlite, SiTypescript } from 'react-icons/si';
+import { FaArrowDown, FaDatabase, FaDocker, FaGitAlt, FaLinux, FaNodeJs, FaReact, FaServer } from 'react-icons/fa';
+import { SiCplusplus, SiPython, SiTypescript } from 'react-icons/si';
 import { profile } from '../../data/portfolio';
 import { theme } from '../../styles/theme';
 
@@ -44,51 +44,45 @@ const fadeUpKeyframes = keyframes`
   }
 `;
 
-const Eyebrow = styled.div`
-  animation: ${fadeUpKeyframes} 0.5s ease-out forwards;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: ${theme.colors.accent};
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
-  margin-bottom: ${theme.spacing.md};
-  background: ${theme.colors.glass.card};
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  border: 1px solid ${theme.colors.glass.border};
-`;
-
 const Title = styled.h1`
   animation: ${fadeUpKeyframes} 0.5s ease-out 0.1s forwards;
   opacity: 0;
-  font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+  font-size: 2.5rem;
   margin-bottom: ${theme.spacing.sm};
   color: ${theme.colors.light};
   line-height: 1.1;
   font-weight: 800;
-  letter-spacing: -1px;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 4.25rem;
+  }
 `;
 
 const Subtitle = styled.h2`
   animation: ${fadeUpKeyframes} 0.5s ease-out 0.2s forwards;
   opacity: 0;
-  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-size: 1.2rem;
   margin-bottom: ${theme.spacing.md};
   color: ${theme.colors.accent};
   font-weight: 600;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 1.8rem;
+  }
 `;
 
 const Description = styled.p`
   animation: ${fadeUpKeyframes} 0.5s ease-out 0.35s forwards;
   opacity: 0;
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-size: 1rem;
   max-width: 820px;
   margin-bottom: ${theme.spacing.lg};
   color: var(--color-muted);
   line-height: 1.7;
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    font-size: 1.15rem;
+  }
 `;
 
 const TechBadges = styled.div`
@@ -124,6 +118,15 @@ const ActionGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${theme.spacing.md};
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+
+    > button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 `;
 
 const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
@@ -131,6 +134,7 @@ const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
   align-items: center;
   gap: ${theme.spacing.sm};
   padding: 0.8rem 1.4rem;
+  min-height: 48px;
   border-radius: 999px;
   font-weight: 700;
   font-size: 0.95rem;
@@ -147,7 +151,7 @@ const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
 `;
 
 const scrollToSection = (sectionId: string) => {
-  document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+  document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 export const Hero = () => {
@@ -155,10 +159,7 @@ export const Hero = () => {
     <HeroSection id="hero" role="region" aria-label="Inicio">
       <div className="container-fluid px-3 px-md-4">
         <HeroContent>
-          <Eyebrow>
-            <FaCode /> Portfolio Personal
-          </Eyebrow>
-          <Title>Desarrollo Web, Algoritmos & IA</Title>
+          <Title>{profile.name}</Title>
           <Subtitle>{profile.headline}</Subtitle>
           <Description>{profile.summary}</Description>
 
@@ -168,7 +169,7 @@ export const Hero = () => {
             <Badge><FaReact /> React</Badge>
             <Badge><FaNodeJs /> Node.js</Badge>
             <Badge><SiPython /> Python</Badge>
-            <Badge><SiSqlite /> SQL</Badge>
+            <Badge><FaDatabase /> SQL</Badge>
             <Badge><FaDocker /> Docker</Badge>
             <Badge><FaGitAlt /> Git</Badge>
             <Badge><FaLinux /> Linux</Badge>
