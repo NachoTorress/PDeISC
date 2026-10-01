@@ -1,1 +1,16 @@
-{ "expo": { "name": "hola-mundo-expo", "slug": "hola-mundo-expo", "version": "1.0.0", "orientation": "portrait", "userInterfaceStyle": "automatic" } }
+{
+	"expo": {
+		"name": "hola-mundo-expo",
+		"slug": "hola-mundo-expo",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"userInterfaceStyle": "automatic",
+		"icon": "./assets/icon.png",
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/icon.png",
+				"backgroundColor": "#F5B700"
+			}
+		}
+	}
+}
