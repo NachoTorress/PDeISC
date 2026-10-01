@@ -107,6 +107,32 @@ app.post('/api/skills', async (req, res) => {
   }
 });
 
+app.put('/api/skills/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, icon } = req.body;
+    if (!name) {
+      return res.status(400).json({ success: false, message: 'El nombre es requerido' });
+    }
+
+    if (isMysql) {
+      await sqlClient.query(
+        'UPDATE skills SET name = ?, icon = ? WHERE id = ?',
+        [name, icon || 'code', id]
+      );
+      const [rows] = await sqlClient.query('SELECT * FROM skills WHERE id = ?', [id]);
+      if (!rows[0]) {
+        return res.status(404).json({ success: false, message: 'Habilidad no encontrada' });
+      }
+      return res.json(rows[0]);
+    }
+
+    return res.status(503).json({ success: false, message: 'La base local no está disponible en este despliegue' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 app.delete('/api/skills/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -170,6 +196,34 @@ app.post('/api/projects', async (req, res) => {
   }
 });
 
+app.put('/api/projects/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, accent, github_url, githubUrl, tags } = req.body;
+    if (!title || !description || !accent) {
+      return res.status(400).json({ success: false, message: 'Campos requeridos faltantes' });
+    }
+    const tagsStr = Array.isArray(tags) ? tags.join(',') : tags || '';
+
+    if (isMysql) {
+      await sqlClient.query(
+        'UPDATE projects SET title = ?, description = ?, accent = ?, github_url = ?, tags = ? WHERE id = ?',
+        [title, description, accent, github_url || githubUrl || null, tagsStr, id]
+      );
+      const [rows] = await sqlClient.query('SELECT * FROM projects WHERE id = ?', [id]);
+      if (!rows[0]) {
+        return res.status(404).json({ success: false, message: 'Proyecto no encontrado' });
+      }
+      const updated = rows[0];
+      return res.json({ ...updated, githubUrl: updated.github_url, tags: updated.tags ? updated.tags.split(',') : [] });
+    }
+
+    return res.status(503).json({ success: false, message: 'La base local no está disponible en este despliegue' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 app.delete('/api/projects/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -224,6 +278,32 @@ app.post('/api/experiences', async (req, res) => {
   }
 });
 
+app.put('/api/experiences/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { type, title, description, meta } = req.body;
+    if (!type || !title || !description) {
+      return res.status(400).json({ success: false, message: 'Campos requeridos faltantes' });
+    }
+
+    if (isMysql) {
+      await sqlClient.query(
+        'UPDATE experiences SET type = ?, title = ?, description = ?, meta = ? WHERE id = ?',
+        [type, title, description, meta || '', id]
+      );
+      const [rows] = await sqlClient.query('SELECT * FROM experiences WHERE id = ?', [id]);
+      if (!rows[0]) {
+        return res.status(404).json({ success: false, message: 'Formación o experiencia no encontrada' });
+      }
+      return res.json(rows[0]);
+    }
+
+    return res.status(503).json({ success: false, message: 'La base local no está disponible en este despliegue' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 app.delete('/api/experiences/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -273,6 +353,32 @@ app.post('/api/achievements', async (req, res) => {
       const created = db.prepare('SELECT * FROM achievements WHERE id = ?').get(info.lastInsertRowid);
       return res.status(201).json(created);
     }
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+app.put('/api/achievements/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description } = req.body;
+    if (!title || !description) {
+      return res.status(400).json({ success: false, message: 'Campos requeridos faltantes' });
+    }
+
+    if (isMysql) {
+      await sqlClient.query(
+        'UPDATE achievements SET title = ?, description = ? WHERE id = ?',
+        [title, description, id]
+      );
+      const [rows] = await sqlClient.query('SELECT * FROM achievements WHERE id = ?', [id]);
+      if (!rows[0]) {
+        return res.status(404).json({ success: false, message: 'Participación no encontrada' });
+      }
+      return res.json(rows[0]);
+    }
+
+    return res.status(503).json({ success: false, message: 'La base local no está disponible en este despliegue' });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
   }
