@@ -3,6 +3,7 @@ import { pool, transaction } from './db.js';
 import { config } from './config.js';
 import { digest, pkceChallenge, randomToken } from './security.js';
 import { findByEmail, session } from './users.js';
+import { errorFields, logger } from './logger.js';
 
 export const oauth = Router();
 const route = (handler) => (req, res, next) => Promise.resolve(handler(req, res)).catch(next);
@@ -33,10 +34,25 @@ const client = (provider) => ({
   secret: process.env[`${provider.toUpperCase()}_CLIENT_SECRET`]
 });
 
+function authorizationUrl(provider, clientId, state, verifier) {
+  const url = new URL(providers[provider].authorize);
+  url.searchParams.set('client_id', clientId);
+  url.searchParams.set('redirect_uri', callbackUrl(provider));
+  url.searchParams.set('response_type', 'code');
+  url.searchParams.set('scope', providers[provider].scope);
+  url.searchParams.set('state', state);
+  url.searchParams.set('code_challenge', pkceChallenge(verifier));
+  url.searchParams.set('code_challenge_method', 'S256');
+  if (provider === 'google') url.searchParams.set('prompt', 'select_account');
+  return url.toString();
+}
+
 async function fetchJson(url, options) {
   const response = await fetch(url, options);
   const value = await response.json();
-  if (!response.ok || value.error) throw new Error('El proveedor no pudo completar el acceso');
+  if (!response.ok || value.error) {
+    throw Object.assign(new Error('El proveedor no pudo completar el acceso'), { providerStatus: response.status });
+  }
   return value;
 }
 
@@ -88,34 +104,76 @@ oauth.get('/:provider/start', route(async (req, res) => {
   const provider = req.params.provider;
   if (!Object.hasOwn(providers, provider)) return res.status(404).end();
   const target = req.query.target === 'web' ? 'web' : 'native';
+  if (target === 'web' && !config.webBaseUrl) return res.status(503).send('Configurá WEB_BASE_URL para usar OAuth desde la web.');
   const credentials = client(provider);
   if (!credentials.id || !credentials.secret) return res.status(503).send('Proveedor sin configurar');
   const state = randomToken();
   const verifier = randomToken();
   await pool.execute('INSERT INTO oauth_states (state_hash, provider, return_target, code_verifier, expires_at) VALUES (?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))', [digest(state), provider, target, verifier]);
-  const url = new URL(providers[provider].authorize);
-  url.searchParams.set('client_id', credentials.id);
-  url.searchParams.set('redirect_uri', callbackUrl(provider));
-  url.searchParams.set('response_type', 'code');
-  url.searchParams.set('scope', providers[provider].scope);
-  url.searchParams.set('state', state);
-  url.searchParams.set('code_challenge', pkceChallenge(verifier));
-  url.searchParams.set('code_challenge_method', 'S256');
-  if (provider === 'google') url.searchParams.set('prompt', 'select_account');
-  res.redirect(url.toString());
+  logger.info('oauth.started', { requestId: req.requestId, provider, target });
+  res.redirect(authorizationUrl(provider, credentials.id, state, verifier));
+}));
+
+// Expo Go no registra el esquema de esta app. El navegador vuelve a la API y
+// la app consulta el resultado con un secreto que nunca se incluye en la URL OAuth.
+oauth.post('/:provider/device-start', route(async (req, res) => {
+  const provider = req.params.provider;
+  if (!Object.hasOwn(providers, provider)) return res.status(404).end();
+  const credentials = client(provider);
+  if (!credentials.id || !credentials.secret) return res.status(503).json({ error: 'Proveedor sin configurar' });
+  const state = randomToken();
+  const verifier = randomToken();
+  const pollToken = randomToken();
+  const stateHash = digest(state);
+  await transaction(async (db) => {
+    await db.execute('DELETE FROM oauth_device_flows WHERE expires_at <= NOW()');
+    await db.execute('DELETE FROM oauth_states WHERE expires_at <= NOW()');
+    await db.execute('INSERT INTO oauth_states (state_hash, provider, return_target, code_verifier, expires_at) VALUES (?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))', [stateHash, provider, 'native', verifier]);
+    await db.execute('INSERT INTO oauth_device_flows (state_hash, poll_token_hash, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 15 MINUTE))', [stateHash, digest(pollToken)]);
+  });
+  logger.info('oauth.started', { requestId: req.requestId, provider, target: 'expo-go' });
+  res.set('Cache-Control', 'no-store').json({ url: authorizationUrl(provider, credentials.id, state, verifier), pollToken });
+}));
+
+oauth.post('/device-poll', route(async (req, res) => {
+  const pollToken = req.body?.pollToken;
+  if (typeof pollToken !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(pollToken)) {
+    return res.status(422).json({ error: 'Solicitud inválida' });
+  }
+  const result = await transaction(async (db) => {
+    const [flows] = await db.execute('SELECT state_hash, user_id, error_message FROM oauth_device_flows WHERE poll_token_hash = ? AND expires_at > NOW() FOR UPDATE', [digest(pollToken)]);
+    const flow = flows[0];
+    if (!flow) return { status: 'expired' };
+    if (!flow.user_id && !flow.error_message) return { status: 'pending' };
+    await db.execute('DELETE FROM oauth_device_flows WHERE state_hash = ?', [flow.state_hash]);
+    if (flow.error_message) return { status: 'error', error: flow.error_message };
+    const [users] = await db.execute('SELECT * FROM users WHERE id = ?', [flow.user_id]);
+    return users[0] ? { status: 'complete', user: users[0] } : { status: 'expired' };
+  });
+  res.set('Cache-Control', 'no-store');
+  if (result.status === 'expired') return res.status(410).json({ error: 'El acceso venció. Volvé a intentarlo.' });
+  if (result.status === 'error') return res.status(400).json({ error: result.error });
+  if (result.status === 'pending') return res.json({ status: 'pending' });
+  logger.info('oauth.session_issued', { requestId: req.requestId, target: 'expo-go' });
+  res.json({ status: 'complete', session: await session(result.user) });
 }));
 
 oauth.get('/:provider/callback', async (req, res) => {
   const provider = req.params.provider;
   if (!Object.hasOwn(providers, provider)) return res.status(404).end();
   let target = 'native';
+  let deviceFlow = false;
   try {
     if (!req.query.state) throw new Error('Acceso cancelado o inválido');
     const stateHash = digest(String(req.query.state));
     const [states] = await pool.execute('SELECT * FROM oauth_states WHERE state_hash = ? AND provider = ? AND expires_at > NOW()', [stateHash, provider]);
     if (!states[0]) throw new Error('La autorización venció. Intentá de nuevo.');
     target = states[0].return_target;
-    await pool.execute('DELETE FROM oauth_states WHERE state_hash = ?', [stateHash]);
+    if (target === 'web' && !config.webBaseUrl) return res.status(503).send('Configurá WEB_BASE_URL para usar OAuth desde la web.');
+    const [flows] = await pool.execute('SELECT state_hash FROM oauth_device_flows WHERE state_hash = ? AND expires_at > NOW()', [stateHash]);
+    deviceFlow = Boolean(flows[0]);
+    const [deleted] = await pool.execute('DELETE FROM oauth_states WHERE state_hash = ?', [stateHash]);
+    if (deleted.affectedRows !== 1) throw new Error('La autorización ya fue utilizada.');
     if (req.query.error || !req.query.code) throw new Error('Acceso cancelado o inválido');
     const credentials = client(provider);
     const body = new URLSearchParams({
@@ -128,10 +186,26 @@ oauth.get('/:provider/callback', async (req, res) => {
     });
     if (!tokens.access_token) throw new Error('No se recibió acceso del proveedor');
     const user = await linkIdentity(provider, await identity(provider, tokens.access_token));
+    if (deviceFlow) {
+      await pool.execute('UPDATE oauth_device_flows SET user_id = ? WHERE state_hash = ? AND expires_at > NOW()', [user.id, stateHash]);
+      logger.info('oauth.callback.succeeded', { requestId: req.requestId, provider, target: 'expo-go' });
+      return res.set('Cache-Control', 'no-store').type('text/plain').send('Acceso completado. Volvé a Expo Go para continuar.');
+    }
     const ticket = randomToken();
     await pool.execute('INSERT INTO login_tickets (ticket_hash, user_id, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 2 MINUTE))', [digest(ticket), user.id]);
+    logger.info('oauth.callback.succeeded', { requestId: req.requestId, provider, target });
     res.redirect(appLink({ ticket }, target));
   } catch (error) {
+    logger.warn('oauth.callback.failed', { requestId: req.requestId, provider, target: deviceFlow ? 'expo-go' : target, ...errorFields(error) });
+    if (deviceFlow) {
+      const message = String(error.message || 'No se pudo iniciar sesión').slice(0, 255);
+      try {
+        await pool.execute('UPDATE oauth_device_flows SET error_message = ? WHERE state_hash = ?', [message, digest(String(req.query.state))]);
+      } catch (failure) {
+        logger.error('oauth.flow_update_failed', { requestId: req.requestId, provider, ...errorFields(failure) });
+      }
+      return res.set('Cache-Control', 'no-store').type('text/plain').send('No se pudo completar el acceso. Volvé a Expo Go e intentá de nuevo.');
+    }
     res.redirect(appLink({ error: error.message || 'No se pudo iniciar sesión' }, target));
   }
 });

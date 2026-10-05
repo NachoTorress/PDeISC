@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Text, useWindowDimensions, View } from 'react-native';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { ActionButton } from '../components/ActionButton';
 import { AuthHero } from '../components/AuthHero';
+import { ProviderLogo, providerLabel } from '../components/ProviderLogo';
 import type { Palette } from '../styles/theme';
 import { stylesFor } from '../styles/theme';
 import type { User } from '../types';
@@ -28,10 +28,10 @@ export function WelcomePage({ user, onLogout, palette }: { user: User; onLogout:
       <View style={s.linkedProviderRow}>
         {(['google', 'discord', 'github'] as const).map((provider) => {
           const linked = user.linkedProviders?.includes(provider) ?? false;
-          const label = provider === 'github' ? 'GitHub' : provider === 'google' ? 'Google' : 'Discord';
+          const label = providerLabel[provider];
           return <View key={provider} style={[s.linkedProvider, linked ? s.linkedProviderActive : undefined]}
             accessibilityLabel={`${label}: ${linked ? 'vinculada' : 'sin vincular'}`}>
-            <FontAwesome5 name={provider} brand size={19} color={linked ? palette.accent : palette.muted} />
+            <ProviderLogo provider={provider} palette={palette} size={19} />
             <Text style={s.linkedProviderName}>{label}</Text>
             <Text style={[s.linkedProviderState, linked ? { color: palette.accent } : undefined]}>{linked ? 'Vinculada' : 'Sin vincular'}</Text>
           </View>;

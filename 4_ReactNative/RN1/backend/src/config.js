@@ -6,11 +6,13 @@ const required = (name) => {
   return value;
 };
 
+const baseUrl = required('APP_BASE_URL').replace(/\/$/, '');
+
 export const config = {
   port: Number(process.env.PORT || 4000),
-  baseUrl: required('APP_BASE_URL').replace(/\/$/, ''),
+  baseUrl,
   scheme: process.env.FRONTEND_SCHEME || 'accesoexpo',
-  webBaseUrl: (process.env.WEB_BASE_URL || 'http://localhost:8084').replace(/\/$/, ''),
+  webBaseUrl: (process.env.WEB_BASE_URL || '').trim().replace(/\/+$/, ''),
   jwtSecret: required('JWT_SECRET'),
   hmacSecret: required('TOKEN_HMAC_SECRET'),
   mysql: {

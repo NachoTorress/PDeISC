@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS oauth_identities (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   user_id BIGINT UNSIGNED NOT NULL,
   provider ENUM('google','discord','github') NOT NULL,
-  return_target ENUM('native','web') NOT NULL DEFAULT 'native',
   provider_user_id VARCHAR(255) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_provider_identity (provider, provider_user_id),
@@ -69,8 +68,19 @@ CREATE TABLE IF NOT EXISTS verification_codes (
 CREATE TABLE IF NOT EXISTS oauth_states (
   state_hash CHAR(64) PRIMARY KEY,
   provider ENUM('google','discord','github') NOT NULL,
+  return_target ENUM('native','web') NOT NULL DEFAULT 'native',
   code_verifier VARCHAR(128) NOT NULL,
   expires_at DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS oauth_device_flows (
+  state_hash CHAR(64) PRIMARY KEY,
+  poll_token_hash CHAR(64) NOT NULL UNIQUE,
+  user_id BIGINT UNSIGNED NULL,
+  error_message VARCHAR(255) NULL,
+  expires_at DATETIME NOT NULL,
+  INDEX idx_device_flow_expiry (expires_at),
+  CONSTRAINT fk_device_flow_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS login_tickets (

@@ -3,7 +3,7 @@
     "name": "Acceso",
     "slug": "acceso-expo",
     "scheme": "accesoexpo",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "platforms": ["ios", "android", "web"],
     "web": { "bundler": "metro", "name": "Acceso" },

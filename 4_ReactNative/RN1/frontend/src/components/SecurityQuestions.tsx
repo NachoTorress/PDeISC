@@ -23,13 +23,15 @@ export function SecurityQuestions({ answers, onChange, palette }: {
       <View style={s.chipRow}>{questions.map((question) => {
         const selected = item.questionId === question.id;
         const unavailable = answers.some((answer, position) => position !== index && answer.questionId === question.id);
-        return <Pressable key={question.id} accessibilityRole="button" accessibilityState={{ selected, disabled: unavailable }}
+        return <Pressable key={question.id} accessibilityRole="button" accessibilityLabel={`Pregunta ${index + 1}: ${question.prompt}`}
+          accessibilityState={{ selected, disabled: unavailable }}
           disabled={unavailable} onPress={() => onChange(answers.map((answer, position) => position === index ? { ...answer, questionId: question.id } : answer))}
-          style={[s.chip, selected ? s.chipSelected : undefined, unavailable ? { opacity: 0.4 } : undefined]}>
+          style={({ pressed }) => [s.chip, selected ? s.chipSelected : undefined, unavailable ? { opacity: 0.5 } : undefined,
+            pressed ? { opacity: 0.7 } : undefined]}>
           <Text style={s.chipText}>{question.prompt}</Text>
         </Pressable>;
       })}</View>
-      <Field label={`Respuesta ${index + 1}`} value={item.answer} palette={palette}
+      <Field label={`Respuesta ${index + 1}`} value={item.answer} palette={palette} autoComplete="off"
         onChange={(value) => onChange(answers.map((answer, position) => position === index ? { ...answer, answer: value } : answer))}
         validate={(value) => value.trim().length < 2 ? 'Ingresá al menos dos caracteres.' : ''} />
     </View>)}
