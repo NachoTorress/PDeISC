@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { pool, transaction } from './db.js';
 import { createCode, consumeCode, deliverCode } from './codes.js';
-import { comparePassword, hashPassword, verifyJwt } from './security.js';
+import { comparePassword, digest, hashPassword, verifyJwt } from './security.js';
 import { checkAnswers, findByEmail, getLinkedProviders, saveAnswers, session, publicUser } from './users.js';
 import { codeSchema, credentialSchema, email, loginSchema, parse, registerSchema, resetSchema } from './validation.js';
 
@@ -39,7 +39,7 @@ localAuth.post('/verify-email', route(async (req, res) => {
 
 localAuth.post('/login', route(async (req, res) => {
   const data = parse(loginSchema, req.body);
-  const [matches] = await pool.execute('SELECT * FROM users WHERE email = ? OR username = ? LIMIT 1', [data.identifier.toLowerCase(), data.identifier.toLowerCase()]);
+  const [matches] = await pool.execute('SELECT * FROM users WHERE email = ? LIMIT 1', [data.identifier]);
   const user = matches[0];
   if (!user || !user.password_hash || !(await comparePassword(data.password, user.password_hash))) {
     throw Object.assign(new Error('Correo o contraseña incorrectos.'), { status: 401 });
@@ -98,6 +98,8 @@ localAuth.post('/me', route(async (req, res) => {
   if (!token) throw Object.assign(new Error('Sesión inválida'), { status: 401 });
   const payload = verifyJwt(token);
   const [rows] = await pool.execute('SELECT * FROM users WHERE id = ?', [payload.sub]);
-  if (!rows[0]) throw Object.assign(new Error('Sesión inválida'), { status: 401 });
+  if (!rows[0] || payload.credential !== digest(rows[0].password_hash || '')) {
+    throw Object.assign(new Error('Sesión inválida'), { status: 401 });
+  }
   res.json({ user: publicUser(rows[0], await getLinkedProviders(rows[0].id)) });
 }));

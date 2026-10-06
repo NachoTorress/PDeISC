@@ -90,8 +90,7 @@ CREATE TABLE IF NOT EXISTS login_tickets (
   CONSTRAINT fk_ticket_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Acceso inicial: usuario nacho / contraseña nacho87.
--- Se almacena un hash bcrypt; cambiá la contraseña y el correo al desplegar.
+-- Cuenta administradora inicial. Definí su contraseña localmente con CAMBIAR_CLAVE_ADMIN.bat.
 INSERT INTO users (role_id, email, username, display_name, password_hash, email_verified_at)
-VALUES (1, 'nacho@admin.local', 'nacho', 'nacho', '$2a$12$QBiy2R/YWjAZEhDOXpSIWOLV6HswYI.eKeFlxbwPaVd3iid6G/iY2', NOW())
-ON DUPLICATE KEY UPDATE role_id = 1, username = 'nacho';
+VALUES (1, 'nacho@admin.local', NULL, 'nacho', NULL, NOW())
+ON DUPLICATE KEY UPDATE role_id = 1, username = NULL;

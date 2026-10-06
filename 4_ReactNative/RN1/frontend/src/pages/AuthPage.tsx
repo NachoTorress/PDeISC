@@ -37,7 +37,7 @@ export function AuthPage({ route, go, onSession, onOAuth, oauthBusy, palette }: 
 
   const clearSecrets = () => { setPassword(''); setConfirm(''); setCode(''); setAnswers(blankAnswers()); };
   const navigate = (next: Route) => { action.setError(''); setNotice(''); clearSecrets(); go(next); };
-  const loginValid = (!emailError(email) || email.trim().toLowerCase() === 'nacho') && password.length > 0;
+  const loginValid = !emailError(email) && password.length > 0;
   const passwordFormValid = !emailError(email) && !passwordError(password) && password === confirm && answersValid(answers);
   const title = {
     login: 'Iniciá sesión', register: 'Creá tu cuenta', verify: 'Verificá tu correo',
@@ -81,9 +81,8 @@ export function AuthPage({ route, go, onSession, onOAuth, oauthBusy, palette }: 
     if (result) { setCode(''); setNotice(result.message); if (next) go(next); }
   }
 
-  const emailField = <Field label={route === 'login' ? 'Correo electrónico o usuario' : 'Correo electrónico'} value={email} onChange={setEmail}
-    validate={route === 'login' ? (value) => value.trim().toLowerCase() === 'nacho' ? '' : emailError(value) : emailError}
-    keyboard={route === 'login' ? 'default' : 'email-address'} autoComplete={route === 'login' ? 'username' : 'email'} palette={palette} />;
+  const emailField = <Field label="Correo electrónico" value={email} onChange={setEmail}
+    validate={emailError} keyboard="email-address" autoComplete="email" palette={palette} />;
   const passwordField = route !== 'verify' ? <Field label={route === 'login' ? 'Contraseña' : 'Nueva contraseña'} value={password} onChange={setPassword}
     validate={route === 'login' ? (value) => value ? '' : 'Ingresá tu contraseña.' : passwordError} secret
     autoComplete={route === 'login' ? 'current-password' : 'new-password'} palette={palette} /> : null;

@@ -16,7 +16,7 @@ Aplicación React Native y Web con TypeScript y API Node.js/MySQL. La pantalla d
 
 En esta computadora ya están instaladas las dependencias y configurados los `.env` locales. Estos pasos sirven si se mueve el proyecto o se vuelve a configurar desde cero.
 
-1. Ejecutá `backend/sql/schema.sql` en MySQL. Crea la base y el administrador `nacho` con contraseña `nacho87` (hash bcrypt). Cambiá esa clave y el correo del administrador antes de usarlo fuera de desarrollo.
+1. Ejecutá `backend/sql/schema.sql` en MySQL. Crea la base y la cuenta administradora `nacho@admin.local` sin contraseña inicial. Definila desde esta computadora con `CAMBIAR_CLAVE_ADMIN.bat`. El acceso local acepta solo direcciones de correo.
    Si ya habías creado la base con la versión anterior, ejecutá las migraciones que te falten: `backend/sql/migration_web.sql` para el retorno web y `backend/sql/migration_expo_go.sql` para Expo Go. Cada una se aplica una sola vez.
 2. Copiá `backend/.env.example` a `backend/.env`. Asigná secretos aleatorios distintos de al menos 32 caracteres a `JWT_SECRET` y `TOKEN_HMAC_SECRET`; por ejemplo, generá cada uno con `node --input-type=module -e "import { randomBytes } from 'node:crypto'; console.log(randomBytes(32).toString('hex'))"`. Completá MySQL, SMTP y OAuth. En la configuración local actual faltan SMTP y Discord.
 3. En Google, Discord y GitHub registrá el callback HTTPS de cada proveedor: `APP_BASE_URL/auth/oauth/google/callback`, `APP_BASE_URL/auth/oauth/discord/callback` y `APP_BASE_URL/auth/oauth/github/callback`. Los secretos OAuth quedan solo en el backend.
@@ -102,7 +102,7 @@ Abrí `http://localhost:8084` en el navegador. `frontend/src/services/tokenStore
 
 `backend/src/localAuth.js` procesa credenciales y códigos; `oauth.js` intercambia códigos OAuth en el servidor y guarda temporalmente el resultado que consulta Expo Go. `users.js`, `codes.js`, `security.js` y `db.js` separan persistencia y seguridad. La base se organiza en usuarios, roles, identidades OAuth, preguntas, respuestas y códigos; las contraseñas y respuestas usan bcrypt. Las conexiones de transacciones se liberan en `finally`; las consultas comunes usan el pool. En una base ya existente, ejecutá una sola vez `backend/sql/migration_expo_go.sql`.
 
-Para producción, configurá alojamiento permanente para la API y MySQL, HTTPS, un SMTP real, limitación de solicitudes a nivel proxy, respaldos de MySQL y secretos fuera del repositorio. También cambiá la contraseña y el correo iniciales de `nacho`.
+Para producción, configurá alojamiento permanente para la API y MySQL, HTTPS, un SMTP real, limitación de solicitudes a nivel proxy, respaldos de MySQL y secretos fuera del repositorio. También cambiá el correo administrador `nacho@admin.local` por uno propio.
 
 ## Logs del backend
 
