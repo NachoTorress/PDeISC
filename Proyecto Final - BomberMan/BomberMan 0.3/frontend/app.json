@@ -1,0 +1,22 @@
+{
+    "expo":  {
+                 "name":  "BomberMan Académico",
+                 "slug":  "bomberman-academico",
+                 "scheme":  "bombermanacademico",
+                 "version":  "0.3.0",
+                 "orientation":  "landscape",
+                 "userInterfaceStyle":  "automatic",
+                 "platforms":  [
+                                   "android",
+                                   "web"
+                               ],
+                 "android":  {
+                                 "package":  "com.proyectofinal.bomberman",
+                                 "versionCode":  3
+                             },
+                 "web":  {
+                             "name":  "BomberMan Académico",
+                             "shortName":  "BomberMan"
+                         }
+             }
+}

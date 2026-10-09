@@ -1,0 +1,32 @@
+{
+    "name":  "bomberman-academico",
+    "version":  "0.2.0",
+    "private":  true,
+    "main":  "index.js",
+    "scripts":  {
+                    "start":  "expo start",
+                    "tunnel":  "expo start --tunnel",
+                    "web":  "expo start --web",
+                    "export:web":  "expo export --platform web",
+                    "export:android":  "expo export --platform android",
+                    "lint":  "eslint .",
+                    "typecheck":  "tsc --noEmit",
+                    "test:engine":  "node --experimental-strip-types --test src/game/engine.test.mjs"
+                },
+    "dependencies":  {
+                         "expo":  "~57.0.27",
+                         "react":  "19.2.3",
+                         "react-dom":  "19.2.3",
+                         "react-native":  "0.86.3",
+                         "react-native-web":  "~0.21.0",
+                         "expo-status-bar":  "~57.0.1"
+                     },
+    "devDependencies":  {
+                            "@expo/ngrok":  "^4.1.0",
+                            "@types/react":  "~19.2.2",
+                            "@types/react-dom":  "~19.2.0",
+                            "eslint":  "^9.0.0",
+                            "eslint-config-expo":  "~57.0.2",
+                            "typescript":  "~6.0.3"
+                        }
+}
