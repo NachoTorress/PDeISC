@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "ExpoTec",
+    "slug": "expotec-organizacion",
+    "version": "0.2.0",
+    "orientation": "default",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "ar.edu.expotec.organizacion",
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "web": { "bundler": "metro", "output": "single", "name": "ExpoTec" },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Elegí una imagen referencial para tu proyecto de ExpoTec.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      "expo-video"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "expotec-native",
+  "version": "0.2.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "tsx --test src/lib/*.test.ts",
+    "export:android": "expo export --platform android --output-dir dist-android",
+    "export:web": "expo export --platform web --output-dir dist",
+    "preview": "node scripts/preview.mjs"
+  },
+  "dependencies": {
+    "expo": "57.0.28",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "expo-status-bar": "~57.0.1",
+    "@expo/metro-runtime": "~57.0.16",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-navigation/native": "^7.1.0",
+    "@react-navigation/native-stack": "^7.3.0",
+    "@react-navigation/bottom-tabs": "^7.4.0",
+    "expo-crypto": "~57.0.4",
+    "expo-image-picker": "~57.0.20",
+    "expo-video": "~57.0.5",
+    "expo-file-system": "~57.0.7",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-svg": "15.15.4",
+    "react-dom": "19.2.3",
+    "react-native-web": "~0.21.0"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "@types/react": "~19.2.2",
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "eslint": "^9.39.0",
+    "typescript-eslint": "^8.46.0"
+  }
+}

@@ -1,0 +1,15 @@
+node_modules/
+.npm-cache/
+*.tsbuildinfo
+dist/
+.env
+.env.local
+.env.*
+!.env.example
+!.env.setup.example
+.vercel/
+*.log
+.impeccable/review/
+.expo/
+.install-interrupted/
+dist-android/

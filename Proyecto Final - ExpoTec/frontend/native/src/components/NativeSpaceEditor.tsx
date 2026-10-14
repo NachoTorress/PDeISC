@@ -1,0 +1,146 @@
+import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { useDemo } from "../hooks/useDemo";
+import { useTheme } from "../contexts/ThemeContext";
+import type { Furniture, Space } from "../lib/types";
+import { Button, Card, Field, InlineConfirm } from "./ui";
+
+/** Edita el borrador del espacio. El plano guarda los cambios cuando administración confirma. */
+export default function NativeSpaceEditor({
+  space,
+  selected,
+  onChange,
+  onSelect,
+}: {
+  space: Space;
+  selected: string | null;
+  onChange: (space: Space) => void;
+  onSelect: (id: string | null) => void;
+}) {
+  const { state } = useDemo();
+  const { colors } = useTheme();
+  const [confirm, setConfirm] = useState<string | null>(null);
+  const current = space.furniture.find((item) => item.id === selected);
+  const used =
+    current &&
+    state.projects.some(
+      (project) =>
+        project.spaceId === space.id && project.furnitureId === current.id,
+    );
+  const labelError =
+    current?.type === "label" && (current.text?.trim().length ?? 0) < 2
+      ? "Escribí al menos 2 caracteres para identificar la zona."
+      : "";
+  function update(changes: Partial<Furniture>) {
+    if (!current) return;
+    onChange({
+      ...space,
+      furniture: space.furniture.map((item) =>
+        item.id === current.id ? { ...item, ...changes } : item,
+      ),
+    });
+  }
+  return (
+    <Card>
+      <Text style={{ color: colors.text, fontSize: 20, fontWeight: "600" }}>
+        Propiedades del espacio
+      </Text>
+      <Text style={{ color: colors.muted, lineHeight: 22 }}>
+        Seleccioná una pieza del plano para moverla, girarla o editarla.
+      </Text>
+      <Field
+        label="Nombre del espacio"
+        value={space.name}
+        onChangeText={(name) => onChange({ ...space, name })}
+        maxLength={80}
+        error={
+          space.name.trim().length < 2
+            ? "El nombre necesita al menos 2 caracteres."
+            : ""
+        }
+      />
+      <Field
+        label="Descripción"
+        value={space.description}
+        onChangeText={(description) => onChange({ ...space, description })}
+        maxLength={150}
+      />
+      {current && (
+        <View style={[styles.selected, { borderColor: colors.outline }]}>
+          <Text style={{ color: colors.text, fontWeight: "700" }}>
+            {current.type === "table"
+              ? "Mesa"
+              : current.type === "bench"
+                ? "Banco"
+                : current.type === "label"
+                  ? "Etiqueta"
+                  : "Punto eléctrico"}{" "}
+            · {current.id}
+          </Text>
+          {current.type !== "label" && (
+            <Button
+              title="Girar 90°"
+              icon="rotate"
+              variant="secondary"
+              onPress={() =>
+                update({ rotation: (current.rotation + 90) % 360 })
+              }
+            />
+          )}
+          {current.type === "label" && (
+            <Field
+              label="Texto de la etiqueta"
+              value={current.text ?? ""}
+              onChangeText={(text) => update({ text })}
+              maxLength={60}
+              error={labelError}
+              hint="Por ejemplo: Entrada, Robótica o Zona de descanso."
+            />
+          )}
+          {current.type === "table" && (
+            <Text style={{ color: colors.muted, lineHeight: 21 }}>
+              Arrastrá un tirador hacia adentro para achicar o hacia afuera para
+              agrandar.
+            </Text>
+          )}
+          {used ? (
+            <Text style={{ color: colors.muted, lineHeight: 21 }}>
+              Este puesto tiene proyectos asociados y debe conservarse.
+            </Text>
+          ) : confirm === current.id ? (
+            <InlineConfirm
+              text="¿Seguro que querés quitar este elemento del plano?"
+              confirmLabel="Quitar elemento"
+              onCancel={() => setConfirm(null)}
+              onConfirm={() => {
+                onChange({
+                  ...space,
+                  furniture: space.furniture.filter(
+                    (item) => item.id !== current.id,
+                  ),
+                });
+                onSelect(null);
+                setConfirm(null);
+              }}
+            />
+          ) : (
+            <Button
+              title="Quitar del plano"
+              icon="trash"
+              variant="danger"
+              onPress={() => setConfirm(current.id)}
+            />
+          )}
+        </View>
+      )}
+      <Text style={{ color: colors.muted, fontSize: 13, lineHeight: 20 }}>
+        Los puntos eléctricos indican ubicaciones. La instalación debe revisarla
+        personal habilitado.
+      </Text>
+    </Card>
+  );
+}
+
+const styles = StyleSheet.create({
+  selected: { borderTopWidth: 1, paddingTop: 18, gap: 12 },
+});

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 2,
+  "schemaRef": "DESIGN.md",
+  "generatedAt": "2026-10-13T11:54:37-03:00",
+  "title": "Design System: ExpoTec — prototipo",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Verde bosque" },
+      "primary-dark": { "role": "primary", "displayName": "Verde claro nocturno" },
+      "page": { "role": "neutral", "displayName": "Fondo claro suave" },
+      "page-dark": { "role": "neutral", "displayName": "Fondo carbón" },
+      "warning-soft": { "role": "semantic", "displayName": "Solicitud pendiente" },
+      "danger": { "role": "semantic", "displayName": "Error o acción destructiva" }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Título de pantalla", "purpose": "Encabeza la tarea; familia de interfaz disponible en el dispositivo." },
+      "body": { "displayName": "Lectura", "purpose": "Texto operativo y explicaciones del prototipo." },
+      "label": { "displayName": "Etiqueta", "purpose": "Nombre visible del dato, separado del campo." }
+    },
+    "shadows": [
+      { "name": "floating-light", "value": "0 12px 36px #293f2814", "purpose": "Diálogos y avisos flotantes en modo claro." },
+      { "name": "floating-dark", "value": "0 12px 36px #00000030", "purpose": "Diálogos y avisos flotantes en modo oscuro." }
+    ],
+    "motion": [
+      { "name": "button-state", "value": "background .15s ease, color .15s ease", "purpose": "Cambio de tono de las acciones." },
+      { "name": "mobile-menu", "value": "transform .2s ease-out", "purpose": "Entrada y salida del panel de navegación móvil." },
+      { "name": "notice-enter", "value": "toast-enter .18s ease-out", "purpose": "Aviso de estado: opacidad de 0 a 1 y desplazamiento vertical de 8 px a 0." }
+    ],
+    "breakpoints": [
+      { "name": "mobile-max", "value": "767px" },
+      { "name": "map-stack-max", "value": "1000px" },
+      { "name": "compact-desktop-max", "value": "1250px" },
+      { "name": "wide-desktop-min", "value": "1700px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal del formulario o pantalla; colores vinculados al tema con valores de respaldo claros.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Guardar proyecto</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--primary,#176650);color:var(--on-primary,#f6fff9);border:1px solid var(--primary,#176650);border-radius:8px;padding:10px 16px;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;font-weight:600;line-height:1.45;cursor:pointer;transition:background .15s ease,color .15s ease}.ds-btn-primary:hover,.ds-btn-primary:active{background:var(--primary-hover,#0f513f);border-color:var(--primary-hover,#0f513f)}.ds-btn-primary:focus-visible{outline:3px solid var(--focus,#298568);outline-offset:3px}.ds-btn-primary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-btn-primary{transition:none}}"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción secundaria con borde y relleno de superficie.",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">Volver al mapa</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--surface,#fcfdf9);color:var(--text,#24352e);border:1px solid var(--line,#dfe5dc);border-radius:8px;padding:10px 16px;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;font-weight:600;line-height:1.45;cursor:pointer;transition:background .15s ease,color .15s ease}.ds-btn-secondary:hover,.ds-btn-secondary:active{background:var(--surface-muted,#eef1eb)}.ds-btn-secondary:focus-visible{outline:3px solid var(--focus,#298568);outline-offset:3px}.ds-btn-secondary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-btn-secondary{transition:none}}"
+    },
+    {
+      "name": "Campo etiquetado",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Etiqueta superior, ayuda y tratamiento de error mediante aria-invalid.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-project-name\">Nombre del proyecto</label><input id=\"ds-project-name\" name=\"projectName\" value=\"Huerta automatizada\" aria-describedby=\"ds-name-help\"/><small id=\"ds-name-help\">Usá un nombre que identifique el proyecto.</small></div>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;max-width:340px;font-family:'Segoe UI',system-ui,sans-serif;line-height:1.55;color:var(--text,#24352e)}.ds-field label{font-size:12px;font-weight:600}.ds-field input{background:var(--surface,#fcfdf9);color:var(--text,#24352e);border:1px solid var(--line,#dfe5dc);border-radius:7px;min-height:40px;padding:9px 11px;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;caret-color:var(--primary,#176650)}.ds-field input:focus{outline:2px solid var(--focus,#298568);outline-offset:1px}.ds-field input[aria-invalid=true]{border-color:var(--danger,#a33838);background:var(--danger-soft,#f5e5e2)}.ds-field small{font-size:10px;color:var(--muted,#647269)}.ds-field .ds-field-error{font-size:11px;color:var(--danger,#a33838);line-height:1.6}"
+    },
+    {
+      "name": "Navegación activa",
+      "kind": "nav",
+      "refersTo": "navigation-active",
+      "description": "Fila de navegación con icono y estado actual visible.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegación de ejemplo\"><button class=\"ds-nav-item\" type=\"button\" aria-current=\"page\"><svg width=\"21\" height=\"21\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2V5zM9 3v16M15 5v16\"/></svg><span>Mapa de espacios</span></button></nav>",
+      "css": ".ds-nav{width:230px;font-family:'Segoe UI',system-ui,sans-serif}.ds-nav-item{width:100%;display:flex;align-items:center;gap:11px;border:0;background:transparent;color:var(--muted,#647269);padding:13px;margin-bottom:5px;text-align:left;border-radius:8px;font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;line-height:1.55;min-height:44px;cursor:pointer;transition:background .15s}.ds-nav-item[aria-current=page]{background:var(--accent-soft,#e0efe3);color:var(--accent-text,#22623f);font-weight:650}.ds-nav-item:hover{background:var(--surface-muted,#eef1eb);color:var(--text,#24352e)}.ds-nav-item[aria-current=page]:hover{background:var(--accent-soft,#e0efe3);color:var(--accent-text,#22623f)}.ds-nav-item:focus-visible{outline:3px solid var(--focus,#298568);outline-offset:3px}@media(prefers-reduced-motion:reduce){.ds-nav-item{transition:none}}"
+    },
+    {
+      "name": "Estado confirmado",
+      "kind": "chip",
+      "refersTo": "status-approved",
+      "description": "Indicador estático de estado, acompañado por texto e icono.",
+      "html": "<span class=\"ds-status-approved\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"6\"/><path d=\"M5 8l2 2 4-4\"/></svg>Confirmado</span>",
+      "css": ".ds-status-approved{display:inline-flex;align-items:center;gap:5px;font-family:'Segoe UI',system-ui,sans-serif;font-size:10px;line-height:1.55;padding:4px 8px;border-radius:5px;background:var(--success-soft,#d6eadb);color:var(--accent-text,#22623f);font-weight:500;white-space:nowrap}"
+    },
+    {
+      "name": "Puesto disponible",
+      "kind": "custom",
+      "refersTo": "booth",
+      "description": "Geometría de mesa extraída del plano, en estado libre y sin sombras. Sus dimensiones son de muestra; en el plano el tamaño y la posición son relativos al espacio.",
+      "html": "<div class=\"ds-plan-preview\"><button class=\"ds-booth\" type=\"button\" aria-label=\"Puesto P04, disponible\" aria-pressed=\"false\"><span class=\"ds-booth-code\">P04<span class=\"ds-free-dot\"></span></span><span class=\"ds-booth-name\">Disponible</span><span class=\"ds-booth-leg ds-left-leg\"></span><span class=\"ds-booth-leg ds-right-leg\"></span></button></div>",
+      "css": ".ds-plan-preview{position:relative;width:260px;height:155px;background-color:var(--canvas,#f1f4eb);background-image:radial-gradient(var(--canvas-dot,#d4dfcf) 1px,transparent 1px);background-size:17px 17px;border:1px solid var(--table-edge,#ccd9c6);border-radius:7px}.ds-booth{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);width:110px;height:60px;background:var(--table,#fcfdf7);border:1.5px solid var(--table-edge,#ccd9c6);border-radius:5px;color:var(--text,#24352e);padding:5px 8px;text-align:left;display:flex;flex-direction:column;justify-content:center;font-family:'Segoe UI',system-ui,sans-serif;line-height:1.55;cursor:pointer}.ds-booth-code{display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:650;letter-spacing:.6px}.ds-booth-name{font-size:8px;line-height:1.3;margin-top:4px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-free-dot{height:5px;width:5px;border-radius:50%;background:var(--table-edge,#ccd9c6)}.ds-booth-leg{position:absolute;bottom:-8px;width:11px;height:4px;border-radius:0 0 2px 2px;background:var(--table-edge,#ccd9c6)}.ds-left-leg{left:12%}.ds-right-leg{right:12%}.ds-booth[aria-pressed=true],.ds-booth:focus-visible{outline:3px solid var(--focus,#298568);outline-offset:5px}.ds-booth:active{cursor:grabbing}@media(max-width:767px){.ds-booth{min-height:44px;padding:3px 4px}.ds-booth-name{font-size:9px;line-height:1.15;margin-top:3px;white-space:normal;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Todo en su lugar",
+    "overview": "Descripción provisional tomada del prototipo construido y de su frase de marca. No constituye una identidad aprobada. El panel de organización usa superficies verde grisáceo, acciones verde bosque y un plano geométrico que permite reconocer puestos y proyectos por su ubicación.\n\nLa interfaz conserva densidad de herramienta escolar: navegación estable, etiquetas explícitas, fichas compactas y estados legibles. El modo oscuro cambia todas las variables semánticas. Segoe UI y las familias del sistema responden a este contexto operativo; no existe una fuente descargada ni autocontenida. El mobiliario y las ilustraciones de ejemplo son geometría y SVG, no fotografías de la escuela.",
+    "keyCharacteristics": [
+      "Claros suaves y verdes contenidos, con equivalentes oscuros.",
+      "Plano superior como patrón propio de organización.",
+      "Estados comunicados con texto e iconos además del color.",
+      "Controles etiquetados, foco visible y confirmaciones dentro del contexto.",
+      "Dirección visual provisional; datos y planos rotulados como ejemplos."
+    ],
+    "rules": [
+      { "name": "Estado explícito", "body": "Un estado conserva su texto o icono; el color acompaña la información y no la reemplaza.", "section": "colors" },
+      { "name": "Movimiento funcional", "body": "El movimiento acompaña cambios de estado o apertura; `prefers-reduced-motion` desactiva animaciones, transiciones y desplazamiento suave.", "section": "components" }
+    ],
+    "dos": [
+      "Do usar los pares semánticos del tema para fondo y texto.",
+      "Do mantener etiquetas visibles, errores junto al campo y foco perceptible.",
+      "Do conservar código y estado textual al mostrar un puesto.",
+      "Do rotular como ejemplo los datos y planos del prototipo.",
+      "Do preservar la amplitud del escritorio y la navegación operable en móvil."
+    ],
+    "donts": [
+      "Don't reemplazar etiquetas de campos por placeholders.",
+      "Don't usar alerts o confirmaciones nativas para flujos de la interfaz.",
+      "Don't interpretar una ilustración del plano como relevamiento real o validación eléctrica.",
+      "Don't presentar esta extracción como identidad final aprobada.",
+      "Don't convertir los metadatos diminutos del prototipo en una escala mínima para nuevos componentes."
+    ]
+  }
+}
