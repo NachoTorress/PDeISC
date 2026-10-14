@@ -7,8 +7,7 @@ import { createAuthService } from './services/auth.mjs';
 import { authRoutes, adminRoutes } from './routes/auth.mjs';
 import { objectBody } from './validators/auth.mjs';
 
-export function createApp(repository, config, logger = console) {
-  const app = express();
+export function createApp(repository, config, logger = console, app = express()) {
   app.disable('x-powered-by');
   // Solo Vercel es el proxy de confianza; en ejecución local no se aceptan IP reenviadas.
   if (config.onVercel) app.set('trust proxy', 1);
