@@ -4,6 +4,8 @@ Prototipo de organización escolar migrado a **React Native con Expo SDK 57**. E
 
 Los datos y perfiles de las pantallas son de ejemplo y todavía no se sincronizan entre dispositivos. El primer bloque del backend ya implementa cuentas, sesiones y permisos; la aplicación aún no se conecta a esa API.
 
+La [web pública](https://expotec-web-gn19.vercel.app) ya está en Vercel. La API está publicada por separado en `https://expotec-api-gn19.vercel.app` y conectada a TiDB. Los pasos para probarla y actualizar los despliegues están en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
+
 ## Instalar y abrir
 
 Requisitos: Node.js 24.3 o posterior y npm.
@@ -100,7 +102,7 @@ backend/               API Express, cuentas, sesiones, permisos y SQL para TiDB
 
 ## Backend y despliegue — hito 7A
 
-Por decisión del 14/10/2026, la base se aloja en **TiDB** y habrá **dos proyectos en Vercel**: uno para `frontend/native` (exportación web de Expo) y otro para `backend` (Express). Android utilizará la misma API. TiDB ya tiene `expotec`, sus migraciones y un usuario limitado de aplicación; la publicación de Vercel se prepara por separado.
+Por decisión del 14/10/2026, la base se aloja en **TiDB** y hay **dos proyectos en Vercel**: `expotec-web` para `frontend/native` (exportación web de Expo) y `expotec-api` para `backend` (Express). Android utilizará la misma API. TiDB tiene `expotec`, sus migraciones y un usuario limitado de aplicación. Ambos proyectos están publicados; la API confirma su conexión a la base y acepta el origen de la web.
 
 El backend incluye registro como alumno, ingreso con correo y contraseña, JWT de acceso, renovación rotativa, revocación y cierre de sesión. Comprueba los permisos en la base y permite a un administrador asignar responsabilidades sin que una cuenta nueva pueda concedérselas. El SQL normaliza usuarios, roles y sesiones, y las migraciones tienen un registro de aplicación.
 
@@ -112,7 +114,7 @@ npm ci
 Copy-Item .env.example .env
 ```
 
-Completar las variables del ejemplo, crear la base y ejecutar `npm run db:check`, `npm run db:migrate` y `npm run dev`. La configuración de esta computadora ya está cargada en archivos privados ignorados por Git. `npm test` comprueba la API localmente con almacenamiento controlado. `npm run test:database` requiere una base vacía exclusiva de pruebas y comprueba SQL y concurrencia reales; pasó contra TiDB el 14/10/2026 en `expotec_test_01`.
+Esos pasos corresponden a una instalación nueva: no reemplazar el `.env` existente de esta computadora. Para crear otra base, seguir la guía de `.env.setup` y `db:setup` en backend/README.md. `npm test` comprueba la API localmente con almacenamiento controlado; las 18 pruebas pasaron. `npm run test:database` requiere una base vacía exclusiva de pruebas y comprueba SQL y concurrencia reales; pasó contra TiDB el 14/10/2026 en `expotec_test_01`. También se comprobaron los endpoints públicos de salud, conexión, sesión sin token y CORS desde Vercel.
 
 La [documentación de la API](backend/README.md) detalla todos los métodos, rutas, permisos, cuerpos, respuestas y errores. Las consultas usan POST mientras se confirma la restricción sobre GET de la consigna. La [guía de TiDB y Vercel](docs/DESPLIEGUE.md) explica raíces de los dos proyectos, variables y orden de configuración. Las credenciales de base y `JWT_SECRET` se guardan exclusivamente en el backend.
 

@@ -120,6 +120,8 @@ La prueba rechaza la base de producción y cualquier base con tablas; deja sus d
 
 `npm run db:prune` elimina sesiones vencidas con sus tokens y contadores vencidos. Conservar los hashes de tokens consumidos mientras la sesión esté vigente es necesario para detectar reutilización. Ejecutar periódicamente esta limpieza con las credenciales del backend; no hay una tarea programada configurada aún.
 
-Pendiente: conectar el frontend, CRUD de entidades de ExpoTec y sus transacciones, proveedores sociales, recuperación por correo, verificación del correo, persistencia segura de sesión y prueba en TiDB/Vercel. Registro e ingreso con correo no implican verificación de su titularidad. La API no guarda imágenes, videos ni archivos en el disco del hosting; la solución de archivos aún debe definirse.
+API publicada el 14/10/2026 en `https://expotec-api-gn19.vercel.app`, con base `expotec` en TiDB. POST `/api/health` y `/api/health/ready` responden 200; ready confirma `database: connected`. Se comprobaron la sesión sin token (401), el preflight del origen de la web (204) y el rechazo de otro origen (403). La entrada `src/app.mjs` importa Express directamente para que Vercel la reconozca. Las direcciones, raíces y pasos de prueba están en [../docs/DESPLIEGUE.md](../docs/DESPLIEGUE.md).
+
+Pendiente: conectar el frontend, CRUD de entidades de ExpoTec y sus transacciones, proveedores sociales, recuperación por correo, verificación del correo y persistencia segura de sesión. Registro e ingreso con correo no implican verificación de su titularidad. La API no guarda imágenes, videos ni archivos en el disco del hosting; la solución de archivos aún debe definirse.
 
 La configuración de despliegue está en [docs/DESPLIEGUE.md](../docs/DESPLIEGUE.md). Este hito no completa toda la etapa 7 ni habilita el uso con datos reales de la escuela.

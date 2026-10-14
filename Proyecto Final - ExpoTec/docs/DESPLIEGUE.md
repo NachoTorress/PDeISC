@@ -1,6 +1,25 @@
 # ExpoTec — TiDB y Vercel
 
-Decisión del usuario del 14/10/2026: base de datos en TiDB y frontend/backend como dos proyectos separados en Vercel. TiDB ya está configurado con `expotec`, sus migraciones y un usuario limitado para la aplicación. La prueba SQL completa pasó en una base independiente `expotec_test_01`. La publicación de los dos proyectos Vercel se prepara por separado.
+Decisión del usuario del 14/10/2026: base de datos en TiDB y frontend/backend como dos proyectos separados en Vercel. Los tres servicios están configurados y comprobados. TiDB tiene `expotec`, sus migraciones y un usuario limitado para la aplicación. La prueba SQL completa pasó en una base independiente `expotec_test_01`.
+
+## Direcciones y prueba rápida
+
+- Web pública: [ExpoTec](https://expotec-web-gn19.vercel.app).
+- Base de la API: `https://expotec-api-gn19.vercel.app`.
+- Panel del backend: [expotec-api en Vercel](https://vercel.com/gn19/expotec-api).
+- Panel de la web: [expotec-web en Vercel](https://vercel.com/gn19/expotec-web).
+
+Abrir la web permite probar la demostración. Para comprobar la API desde PowerShell:
+
+```powershell
+Invoke-RestMethod -Uri "https://expotec-api-gn19.vercel.app/api/health/ready" -Method Post -ContentType "application/json" -Body '{}'
+```
+
+La respuesta esperada es `status: ok` y `database: connected`. La API usa POST para sus consultas: abrir esa ruta o la raíz de la API directamente en el navegador hace una petición GET y devuelve 404.
+
+En esta computadora, los archivos privados ya están preparados. Para trabajar localmente, abrir dos terminales desde la carpeta de ExpoTec: en `backend`, ejecutar `npm run dev`; en `frontend/native`, ejecutar `npm run web`. Para comprobar el código, ejecutar `npm test` en backend y `npm run typecheck` en frontend/native. Las pantallas conservan datos locales hasta completar la integración.
+
+Los proyectos están conectados a `NachoTorress/PDeISC`, con **Production Branch: `codex/expotec-tidb-vercel`**. Publicar cambios en esa rama dispara los despliegues. El repositorio está en la carpeta superior `PDelSC`; la copia local continúa en `main` y ExpoTec se incorporó a la rama de publicación sin modificar el índice local ni otros proyectos. Antes de nuevos commits, trabajar sobre la rama de publicación conservando los cambios locales.
 
 ```mermaid
 flowchart LR
@@ -13,13 +32,13 @@ El código activo de la web sigue siendo `frontend/native`, exportado mediante R
 
 ## 1. Base en TiDB
 
-Crear el clúster y la base `expotec`. Copiar host, puerto, usuario completo y contraseña desde **Connect** a `backend/.env`. Mantener TLS y verificación de certificado activados; usar `DB_SSL_CA` si hace falta indicar un PEM. Aplicar las migraciones desde una máquina autorizada con `npm run db:check` y `npm run db:migrate` dentro de `backend`.
+La base `expotec` y las migraciones ya existen. Para preparar otra instalación, copiar `.env.example` a `.env` y `.env.setup.example` a `.env.setup`, completar las credenciales privadas y ejecutar `npm run db:setup`, `npm run db:migrate` y `npm run db:check` dentro de `backend`. No reemplazar los archivos privados de esta computadora por los ejemplos. Mantener TLS y verificación de certificado activados; usar `DB_SSL_CA` si hace falta indicar un PEM.
 
 La API usa un usuario con SELECT, INSERT, UPDATE y DELETE exclusivamente en `expotec`. Las migraciones y la preparación cargan las credenciales de administración de `.env.setup`; ese archivo no se publica. No compartir credenciales con el frontend. El clúster está en São Paulo (`sa-east-1`); configurar el backend de Vercel en `gru1` cuando esté disponible.
 
 ## 2. Proyecto backend en Vercel
 
-Importar el repositorio y seleccionar **Root Directory: `backend`**, framework **Express**, Node **24.x**. Vercel reconoce `src/app.mjs`, que exporta la app y reutiliza un pool de conexiones por instancia. No ejecutar migraciones como Build Command.
+El proyecto `expotec-api` usa **Root Directory: `Proyecto Final - ExpoTec/backend`**, framework **Express**, Node **24.x**. Vercel reconoce `src/app.mjs`, que importa Express directamente, exporta la app y reutiliza un pool de conexiones por instancia. No ejecutar migraciones como Build Command.
 
 Configurar variables exclusivamente en este proyecto:
 
@@ -33,13 +52,13 @@ Configurar variables exclusivamente en este proyecto:
 | `DB_SSL_CA` | opcional, certificado PEM; admite `\n` escapados |
 | `DB_POOL_LIMIT` | `5`, valor inicial por instancia; ajustar según conexiones observadas |
 
-No cargar `TEST_DB_NAME` en producción. No copiar `.env` al repositorio. El puerto lo administra Vercel; `PORT=3001` corresponde al desarrollo local. La API limita los cuerpos de estas rutas a 16 KB y no implementa carga de archivos.
+Las diez variables necesarias ya están guardadas como secretos de Production en Vercel, incluyendo la contraseña del usuario limitado y el JWT generado. No cargar `TEST_DB_NAME` ni credenciales de administración en producción. No copiar `.env` al repositorio. El puerto lo administra Vercel; `PORT=3001` corresponde al desarrollo local. La API limita los cuerpos de estas rutas a 16 KB y no implementa carga de archivos.
 
 Tras publicar, comprobar POST `/api/health` y POST `/api/health/ready` con cuerpo `{}`. El primer endpoint solo indica que el servicio responde; el segundo comprueba una consulta a la base. Registrar la cuenta propia y promoverla con el script local `admin:grant`, sin crear credenciales de demostración en producción.
 
 ## 3. Proyecto frontend en Vercel
 
-Importar el mismo repositorio como otro proyecto y seleccionar **Root Directory: `frontend/native`**, Node **24.x**. `vercel.json` establece build `npm run export:web`, salida `dist` y reescritura de las rutas a la entrada de la aplicación.
+El proyecto `expotec-web` importa el mismo repositorio con **Root Directory: `Proyecto Final - ExpoTec/frontend/native`**, Node **24.x** y framework **Other**. `vercel.json` establece build `npm run export:web`, salida `dist` y reescritura de las rutas a la entrada de la aplicación.
 
 El frontend todavía no consume la API; no necesita variables para TiDB ni secretos. En el hito de integración se agregará la URL pública de la API y el manejo de sesión. Publicar ahora muestra el prototipo con datos locales de ejemplo.
 
@@ -62,8 +81,10 @@ Una API desplegada en funciones no debe conservar fotos, videos, copias de desca
 | --- | --- |
 | API de cuentas, sesiones, permisos y protección del último administrador | Implementada; 18 pruebas locales aprobadas |
 | SQL de autenticación y migraciones repetibles | Aplicado a expotec y comprobado contra TiDB |
-| Configuración de exportación web y dos proyectos Vercel | Preparada; typecheck y exportación web aprobados; publicación pendiente |
+| Exportación web y dos proyectos Vercel | Publicados; typecheck y exportación web aprobados |
 | Prueba completa MySQL/TiDB de concurrencia y restricciones | Aprobada en expotec_test_01 el 14/10/2026 |
+| API pública conectada a TiDB | POST health y ready devuelven 200; ready confirma database: connected |
+| Acceso público y CORS | Sesión sin token devuelve 401; preflight de la web devuelve 204; origen ajeno devuelve 403 |
 | Pantallas conectadas, dominio ExpoTec y acceso social/recuperación | Próximos bloques de la etapa 7 |
 
-Antes de dar por terminada esta etapa de infraestructura falta publicar y comprobar los proyectos Vercel. El APK continúa postergado por indicación del usuario.
+El hito 7A de infraestructura queda comprobado el 14/10/2026. La autenticación del frontend y los datos compartidos de ExpoTec siguen pendientes. El APK continúa postergado por indicación del usuario.

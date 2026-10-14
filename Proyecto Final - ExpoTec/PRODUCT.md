@@ -20,7 +20,7 @@ Los requisitos completos están en docs/REQUISITOS.md. El usuario confirmó Reac
 
 La interfaz actual es un prototipo migrado a componentes nativos para revisar los flujos y el diseño. Sus datos son ficticios y se guardan localmente en cada dispositivo; no se comparten entre equipos. La selección de una vista por perfil no es autenticación ni control de acceso real. Los equipos admiten varios integrantes y los proyectos informáticos admiten enlaces opcionales de GitHub y de su página.
 
-El hito 7A incorpora por separado una API Express de cuentas, sesiones y permisos, con SQL para TiDB. El usuario confirmó el 14/10/2026 la base en TiDB y dos proyectos separados en Vercel para backend y frontend. La conexión de las pantallas, los datos de ExpoTec y los servicios externos sigue pendiente; los servicios todavía no se crearon.
+El hito 7A incorpora por separado una API Express de cuentas, sesiones y permisos, con SQL para TiDB. El usuario confirmó el 14/10/2026 la base en TiDB y dos proyectos separados en Vercel para backend y frontend. TiDB está configurado y la web y API están publicadas; la conexión de la API a TiDB está comprobada. La conexión de las pantallas, los datos de ExpoTec y los servicios de acceso social, correo y archivos siguen pendientes. Las direcciones y las pruebas están en docs/DESPLIEGUE.md.
 
 ## Operating Context
 
@@ -32,4 +32,4 @@ Consigna aportada por el usuario. No hay plano real, imágenes de proyectos, fec
 
 ## Open Decisions
 
-Distribución real de la escuela, fechas, vinculación de integrantes con cuentas reales, proveedores sociales, hosting, criterios de revisión eléctrica y formatos admitidos para videos. Los proyectos admiten equipos de varios integrantes; el prototipo registra sus nombres y apellidos. No inventar capacidades eléctricas ni presentar el prototipo como sistema terminado.
+Distribución real de la escuela, fechas, vinculación de integrantes con cuentas reales, proveedores sociales, almacenamiento de archivos, criterios de revisión eléctrica y formatos admitidos para videos. Los proyectos admiten equipos de varios integrantes; el prototipo registra sus nombres y apellidos. No inventar capacidades eléctricas ni presentar el prototipo como sistema terminado.
