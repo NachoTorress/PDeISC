@@ -19,7 +19,7 @@ La respuesta esperada es `status: ok` y `database: connected`. La API usa POST p
 
 En esta computadora, los archivos privados ya están preparados. Para trabajar localmente, abrir dos terminales desde la carpeta de ExpoTec: en `backend`, ejecutar `npm run dev`; en `frontend/native`, ejecutar `npm run web`. Para comprobar el código, ejecutar `npm test` en backend y `npm run typecheck` en frontend/native. Las pantallas conservan datos locales hasta completar la integración.
 
-Los proyectos están conectados a `NachoTorress/PDeISC`, con **Production Branch: `codex/expotec-tidb-vercel`**. Publicar cambios en esa rama dispara los despliegues. El repositorio está en la carpeta superior `PDelSC`; la copia local continúa en `main` y ExpoTec se incorporó a la rama de publicación sin modificar el índice local ni otros proyectos. Antes de nuevos commits, trabajar sobre la rama de publicación conservando los cambios locales.
+Los proyectos están conectados a `NachoTorress/PDeISC`, con **Production Branch: `main`**. Por indicación del usuario del 15/10/2026, trabajar, hacer commits y pushear directamente en `main`, sin crear ramas. Publicar cambios en `main` dispara los despliegues. El repositorio está en la carpeta superior `PDelSC`; incluir únicamente los cambios de ExpoTec y conservar los cambios locales de los otros proyectos.
 
 ```mermaid
 flowchart LR
