@@ -28,7 +28,7 @@ flowchart LR
     API -->|MySQL con TLS| DB[(TiDB)]
 ```
 
-El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. **Mi cuenta** utiliza la API desde el hito 7B y **Espacios compartidos** desde el hito 7C. **Proyectos de ExpoTec** utiliza la API desde el hito 7D. El inventario, los préstamos y la presentación TV continúan en la demostración local.
+El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. **Mi cuenta** utiliza la API desde el hito 7B y **Espacios compartidos** desde el hito 7C. **Proyectos de ExpoTec** utiliza la API desde el hito 7D. El inventario y las reservas usan la API desde el hito 7E. Los préstamos y la presentación TV continúan en la demostración local.
 
 ## 1. Base en TiDB
 
@@ -104,7 +104,7 @@ La web abre la consulta pública de espacios; solo una cuenta real con permiso d
 
 Comprobaciones: 23 pruebas de backend y 60 de frontend aprobadas, más una prueba de integración real en TiDB (`npm run test:spaces`). Esa integración verifica migraciones repetibles, permisos, restricciones relacionales, guardados simultáneos y conservación de historial; utiliza y limpia únicamente sus propios datos en una base `expotec_test_*`. En navegador contra esa base se comprobaron creación, incorporación de una mesa, habilitación de puesto, giro, guardado, lectura desde otra pestaña, conflicto con borrador conservado, descarte confirmado, baja y consulta como invitado. La vista de 390 px no desborda horizontalmente.
 
-Tras desplegar, POST `/api/spaces/query` con `{}` debe responder 200 y mostrar exclusivamente los espacios reales activos. Una base sin espacios devuelve `{ "spaces": [] }`. POST `/api/spaces/create` sin Bearer debe responder 401. Los espacios de demostración siguen separados; no importar datos ficticios a producción. Las confirmaciones de proyectos se incorporan en el hito 7D. El inventario y los préstamos compartidos quedan para los siguientes hitos. Por indicación del usuario, Android se retoma al final.
+Tras desplegar, POST `/api/spaces/query` con `{}` debe responder 200 y mostrar exclusivamente los espacios reales activos. Una base sin espacios devuelve `{ "spaces": [] }`. POST `/api/spaces/create` sin Bearer debe responder 401. Los espacios de demostración siguen separados; no importar datos ficticios a producción. Las confirmaciones de proyectos se incorporan en el hito 7D. El inventario y las reservas se incorporan en 7E; los préstamos compartidos quedan para el siguiente bloque. Por indicación del usuario, Android se retoma al final.
 
 Referencias de la persistencia de sesión: [Expo SecureStore](https://docs.expo.dev/versions/v57.0.0/sdk/securestore/), [cookies HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies) y [reescrituras de Vercel](https://vercel.com/docs/rewrites).
 
@@ -112,10 +112,22 @@ Referencias de la persistencia de sesión: [Expo SecureStore](https://docs.expo.
 
 La migración aditiva `003_projects.sql` se aplicó en producción el 19/10/2026 antes del despliegue de la API. Crea proyectos, integrantes, profesores, materias y sus relaciones, asignaciones únicas de puesto e historial de revisión. No carga cuentas ni proyectos de ejemplo. No se necesitan nuevas variables privadas. Mantener las tablas si se revierte la aplicación.
 
-Las propuestas se presentan con cuentas de alumnos; un profesor asignado pide cambios o confirma el puesto. La confirmación comprueba participantes, roles y disponibilidad dentro de una transacción. Los puestos con propuestas vigentes no se pueden retirar del plano. Reabrir o cancelar conserva el historial y libera una asignación confirmada. Las reservas de recursos y los préstamos se incorporarán después.
+Las propuestas se presentan con cuentas de alumnos; un profesor asignado pide cambios o confirma el puesto. La confirmación comprueba participantes, roles y disponibilidad dentro de una transacción. Los puestos con propuestas vigentes no se pueden retirar del plano. Reabrir o cancelar conserva el historial y libera una asignación confirmada. Las reservas de recursos se incorporan en 7E; los préstamos se incorporarán después.
 
 Comprobaciones automáticas: 26 pruebas de backend y 62 de frontend, más dos integraciones reales aprobadas (`test:spaces` y `test:projects`) en una base exclusiva `expotec_test_*`. La integración de proyectos cubre equipos, privacidad, permisos, correcciones, reenvío, dos aprobaciones simultáneas para un puesto, versiones, reapertura, cancelación y protección del plano. Android queda para el final, sin exportación nueva en este hito.
 
 En navegador contra esa base se verificó la presentación con dos cuentas de alumnos y un profesor, protección del borrador al salir, pedido de cambios, edición y reenvío por otro integrante, confirmación, actualización del puesto en el plano y apertura de su ficha pública. La propuesta pendiente permaneció fuera de la muestra. Se comprobó también la consulta sin sesión y la vista de teléfono.
 
 Después de publicar, comprobar POST `/api/projects/public/query` con `{}`: debe devolver 200 y exclusivamente proyectos confirmados, o `{ "projects": [] }` si todavía no hay. POST `/api/projects/query` y `/api/projects/create` sin Bearer deben responder 401. La ficha pública de un proyecto pendiente debe devolver 404. Los datos de prueba se crean y limpian únicamente en la base de pruebas.
+
+## Inventario y reservas — hito 7E
+
+La migración aditiva `004_inventory.sql` se aplicó en producción el 19/10/2026 antes del despliegue. Crea elementos, pedidos, reservas e historial de modificaciones con claves foráneas. No agrega existencias ni ejemplos a producción. No requiere variables nuevas. Conservar tablas y registros al revertir el código; una reversión anterior a 7E deja de gestionar reservas y debe evitarse mientras se sigan confirmando proyectos con elementos.
+
+El catálogo de elementos exige cuenta de alumno, profesor, préstamos o administración. El inventario completo y el historial requieren préstamos o administración; solo administración escribe. Los invitados no acceden. POST `/api/inventory/query`, `/api/inventory/catalog/query` y `/api/inventory/create` sin Bearer deben devolver 401. Las propuestas admiten pedidos opcionales y la confirmación reserva todos los elementos junto con la mesa en una transacción. La ficha pública no expone pedidos, reservas ni datos de inventario.
+
+Comprobaciones automáticas: 28 pruebas de backend y 64 de frontend aprobadas, más tres integraciones TiDB (`test:spaces`, `test:projects` y `test:inventory`). La prueba de inventario usa y limpia exclusivamente sus registros en una base `expotec_test_*`: cubre permisos, historial, versiones, bajas, faltantes sin reservas parciales, confirmaciones concurrentes y reducción de stock simultánea, reapertura y cancelación. El cliente anterior que omite pedidos al guardar los conserva. Se verificaron tipos, lint y exportación web; Android sigue al final.
+
+En navegador contra esa base se comprobó alta de un elemento con dos unidades, pedido de tres con aviso de faltante, rechazo de confirmación, corrección a dos y reserva conjunta con el puesto. Se verificaron rechazo de reducción por debajo de las reservas, aumento de total con historial, baja bloqueada mientras existía un proyecto vigente, reapertura con liberación de stock, cancelación y baja conservando historial. El borrador del elemento pide confirmación al descartarlo y la vista de inventario se deshabilita durante la edición. La revisión móvil de 390 px no mostró desborde horizontal.
+
+La disponibilidad publicada en el catálogo es una referencia para pedidos, calculada como total menos reservas. Las entregas y devoluciones por jornada todavía no están conectadas. Antes de implementarlas, extender las protecciones de stock, bajas, reapertura y cancelación para conservar saldos pendientes e historial de préstamos.

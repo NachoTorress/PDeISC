@@ -1,6 +1,33 @@
 # ExpoTec API — cuentas y sesiones
 
-Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas, sesiones, permisos, espacios y proyectos compartidos; usa mysql2 y SQL relacional compatible con MySQL/TiDB. **Mi cuenta**, **Espacios compartidos** y **Proyectos de ExpoTec** utilizan esta API. El inventario, los préstamos y la presentación TV todavía pertenecen a la demostración local.
+Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas, sesiones, permisos, espacios, proyectos, inventario y reservas compartidas; usa mysql2 y SQL relacional compatible con MySQL/TiDB. Las pantallas compartidas utilizan esta API. Los préstamos y la presentación TV todavía pertenecen a la demostración local.
+
+## Inventario y reservas — hito 7E
+
+Aplicar la migración aditiva `004_inventory.sql` antes de desplegar. Crea `resources`, `project_resource_requests`, `resource_allocations` e `inventory_events`, con claves foráneas. Los elementos son cantidades de unidades equivalentes; no representan unidades con número de serie ni las mesas del plano. No se importan existencias de la demostración. Para revertir la aplicación, conservar las tablas y sus registros; no borrar reservas ni migraciones.
+
+Todas las rutas usan POST, JSON y Bearer. Los invitados no acceden al inventario.
+
+| Ruta | Permiso y cuerpo | Respuesta |
+| --- | --- | --- |
+| `/api/inventory/catalog/query` | Alumno, profesor, préstamos o administrador; `{}` | 200 `{ resources }`, catálogo completo de hasta 500 elementos activos |
+| `/api/inventory/query` | Préstamos o administrador; `limit` 1–100, `offset` 0–100000, `archived` booleano; opcionales, predeterminados 25, 0 y false | 200 `{ resources }`, activos o bajas según la vista |
+| `/api/inventory/:id/query` | Préstamos o administrador; `{}` | 200 `{ resource }`, incluso si fue dado de baja, con las últimas 100 modificaciones de inventario |
+| `/api/inventory/create` | Administrador; `{ name, description, total }` | 201 `{ resource }`, versión 1 |
+| `/api/inventory/:id/save` | Administrador; `{ version, name, description, total }` | 200 `{ resource }`, aumenta versión y registra modificación |
+| `/api/inventory/:id/archive` | Administrador; `{ version }` | 204; baja lógica con historial |
+
+`resource` incluye `id`, `name`, `description`, `total`, `reserved`, `available`, `version`, `createdAt`, `updatedAt` y `archivedAt` (null si está activo). La ficha agrega `events`: id, acción (`create`, `update`, `archive`), total anterior y actual, fecha y nombre del administrador. El catálogo y el listado omiten autores e historial. Nombre único de 2–100 caracteres, incluso entre las bajas, descripción de hasta 250 y total entero de 0–100000. No se aceptan cantidades como strings, fracciones ni campos calculados enviados por el cliente. Las escrituras admiten 120 operaciones por cuenta cada 15 minutos.
+
+Errores: 400 validación; 401 sin sesión; 403 permiso insuficiente; 404 `RESOURCE_NOT_FOUND`; 409 `RESOURCE_CHANGED`, `RESOURCE_ARCHIVED`, `RESOURCE_NAME_EXISTS`, `RESOURCE_LIMIT`, `RESOURCE_RESERVED` o `RESOURCE_IN_USE`; 413 sobre 16 KB; 429 con `Retry-After`. Un total menor que las reservas se rechaza, incluso si esas reservas se confirmaron mientras el administrador editaba. Una baja se rechaza si un proyecto vigente lo solicita o tiene reservas. Un pedido cancelado conserva su relación histórica y permite dar de baja el elemento.
+
+La propuesta de proyecto admite `resources: [{ resourceId, quantity }]`, de 0 a 50 UUID distintos y cantidades enteras de 1–10000. El pedido puede superar la disponibilidad actual: mientras permanezca pendiente no reserva stock, y la interfaz lo advierte. Se comprueba que los elementos existan y estén activos al presentar o reenviar. Para compatibilidad, omitir `resources` al crear significa pedido vacío; omitirlo al guardar conserva el pedido existente. Enviar `[]` lo quita explícitamente.
+
+La ficha privada agrega `resources` con nombre, cantidad solicitada, cantidad reservada para ese proyecto, total, disponibilidad actual y baja. La ficha pública omite esta información. Confirmar comprueba todos los elementos, roles y puesto con lecturas del estado actual bajo el mismo bloqueo de dominio; inserta reservas y asignación de puesto, estado e historial en una transacción. Un faltante devuelve 409 `RESOURCE_STOCK` y no conserva ninguna reserva parcial ni ocupa la mesa. Un elemento retirado devuelve `RESOURCE_UNAVAILABLE`. Dos confirmaciones simultáneas o una confirmación frente a una reducción de total no pueden reservar más unidades de las existentes. Reabrir y cancelar liberan ambas asignaciones; los pedidos e historial se conservan.
+
+`available = total - reserved` expresa disponibilidad para asignar proyectos durante la exposición. No expresa entregas físicas ni devoluciones por jornada. Antes de conectar préstamos se deben proteger reaperturas, cancelaciones, bajas y cambios de stock frente a saldos pendientes; ese siguiente bloque mantendrá separada la asignación del préstamo físico. No se afirman capacidades eléctricas de los elementos.
+
+`npm run test:inventory` usa exclusivamente `expotec_test_*`, diferente de producción. Comprueba permisos, versiones, cambios concurrentes, bajas con historial, pedidos sin reserva, compatibilidad de clientes anteriores, faltante de un elemento sin reserva parcial, dos confirmaciones en mesas distintas con stock para una sola, reducción de total simultánea, reapertura, cancelación y conservación de pedidos. Limpia únicamente sus propios registros. Las integraciones `test:projects` y `test:spaces` continúan como regresión de los bloques anteriores.
 
 ## Proyectos compartidos — hito 7D
 
@@ -30,7 +57,7 @@ Solicitar un puesto no lo reserva: varias propuestas pueden pedirlo. La confirma
 
 Errores: 400 `VALIDATION_ERROR`/`PARTICIPANTS_INVALID`; 401 sesión inválida; 403 permiso insuficiente; 404 `PROJECT_NOT_FOUND` o `PERSON_NOT_FOUND`; 409 `PROJECT_CHANGED`, `PROJECT_LOCKED`, `BOOTH_UNAVAILABLE` o `BOOTH_OCCUPIED`; 413 sobre 64 KB; 429 exceso de operaciones. Un conflicto no se reintenta automáticamente. El formulario conserva su borrador en memoria y permite actualizar los puestos; salir sin enviarlo pide confirmación. El borrador no persiste al cerrar la aplicación.
 
-Los pedidos y reservas de recursos se incorporarán con el inventario. Antes de conectar préstamos, extender reapertura y cancelación para proteger sus saldos e historial. La confirmación actual reserva únicamente el puesto. La presentación TV compartida y el almacenamiento de archivos siguen pendientes.
+Desde el hito 7E los pedidos y reservas de recursos se confirman con el puesto, según el contrato de inventario anterior. Antes de conectar préstamos, extender reapertura y cancelación para proteger sus saldos e historial. La presentación TV compartida y el almacenamiento de archivos siguen pendientes.
 
 `npm run test:projects` exige una base `expotec_test_*` distinta de producción. Comprueba equipos, permisos, privacidad, pedido de cambios, reenvío, versiones, dos confirmaciones concurrentes, reapertura, cancelación y protección del plano; elimina solo sus cuentas, proyectos y espacio temporales. `npm run test:spaces` continúa comprobando la distribución real en esa base.
 
@@ -211,6 +238,6 @@ La prueba rechaza la base de producción y cualquier base con tablas; deja sus d
 
 API publicada el 14/10/2026 en `https://expotec-api-gn19.vercel.app`, con base `expotec` en TiDB. POST `/api/health` y `/api/health/ready` responden 200; ready confirma `database: connected`. Se comprobaron la sesión sin token (401), el preflight del origen de la web (204) y el rechazo de otro origen (403). La entrada `src/app.mjs` importa Express directamente para que Vercel la reconozca. Las direcciones, raíces y pasos de prueba están en [../docs/DESPLIEGUE.md](../docs/DESPLIEGUE.md).
 
-Pendiente: inventario, pedidos y reservas de recursos, préstamos y devoluciones, presentación compartida, proveedores sociales, recuperación y verificación del correo. Registro e ingreso con correo no implican verificación de su titularidad. La API no guarda imágenes, videos ni archivos en el disco del hosting; la solución de archivos aún debe definirse.
+Pendiente: préstamos y devoluciones, presentación compartida, proveedores sociales, recuperación y verificación del correo. Registro e ingreso con correo no implican verificación de su titularidad. La API no guarda imágenes, videos ni archivos en el disco del hosting; la solución de archivos aún debe definirse.
 
 La configuración de despliegue está en [docs/DESPLIEGUE.md](../docs/DESPLIEGUE.md). Este hito no completa toda la etapa 7 ni habilita el uso con datos reales de la escuela.

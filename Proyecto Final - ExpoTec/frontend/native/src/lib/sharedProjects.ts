@@ -1,4 +1,6 @@
 import type { AccountUser } from "./authTypes";
+import { requestsError } from "./sharedInventory";
+import type { ProjectResource, ResourceRequestDraft } from "./sharedInventory";
 export interface ProjectPerson {
   id?: string;
   firstName: string;
@@ -41,6 +43,7 @@ export interface SharedProject
   creatorId?: string;
   version?: number;
   feedback?: string;
+  resources?: ProjectResource[];
   reviews?: {
     id: string;
     action: string;
@@ -65,6 +68,7 @@ export interface ProposalDraft {
   boothId: string;
   creatorId: string;
   version?: number;
+  resources: ResourceRequestDraft[];
 }
 export const sharedStatusLabel: Record<SharedProjectStatus, string> = {
   pending: "Pendiente de revisión",
@@ -93,6 +97,7 @@ export function proposalDraft(
       subjects: [],
       boothId: "",
       creatorId: user.id,
+      resources: [],
     };
   return {
     name: source.name,
@@ -113,6 +118,11 @@ export function proposalDraft(
     boothId: source.booth.id,
     creatorId: source.creatorId ?? user.id,
     version: source.version,
+    resources: (source.resources ?? []).map((item) => ({
+      resourceId: item.resourceId,
+      name: item.name,
+      quantity: String(item.quantity),
+    })),
   };
 }
 export function proposalRequest(draft: ProposalDraft) {
@@ -129,6 +139,10 @@ export function proposalRequest(draft: ProposalDraft) {
     teacherIds: draft.teachers.map((person) => person.id),
     subjects: draft.subjects.map((subject) => subject.trim()),
     boothId: draft.boothId,
+    resources: draft.resources.map((item) => ({
+      resourceId: item.resourceId,
+      quantity: Number(item.quantity),
+    })),
     ...(draft.version === undefined ? {} : { version: draft.version }),
   };
 }
@@ -161,6 +175,8 @@ export function sharedLinkError(value: string, required = false, kind = "") {
 }
 export function proposalErrors(draft: ProposalDraft, actorId: string) {
   const fields: Record<string, string> = {};
+  const resources = requestsError(draft.resources);
+  if (resources) fields.resources = resources;
   for (const [key, min, max] of [
     ["name", 2, 120],
     ["description", 20, 5000],

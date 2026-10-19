@@ -32,10 +32,12 @@ export default function AccountPage({
   onDemo,
   onSpaces,
   onProjects,
+  onInventory,
 }: {
   onDemo: () => void;
   onSpaces: () => void;
   onProjects: () => void;
+  onInventory: () => void;
 }) {
   const { colors } = useTheme();
   const { user, ready, error: sessionError, client, retry } = useAuth();
@@ -155,9 +157,9 @@ export default function AccountPage({
               Cuenta creada el {formatDate(user.createdAt)}
             </Text>
             <Text style={paragraph}>
-              Tu cuenta, los espacios y los proyectos compartidos se guardan en
-              el servidor. El inventario y los préstamos de la demostración
-              siguen siendo ejemplos locales.
+              Tu cuenta, los espacios, los proyectos y el inventario compartidos
+              se guardan en el servidor. Los préstamos de la demostración siguen
+              siendo ejemplos locales.
             </Text>
             <Button
               title={busy ? "Verificando…" : "Actualizar sesión"}
@@ -331,6 +333,14 @@ export default function AccountPage({
           </Card>
         )}
         <Button title="Ver proyectos" icon="projects" onPress={onProjects} />
+        {ready &&
+          user?.roles.some((role) => role === "admin" || role === "loans") && (
+            <Button
+              title="Ver inventario compartido"
+              icon="inventory"
+              onPress={onInventory}
+            />
+          )}
         <Button
           title="Ver espacios compartidos"
           icon="map"

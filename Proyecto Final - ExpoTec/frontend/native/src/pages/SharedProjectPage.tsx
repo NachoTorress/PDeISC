@@ -122,12 +122,14 @@ export default function SharedProjectPage({
       setNote("");
       setNotice(
         result.project.status === "approved"
-          ? "Proyecto confirmado. El puesto quedó reservado."
+          ? project.resources?.length
+            ? "Proyecto confirmado. El puesto y los elementos quedaron reservados."
+            : "Proyecto confirmado. El puesto quedó reservado."
           : result.project.status === "changes"
             ? "Se envió el pedido de cambios al equipo."
             : result.project.status === "cancelled"
               ? "El proyecto quedó cancelado."
-              : "La propuesta quedó reabierta y se liberó el puesto.",
+              : "La propuesta quedó reabierta y se liberaron el puesto y sus reservas de elementos.",
       );
     } catch (cause) {
       setError(
@@ -277,6 +279,52 @@ export default function SharedProjectPage({
                 />
               )}
             </Card>
+            {privateView && project.resources && (
+              <Card>
+                <Heading
+                  title={
+                    project.status === "approved"
+                      ? "Elementos reservados"
+                      : "Elementos solicitados"
+                  }
+                />
+                {!project.resources.length && (
+                  <Text style={paragraph}>
+                    Este proyecto no solicita elementos del inventario.
+                  </Text>
+                )}
+                {project.resources.map((item) => (
+                  <View key={item.resourceId} style={{ gap: 4 }}>
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontWeight: "600",
+                        fontSize: 16,
+                      }}
+                    >
+                      {item.name} · {item.quantity}{" "}
+                      {item.quantity === 1 ? "unidad" : "unidades"}
+                    </Text>
+                    <Text style={paragraph}>
+                      {project.status === "approved"
+                        ? `Reservadas para este proyecto: ${item.reservedQuantity}.`
+                        : project.status === "cancelled"
+                          ? "El pedido se conserva como historial; no reserva stock."
+                          : `Disponibles para reservar ahora: ${item.available} de ${item.total}.`}
+                      {item.archivedAt ? " Elemento dado de baja." : ""}
+                    </Text>
+                  </View>
+                ))}
+                {project.status !== "approved" &&
+                  project.status !== "cancelled" &&
+                  !!project.resources.length && (
+                    <Text style={paragraph}>
+                      El pedido no descuenta stock. La confirmación comprueba y
+                      reserva todos los elementos junto con el puesto.
+                    </Text>
+                  )}
+              </Card>
+            )}
             {!!project.feedback && (
               <Card>
                 <Heading
@@ -319,7 +367,11 @@ export default function SharedProjectPage({
                 {reviewable && (
                   <>
                     <Button
-                      title="Confirmar proyecto y puesto"
+                      title={
+                        project.resources?.length
+                          ? "Confirmar proyecto, puesto y elementos"
+                          : "Confirmar proyecto y puesto"
+                      }
                       icon="check"
                       disabled={busy}
                       onPress={() => setConfirm("approve")}
@@ -334,7 +386,7 @@ export default function SharedProjectPage({
                 )}
                 {reopenable && (
                   <Button
-                    title="Reabrir propuesta y liberar puesto"
+                    title="Reabrir propuesta y liberar reservas"
                     variant="secondary"
                     disabled={busy || note.trim().length < 10}
                     onPress={() => setConfirm("reopen")}
@@ -356,12 +408,12 @@ export default function SharedProjectPage({
                 <InlineConfirm
                   text={
                     confirm === "approve"
-                      ? `¿Confirmar ${project.name} y ocupar el puesto ${project.booth.furnitureId}?`
+                      ? `¿Confirmar ${project.name}, ocupar el puesto ${project.booth.furnitureId}${project.resources?.length ? " y reservar todos sus elementos" : ""}?`
                       : confirm === "changes"
                         ? "¿Enviar este pedido de cambios al equipo?"
                         : confirm === "reopen"
-                          ? "¿Reabrir la propuesta y liberar su puesto?"
-                          : "¿Cancelar el proyecto? Se conservará su historial y se liberará su puesto si estaba confirmado."
+                          ? "¿Reabrir la propuesta y liberar el puesto y sus reservas de elementos?"
+                          : "¿Cancelar el proyecto? Se conservará su historial y se liberarán el puesto y sus reservas de elementos si estaba confirmado."
                   }
                   confirmLabel={
                     busy

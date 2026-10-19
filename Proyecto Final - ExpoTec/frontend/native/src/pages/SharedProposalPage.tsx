@@ -13,6 +13,7 @@ import {
   Screen,
 } from "../components/ui";
 import SharedPeoplePicker from "../components/SharedPeoplePicker";
+import SharedResourcePicker from "../components/SharedResourcePicker";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { AuthError } from "../lib/authTypes";
@@ -242,7 +243,7 @@ export default function SharedProposalPage({
             {error}
           </Text>
         )}
-      {draft && user && draftFor === `${user.id}:${projectId ?? "new"}` && (
+        {draft && user && draftFor === `${user.id}:${projectId ?? "new"}` && (
           <View style={{ gap: 16 }} pointerEvents={busy ? "none" : "auto"}>
             <Card>
               <Field
@@ -502,6 +503,12 @@ export default function SharedProposalPage({
                   </Text>
                 )}
             </Card>
+            <SharedResourcePicker
+              requests={draft.resources}
+              disabled={busy}
+              error={fieldError("resources")}
+              onChange={(resources) => change("resources", resources)}
+            />
             <Button
               title={
                 busy

@@ -324,11 +324,13 @@ export function Choice({
   value,
   options,
   onChange,
+  disabled = false,
 }: {
   label: string;
   value: string;
   options: { value: string; label: string }[];
   onChange: (value: string) => void;
+  disabled?: boolean;
 }) {
   const { colors } = useTheme();
   return (
@@ -342,11 +344,13 @@ export function Choice({
             key={option.value}
             accessibilityRole="radio"
             aria-checked={value === option.value}
-            accessibilityState={{ checked: value === option.value }}
+            accessibilityState={{ checked: value === option.value, disabled }}
+            disabled={disabled}
             onPress={() => onChange(option.value)}
             style={[
               styles.choice,
               {
+                opacity: disabled ? 0.45 : 1,
                 backgroundColor:
                   value === option.value
                     ? colors.selectedContainer

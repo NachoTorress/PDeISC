@@ -34,6 +34,7 @@ import SharedSpacesPage from "./pages/SharedSpacesPage";
 import SharedProjectsPage from "./pages/SharedProjectsPage";
 import SharedProjectPage from "./pages/SharedProjectPage";
 import SharedProposalPage from "./pages/SharedProposalPage";
+import SharedInventoryPage from "./pages/SharedInventoryPage";
 
 type RootRoutes = {
   Home: undefined;
@@ -45,6 +46,7 @@ type RootRoutes = {
   SharedProjects: undefined;
   SharedProject: { projectId: string; privateView?: boolean };
   SharedProposal: { projectId?: string } | undefined;
+  SharedInventory: undefined;
 };
 type TabRoutes = {
   map: undefined;
@@ -301,6 +303,7 @@ function AppShell() {
               "SharedProjects",
               "SharedProject",
               "SharedProposal",
+              "SharedInventory",
             ].includes(navigation.getCurrentRoute()?.name ?? ""),
           )
         }
@@ -312,6 +315,7 @@ function AppShell() {
               "SharedProjects",
               "SharedProject",
               "SharedProposal",
+              "SharedInventory",
             ].includes(navigation.getCurrentRoute()?.name ?? ""),
           )
         }
@@ -356,6 +360,7 @@ function AppShell() {
                   })
                 }
                 onCreate={() => navigation.navigate("SharedProposal")}
+                onInventory={() => navigation.navigate("SharedInventory")}
                 onSpaces={() => navigation.popTo("SharedSpaces")}
                 onAccount={() => navigation.navigate("Account")}
               />
@@ -403,6 +408,7 @@ function AppShell() {
                 onDemo={() => navigation.navigate("Home")}
                 onSpaces={() => navigation.popTo("SharedSpaces")}
                 onProjects={() => navigation.popTo("SharedProjects")}
+                onInventory={() => navigation.navigate("SharedInventory")}
               />
             )}
           </Stack.Screen>
@@ -412,6 +418,18 @@ function AppShell() {
                 projectId={route.params.projectId}
                 onBack={() => navigation.goBack()}
                 onEdit={(id) => navigation.navigate("Form", { projectId: id })}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen
+            name="SharedInventory"
+            options={{ title: "Inventario compartido" }}
+          >
+            {({ navigation }) => (
+              <SharedInventoryPage
+                onAccount={() => navigation.navigate("Account")}
+                onProjects={() => navigation.popTo("SharedProjects")}
+                onSpaces={() => navigation.popTo("SharedSpaces")}
               />
             )}
           </Stack.Screen>
