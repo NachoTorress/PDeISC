@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useDemo } from "../hooks/useDemo";
 import { useTheme } from "../contexts/ThemeContext";
 import type { Furniture, Space } from "../lib/types";
 import { Button, Card, Field, InlineConfirm } from "./ui";
@@ -11,22 +10,18 @@ export default function NativeSpaceEditor({
   selected,
   onChange,
   onSelect,
+  protectedFurnitureIds = [],
 }: {
   space: Space;
   selected: string | null;
   onChange: (space: Space) => void;
   onSelect: (id: string | null) => void;
+  protectedFurnitureIds?: string[];
 }) {
-  const { state } = useDemo();
   const { colors } = useTheme();
   const [confirm, setConfirm] = useState<string | null>(null);
   const current = space.furniture.find((item) => item.id === selected);
-  const used =
-    current &&
-    state.projects.some(
-      (project) =>
-        project.spaceId === space.id && project.furnitureId === current.id,
-    );
+  const used = current && protectedFurnitureIds.includes(current.id);
   const labelError =
     current?.type === "label" && (current.text?.trim().length ?? 0) < 2
       ? "Escribí al menos 2 caracteres para identificar la zona."

@@ -28,7 +28,13 @@ const empty: Credentials = {
   lastName: "",
 };
 
-export default function AccountPage({ onDemo }: { onDemo: () => void }) {
+export default function AccountPage({
+  onDemo,
+  onSpaces,
+}: {
+  onDemo: () => void;
+  onSpaces: () => void;
+}) {
   const { colors } = useTheme();
   const { user, ready, error: sessionError, client, retry } = useAuth();
   const [register, setRegister] = useState(false);
@@ -147,8 +153,9 @@ export default function AccountPage({ onDemo }: { onDemo: () => void }) {
               Cuenta creada el {formatDate(user.createdAt)}
             </Text>
             <Text style={paragraph}>
-              Tu cuenta ya se guarda en el servidor. Los proyectos, espacios y
-              préstamos de la demostración siguen siendo ejemplos locales.
+              Tu cuenta y los espacios compartidos se guardan en el servidor.
+              Los proyectos, el inventario y los préstamos de la demostración
+              siguen siendo ejemplos locales.
             </Text>
             <Button
               title={busy ? "Verificando…" : "Actualizar sesión"}
@@ -321,6 +328,11 @@ export default function AccountPage({ onDemo }: { onDemo: () => void }) {
             />
           </Card>
         )}
+        <Button
+          title="Ver espacios compartidos"
+          icon="map"
+          onPress={onSpaces}
+        />
         <Button
           title="Volver a la demostración"
           icon="arrowLeft"

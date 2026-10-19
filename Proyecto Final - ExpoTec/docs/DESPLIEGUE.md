@@ -28,7 +28,7 @@ flowchart LR
     API -->|MySQL con TLS| DB[(TiDB)]
 ```
 
-El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. **Mi cuenta** utiliza la API desde el hito 7B. Los proyectos, espacios, inventario y préstamos continúan en la demostración local.
+El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. **Mi cuenta** utiliza la API desde el hito 7B y **Espacios compartidos** desde el hito 7C. Los proyectos, inventario y préstamos continúan en la demostración local.
 
 ## 1. Base en TiDB
 
@@ -52,7 +52,7 @@ Configurar variables exclusivamente en este proyecto:
 | `DB_SSL_CA` | opcional, certificado PEM; admite `\n` escapados |
 | `DB_POOL_LIMIT` | `5`, valor inicial por instancia; ajustar según conexiones observadas |
 
-Las diez variables necesarias ya están guardadas como secretos de Production en Vercel, incluyendo la contraseña del usuario limitado y el JWT generado. No cargar `TEST_DB_NAME` ni credenciales de administración en producción. No copiar `.env` al repositorio. El puerto lo administra Vercel; `PORT=3001` corresponde al desarrollo local. La API limita los cuerpos de estas rutas a 16 KB y no implementa carga de archivos.
+Las diez variables necesarias ya están guardadas como secretos de Production en Vercel, incluyendo la contraseña del usuario limitado y el JWT generado. No cargar `TEST_DB_NAME` ni credenciales de administración en producción. No copiar `.env` al repositorio. El puerto lo administra Vercel; `PORT=3001` corresponde al desarrollo local. La API limita los cuerpos de autenticación a 16 KB y los de espacios a 128 KB; no implementa carga de archivos.
 
 Tras publicar, comprobar POST `/api/health` y POST `/api/health/ready` con cuerpo `{}`. El primer endpoint solo indica que el servicio responde; el segundo comprueba una consulta a la base. Registrar la cuenta propia y promoverla con el script local `admin:grant`, sin crear credenciales de demostración en producción.
 
@@ -94,6 +94,16 @@ Una API desplegada en funciones no debe conservar fotos, videos, copias de desca
 | Pantallas de cuentas conectadas y persistencia de sesión | Implementadas en el hito 7B; pruebas en navegador local aprobadas |
 | Dominio ExpoTec y acceso social/recuperación | Próximos bloques de la etapa 7 |
 
-El hito 7A de infraestructura queda comprobado el 14/10/2026. El hito 7B del 19/10/2026 incorpora el acceso desde la aplicación: 20 pruebas de backend y 57 de frontend aprobadas, revisión de tipos y estilos y exportaciones web y Android comprobadas. En navegador local se verificaron registro, contraseña incorrecta, ingreso, recarga, renovación en dos pestañas, cierre con confirmación, tamaño de teléfono y tema oscuro. Los datos compartidos de ExpoTec siguen pendientes. El APK continúa postergado por indicación del usuario.
+El hito 7A de infraestructura queda comprobado el 14/10/2026. El hito 7B del 19/10/2026 incorpora el acceso desde la aplicación: 20 pruebas de backend y 57 de frontend aprobadas, revisión de tipos y estilos y exportaciones web y Android comprobadas. En navegador local se verificaron registro, contraseña incorrecta, ingreso, recarga, renovación en dos pestañas, cierre con confirmación, tamaño de teléfono y tema oscuro.
+
+## Espacios compartidos — hito 7C
+
+La migración aditiva `002_spaces.sql` se aplicó a TiDB el 19/10/2026. Crea `spaces`, `furniture` y `booths`, vinculados mediante claves foráneas. No carga ejemplos ni modifica usuarios. Para otra instalación, ejecutar `npm run db:migrate` antes de publicar la API. Las tablas nuevas pueden conservarse si se vuelve al código anterior.
+
+La web abre la consulta pública de espacios; solo una cuenta real con permiso de administrador puede crear, acomodar y dar de baja espacios. Las bajas conservan filas e identidades. El guardado del plano y la habilitación de puestos son atómicos y comprueban la versión. La API admite hasta 100 espacios activos y 150 elementos por plano. El listado devuelve resúmenes y cada plano se consulta por separado para limitar el tamaño de las respuestas.
+
+Comprobaciones: 23 pruebas de backend y 60 de frontend aprobadas, más una prueba de integración real en TiDB (`npm run test:spaces`). Esa integración verifica migraciones repetibles, permisos, restricciones relacionales, guardados simultáneos y conservación de historial; utiliza y limpia únicamente sus propios datos en una base `expotec_test_*`. En navegador contra esa base se comprobaron creación, incorporación de una mesa, habilitación de puesto, giro, guardado, lectura desde otra pestaña, conflicto con borrador conservado, descarte confirmado, baja y consulta como invitado. La vista de 390 px no desborda horizontalmente.
+
+Tras desplegar, POST `/api/spaces/query` con `{}` debe responder 200 y mostrar exclusivamente los espacios reales activos. Una base sin espacios devuelve `{ "spaces": [] }`. POST `/api/spaces/create` sin Bearer debe responder 401. Los espacios de demostración siguen separados; no importar datos ficticios a producción. Las confirmaciones de proyectos y el inventario y préstamos compartidos quedan para los siguientes hitos. Por indicación del usuario, Android se retoma al final.
 
 Referencias de la persistencia de sesión: [Expo SecureStore](https://docs.expo.dev/versions/v57.0.0/sdk/securestore/), [cookies HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies) y [reescrituras de Vercel](https://vercel.com/docs/rewrites).

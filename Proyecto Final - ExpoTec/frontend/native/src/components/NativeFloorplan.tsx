@@ -31,6 +31,8 @@ interface Props {
   onResize: (id: string, geometry: Geometry) => void;
   onAddFurniture?: (furniture: Furniture) => void;
   onGestureActiveChange?: (active: boolean) => void;
+  shared?: boolean;
+  boothFurnitureIds?: string[];
 }
 
 const clamp = (value: number, min: number, max: number) =>
@@ -134,6 +136,8 @@ function MoveableItem({
   onSelect,
   onMove,
   onMoving,
+  booth = true,
+  shared = false,
 }: {
   item: Furniture;
   stage: Size;
@@ -144,6 +148,8 @@ function MoveableItem({
   onSelect: () => void;
   onMove: (x: number, y: number) => void;
   onMoving: (moving: boolean) => void;
+  booth?: boolean;
+  shared?: boolean;
 }) {
   const { colors } = useTheme();
   const [preview, setPreview] = useState<{ x: number; y: number } | null>(null);
@@ -223,7 +229,9 @@ function MoveableItem({
         : colors.surfaceVariant;
   const label =
     item.type === "table"
-      ? `Puesto ${item.id}. ${project?.name ?? (pending ? "Solicitado" : "Disponible")}`
+      ? booth
+        ? `Puesto ${item.id}. ${project?.name ?? (pending ? "Solicitado" : shared ? "Habilitado" : "Disponible")}`
+        : `Mesa ${item.id}. Solo mobiliario`
       : item.type === "label"
         ? `Zona: ${item.text ?? "Nueva zona"}`
         : item.type === "bench"
@@ -251,7 +259,7 @@ function MoveableItem({
         accessibilityHint={
           editing
             ? "Arrastrá para mover. Los tiradores cambian el tamaño de una mesa."
-            : "Muestra los detalles del puesto."
+            : "Muestra los detalles del elemento."
         }
         onPress={onSelect}
         style={styles.itemTouch}
@@ -289,21 +297,30 @@ function MoveableItem({
                   numberOfLines={1}
                   style={{ color: colors.muted, fontSize: 10 }}
                 >
-                  {project?.name ?? (pending ? "Solicitado" : "Disponible")}
+                  {booth
+                    ? (project?.name ??
+                      (pending
+                        ? "Solicitado"
+                        : shared
+                          ? "Habilitado"
+                          : "Disponible"))
+                    : "Mesa"}
                 </Text>
               )}
-              <View
-                style={[
-                  styles.occupiedDot,
-                  {
-                    backgroundColor: project
-                      ? colors.primary
-                      : pending
-                        ? colors.onWarning
-                        : colors.outline,
-                  },
-                ]}
-              />
+              {booth && (
+                <View
+                  style={[
+                    styles.occupiedDot,
+                    {
+                      backgroundColor: project
+                        ? colors.primary
+                        : pending
+                          ? colors.onWarning
+                          : colors.outline,
+                    },
+                  ]}
+                />
+              )}
             </>
           ) : item.type === "power" ? (
             <Icon name="power" size={22} color={colors.text} />
@@ -448,6 +465,8 @@ export default function NativeFloorplan({
   onResize,
   onAddFurniture,
   onGestureActiveChange,
+  shared = false,
+  boothFurnitureIds,
 }: Props) {
   const { colors } = useTheme();
   const viewport = useWindowDimensions();
@@ -504,7 +523,9 @@ export default function NativeFloorplan({
         />
       ) : (
         <Text selectable={false} style={{ color: colors.muted, fontSize: 12 }}>
-          Tocá una mesa para ver su proyecto o disponibilidad.
+          {shared
+            ? "Seleccioná un elemento para consultar sus detalles."
+            : "Tocá una mesa para ver su proyecto o disponibilidad."}
         </Text>
       )}
       <View
@@ -530,7 +551,11 @@ export default function NativeFloorplan({
             selectable={false}
             style={{ color: colors.muted, fontSize: 10 }}
           >
-            Distribución de ejemplo
+            {shared
+              ? editing
+                ? "Borrador del plano"
+                : "Distribución guardada"
+              : "Distribución de ejemplo"}
           </Text>
           <Text
             selectable={false}
@@ -539,17 +564,19 @@ export default function NativeFloorplan({
             Vista superior
           </Text>
         </View>
-        <View
-          pointerEvents="none"
-          style={[styles.walkway, { borderColor: colors.outline }]}
-        >
-          <Text
-            selectable={false}
-            style={{ color: colors.muted, fontSize: 10 }}
+        {!shared && (
+          <View
+            pointerEvents="none"
+            style={[styles.walkway, { borderColor: colors.outline }]}
           >
-            Circulación
-          </Text>
-        </View>
+            <Text
+              selectable={false}
+              style={{ color: colors.muted, fontSize: 10 }}
+            >
+              Circulación
+            </Text>
+          </View>
+        )}
         {space.furniture.map((item) => {
           const project = projects.find(
             (entry) =>
@@ -574,6 +601,10 @@ export default function NativeFloorplan({
               selected={selected === item.id}
               project={project}
               pending={pending}
+              booth={
+                boothFurnitureIds ? boothFurnitureIds.includes(item.id) : true
+              }
+              shared={shared}
               onSelect={() => onSelect(item.id)}
               onMove={(x, y) => onMove(item.id, x, y)}
               onMoving={(active) => {
@@ -613,29 +644,41 @@ export default function NativeFloorplan({
               onCommit={(geometry) => onResize(displayed.id, geometry)}
             />
           ))}
-        <View
-          pointerEvents="none"
-          style={[styles.entrance, { backgroundColor: colors.canvas }]}
-        >
-          <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
-            <Icon name="arrowDown" color={colors.muted} size={14} />
-            <Text
-              selectable={false}
-              style={{ color: colors.muted, fontSize: 11 }}
+        {!shared && (
+          <View
+            pointerEvents="none"
+            style={[styles.entrance, { backgroundColor: colors.canvas }]}
+          >
+            <View
+              style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
             >
-              Entrada
-            </Text>
+              <Icon name="arrowDown" color={colors.muted} size={14} />
+              <Text
+                selectable={false}
+                style={{ color: colors.muted, fontSize: 11 }}
+              >
+                Entrada
+              </Text>
+            </View>
           </View>
-        </View>
+        )}
       </View>
       <View style={styles.legend}>
-        {[
-          { label: "Disponible", color: colors.table },
-          { label: "Ocupado", color: colors.tableOccupied },
-          ...(showPending
-            ? [{ label: "Solicitado", color: colors.warning }]
-            : []),
-        ].map((item) => (
+        {(shared
+          ? [
+              {
+                label: "Puestos habilitados · ver detalle",
+                color: colors.table,
+              },
+            ]
+          : [
+              { label: "Disponible", color: colors.table },
+              { label: "Ocupado", color: colors.tableOccupied },
+              ...(showPending
+                ? [{ label: "Solicitado", color: colors.warning }]
+                : []),
+            ]
+        ).map((item) => (
           <View key={item.label} style={styles.legendItem}>
             <View
               style={{

@@ -312,6 +312,9 @@ export default function MapPage({
             {draft ? (
               <NativeSpaceEditor
                 space={draft}
+                protectedFurnitureIds={state.projects
+                  .filter((project) => project.spaceId === draft.id)
+                  .map((project) => project.furnitureId)}
                 selected={selected}
                 onChange={setDraft}
                 onSelect={setSelected}

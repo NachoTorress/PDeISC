@@ -156,3 +156,37 @@ test("una sesión revocada no se informa como verificada", async () => {
   assert.equal(app.user(), null);
   assert.equal(app.saved(), null);
 });
+
+test("las consultas públicas no envían acceso y un conflicto de guardado no se reintenta", async () => {
+  let writes = 0;
+  const app = setup(async (path, body, token) => {
+    if (path.endsWith("/refresh")) return session;
+    if (path.endsWith("/query")) {
+      assert.equal(token, undefined);
+      return { spaces: [] };
+    }
+    assert.equal(token, "access");
+    assert.deepEqual(body, { version: 4 });
+    writes++;
+    throw new AuthError("Otra persona modificó el espacio", 409);
+  });
+  await app.client.restore();
+  await app.client.query("/api/spaces/query");
+  await assert.rejects(
+    app.client.send("/api/spaces/space/save", { version: 4 }),
+    (error) => error instanceof AuthError && error.status === 409,
+  );
+  assert.equal(writes, 1);
+  assert.equal(app.saved(), "refresh");
+});
+
+test("una escritura sin sesión no llega al endpoint protegido", async () => {
+  const app = setup(async () => {
+    throw new Error("No debe enviar solicitudes");
+  });
+  await app.storage.clear();
+  await assert.rejects(
+    app.client.send("/api/spaces/create", {}),
+    (error) => error instanceof AuthError && error.status === 401,
+  );
+});

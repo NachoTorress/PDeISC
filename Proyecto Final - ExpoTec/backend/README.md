@@ -1,6 +1,44 @@
 # ExpoTec API — cuentas y sesiones
 
-Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas locales, sesiones y permisos; usa mysql2 y SQL relacional compatible con MySQL/TiDB. Desde el hito 7B, la pantalla **Mi cuenta** utiliza esta API. Los datos de proyectos, espacios y préstamos todavía pertenecen a la demostración local.
+Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas, sesiones, permisos y espacios compartidos; usa mysql2 y SQL relacional compatible con MySQL/TiDB. **Mi cuenta** y **Espacios compartidos** utilizan esta API. Los proyectos, inventario y préstamos todavía pertenecen a la demostración local.
+
+## Espacios compartidos — hito 7C
+
+Las consultas son públicas y no devuelven datos de cuentas. Las escrituras requieren Bearer de una sesión válida y permiso `admin`, comprobado nuevamente dentro de la transacción junto con el estado activo del usuario. El selector de perfiles ficticios no concede permisos.
+
+| Método y ruta | Permiso y cuerpo | Respuesta |
+| --- | --- | --- |
+| POST `/api/spaces/query` | Público; `{}` | 200 `{ spaces }`: id, nombre, descripción, versión, fechas y cantidades de muebles y puestos de cada espacio activo |
+| POST `/api/spaces/:id/query` | Público; UUID y `{}` | 200 `{ space }`, con `furniture` y `booths` |
+| POST `/api/spaces/create` | Administrador; `{ name, description }` | 201 `{ space }`, sin mobiliario, versión 1 |
+| POST `/api/spaces/:id/save` | Administrador; `{ version, name, description, furniture, boothFurnitureIds }` | 200 `{ space }`, versión incrementada y plano guardado atómicamente |
+| POST `/api/spaces/:id/archive` | Administrador; `{ version }` | 204; baja lógica del espacio, sus muebles y puestos |
+
+`space` contiene `id`, `name`, `description`, `version`, `createdAt`, `updatedAt`, `furniture` y `booths`. Las fechas se serializan como ISO UTC. Cada mueble tiene `id` como código único dentro de su espacio, `type` (`table`, `bench`, `power` o `label`), `x`, `y` y `rotation`. Las mesas tienen `width` y `height`; las etiquetas, `text`. Los puestos tienen UUID estable `id` y `furnitureId`, separado de la identidad del mueble.
+
+Ejemplo de guardado de una mesa habilitada como puesto:
+
+```json
+{
+  "version": 1,
+  "name": "Aula 1",
+  "description": "Planta baja",
+  "furniture": [
+    { "id": "M01", "type": "table", "x": 50, "y": 50, "rotation": 0, "width": 14, "height": 9 }
+  ],
+  "boothFurnitureIds": ["M01"]
+}
+```
+
+Límites: 100 espacios activos, 150 muebles por plano, nombre de 2–80 caracteres y descripción de hasta 150. Los códigos admiten 1–64 letras ASCII, números, guiones y guion bajo. Coordenadas finitas de 0–100; giros de 0, 90, 180 o 270 grados; ancho relativo de mesa 6–30 y alto 4–25. Las etiquetas requieren 2–60 caracteres. Solo las mesas pueden habilitarse como puestos. Los valores del plano no representan metros ni validan la instalación eléctrica.
+
+Errores: 400 por campos desconocidos o datos inválidos; 401 sin sesión o con sesión vencida; 403 por permisos; 404 por espacio inexistente o dado de baja; 409 `SPACE_CHANGED` si la versión ya cambió, `FURNITURE_ID_RESERVED` si se intenta reutilizar un código retirado/cambiar su tipo, o `SPACE_LIMIT` al superar 100 espacios; 413 por cuerpo mayor a 128 KB; 429 por exceso de escrituras. El formato común es `{ error: { code, message, fields? }, requestId }`. Los endpoints de autenticación conservan su límite de 16 KB.
+
+El guardado bloquea el espacio y verifica la versión, conserva las identidades de los puestos, actualiza el mobiliario y las habilitaciones y aumenta la versión en una sola transacción. No reintentar automáticamente un conflicto: el usuario debe revisar los cambios y decidir si descarta su borrador. Las bajas conservan filas inactivas. Las claves foráneas vinculan puestos con muebles y muebles con espacios; las relaciones no se guardan como JSON.
+
+La migración `002_spaces.sql` es aditiva y no importa la demostración ni crea datos de la escuela. Aplicar `npm run db:migrate` antes de desplegar esta API. Volver a una versión anterior de la aplicación no requiere quitar las tablas nuevas; conservarlas evita perder datos. La protección frente a asignaciones de proyectos y préstamos se completará al incorporar esas entidades: todavía no existen reservas reales ni proyectos asociados en la base.
+
+`npm run test:spaces` usa exclusivamente una base `expotec_test_*`, distinta de `DB_NAME`. Aplica migraciones repetibles y comprueba HTTP, SQL, claves foráneas, permisos retirados, guardados concurrentes, versiones y conservación de filas. Limpia únicamente sus espacios y cuentas temporales; permite conservar otras pruebas existentes. `npm run test:database` sigue requiriendo una base vacía para la prueba histórica completa de autenticación.
 
 ## Sesión web — hito 7B
 
@@ -105,7 +143,7 @@ Errores uniformes:
 }
 ```
 
-`fields` aparece solo cuando corresponde. Códigos HTTP generales: 400 validación/JSON, 401 sesión o credenciales, 403 permisos/origen, 404 ruta/usuario, 409 conflicto, 413 cuerpo mayor a 16 KB, 429 límite de intentos, 500 error inesperado y 503 conexión no disponible. Las respuestas y logs no incluyen contraseñas, tokens ni mensajes internos del driver.
+`fields` aparece solo cuando corresponde. Códigos HTTP generales: 400 validación/JSON, 401 sesión o credenciales, 403 permisos/origen, 404 ruta/entidad, 409 conflicto, 413 cuerpo mayor al límite de la ruta (16 KB en autenticación, 128 KB en espacios), 429 límite de intentos, 500 error inesperado y 503 conexión no disponible. Las respuestas y logs no incluyen contraseñas, tokens ni mensajes internos del driver.
 
 El límite de cuentas/sesiones públicas permite 40 solicitudes por IP cada 15 minutos; login además admite 10 intentos por correo en ese lapso. Los contadores se guardan y bloquean en SQL, para compartirlos entre instancias de Vercel. Un 429 incluye `Retry-After` en segundos. Fuera de Vercel no se confía en cabeceras que reescriben la IP.
 

@@ -65,7 +65,31 @@ export function createAuthClient(
       else throw error;
     }
   }
+  async function authorized<T>(endpoint: string, body: object): Promise<T> {
+    if (!session || expiresAt <= Date.now() + 30000) await renew();
+    if (!session)
+      throw new AuthError("Tu sesión venció. Volvé a ingresar.", 401);
+    try {
+      return await request<T>(endpoint, body, session.accessToken);
+    } catch (error) {
+      if (!(error instanceof AuthError) || error.status !== 401) throw error;
+      await renew();
+      if (!session)
+        throw new AuthError("Tu sesión venció. Volvé a ingresar.", 401);
+      try {
+        return await request<T>(endpoint, body, session.accessToken);
+      } catch (retryError) {
+        if (retryError instanceof AuthError && retryError.status === 401)
+          await forget();
+        throw retryError;
+      }
+    }
+  }
   return {
+    query: <T>(endpoint: string, body: object = {}) =>
+      request<T>(endpoint, body),
+    send: <T>(endpoint: string, body: object) =>
+      serial(() => authorized<T>(endpoint, body)),
     restore: () => serial(renew),
     signIn: (input: Credentials, register: boolean) =>
       serial(async () => {
@@ -78,28 +102,15 @@ export function createAuthClient(
       }),
     verify: () =>
       serial(async () => {
-        if (!session || expiresAt <= Date.now() + 30000) await renew();
-        if (!session) return false;
         let result: { user: AccountUser };
         try {
-          result = await request("/api/auth/session", {}, session.accessToken);
+          result = await authorized("/api/auth/session", {});
         } catch (error) {
           if (!(error instanceof AuthError) || error.status !== 401)
             throw error;
-          await renew();
-          if (!session) return false;
-          try {
-            result = await request(
-              "/api/auth/session",
-              {},
-              session.accessToken,
-            );
-          } catch (retryError) {
-            if (retryError instanceof AuthError && retryError.status === 401)
-              await forget();
-            throw retryError;
-          }
+          return false;
         }
+        if (!session) return false;
         session = { ...session, user: result.user };
         changed(result.user);
         return true;

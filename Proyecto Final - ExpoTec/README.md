@@ -2,7 +2,7 @@
 
 Prototipo de organización escolar migrado a **React Native con Expo SDK 57**. El código activo está en `frontend/native`; la versión anterior de Vite queda en `frontend/web` como referencia. La generación del APK quedó para una etapa posterior, como indicó el usuario.
 
-Los proyectos, espacios y préstamos de la demostración son ejemplos locales y todavía no se sincronizan entre dispositivos. **Mi cuenta** ya conecta la aplicación con la API: permite registrarse como alumno, ingresar, consultar los permisos asignados por el servidor, recuperar la sesión y cerrarla con confirmación.
+La aplicación abre **Espacios compartidos**, con planos y puestos guardados en TiDB y consulta pública. Solo los administradores reales pueden crear espacios, guardar su distribución y darlos de baja. **Mi cuenta** permite registrarse como alumno, ingresar, consultar los permisos del servidor y cerrar sesión. La demostración conserva aparte sus proyectos, espacios, inventario y préstamos ficticios, locales a cada dispositivo.
 
 La [web pública](https://expotec-web-gn19.vercel.app) ya está en Vercel. La API está publicada por separado en `https://expotec-api-gn19.vercel.app` y conectada a TiDB. Los pasos para probarla y actualizar los despliegues están en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
 
@@ -61,6 +61,10 @@ La configuración de `eas.json` incluye el perfil `preview` para un APK futuro. 
 - Temas claro y oscuro separados, navegación adaptable, retroceso nativo, validación inmediata y confirmaciones dentro de la interfaz.
 
 ## Guía breve de uso
+
+**Espacios compartidos** es la entrada de la aplicación. Al principio puede estar vacío: la organización debe cargar la distribución real. **Actualizar espacios** consulta el servidor. Los invitados y alumnos pueden ver los planos sin editarlos. Un administrador puede crear un espacio, abrir **Acomodar espacio**, agregar y mover mobiliario y guardar el plano para todos los dispositivos. Cada mesa se agrega como mobiliario; seleccionarla y marcar **Habilitar esta mesa como puesto para proyectos** la convierte en un puesto inscribible. El registro y la confirmación de proyectos sobre esos puestos se implementarán en el siguiente hito.
+
+Si otro administrador guardó cambios, se avisa del conflicto y se conserva el borrador en pantalla. **Descartar borrador y recargar** pide confirmación antes de reemplazarlo por la versión del servidor. **Dar de baja espacio** también requiere confirmación, lo retira de la consulta pública y conserva sus registros. Los tamaños y posiciones del plano son relativos, sin dimensiones físicas certificadas. Las cuentas nuevas no pueden concederse permisos de administración; la escuela los asigna mediante el procedimiento del backend.
 
 **Mi cuenta** abre el acceso real. El registro pide nombre, apellido, correo y contraseña de 12–128 caracteres, con repetición para comprobarla. Las nuevas cuentas reciben únicamente el permiso de alumno. La ficha muestra los permisos actuales y permite actualizarlos o cerrar sesión con confirmación. Si falla la conexión, se puede reintentar sin eliminar la sesión guardada. La recuperación de contraseña y los proveedores sociales siguen pendientes.
 
@@ -122,7 +126,7 @@ Esos pasos corresponden a una instalación nueva: no reemplazar el `.env` existe
 
 La [documentación de la API](backend/README.md) detalla todos los métodos, rutas, permisos, cuerpos, respuestas y errores. Las consultas usan POST mientras se confirma la restricción sobre GET de la consigna. La [guía de TiDB y Vercel](docs/DESPLIEGUE.md) explica raíces de los dos proyectos, variables y orden de configuración. Las credenciales de base y `JWT_SECRET` se guardan exclusivamente en el backend.
 
-El hito **7B: acceso desde la aplicación**, implementado el 19/10/2026, incorpora las pantallas y la persistencia de sesión. Los perfiles ficticios se mantienen exclusivamente para la demostración local, separados de los permisos de la cuenta. Conectar los datos de proyectos, espacios e inventario al servidor sigue pendiente.
+El hito **7B: acceso desde la aplicación**, implementado el 19/10/2026, incorpora las pantallas y la persistencia de sesión. El hito **7C: espacios compartidos** añade las tablas relacionales de espacios, mobiliario y puestos, con edición atómica, control de versiones y baja sin borrado. Los perfiles ficticios se mantienen exclusivamente para la demostración local. Conectar los proyectos, el inventario y los préstamos al servidor sigue pendiente.
 
 En desarrollo web, copiar `frontend/native/.env.example` a `.env.local` únicamente si no existe y configurar `EXPO_PUBLIC_API_URL=http://localhost:3001`. Abrir Expo Web con `localhost` y autorizar su origen y puerto exactos en `CORS_ORIGINS` del backend. Reiniciar Expo tras modificar variables. En Android sin variable se usa la API pública; para el emulador con API local usar `http://10.0.2.2:3001`. Nunca colocar credenciales de base ni secretos en variables `EXPO_PUBLIC_`.
 
@@ -130,7 +134,7 @@ Para probar una exportación local, iniciar el backend y ejecutar `npm run previ
 
 ## Entrega final pendiente
 
-Integración de proyectos, espacios, inventario y préstamos con TiDB, transacciones y permisos del dominio en servidor, tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. La persistencia de sesión está implementada; su ejecución en un Android físico queda por comprobar. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
+Integración de proyectos, inventario y préstamos con TiDB, asignación y confirmación transaccionales de puestos y recursos, tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
 
 Las fechas, el plano real, el relevamiento eléctrico, los proveedores externos y el almacenamiento de videos requieren definición antes de reemplazar los ejemplos. El prototipo usa enlaces directos MP4/WebM; su reproducción final depende del formato compatible con cada dispositivo.
 

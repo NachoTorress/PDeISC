@@ -8,6 +8,7 @@ import {
   NavigationContainer,
   useNavigation,
   useNavigationContainerRef,
+  StackActions,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -29,6 +30,7 @@ import InventoryPage from "./pages/InventoryPage";
 import GalleryPage from "./pages/GalleryPage";
 import PresentationPage from "./pages/PresentationPage";
 import AccountPage from "./pages/AccountPage";
+import SharedSpacesPage from "./pages/SharedSpacesPage";
 
 type RootRoutes = {
   Home: undefined;
@@ -36,6 +38,7 @@ type RootRoutes = {
   Form: { projectId?: string } | undefined;
   Presentation: undefined;
   Account: undefined;
+  SharedSpaces: undefined;
 };
 type TabRoutes = {
   map: undefined;
@@ -111,7 +114,8 @@ function AppShell() {
   const { role, setRole, notice } = useDemo();
   const { user } = useAuth();
   const [menu, setMenu] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
+  const [remoteOpen, setRemoteOpen] = useState(true);
+  const [startInDemo, setStartInDemo] = useState(false);
   const navigation = useNavigationContainerRef<RootRoutes>();
   const { width } = useWindowDimensions();
   const profile = profiles.find((item) => item.role === role)!;
@@ -195,7 +199,7 @@ function AppShell() {
           />
         </View>
       </View>
-      {menu && !accountOpen && (
+      {menu && !remoteOpen && (
         <View
           style={{
             padding: 16,
@@ -216,6 +220,7 @@ function AppShell() {
                 icon={item.role === role ? "check" : "users"}
                 variant={item.role === role ? "primary" : "secondary"}
                 onPress={() => {
+                  setStartInDemo(true);
                   setRole(item.role);
                   setMenu(false);
                 }}
@@ -226,9 +231,17 @@ function AppShell() {
             Perfiles ficticios para probar datos locales. Los permisos de tu
             cuenta real se consultan desde Mi cuenta.
           </Text>
+          <Button
+            title="Ver espacios compartidos"
+            variant="secondary"
+            onPress={() => {
+              setMenu(false);
+              navigation.dispatch(StackActions.popTo("SharedSpaces"));
+            }}
+          />
         </View>
       )}
-      {!accountOpen && (
+      {!remoteOpen && (
         <View
           style={{
             paddingHorizontal: width > 700 ? 32 : 18,
@@ -250,7 +263,7 @@ function AppShell() {
           />
         </View>
       )}
-      {!!notice && !accountOpen && (
+      {!!notice && !remoteOpen && (
         <View
           style={{
             paddingHorizontal: 18,
@@ -275,13 +288,22 @@ function AppShell() {
         theme={navTheme}
         key={role}
         onReady={() =>
-          setAccountOpen(navigation.getCurrentRoute()?.name === "Account")
+          setRemoteOpen(
+            ["Account", "SharedSpaces"].includes(
+              navigation.getCurrentRoute()?.name ?? "",
+            ),
+          )
         }
         onStateChange={() =>
-          setAccountOpen(navigation.getCurrentRoute()?.name === "Account")
+          setRemoteOpen(
+            ["Account", "SharedSpaces"].includes(
+              navigation.getCurrentRoute()?.name ?? "",
+            ),
+          )
         }
       >
         <Stack.Navigator
+          initialRouteName={startInDemo ? "Home" : "SharedSpaces"}
           screenOptions={{
             headerStyle: { backgroundColor: colors.surface },
             headerTintColor: colors.text,
@@ -293,9 +315,20 @@ function AppShell() {
             component={HomeTabs}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="SharedSpaces"
+            options={{ title: "Espacios compartidos" }}
+          >
+            {({ navigation }) => (
+              <SharedSpacesPage onDemo={() => navigation.navigate("Home")} />
+            )}
+          </Stack.Screen>
           <Stack.Screen name="Account" options={{ title: "Mi cuenta" }}>
             {({ navigation }) => (
-              <AccountPage onDemo={() => navigation.navigate("Home")} />
+              <AccountPage
+                onDemo={() => navigation.navigate("Home")}
+                onSpaces={() => navigation.popTo("SharedSpaces")}
+              />
             )}
           </Stack.Screen>
           <Stack.Screen name="Detail" options={{ title: "Proyecto" }}>
