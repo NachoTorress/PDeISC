@@ -20,10 +20,12 @@ export default function SharedInventoryPage({
   onAccount,
   onProjects,
   onSpaces,
+  onLoans,
 }: {
   onAccount: () => void;
   onProjects: () => void;
   onSpaces: () => void;
+  onLoans: () => void;
 }) {
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
@@ -174,6 +176,13 @@ export default function SharedInventoryPage({
             void load();
           }}
         />
+        <Button
+          title="Ver préstamos y devoluciones"
+          icon="loans"
+          variant="secondary"
+          onPress={onLoans}
+          disabled={busy || !!editing}
+        />
         {canManage && (
           <Button
             title="Nuevo elemento"
@@ -189,9 +198,9 @@ export default function SharedInventoryPage({
         )}
       </View>
       <Text style={paragraph}>
-        Disponible para reservar = total menos las reservas de proyectos
-        confirmados. La entrega y devolución física se incorporarán con los
-        préstamos.
+        Las unidades fuera de servicio no están disponibles. Las reservas se
+        conservan entre jornadas; las entregas y devoluciones actualizan las
+        unidades que todavía están prestadas.
       </Text>
       {!canManage && (
         <Text style={paragraph}>
@@ -302,9 +311,20 @@ export default function SharedInventoryPage({
               subtitle={resource.description || undefined}
             />
             <Text style={{ color: colors.text, lineHeight: 24 }}>
-              Total: {resource.total} · Reservadas: {resource.reserved} ·
-              Disponibles: {resource.available}
+              Total: {resource.total} · Fuera de servicio:{" "}
+              {resource.unavailable} · Reservadas: {resource.reserved} ·
+              Disponibles para reservar: {resource.available}
             </Text>
+            <Text style={paragraph}>
+              Sin devolver: {resource.outstanding} · Disponibles para entregar:{" "}
+              {resource.availableToLend}
+            </Text>
+            {resource.shortage > 0 && (
+              <Text style={{ color: colors.error, lineHeight: 22 }}>
+                Faltan {resource.shortage} unidades utilizables para cubrir las
+                reservas. Revisá el estado o las existencias.
+              </Text>
+            )}
             <Text style={paragraph}>
               Creado el {formatDate(resource.createdAt)}
               {resource.archivedAt
@@ -385,6 +405,7 @@ export default function SharedInventoryPage({
                           create: "Alta",
                           update: "Modificación",
                           archive: "Baja",
+                          damage: "Devolución con daños",
                         } as Record<string, string>
                       )[event.action] ?? event.action}{" "}
                       · {formatDate(event.createdAt)} · {event.firstName}{" "}
@@ -396,6 +417,15 @@ export default function SharedInventoryPage({
                         ? event.total
                         : `${event.previousTotal} → ${event.total}`}
                     </Text>
+                    <Text style={paragraph}>
+                      Fuera de servicio:{" "}
+                      {event.previousUnavailable === null
+                        ? event.unavailable
+                        : `${event.previousUnavailable} → ${event.unavailable}`}
+                    </Text>
+                    {!!event.note && (
+                      <Text style={paragraph}>{event.note}</Text>
+                    )}
                   </View>
                 ))}
                 <Button

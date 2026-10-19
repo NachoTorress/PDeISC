@@ -11,6 +11,10 @@ test('inventario valida cantidades estrictas, campos y versiones', () => {
   assert.throws(() => resourceBody({ ...input, version: 0 }, true));
   assert.deepEqual(inventoryQuery({ archived: true }), { limit: 25, offset: 0, archived: true });
   assert.throws(() => inventoryQuery({ archived: 'true' }));
+  assert.equal(resourceBody({ ...input, total: 3, unavailable: 1 }).unavailable, 1);
+  assert.equal(resourceBody({ ...input, version: 1 }, true).unavailable, undefined);
+  for (const unavailable of [-1, 0.5, '1', null, 4]) assert.throws(() => resourceBody({ ...input, total: 3, unavailable }));
+  for (const note of [null, 4, 'x'.repeat(1001)]) assert.throws(() => resourceBody({ ...input, note }));
 });
 test('los pedidos rechazan duplicados y cantidades inválidas; un cliente anterior no borra los existentes', () => {
   const resourceId = randomUUID();

@@ -14,12 +14,14 @@ export default function SharedProjectsPage({
   onSpaces,
   onAccount,
   onInventory,
+  onLoans,
 }: {
   onSelect: (id: string, privateView: boolean) => void;
   onCreate: () => void;
   onSpaces: () => void;
   onAccount: () => void;
   onInventory: () => void;
+  onLoans: () => void;
 }) {
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
@@ -113,6 +115,15 @@ export default function SharedProjectsPage({
         {ready && user?.roles.includes("student") && (
           <Button title="Presentar proyecto" icon="plus" onPress={onCreate} />
         )}
+        {ready &&
+          user?.roles.some((role) => role === "admin" || role === "loans") && (
+            <Button
+              title="Ver préstamos"
+              icon="loans"
+              variant="secondary"
+              onPress={onLoans}
+            />
+          )}
         <Button
           title="Actualizar proyectos"
           variant="quiet"

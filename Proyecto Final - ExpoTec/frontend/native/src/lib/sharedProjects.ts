@@ -10,10 +10,7 @@ export interface ProjectParticipant extends ProjectPerson {
   id: string;
 }
 export type SharedProjectStatus =
-  | "pending"
-  | "changes"
-  | "approved"
-  | "cancelled";
+  "pending" | "changes" | "approved" | "cancelled";
 export interface ProjectSummary {
   id: string;
   name: string;
@@ -24,8 +21,10 @@ export interface ProjectSummary {
   spaceName: string;
   furnitureId: string;
 }
-export interface SharedProject
-  extends Omit<ProjectSummary, "spaceName" | "furnitureId"> {
+export interface SharedProject extends Omit<
+  ProjectSummary,
+  "spaceName" | "furnitureId"
+> {
   description: string;
   videoUrl: string;
   isSoftwareProject: boolean;
@@ -44,6 +43,7 @@ export interface SharedProject
   version?: number;
   feedback?: string;
   resources?: ProjectResource[];
+  openLoanQuantity?: number;
   reviews?: {
     id: string;
     action: string;

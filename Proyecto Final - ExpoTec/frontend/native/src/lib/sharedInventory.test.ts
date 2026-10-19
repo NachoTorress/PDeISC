@@ -29,6 +29,20 @@ test("las cantidades exigen enteros explícitos; cero es válido solo para exist
       { resourceId: "cable", name: "Cable", quantity: "2" },
     ]),
   );
+  const condition = {
+    name: "Cable",
+    description: "",
+    total: "3",
+    unavailable: "0",
+    previousUnavailable: 1,
+    note: "",
+  };
+  assert.ok(inventoryErrors(condition).note);
+  assert.deepEqual(
+    inventoryErrors({ ...condition, note: "Se reparó la ficha del cable." }),
+    {},
+  );
+  assert.ok(inventoryErrors({ ...condition, unavailable: "4" }).unavailable);
 });
 test("la propuesta envía solo IDs y cantidades de recursos, sin existencias ni reservas confiadas al cliente", () => {
   const user = {

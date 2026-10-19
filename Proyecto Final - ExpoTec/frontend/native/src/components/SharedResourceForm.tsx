@@ -27,6 +27,8 @@ export default function SharedResourceForm({
     name: resource?.name ?? "",
     description: resource?.description ?? "",
     total: String(resource?.total ?? 0),
+    unavailable: String(resource?.unavailable ?? 0),
+    note: "",
   });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [fields, setFields] = useState<Record<string, string>>({});
@@ -39,9 +41,14 @@ export default function SharedResourceForm({
   const dirty =
     input.name !== (resource?.name ?? "") ||
     input.description !== (resource?.description ?? "") ||
-    input.total !== String(resource?.total ?? 0);
+    input.total !== String(resource?.total ?? 0) ||
+    input.unavailable !== String(resource?.unavailable ?? 0) ||
+    !!input.note;
   usePreventRemove(dirty && !saved, ({ data }) => setLeaveAction(data.action));
-  const validation = inventoryErrors(input);
+  const validation = inventoryErrors({
+    ...input,
+    previousUnavailable: resource?.unavailable ?? 0,
+  });
   function change(key: keyof typeof input, value: string) {
     setInput((current) => ({ ...current, [key]: value }));
     setTouched((current) => ({ ...current, [key]: true }));
@@ -49,7 +56,13 @@ export default function SharedResourceForm({
     setError("");
   }
   async function save() {
-    setTouched({ name: true, description: true, total: true });
+    setTouched({
+      name: true,
+      description: true,
+      total: true,
+      unavailable: true,
+      note: true,
+    });
     if (working.current || Object.keys(validation).length) return;
     working.current = true;
     setBusy(true);
@@ -64,6 +77,8 @@ export default function SharedResourceForm({
           name: input.name.trim(),
           description: input.description.trim(),
           total: Number(input.total),
+          unavailable: Number(input.unavailable),
+          note: input.note.trim(),
           ...(resource ? { version: resource.version } : {}),
         },
       );
@@ -120,8 +135,31 @@ export default function SharedResourceForm({
         editable={!busy}
         maxLength={6}
         keyboardType="number-pad"
-        hint="Ingresá unidades utilizables del mismo tipo. Las mesas del plano se administran por separado."
+        hint="Incluí las unidades fuera de servicio. Las mesas del plano se administran por separado."
         error={fields.total || (touched.total ? validation.total : undefined)}
+      />
+      <Field
+        label="Unidades fuera de servicio"
+        value={input.unavailable}
+        onChangeText={(value) => change("unavailable", value)}
+        editable={!busy}
+        maxLength={6}
+        keyboardType="number-pad"
+        hint="Las devoluciones con daños aumentan esta cantidad. Actualizala después de revisar o reparar los elementos."
+        error={
+          fields.unavailable ||
+          (touched.unavailable ? validation.unavailable : undefined)
+        }
+      />
+      <Field
+        label="Motivo del ajuste"
+        value={input.note}
+        onChangeText={(value) => change("note", value)}
+        editable={!busy}
+        multiline
+        maxLength={1000}
+        hint="Obligatorio al cambiar las unidades fuera de servicio; mínimo 10 caracteres."
+        error={fields.note || (touched.note ? validation.note : undefined)}
       />
       {resource && (
         <Text style={{ color: colors.muted, lineHeight: 22 }}>

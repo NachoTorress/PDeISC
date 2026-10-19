@@ -95,6 +95,7 @@ export default function SharedProjectPage({
     !!user?.roles.includes("teacher") &&
     !!project?.teachers.some((person) => person.id === user.id);
   const admin = !!user?.roles.includes("admin");
+  const hasOpenLoans = (project?.openLoanQuantity ?? 0) > 0;
   const editable =
     privateView &&
     member &&
@@ -312,6 +313,7 @@ export default function SharedProjectPage({
                           ? "El pedido se conserva como historial; no reserva stock."
                           : `Disponibles para reservar ahora: ${item.available} de ${item.total}.`}
                       {item.archivedAt ? " Elemento dado de baja." : ""}
+                      {` Sin devolver de este proyecto: ${item.outstanding}. Fuera de servicio en el inventario: ${item.unavailable}.`}
                     </Text>
                   </View>
                 ))}
@@ -324,6 +326,13 @@ export default function SharedProjectPage({
                     </Text>
                   )}
               </Card>
+            )}
+            {hasOpenLoans && (
+              <Text style={{ color: colors.error, lineHeight: 22 }}>
+                Este proyecto tiene {project.openLoanQuantity} unidades sin
+                devolver. Registrá su devolución antes de reabrir o cancelar el
+                proyecto.
+              </Text>
             )}
             {!!project.feedback && (
               <Card>
@@ -388,7 +397,7 @@ export default function SharedProjectPage({
                   <Button
                     title="Reabrir propuesta y liberar reservas"
                     variant="secondary"
-                    disabled={busy || note.trim().length < 10}
+                    disabled={busy || hasOpenLoans || note.trim().length < 10}
                     onPress={() => setConfirm("reopen")}
                   />
                 )}
@@ -399,7 +408,7 @@ export default function SharedProjectPage({
                 title="Cancelar proyecto"
                 variant="danger"
                 icon="trash"
-                disabled={busy}
+                disabled={busy || hasOpenLoans}
                 onPress={() => setConfirm("cancel")}
               />
             )}

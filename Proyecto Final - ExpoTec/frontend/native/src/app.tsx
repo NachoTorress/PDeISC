@@ -35,6 +35,7 @@ import SharedProjectsPage from "./pages/SharedProjectsPage";
 import SharedProjectPage from "./pages/SharedProjectPage";
 import SharedProposalPage from "./pages/SharedProposalPage";
 import SharedInventoryPage from "./pages/SharedInventoryPage";
+import SharedLoansPage from "./pages/SharedLoansPage";
 
 type RootRoutes = {
   Home: undefined;
@@ -47,6 +48,7 @@ type RootRoutes = {
   SharedProject: { projectId: string; privateView?: boolean };
   SharedProposal: { projectId?: string } | undefined;
   SharedInventory: undefined;
+  SharedLoans: undefined;
 };
 type TabRoutes = {
   map: undefined;
@@ -304,6 +306,7 @@ function AppShell() {
               "SharedProject",
               "SharedProposal",
               "SharedInventory",
+              "SharedLoans",
             ].includes(navigation.getCurrentRoute()?.name ?? ""),
           )
         }
@@ -316,6 +319,7 @@ function AppShell() {
               "SharedProject",
               "SharedProposal",
               "SharedInventory",
+              "SharedLoans",
             ].includes(navigation.getCurrentRoute()?.name ?? ""),
           )
         }
@@ -360,6 +364,7 @@ function AppShell() {
                   })
                 }
                 onCreate={() => navigation.navigate("SharedProposal")}
+                onLoans={() => navigation.navigate("SharedLoans")}
                 onInventory={() => navigation.navigate("SharedInventory")}
                 onSpaces={() => navigation.popTo("SharedSpaces")}
                 onAccount={() => navigation.navigate("Account")}
@@ -408,6 +413,7 @@ function AppShell() {
                 onDemo={() => navigation.navigate("Home")}
                 onSpaces={() => navigation.popTo("SharedSpaces")}
                 onProjects={() => navigation.popTo("SharedProjects")}
+                onLoans={() => navigation.navigate("SharedLoans")}
                 onInventory={() => navigation.navigate("SharedInventory")}
               />
             )}
@@ -427,6 +433,7 @@ function AppShell() {
           >
             {({ navigation }) => (
               <SharedInventoryPage
+                onLoans={() => navigation.navigate("SharedLoans")}
                 onAccount={() => navigation.navigate("Account")}
                 onProjects={() => navigation.popTo("SharedProjects")}
                 onSpaces={() => navigation.popTo("SharedSpaces")}
@@ -443,6 +450,18 @@ function AppShell() {
               )}
             </Stack.Screen>
           )}
+          <Stack.Screen
+            name="SharedLoans"
+            options={{ title: "Préstamos compartidos" }}
+          >
+            {({ navigation }) => (
+              <SharedLoansPage
+                onAccount={() => navigation.navigate("Account")}
+                onInventory={() => navigation.popTo("SharedInventory")}
+                onProjects={() => navigation.popTo("SharedProjects")}
+              />
+            )}
+          </Stack.Screen>
           <Stack.Screen name="Presentation" options={{ headerShown: false }}>
             {({ navigation }) => (
               <PresentationPage onBack={() => navigation.goBack()} />

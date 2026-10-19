@@ -136,7 +136,8 @@ export default function SharedResourcePicker({
             {resource ? (
               <Text style={paragraph}>
                 Disponibles para reservar: {resource.available} de{" "}
-                {resource.total}.
+                {resource.total - resource.unavailable} utilizables. Fuera de
+                servicio: {resource.unavailable}.
                 {!invalid && Number(item.quantity) > resource.available
                   ? " El pedido supera la disponibilidad actual; no podrá confirmarse mientras falten unidades."
                   : ""}

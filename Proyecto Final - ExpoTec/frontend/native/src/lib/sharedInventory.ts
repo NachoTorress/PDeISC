@@ -5,6 +5,10 @@ export interface InventoryResource {
   total: number;
   reserved: number;
   available: number;
+  unavailable: number;
+  outstanding: number;
+  availableToLend: number;
+  shortage: number;
   version: number;
   createdAt: string;
   updatedAt: string;
@@ -17,6 +21,9 @@ export interface InventoryResource {
     createdAt: string;
     firstName: string;
     lastName: string;
+    previousUnavailable: number | null;
+    unavailable: number;
+    note: string;
   }[];
 }
 export interface ProjectResource {
@@ -27,6 +34,8 @@ export interface ProjectResource {
   total: number;
   available: number;
   archivedAt: string | null;
+  unavailable: number;
+  outstanding: number;
 }
 export interface ResourceRequestDraft {
   resourceId: string;
@@ -45,6 +54,9 @@ export function inventoryErrors(input: {
   name: string;
   description: string;
   total: string;
+  unavailable?: string;
+  note?: string;
+  previousUnavailable?: number;
 }) {
   const fields: Record<string, string> = {};
   if (
@@ -57,6 +69,19 @@ export function inventoryErrors(input: {
     fields.description = "Usá hasta 250 caracteres.";
   if (!integerQuantity(input.total, 0, 100000))
     fields.total = "Usá un entero de 0 a 100000.";
+  if (
+    input.unavailable !== undefined &&
+    (!integerQuantity(input.unavailable, 0, 100000) ||
+      Number(input.unavailable) > Number(input.total))
+  )
+    fields.unavailable = "Indicá un entero entre 0 y el total.";
+  if (
+    (input.note?.trim().length ?? 0) > 1000 ||
+    (input.unavailable !== undefined &&
+      Number(input.unavailable) !== (input.previousUnavailable ?? 0) &&
+      (input.note?.trim().length ?? 0) < 10)
+  )
+    fields.note = "Explicá el cambio de estado con 10 a 1000 caracteres.";
   return fields;
 }
 export function requestsError(requests: ResourceRequestDraft[]) {
