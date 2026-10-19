@@ -1,6 +1,7 @@
 import { HttpError } from '../lib/errors.mjs';
 import { objectBody, userId } from './auth.mjs';
 import { spaceVersion } from './spaces.mjs';
+import { resourceRequests } from './inventory.mjs';
 
 function invalid(fields) {
   if (Object.keys(fields).length) throw new HttpError(400, 'VALIDATION_ERROR', 'Revisá los datos del proyecto.', fields);
@@ -18,7 +19,7 @@ export function httpsLinkError(value, required = false, kind = '') {
   } catch { return 'Usá una URL HTTPS completa, sin credenciales ni espacios.'; }
 }
 export function proposalBody(body, editing = false) {
-  objectBody(body, ['name', 'description', 'course', 'imageUrl', 'videoUrl', 'isSoftwareProject', 'githubUrl', 'websiteUrl', 'memberIds', 'teacherIds', 'subjects', 'boothId', ...(editing ? ['version'] : [])]);
+  objectBody(body, ['name', 'description', 'course', 'imageUrl', 'videoUrl', 'isSoftwareProject', 'githubUrl', 'websiteUrl', 'memberIds', 'teacherIds', 'subjects', 'boothId', 'resources', ...(editing ? ['version'] : [])]);
   const fields = {}, result = {};
   for (const [key, min, max] of [['name', 2, 120], ['description', 20, 5000], ['course', 2, 100]]) {
     result[key] = typeof body[key] === 'string' ? body[key].trim().normalize('NFC') : '';
@@ -50,6 +51,7 @@ export function proposalBody(body, editing = false) {
   }
   try { result.boothId = userId(body.boothId); } catch { fields.boothId = 'Elegí un puesto habilitado.'; }
   invalid(fields);
+  result.resources = resourceRequests(body.resources, editing);
   if (editing) result.version = spaceVersion(body.version);
   return result;
 }

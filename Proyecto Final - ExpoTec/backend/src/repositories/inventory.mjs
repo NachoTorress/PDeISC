@@ -13,6 +13,39 @@ async function allocations(db, ids, locking = false) {
 }
 const reserved = (rows, id) => rows.filter(row => row.resourceId === id).reduce((sum, row) => sum + row.quantity, 0);
 
+export async function projectResources(db, projectId, locking = false) {
+  const [rows] = await db.execute(`SELECT q.resource_id AS resourceId, q.quantity, r.name, r.total,
+    r.archived_at AS archivedAt, COALESCE(a.quantity, 0) AS reservedQuantity
+    FROM project_resource_requests q JOIN resources r ON r.id = q.resource_id
+    LEFT JOIN resource_allocations a ON a.project_id = q.project_id AND a.resource_id = q.resource_id
+    WHERE q.project_id = ? ORDER BY q.resource_id${locking ? ' FOR UPDATE' : ''}`, [projectId]);
+  const assigned = await allocations(db, rows.map(row => row.resourceId), locking);
+  return rows.map(row => ({ ...row, available: row.total - reserved(assigned, row.resourceId) }));
+}
+export async function checkRequestedResources(db, requests) {
+  if (!requests.length) return;
+  const [rows] = await db.execute(`SELECT id FROM resources WHERE id IN (${requests.map(() => '?').join(',')})
+    AND archived_at IS NULL ORDER BY id FOR UPDATE`, requests.map(item => item.resourceId));
+  if (rows.length !== requests.length) throw new HttpError(409, 'RESOURCE_UNAVAILABLE', 'Algún elemento ya no está disponible en el catálogo. Actualizá los elementos y revisá el pedido.', { resources: 'Quitá los elementos dados de baja antes de reenviar.' });
+}
+export async function replaceResourceRequests(db, projectId, requests) {
+  await db.execute('DELETE FROM project_resource_requests WHERE project_id = ?', [projectId]);
+  if (requests.length) await db.execute(`INSERT INTO project_resource_requests (project_id, resource_id, quantity)
+    VALUES ${requests.map(() => '(?, ?, ?)').join(',')}`, requests.flatMap(item => [projectId, item.resourceId, item.quantity]));
+}
+export async function reserveProjectResources(db, projectId) {
+  const requests = await projectResources(db, projectId, true);
+  for (const item of requests) {
+    if (item.archivedAt) throw new HttpError(409, 'RESOURCE_UNAVAILABLE', `${item.name} fue dado de baja. El equipo debe revisar su pedido.`);
+    if (item.quantity > item.available) throw new HttpError(409, 'RESOURCE_STOCK', `${item.name}: se necesitan ${item.quantity} unidades y hay ${item.available} disponibles. No se reservó ningún elemento ni el puesto.`);
+  }
+  if (requests.length) await db.execute(`INSERT INTO resource_allocations (project_id, resource_id, quantity)
+    VALUES ${requests.map(() => '(?, ?, ?)').join(',')}`, requests.flatMap(item => [projectId, item.resourceId, item.quantity]));
+}
+export async function releaseProjectResources(db, projectId) {
+  await db.execute('DELETE FROM resource_allocations WHERE project_id = ?', [projectId]);
+}
+
 export function createInventoryRepository(pool) {
   async function actor(db, id, writing = false, catalog = false) {
     if (writing) await db.execute("SELECT code FROM roles WHERE code = 'admin' FOR UPDATE");

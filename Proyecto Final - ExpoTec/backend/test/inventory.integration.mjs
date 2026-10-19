@@ -11,7 +11,7 @@ import { migrate } from '../scripts/migrations.mjs';
 import { listen, testConfig } from './support.mjs';
 
 const database = process.env.TEST_DB_NAME;
-test('TiDB: inventario, permisos y cambios concurrentes con historial', { skip: !database ? 'Configurá TEST_DB_NAME.' : false }, async t => {
+test('TiDB: inventario, reservas atómicas, concurrencia y liberación con historial', { skip: !database ? 'Configurá TEST_DB_NAME.' : false }, async t => {
   assert.match(database, /^expotec_test_[a-z0-9_]+$/);
   assert.notEqual(database, process.env.DB_NAME);
   const pool = createDatabase({ ...process.env, DB_NAME: database, VERCEL: '0' });
@@ -72,4 +72,61 @@ test('TiDB: inventario, permisos y cambios concurrentes con historial', { skip: 
   assert.ok(archived.archivedAt); assert.equal(archived.events.length, 3);
   assert.equal((await api.request('/api/inventory/catalog/query', {}, teacher.accessToken)).body.resources.some(item => item.id === resource.id), false);
   assert.ok((await api.request('/api/inventory/query', { archived: true }, loans.accessToken)).body.resources.some(item => item.id === resource.id));
+
+  const firstResource = await inventory.create({ name: `Cable ${randomUUID()}`, description: '', total: 2 }, admin.user.id);
+  resources.push(firstResource.id);
+  const secondResource = await inventory.create({ name: `Adaptador ${randomUUID()}`, description: '', total: 1 }, admin.user.id);
+  resources.push(secondResource.id);
+  const space = await layouts.create({ name: 'Espacio temporal de reservas', description: '' }, admin.user.id);
+  spaces.push(space.id);
+  const furniture = ['M01', 'M02'].map((id, index) => ({ id, type: 'table', x: 30 + index * 40, y: 50, rotation: 0, width: 14, height: 9 }));
+  const savedSpace = await layouts.save(space.id, { version: 1, name: space.name, description: '', furniture, boothFurnitureIds: furniture.map(item => item.id) }, admin.user.id);
+  const proposal = { name: 'Proyecto de reservas', description: 'Prueba temporal de reservas de elementos compartidos.', course: '6° 1°', imageUrl: 'https://example.com/image.png', videoUrl: '', githubUrl: '', websiteUrl: '', isSoftwareProject: false, memberIds: [owner.user.id], teacherIds: [teacher.user.id], subjects: [subject], boothId: savedSpace.booths[0].id,
+    resources: [{ resourceId: firstResource.id, quantity: 2 }, { resourceId: secondResource.id, quantity: 2 }] };
+  async function create(body) {
+    const result = await api.request('/api/projects/create', body, owner.accessToken);
+    assert.equal(result.status, 201, JSON.stringify(result.body)); projects.push(result.body.project.id); return result.body.project;
+  }
+  const first = await create(proposal);
+  assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 0);
+  assert.equal((await api.request(`/api/inventory/${firstResource.id}/archive`, { version: 1 }, admin.accessToken)).status, 409);
+  const failed = await api.request(`/api/projects/${first.id}/review`, { version: 1, action: 'approve' }, teacher.accessToken);
+  assert.equal(failed.status, 409); assert.equal(failed.body.error.code, 'RESOURCE_STOCK');
+  assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 0);
+  assert.ok((await layouts.get(space.id)).booths.every(booth => !booth.projectId));
+  const corrected = { ...proposal, resources: [{ resourceId: firstResource.id, quantity: 2 }, { resourceId: secondResource.id, quantity: 1 }] };
+  assert.equal((await api.request(`/api/projects/${first.id}/save`, { ...corrected, version: 1 }, owner.accessToken)).status, 200);
+  const { resources: omitted, ...legacy } = corrected;
+  const preserved = await api.request(`/api/projects/${first.id}/save`, { ...legacy, version: 2 }, owner.accessToken);
+  assert.equal(preserved.status, 200); assert.equal(preserved.body.project.resources.length, 2);
+  const second = await create({ ...corrected, boothId: savedSpace.booths[1].id });
+  const confirmations = await Promise.all([
+    api.request(`/api/projects/${first.id}/review`, { version: 3, action: 'approve' }, teacher.accessToken),
+    api.request(`/api/projects/${second.id}/review`, { version: 1, action: 'approve' }, teacher.accessToken),
+  ]);
+  assert.deepEqual(confirmations.map(result => result.status).sort(), [200, 409]);
+  const winner = confirmations.find(result => result.status === 200).body.project;
+  assert.equal(winner.resources[0].reservedQuantity > 0, true);
+  const published = await api.request(`/api/projects/public/${winner.id}/query`);
+  assert.equal(published.body.project.resources, undefined);
+  assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 2);
+  assert.equal((await layouts.get(space.id)).booths.filter(booth => booth.projectId).length, 1);
+  const tooLow = await api.request(`/api/inventory/${firstResource.id}/save`, { name: firstResource.name, description: '', total: 1, version: 1 }, admin.accessToken);
+  assert.equal(tooLow.status, 409); assert.equal(tooLow.body.error.code, 'RESOURCE_RESERVED');
+  const reopened = await api.request(`/api/projects/${winner.id}/review`, { version: winner.version, action: 'reopen', note: 'Revisar los elementos y la ubicación del proyecto.' }, admin.accessToken);
+  assert.equal(reopened.status, 200); assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 0);
+  const stockRace = await Promise.all([
+    api.request(`/api/projects/${winner.id}/review`, { version: reopened.body.project.version, action: 'approve' }, teacher.accessToken),
+    api.request(`/api/inventory/${firstResource.id}/save`, { name: firstResource.name, description: '', total: 1, version: 1 }, admin.accessToken),
+  ]);
+  assert.deepEqual(stockRace.map(result => result.status).sort(), [200, 409]);
+  const remaining = await inventory.get(firstResource.id, admin.user.id);
+  assert.ok(remaining.reserved <= remaining.total);
+  for (const id of projects) {
+    const current = await proposals.get(id, admin.user.id);
+    assert.equal((await api.request(`/api/projects/${id}/cancel`, { version: current.version }, admin.accessToken)).status, 200);
+  }
+  assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 0);
+  assert.equal((await api.request(`/api/inventory/${firstResource.id}/archive`, { version: remaining.version }, admin.accessToken)).status, 204);
+  assert.equal((await proposals.get(first.id, admin.user.id)).resources.length, 2);
 });

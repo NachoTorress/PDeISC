@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { transaction } from '../config/database.mjs';
 import { HttpError, unauthorized } from '../lib/errors.mjs';
+import { projectResources, checkRequestedResources, replaceResourceRequests, reserveProjectResources, releaseProjectResources } from './inventory.mjs';
 
 const missing = () => new HttpError(404, 'PROJECT_NOT_FOUND', 'No encontramos ese proyecto o no tenés acceso.');
 const forbidden = () => new HttpError(403, 'FORBIDDEN', 'No tenés permiso para realizar esta operación.');
@@ -52,7 +53,7 @@ export function createProjectsRepository(pool) {
     const [reviews] = await db.execute(`SELECT r.id, r.action, r.note, r.created_at AS createdAt,
       u.first_name AS firstName, u.last_name AS lastName FROM project_reviews r JOIN users u ON u.id = r.actor_id
       WHERE r.project_id = ? ORDER BY r.created_at, r.id LIMIT 100${locking ? ' FOR UPDATE' : ''}`, [id]);
-    return { ...base, members, teachers, reviews };
+    return { ...base, members, teachers, reviews, resources: await projectResources(db, id, locking) };
   }
   async function availableBooth(db, id, projectId = '') {
     const [rows] = await db.execute(`SELECT b.id FROM booths b JOIN spaces s ON s.id = b.space_id
@@ -114,10 +115,12 @@ export function createProjectsRepository(pool) {
       if (!input.memberIds.includes(actorId)) throw new HttpError(400, 'PARTICIPANTS_INVALID', 'La cuenta que presenta el proyecto debe integrar el equipo.');
       await validatePeople(db, input.memberIds, input.teacherIds, actorId);
       await availableBooth(db, input.boothId);
+      await checkRequestedResources(db, input.resources ?? []);
       const id = randomUUID();
       await db.execute(`INSERT INTO projects (id, creator_id, requested_booth_id, name, description, course, image_url, video_url,
         is_software, github_url, website_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [id, actorId, ...content(input)]);
       await relations(db, id, input);
+      await replaceResourceRequests(db, id, input.resources ?? []);
       await event(db, id, actorId, 'submit');
       return detail(db, id, actorId, true);
     }),
@@ -131,9 +134,12 @@ export function createProjectsRepository(pool) {
       if (!input.memberIds.includes(actorId)) throw new HttpError(400, 'PARTICIPANTS_INVALID', 'La persona que edita debe permanecer en el equipo.');
       await validatePeople(db, input.memberIds, input.teacherIds, project.creatorId);
       await availableBooth(db, input.boothId, id);
+      const requests = input.resources ?? await projectResources(db, id, true);
+      await checkRequestedResources(db, requests);
       await db.execute(`UPDATE projects SET requested_booth_id = ?, name = ?, description = ?, course = ?, image_url = ?, video_url = ?,
         is_software = ?, github_url = ?, website_url = ?, status = 'pending', feedback = '', version = version + 1, updated_at = UTC_TIMESTAMP(3) WHERE id = ?`, [...content(input), id]);
       await relations(db, id, input);
+      await replaceResourceRequests(db, id, requests);
       await event(db, id, actorId, 'resubmit');
       return detail(db, id, actorId, true);
     }),
@@ -150,8 +156,12 @@ export function createProjectsRepository(pool) {
         const members = await people(db, 'project_members', id, true);
         await validatePeople(db, members.map(person => person.id), teachers.map(person => person.id), project.creatorId);
         await availableBooth(db, project.boothId, id);
+        await reserveProjectResources(db, id);
         await db.execute('INSERT INTO booth_allocations (booth_id, project_id) VALUES (?, ?)', [project.boothId, id]);
-      } else if (input.action === 'reopen') await db.execute('DELETE FROM booth_allocations WHERE project_id = ?', [id]);
+      } else if (input.action === 'reopen') {
+        await db.execute('DELETE FROM booth_allocations WHERE project_id = ?', [id]);
+        await releaseProjectResources(db, id);
+      }
       await db.execute('UPDATE projects SET status = ?, feedback = ?, version = version + 1, updated_at = UTC_TIMESTAMP(3) WHERE id = ?', [status, input.note, id]);
       await event(db, id, actorId, input.action, input.note);
       return detail(db, id, actorId, true);
@@ -165,6 +175,7 @@ export function createProjectsRepository(pool) {
       if (project.status === 'cancelled' || (project.status === 'approved' && !roles.includes('admin')))
         throw new HttpError(409, 'PROJECT_LOCKED', 'Ese proyecto no se puede cancelar con el estado o permiso actuales.');
       await db.execute('DELETE FROM booth_allocations WHERE project_id = ?', [id]);
+      await releaseProjectResources(db, id);
       await db.execute("UPDATE projects SET status = 'cancelled', version = version + 1, updated_at = UTC_TIMESTAMP(3) WHERE id = ?", [id]);
       await event(db, id, actorId, 'cancel');
       return detail(db, id, actorId, true);
