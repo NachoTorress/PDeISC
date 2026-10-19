@@ -17,10 +17,10 @@ export function requireAdmin(req, res, next) {
   next();
 }
 
-export function rateLimit(repository, config, { scope, limit, seconds, byEmail = false }) {
+export function rateLimit(repository, config, { scope, limit, seconds, byEmail = false, byUser = false }) {
   return async (req, res, next) => {
     const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase().slice(0, 254) : '';
-    const key = rateKey(config.secret, `${scope}:${byEmail ? email : req.ip}`);
+    const key = rateKey(config.secret, `${scope}:${byEmail ? email : byUser ? req.auth.user.id : req.ip}`);
     const retryAfter = await repository.consumeRate(key, limit, seconds);
     if (retryAfter) {
       res.set('Retry-After', String(retryAfter));

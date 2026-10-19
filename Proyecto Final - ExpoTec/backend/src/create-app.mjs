@@ -7,8 +7,9 @@ import { createAuthService } from './services/auth.mjs';
 import { authRoutes, adminRoutes } from './routes/auth.mjs';
 import { objectBody } from './validators/auth.mjs';
 import { spacesRoutes } from './routes/spaces.mjs';
+import { projectsRoutes } from './routes/projects.mjs';
 
-export function createApp(repository, config, logger = console, app = express(), spacesRepository) {
+export function createApp(repository, config, logger = console, app = express(), spacesRepository, projectsRepository) {
   app.disable('x-powered-by');
   // Solo Vercel es el proxy de confianza; en ejecución local no se aceptan IP reenviadas.
   if (config.onVercel) app.set('trust proxy', 1);
@@ -29,6 +30,7 @@ export function createApp(repository, config, logger = console, app = express(),
     exposedHeaders: ['Retry-After', 'X-Request-Id'], maxAge: 600,
   }));
   app.use('/api/spaces', express.json({ limit: '128kb' }));
+  app.use('/api/projects', express.json({ limit: '64kb' }));
   app.use(express.json({ limit: '16kb' }));
   app.post('/api/health', (req, res) => {
     objectBody(req.body, []);
@@ -43,6 +45,7 @@ export function createApp(repository, config, logger = console, app = express(),
   app.use('/api/auth', authRoutes(repository, service, config));
   app.use('/api/admin', adminRoutes(repository, service));
   if (spacesRepository) app.use('/api/spaces', spacesRoutes(spacesRepository, repository, service, config));
+  if (projectsRepository) app.use('/api/projects', projectsRoutes(projectsRepository, repository, service, config));
   app.use((req, res, next) => next(new HttpError(404, 'NOT_FOUND', 'No encontramos esa operación.')));
   app.use((error, req, res, next) => {
     if (res.headersSent) return next(error);
