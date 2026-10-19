@@ -9,8 +9,9 @@ import { objectBody } from './validators/auth.mjs';
 import { spacesRoutes } from './routes/spaces.mjs';
 import { projectsRoutes } from './routes/projects.mjs';
 import { inventoryRoutes } from './routes/inventory.mjs';
+import { loansRoutes } from './routes/loans.mjs';
 
-export function createApp(repository, config, logger = console, app = express(), spacesRepository, projectsRepository, inventoryRepository) {
+export function createApp(repository, config, logger = console, app = express(), spacesRepository, projectsRepository, inventoryRepository, loansRepository) {
   app.disable('x-powered-by');
   // Solo Vercel es el proxy de confianza; en ejecución local no se aceptan IP reenviadas.
   if (config.onVercel) app.set('trust proxy', 1);
@@ -48,6 +49,7 @@ export function createApp(repository, config, logger = console, app = express(),
   if (spacesRepository) app.use('/api/spaces', spacesRoutes(spacesRepository, repository, service, config));
   if (projectsRepository) app.use('/api/projects', projectsRoutes(projectsRepository, repository, service, config));
   if (inventoryRepository) app.use('/api/inventory', inventoryRoutes(inventoryRepository, repository, service, config));
+  if (loansRepository) app.use('/api/loans', loansRoutes(loansRepository, repository, service, config));
   app.use((req, res, next) => next(new HttpError(404, 'NOT_FOUND', 'No encontramos esa operación.')));
   app.use((error, req, res, next) => {
     if (res.headersSent) return next(error);

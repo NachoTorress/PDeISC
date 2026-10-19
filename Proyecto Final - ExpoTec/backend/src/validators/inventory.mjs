@@ -7,15 +7,17 @@ export function inventoryVersion(value) {
   return value;
 }
 export function resourceBody(body, editing = false) {
-  objectBody(body, ['name', 'description', 'total', ...(editing ? ['version'] : [])]);
+  objectBody(body, ['name', 'description', 'total', 'unavailable', 'note', ...(editing ? ['version'] : [])]);
   const fields = {};
   const name = typeof body.name === 'string' ? body.name.trim().normalize('NFC') : '';
   const description = typeof body.description === 'string' ? body.description.trim().normalize('NFC') : '';
   if (name.length < 2 || name.length > 100 || /\p{Cc}/u.test(name)) fields.name = 'Usá entre 2 y 100 caracteres.';
   if (typeof body.description !== 'string' || description.length > 250) fields.description = 'Usá hasta 250 caracteres.';
   if (!Number.isSafeInteger(body.total) || body.total < 0 || body.total > 100000) fields.total = 'Usá un entero de 0 a 100000.';
+  if (body.unavailable !== undefined && (!Number.isSafeInteger(body.unavailable) || body.unavailable < 0 || body.unavailable > body.total)) fields.unavailable = 'Las unidades fuera de servicio deben ser un entero entre 0 y el total.';
+  if (body.note !== undefined && (typeof body.note !== 'string' || body.note.trim().length > 1000)) fields.note = 'Usá hasta 1000 caracteres.';
   if (Object.keys(fields).length) throw new HttpError(400, 'VALIDATION_ERROR', 'Revisá los datos del elemento.', fields);
-  return { name, description, total: body.total, ...(editing ? { version: inventoryVersion(body.version) } : {}) };
+  return { name, description, total: body.total, unavailable: body.unavailable ?? (editing ? undefined : 0), note: body.note?.trim().normalize('NFC') ?? '', ...(editing ? { version: inventoryVersion(body.version) } : {}) };
 }
 export function inventoryQuery(body) {
   objectBody(body, ['limit', 'offset', 'archived']);

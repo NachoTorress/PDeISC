@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { transaction } from '../config/database.mjs';
 import { HttpError, unauthorized } from '../lib/errors.mjs';
 import { projectResources, checkRequestedResources, replaceResourceRequests, reserveProjectResources, releaseProjectResources } from './inventory.mjs';
+import { assertProjectReturned } from './loan-balances.mjs';
 
 const missing = () => new HttpError(404, 'PROJECT_NOT_FOUND', 'No encontramos ese proyecto o no tenés acceso.');
 const forbidden = () => new HttpError(403, 'FORBIDDEN', 'No tenés permiso para realizar esta operación.');
@@ -53,7 +54,8 @@ export function createProjectsRepository(pool) {
     const [reviews] = await db.execute(`SELECT r.id, r.action, r.note, r.created_at AS createdAt,
       u.first_name AS firstName, u.last_name AS lastName FROM project_reviews r JOIN users u ON u.id = r.actor_id
       WHERE r.project_id = ? ORDER BY r.created_at, r.id LIMIT 100${locking ? ' FOR UPDATE' : ''}`, [id]);
-    return { ...base, members, teachers, reviews, resources: await projectResources(db, id, locking) };
+    const resources = await projectResources(db, id, locking);
+    return { ...base, members, teachers, reviews, resources, openLoanQuantity: resources.reduce((sum, resource) => sum + resource.outstanding, 0) };
   }
   async function availableBooth(db, id, projectId = '') {
     const [rows] = await db.execute(`SELECT b.id FROM booths b JOIN spaces s ON s.id = b.space_id
@@ -131,6 +133,7 @@ export function createProjectsRepository(pool) {
       if (!roles.includes('student') || !members.some(person => person.id === actorId)) throw missing();
       version(project, input.version);
       if (!['pending', 'changes'].includes(project.status)) throw new HttpError(409, 'PROJECT_LOCKED', 'Solo se pueden editar propuestas pendientes o con cambios solicitados.');
+      await assertProjectReturned(db, id);
       if (!input.memberIds.includes(actorId)) throw new HttpError(400, 'PARTICIPANTS_INVALID', 'La persona que edita debe permanecer en el equipo.');
       await validatePeople(db, input.memberIds, input.teacherIds, project.creatorId);
       await availableBooth(db, input.boothId, id);

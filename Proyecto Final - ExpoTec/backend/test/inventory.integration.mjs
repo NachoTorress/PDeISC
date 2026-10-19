@@ -27,7 +27,9 @@ test('TiDB: inventario, reservas atómicas, concurrencia y liberación con histo
       await pool.execute('DELETE FROM spaces WHERE id = ?', [id]);
     }
     for (const id of resources) {
+      await pool.execute('DELETE FROM inventory_condition_events WHERE event_id IN (SELECT id FROM inventory_events WHERE resource_id = ?)', [id]);
       await pool.execute('DELETE FROM inventory_events WHERE resource_id = ?', [id]);
+      await pool.execute('DELETE FROM resource_conditions WHERE resource_id = ?', [id]);
       await pool.execute('DELETE FROM resources WHERE id = ?', [id]);
     }
     for (const id of users) {
