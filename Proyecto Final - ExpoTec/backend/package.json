@@ -19,7 +19,8 @@
     "test:spaces": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/spaces.integration.mjs",
     "test:projects": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/projects.integration.mjs",
     "test:inventory": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/inventory.integration.mjs",
-    "test:loans": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/loans.integration.mjs"
+    "test:loans": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/loans.integration.mjs",
+    "test:presentation": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/presentation.integration.mjs"
   },
   "dependencies": {
     "@vercel/functions": "3.10.1",

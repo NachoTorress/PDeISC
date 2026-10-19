@@ -3,9 +3,11 @@ import { requireSession, rateLimit } from '../middleware/auth.mjs';
 import { userId, pagination, objectBody } from '../validators/auth.mjs';
 import { spaceVersion } from '../validators/spaces.mjs';
 import { proposalBody, reviewBody, personBody } from '../validators/projects.mjs';
+import { presentationQuery } from '../validators/presentation.mjs';
 
 export function projectsRoutes(repository, authRepository, service, config) {
   const router = Router();
+  router.post('/presentation/query', async (req, res) => res.json(await repository.presentation(presentationQuery(req.body))));
   router.post('/public/query', async (req, res) => res.json({ projects: await repository.list(pagination(req.body)) }));
   router.post('/public/:id/query', async (req, res) => {
     objectBody(req.body, []);

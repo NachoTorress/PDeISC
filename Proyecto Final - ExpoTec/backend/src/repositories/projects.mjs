@@ -89,6 +89,31 @@ export function createProjectsRepository(pool) {
     await db.execute('INSERT INTO project_reviews (id, project_id, actor_id, action, note) VALUES (?, ?, ?, ?, ?)', [randomUUID(), id, actorId, action, note]);
   }
   return {
+    presentation: ({ limit, after }) => transaction(pool, async db => {
+      const [rows] = await db.query(`SELECT p.id, p.name, p.description, p.course, p.image_url AS imageUrl, p.video_url AS videoUrl,
+        b.furniture_code AS furnitureId, s.name AS spaceName FROM projects p
+        JOIN booth_allocations a ON a.project_id = p.id AND a.booth_id = p.requested_booth_id
+        JOIN booths b ON b.id = a.booth_id JOIN spaces s ON s.id = b.space_id
+        WHERE p.status = 'approved' AND b.active = TRUE AND s.archived_at IS NULL${after ? ' AND p.id > ?' : ''}
+        ORDER BY p.id LIMIT ?`, [...(after ? [after] : []), limit + 1]);
+      const page = rows.slice(0, limit);
+      if (!page.length) return { projects: [], nextCursor: null };
+      const ids = page.map(project => project.id), marks = ids.map(() => '?').join(',');
+      const participants = {};
+      for (const table of ['project_members', 'project_teachers']) {
+        const [people] = await db.execute(`SELECT rel.project_id AS projectId, u.first_name AS firstName, u.last_name AS lastName
+          FROM ${table} rel JOIN users u ON u.id = rel.user_id WHERE rel.project_id IN (${marks})
+          ORDER BY u.last_name, u.first_name, u.id`, ids);
+        participants[table] = people;
+      }
+      const [subjects] = await db.execute(`SELECT rel.project_id AS projectId, s.name FROM project_subjects rel
+        JOIN subjects s ON s.id = rel.subject_id WHERE rel.project_id IN (${marks}) ORDER BY s.name`, ids);
+      const names = (table, id) => participants[table].filter(person => person.projectId === id).map(({ firstName, lastName }) => ({ firstName, lastName }));
+      return { projects: page.map(project => ({ ...project,
+        members: names('project_members', project.id), teachers: names('project_teachers', project.id),
+        subjects: subjects.filter(subject => subject.projectId === project.id).map(subject => subject.name) })),
+      nextCursor: rows.length > limit ? page.at(-1).id : null };
+    }),
     async list({ limit, offset }, viewerId) {
       let condition = "p.status = 'approved'", parameters = [];
       if (viewerId) {
