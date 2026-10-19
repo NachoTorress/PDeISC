@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   ActivityIndicator,
   Text,
@@ -41,7 +42,15 @@ function summary(space: SharedSpace): SpaceSummary {
   };
 }
 
-export default function SharedSpacesPage({ onDemo }: { onDemo: () => void }) {
+export default function SharedSpacesPage({
+  onDemo,
+  onProjects,
+  onSelectProject,
+}: {
+  onDemo: () => void;
+  onProjects: () => void;
+  onSelectProject: (id: string) => void;
+}) {
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
@@ -71,6 +80,16 @@ export default function SharedSpacesPage({ onDemo }: { onDemo: () => void }) {
     source?.booths.map((booth) => booth.furnitureId) ??
     [];
   const chosen = space?.furniture.find((item) => item.id === selected);
+  const chosenBooth = source?.booths.find(
+    (booth) => booth.furnitureId === selected,
+  );
+  const occupied =
+    source?.booths
+      .filter((booth) => booth.projectId)
+      .map((booth) => ({
+        furnitureId: booth.furnitureId,
+        name: booth.projectName ?? "Proyecto confirmado",
+      })) ?? [];
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -96,9 +115,13 @@ export default function SharedSpacesPage({ onDemo }: { onDemo: () => void }) {
       setLoading(false);
     }
   }, [client]);
-  useEffect(() => {
-    void reload();
-  }, [reload]);
+  // Consultar de nuevo al volver de una confirmación, sin reemplazar un borrador.
+  const hasDraft = !!editing;
+  useFocusEffect(
+    useCallback(() => {
+      if (!hasDraft) void reload();
+    }, [reload, hasDraft]),
+  );
   useEffect(() => {
     let active = true;
     setSelected(null);
@@ -216,6 +239,12 @@ export default function SharedSpacesPage({ onDemo }: { onDemo: () => void }) {
         subtitle="Planos compartidos de la exposición"
       />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+        <Button
+          title="Ver proyectos"
+          icon="projects"
+          onPress={onProjects}
+          disabled={!!editing || busy}
+        />
         <Button
           title={loading ? "Actualizando…" : "Actualizar espacios"}
           variant="secondary"
@@ -411,6 +440,7 @@ export default function SharedSpacesPage({ onDemo }: { onDemo: () => void }) {
                 projects={[]}
                 shared
                 boothFurnitureIds={boothIds}
+                occupiedBooths={occupied}
                 editing={!!editing}
                 showPending={false}
                 selected={selected}
@@ -442,6 +472,9 @@ export default function SharedSpacesPage({ onDemo }: { onDemo: () => void }) {
                 <NativeSpaceEditor
                   space={editing.space}
                   selected={selected}
+                  protectedFurnitureIds={occupied.map(
+                    (booth) => booth.furnitureId,
+                  )}
                   onSelect={setSelected}
                   onChange={(next) =>
                     setDraft((current) =>
@@ -459,7 +492,13 @@ export default function SharedSpacesPage({ onDemo }: { onDemo: () => void }) {
                     <CheckRow
                       label="Habilitar esta mesa como puesto para proyectos"
                       checked={boothIds.includes(chosen.id)}
-                      onChange={(enabled) =>
+                      onChange={(enabled) => {
+                        if (!enabled && chosenBooth?.projectId) {
+                          setError(
+                            "Este puesto tiene un proyecto confirmado y debe conservarse.",
+                          );
+                          return;
+                        }
                         setDraft((current) =>
                           current
                             ? {
@@ -471,8 +510,8 @@ export default function SharedSpacesPage({ onDemo }: { onDemo: () => void }) {
                                     ),
                               }
                             : null,
-                        )
-                      }
+                        );
+                      }}
                     />
                     <Text style={paragraph}>
                       Las mesas se agregan como mobiliario. Habilitá solo las
@@ -500,11 +539,20 @@ export default function SharedSpacesPage({ onDemo }: { onDemo: () => void }) {
                   {chosen
                     ? chosen.type === "table"
                       ? boothIds.includes(chosen.id)
-                        ? "Habilitado para recibir proyectos. La inscripción y confirmación se incorporan en el próximo hito."
+                        ? chosenBooth?.projectId
+                          ? `Proyecto confirmado: ${chosenBooth.projectName}`
+                          : "Disponible para solicitarlo al presentar un proyecto. El puesto se reserva cuando un profesor confirma la propuesta."
                         : "Mesa de mobiliario, sin inscripción de proyectos."
                       : "Elemento de la distribución del espacio."
                     : `${space.furniture.length} ${space.furniture.length === 1 ? "elemento" : "elementos"} · ${boothIds.length} ${boothIds.length === 1 ? "puesto habilitado" : "puestos habilitados"}`}
                 </Text>
+                {chosenBooth?.projectId && (
+                  <Button
+                    title="Ver proyecto confirmado"
+                    variant="secondary"
+                    onPress={() => onSelectProject(chosenBooth.projectId!)}
+                  />
+                )}
                 <Text style={paragraph}>
                   Creado el {formatDate(space.createdAt)}
                 </Text>

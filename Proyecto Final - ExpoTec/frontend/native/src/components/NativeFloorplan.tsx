@@ -33,6 +33,7 @@ interface Props {
   onGestureActiveChange?: (active: boolean) => void;
   shared?: boolean;
   boothFurnitureIds?: string[];
+  occupiedBooths?: { furnitureId: string; name: string }[];
 }
 
 const clamp = (value: number, min: number, max: number) =>
@@ -137,19 +138,17 @@ function MoveableItem({
   onMove,
   onMoving,
   booth = true,
-  shared = false,
 }: {
   item: Furniture;
   stage: Size;
   editing: boolean;
   selected: boolean;
-  project?: Project;
+  project?: Pick<Project, "name">;
   pending: boolean;
   onSelect: () => void;
   onMove: (x: number, y: number) => void;
   onMoving: (moving: boolean) => void;
   booth?: boolean;
-  shared?: boolean;
 }) {
   const { colors } = useTheme();
   const [preview, setPreview] = useState<{ x: number; y: number } | null>(null);
@@ -230,7 +229,7 @@ function MoveableItem({
   const label =
     item.type === "table"
       ? booth
-        ? `Puesto ${item.id}. ${project?.name ?? (pending ? "Solicitado" : shared ? "Habilitado" : "Disponible")}`
+        ? `Puesto ${item.id}. ${project?.name ?? (pending ? "Solicitado" : "Disponible")}`
         : `Mesa ${item.id}. Solo mobiliario`
       : item.type === "label"
         ? `Zona: ${item.text ?? "Nueva zona"}`
@@ -298,12 +297,7 @@ function MoveableItem({
                   style={{ color: colors.muted, fontSize: 10 }}
                 >
                   {booth
-                    ? (project?.name ??
-                      (pending
-                        ? "Solicitado"
-                        : shared
-                          ? "Habilitado"
-                          : "Disponible"))
+                    ? (project?.name ?? (pending ? "Solicitado" : "Disponible"))
                     : "Mesa"}
                 </Text>
               )}
@@ -467,6 +461,7 @@ export default function NativeFloorplan({
   onGestureActiveChange,
   shared = false,
   boothFurnitureIds,
+  occupiedBooths = [],
 }: Props) {
   const { colors } = useTheme();
   const viewport = useWindowDimensions();
@@ -578,12 +573,14 @@ export default function NativeFloorplan({
           </View>
         )}
         {space.furniture.map((item) => {
-          const project = projects.find(
-            (entry) =>
-              entry.spaceId === space.id &&
-              entry.furnitureId === item.id &&
-              entry.status === "approved",
-          );
+          const project =
+            occupiedBooths.find((entry) => entry.furnitureId === item.id) ??
+            projects.find(
+              (entry) =>
+                entry.spaceId === space.id &&
+                entry.furnitureId === item.id &&
+                entry.status === "approved",
+            );
           const pending =
             !project &&
             projects.some(
@@ -604,7 +601,6 @@ export default function NativeFloorplan({
               booth={
                 boothFurnitureIds ? boothFurnitureIds.includes(item.id) : true
               }
-              shared={shared}
               onSelect={() => onSelect(item.id)}
               onMove={(x, y) => onMove(item.id, x, y)}
               onMoving={(active) => {
@@ -667,9 +663,10 @@ export default function NativeFloorplan({
         {(shared
           ? [
               {
-                label: "Puestos habilitados · ver detalle",
+                label: "Disponible",
                 color: colors.table,
               },
+              { label: "Confirmado", color: colors.tableOccupied },
             ]
           : [
               { label: "Disponible", color: colors.table },

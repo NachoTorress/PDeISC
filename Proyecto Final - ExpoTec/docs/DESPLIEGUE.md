@@ -28,7 +28,7 @@ flowchart LR
     API -->|MySQL con TLS| DB[(TiDB)]
 ```
 
-El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. **Mi cuenta** utiliza la API desde el hito 7B y **Espacios compartidos** desde el hito 7C. Los proyectos, inventario y préstamos continúan en la demostración local.
+El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. **Mi cuenta** utiliza la API desde el hito 7B y **Espacios compartidos** desde el hito 7C. **Proyectos de ExpoTec** utiliza la API desde el hito 7D. El inventario, los préstamos y la presentación TV continúan en la demostración local.
 
 ## 1. Base en TiDB
 
@@ -52,7 +52,7 @@ Configurar variables exclusivamente en este proyecto:
 | `DB_SSL_CA` | opcional, certificado PEM; admite `\n` escapados |
 | `DB_POOL_LIMIT` | `5`, valor inicial por instancia; ajustar según conexiones observadas |
 
-Las diez variables necesarias ya están guardadas como secretos de Production en Vercel, incluyendo la contraseña del usuario limitado y el JWT generado. No cargar `TEST_DB_NAME` ni credenciales de administración en producción. No copiar `.env` al repositorio. El puerto lo administra Vercel; `PORT=3001` corresponde al desarrollo local. La API limita los cuerpos de autenticación a 16 KB y los de espacios a 128 KB; no implementa carga de archivos.
+Las diez variables necesarias ya están guardadas como secretos de Production en Vercel, incluyendo la contraseña del usuario limitado y el JWT generado. No cargar `TEST_DB_NAME` ni credenciales de administración en producción. No copiar `.env` al repositorio. El puerto lo administra Vercel; `PORT=3001` corresponde al desarrollo local. La API limita los cuerpos de autenticación a 16 KB, proyectos a 64 KB y espacios a 128 KB; no implementa carga de archivos.
 
 Tras publicar, comprobar POST `/api/health` y POST `/api/health/ready` con cuerpo `{}`. El primer endpoint solo indica que el servicio responde; el segundo comprueba una consulta a la base. Registrar la cuenta propia y promoverla con el script local `admin:grant`, sin crear credenciales de demostración en producción.
 
@@ -104,6 +104,18 @@ La web abre la consulta pública de espacios; solo una cuenta real con permiso d
 
 Comprobaciones: 23 pruebas de backend y 60 de frontend aprobadas, más una prueba de integración real en TiDB (`npm run test:spaces`). Esa integración verifica migraciones repetibles, permisos, restricciones relacionales, guardados simultáneos y conservación de historial; utiliza y limpia únicamente sus propios datos en una base `expotec_test_*`. En navegador contra esa base se comprobaron creación, incorporación de una mesa, habilitación de puesto, giro, guardado, lectura desde otra pestaña, conflicto con borrador conservado, descarte confirmado, baja y consulta como invitado. La vista de 390 px no desborda horizontalmente.
 
-Tras desplegar, POST `/api/spaces/query` con `{}` debe responder 200 y mostrar exclusivamente los espacios reales activos. Una base sin espacios devuelve `{ "spaces": [] }`. POST `/api/spaces/create` sin Bearer debe responder 401. Los espacios de demostración siguen separados; no importar datos ficticios a producción. Las confirmaciones de proyectos y el inventario y préstamos compartidos quedan para los siguientes hitos. Por indicación del usuario, Android se retoma al final.
+Tras desplegar, POST `/api/spaces/query` con `{}` debe responder 200 y mostrar exclusivamente los espacios reales activos. Una base sin espacios devuelve `{ "spaces": [] }`. POST `/api/spaces/create` sin Bearer debe responder 401. Los espacios de demostración siguen separados; no importar datos ficticios a producción. Las confirmaciones de proyectos se incorporan en el hito 7D. El inventario y los préstamos compartidos quedan para los siguientes hitos. Por indicación del usuario, Android se retoma al final.
 
 Referencias de la persistencia de sesión: [Expo SecureStore](https://docs.expo.dev/versions/v57.0.0/sdk/securestore/), [cookies HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies) y [reescrituras de Vercel](https://vercel.com/docs/rewrites).
+
+## Proyectos compartidos — hito 7D
+
+La migración aditiva `003_projects.sql` se aplicó en producción el 19/10/2026 antes del despliegue de la API. Crea proyectos, integrantes, profesores, materias y sus relaciones, asignaciones únicas de puesto e historial de revisión. No carga cuentas ni proyectos de ejemplo. No se necesitan nuevas variables privadas. Mantener las tablas si se revierte la aplicación.
+
+Las propuestas se presentan con cuentas de alumnos; un profesor asignado pide cambios o confirma el puesto. La confirmación comprueba participantes, roles y disponibilidad dentro de una transacción. Los puestos con propuestas vigentes no se pueden retirar del plano. Reabrir o cancelar conserva el historial y libera una asignación confirmada. Las reservas de recursos y los préstamos se incorporarán después.
+
+Comprobaciones automáticas: 26 pruebas de backend y 62 de frontend, más dos integraciones reales aprobadas (`test:spaces` y `test:projects`) en una base exclusiva `expotec_test_*`. La integración de proyectos cubre equipos, privacidad, permisos, correcciones, reenvío, dos aprobaciones simultáneas para un puesto, versiones, reapertura, cancelación y protección del plano. Android queda para el final, sin exportación nueva en este hito.
+
+En navegador contra esa base se verificó la presentación con dos cuentas de alumnos y un profesor, protección del borrador al salir, pedido de cambios, edición y reenvío por otro integrante, confirmación, actualización del puesto en el plano y apertura de su ficha pública. La propuesta pendiente permaneció fuera de la muestra. Se comprobó también la consulta sin sesión y la vista de teléfono.
+
+Después de publicar, comprobar POST `/api/projects/public/query` con `{}`: debe devolver 200 y exclusivamente proyectos confirmados, o `{ "projects": [] }` si todavía no hay. POST `/api/projects/query` y `/api/projects/create` sin Bearer deben responder 401. La ficha pública de un proyecto pendiente debe devolver 404. Los datos de prueba se crean y limpian únicamente en la base de pruebas.

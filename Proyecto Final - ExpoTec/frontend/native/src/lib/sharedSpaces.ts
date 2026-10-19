@@ -3,7 +3,7 @@ import type { Furniture, Space } from "./types";
 export interface SharedSpace extends Space {
   version: number;
   updatedAt: string;
-  booths: { id: string; furnitureId: string }[];
+  booths: { id: string; furnitureId: string; projectId?: string | null; projectName?: string | null }[];
 }
 export type SpaceSummary = Omit<SharedSpace, "furniture" | "booths"> & {
   furnitureCount: number;

@@ -1,6 +1,38 @@
 # ExpoTec API — cuentas y sesiones
 
-Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas, sesiones, permisos y espacios compartidos; usa mysql2 y SQL relacional compatible con MySQL/TiDB. **Mi cuenta** y **Espacios compartidos** utilizan esta API. Los proyectos, inventario y préstamos todavía pertenecen a la demostración local.
+Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas, sesiones, permisos, espacios y proyectos compartidos; usa mysql2 y SQL relacional compatible con MySQL/TiDB. **Mi cuenta**, **Espacios compartidos** y **Proyectos de ExpoTec** utilizan esta API. El inventario, los préstamos y la presentación TV todavía pertenecen a la demostración local.
+
+## Proyectos compartidos — hito 7D
+
+Aplicar `003_projects.sql` con `npm run db:migrate` antes de publicar. Es aditiva: crea proyectos, integrantes, profesores, materias, relaciones, asignaciones de puestos e historial de revisiones. No importa ejemplos ni modifica cuentas. Los participantes se relacionan por UUID con cuentas activas y permisos reales; se permiten varios proyectos por alumno.
+
+Todas las rutas usan POST y JSON. Las privadas requieren Bearer. Las escrituras vuelven a comprobar permisos, pertenencia y versión dentro de la transacción.
+
+| Ruta | Acceso y cuerpo | Respuesta |
+| --- | --- | --- |
+| `/api/projects/public/query` | Público; `limit` 1–100 y `offset` 0–100000, opcionales; predeterminados 25 y 0 | 200 `{ projects }`, solo confirmados |
+| `/api/projects/public/:id/query` | Público; `{}` | 200 `{ project }` confirmado; 404 para otros estados |
+| `/api/projects/query` | Administrador: todos; alumno integrante o profesor asignado: propios; misma paginación | 200 `{ projects }` |
+| `/api/projects/:id/query` | Administrador, alumno integrante o profesor asignado; `{}` | 200 `{ project }` privado |
+| `/api/projects/people/find` | Alumno o administrador; `{ email, role }`, correo exacto, rol `student` o `teacher` | 200 `{ person: { id, firstName, lastName } }`; 404 si no existe una cuenta activa con ese permiso |
+| `/api/projects/create` | Alumno incluido en `memberIds`; propuesta completa | 201 `{ project }`, estado `pending`, versión 1 |
+| `/api/projects/:id/save` | Alumno que ya integra el equipo; propuesta completa y `version` | 200 `{ project }`, vuelve a `pending`, aumenta versión y registra reenvío |
+| `/api/projects/:id/review` | Profesor asignado para `approve` o `changes`; administrador para `reopen`; `{ version, action, note }` | 200 `{ project }`, con revisión registrada |
+| `/api/projects/:id/cancel` | Integrante antes de confirmar o administrador; `{ version }` | 200 `{ project }`, estado `cancelled`; conserva historial y libera el puesto |
+
+Propuesta completa: `name` 2–120 caracteres, `description` 20–5000, `course` 2–100, `imageUrl`, `videoUrl`, `isSoftwareProject` booleano, `githubUrl`, `websiteUrl`, `memberIds` (1–12 UUID distintos), `teacherIds` (1–5 UUID distintos), `subjects` (1–10 nombres distintos de 2–80 caracteres) y `boothId` UUID. Enviar los enlaces opcionales vacíos como `""`. `imageUrl` es obligatorio. Todos los enlaces deben ser HTTPS sin credenciales ni espacios; video directo MP4/WebM; GitHub exige su host y una ruta de repositorio. GitHub y web solo se admiten en proyectos informáticos. La API guarda enlaces, no recibe archivos ni comprueba que el contenido remoto exista o sea reproducible.
+
+El creador y quien edita deben permanecer en el equipo. Profesores e integrantes son cuentas distintas. Solo se editan estados `pending` y `changes`; cancelar conserva las relaciones. Un pedido de cambios exige motivo de 10–2000 caracteres y deja `changes`; reenviar limpia el motivo vigente y conserva las revisiones. Confirmar solo admite `pending`; la nota es opcional, hasta 2000 caracteres. Reabrir exige estado `approved` y motivo de 10–2000 caracteres; deja `pending` y libera el puesto. Cada cambio requiere la versión actual.
+
+Los resúmenes devuelven id, nombre, curso, estado, imagen, fecha de creación, espacio y código de mesa. La ficha agrega descripción, enlaces, materias, integrantes, profesores y ubicación. La ficha privada incluye `creatorId`, `version`, `feedback`, `updatedAt`, UUID de participantes y las últimas 100 revisiones con nombre del autor. La ficha pública omite esos datos privados: solo publica los nombres de integrantes y profesores, nunca sus correos ni UUID. Una ficha privada ajena devuelve 404. La búsqueda de participantes requiere correo exacto y admite 30 consultas por cuenta cada 15 minutos; no existe un directorio público. Las escrituras admiten 120 operaciones por cuenta cada 15 minutos. Un 429 incluye `Retry-After`.
+
+Solicitar un puesto no lo reserva: varias propuestas pueden pedirlo. La confirmación verifica cuentas, mesa habilitada y asignación vigente, inserta una asignación única y registra estado y revisión en una sola transacción. Dos confirmaciones simultáneas para una mesa producen un éxito y un conflicto. Las mutaciones comparten un bloqueo con los cambios de roles y planos. Los permisos y referencias dentro de esas transacciones se leen con `FOR UPDATE`, pues TiDB distingue la lectura de la instantánea de la [lectura del estado actual en transacciones pesimistas](https://docs.pingcap.com/tidbcloud/pessimistic-transaction/). Esto evita confirmar con permisos o disponibilidad anteriores al bloqueo.
+
+Errores: 400 `VALIDATION_ERROR`/`PARTICIPANTS_INVALID`; 401 sesión inválida; 403 permiso insuficiente; 404 `PROJECT_NOT_FOUND` o `PERSON_NOT_FOUND`; 409 `PROJECT_CHANGED`, `PROJECT_LOCKED`, `BOOTH_UNAVAILABLE` o `BOOTH_OCCUPIED`; 413 sobre 64 KB; 429 exceso de operaciones. Un conflicto no se reintenta automáticamente. El formulario conserva su borrador en memoria y permite actualizar los puestos; salir sin enviarlo pide confirmación. El borrador no persiste al cerrar la aplicación.
+
+Los pedidos y reservas de recursos se incorporarán con el inventario. Antes de conectar préstamos, extender reapertura y cancelación para proteger sus saldos e historial. La confirmación actual reserva únicamente el puesto. La presentación TV compartida y el almacenamiento de archivos siguen pendientes.
+
+`npm run test:projects` exige una base `expotec_test_*` distinta de producción. Comprueba equipos, permisos, privacidad, pedido de cambios, reenvío, versiones, dos confirmaciones concurrentes, reapertura, cancelación y protección del plano; elimina solo sus cuentas, proyectos y espacio temporales. `npm run test:spaces` continúa comprobando la distribución real en esa base.
 
 ## Espacios compartidos — hito 7C
 
@@ -36,7 +68,7 @@ Errores: 400 por campos desconocidos o datos inválidos; 401 sin sesión o con s
 
 El guardado bloquea el espacio y verifica la versión, conserva las identidades de los puestos, actualiza el mobiliario y las habilitaciones y aumenta la versión en una sola transacción. No reintentar automáticamente un conflicto: el usuario debe revisar los cambios y decidir si descarta su borrador. Las bajas conservan filas inactivas. Las claves foráneas vinculan puestos con muebles y muebles con espacios; las relaciones no se guardan como JSON.
 
-La migración `002_spaces.sql` es aditiva y no importa la demostración ni crea datos de la escuela. Aplicar `npm run db:migrate` antes de desplegar esta API. Volver a una versión anterior de la aplicación no requiere quitar las tablas nuevas; conservarlas evita perder datos. La protección frente a asignaciones de proyectos y préstamos se completará al incorporar esas entidades: todavía no existen reservas reales ni proyectos asociados en la base.
+La migración `002_spaces.sql` es aditiva y no importa la demostración ni crea datos de la escuela. Aplicar `npm run db:migrate` antes de desplegar esta API. Volver a una versión anterior de la aplicación no requiere quitar las tablas nuevas; conservarlas evita perder datos. Desde el hito 7D, cada puesto devuelve también `projectId` y `projectName` del proyecto confirmado, o null. No se puede retirar un puesto ni dar de baja un espacio referido por un proyecto vigente (`pending`, `changes` o `approved`): responde 409 `SPACE_IN_USE`. Se permiten movimientos y cambios de tamaño conservando su identidad. Las cancelaciones conservan el historial.
 
 `npm run test:spaces` usa exclusivamente una base `expotec_test_*`, distinta de `DB_NAME`. Aplica migraciones repetibles y comprueba HTTP, SQL, claves foráneas, permisos retirados, guardados concurrentes, versiones y conservación de filas. Limpia únicamente sus espacios y cuentas temporales; permite conservar otras pruebas existentes. `npm run test:database` sigue requiriendo una base vacía para la prueba histórica completa de autenticación.
 
@@ -132,7 +164,7 @@ Enviar el acceso como `Authorization: Bearer <JWT>`. El JWT de acceso vence a lo
 
 Al renovar, guardar el nuevo token de renovación y desechar el anterior. Reutilizar un token consumido revoca toda esa sesión, incluidos los accesos ya emitidos. El cliente deberá serializar las renovaciones: dos renovaciones simultáneas del mismo token provocan el cierre de sesión. El cierre afecta esa sesión, no las otras sesiones del usuario.
 
-Los tokens se devuelven en JSON para la futura integración Android/web. Todavía no hay persistencia segura de sesión en el frontend: no se deben guardar tokens en el almacenamiento de la demostración. El almacenamiento seguro nativo y la estrategia de sesión web se implementarán al conectar las pantallas.
+Las rutas nativas devuelven tokens en JSON; el cliente conserva la renovación en SecureStore y el acceso en memoria. Las rutas web usan la cookie HttpOnly descrita arriba. No guardar tokens en el almacenamiento de la demostración.
 
 Errores uniformes:
 
@@ -143,7 +175,7 @@ Errores uniformes:
 }
 ```
 
-`fields` aparece solo cuando corresponde. Códigos HTTP generales: 400 validación/JSON, 401 sesión o credenciales, 403 permisos/origen, 404 ruta/entidad, 409 conflicto, 413 cuerpo mayor al límite de la ruta (16 KB en autenticación, 128 KB en espacios), 429 límite de intentos, 500 error inesperado y 503 conexión no disponible. Las respuestas y logs no incluyen contraseñas, tokens ni mensajes internos del driver.
+`fields` aparece solo cuando corresponde. Códigos HTTP generales: 400 validación/JSON, 401 sesión o credenciales, 403 permisos/origen, 404 ruta/entidad, 409 conflicto, 413 cuerpo mayor al límite de la ruta (16 KB en autenticación, 64 KB en proyectos, 128 KB en espacios), 429 límite de intentos, 500 error inesperado y 503 conexión no disponible. Las respuestas y logs no incluyen contraseñas, tokens ni mensajes internos del driver.
 
 El límite de cuentas/sesiones públicas permite 40 solicitudes por IP cada 15 minutos; login además admite 10 intentos por correo en ese lapso. Los contadores se guardan y bloquean en SQL, para compartirlos entre instancias de Vercel. Un 429 incluye `Retry-After` en segundos. Fuera de Vercel no se confía en cabeceras que reescriben la IP.
 
@@ -179,6 +211,6 @@ La prueba rechaza la base de producción y cualquier base con tablas; deja sus d
 
 API publicada el 14/10/2026 en `https://expotec-api-gn19.vercel.app`, con base `expotec` en TiDB. POST `/api/health` y `/api/health/ready` responden 200; ready confirma `database: connected`. Se comprobaron la sesión sin token (401), el preflight del origen de la web (204) y el rechazo de otro origen (403). La entrada `src/app.mjs` importa Express directamente para que Vercel la reconozca. Las direcciones, raíces y pasos de prueba están en [../docs/DESPLIEGUE.md](../docs/DESPLIEGUE.md).
 
-Pendiente: conectar el frontend, CRUD de entidades de ExpoTec y sus transacciones, proveedores sociales, recuperación por correo, verificación del correo y persistencia segura de sesión. Registro e ingreso con correo no implican verificación de su titularidad. La API no guarda imágenes, videos ni archivos en el disco del hosting; la solución de archivos aún debe definirse.
+Pendiente: inventario, pedidos y reservas de recursos, préstamos y devoluciones, presentación compartida, proveedores sociales, recuperación y verificación del correo. Registro e ingreso con correo no implican verificación de su titularidad. La API no guarda imágenes, videos ni archivos en el disco del hosting; la solución de archivos aún debe definirse.
 
 La configuración de despliegue está en [docs/DESPLIEGUE.md](../docs/DESPLIEGUE.md). Este hito no completa toda la etapa 7 ni habilita el uso con datos reales de la escuela.

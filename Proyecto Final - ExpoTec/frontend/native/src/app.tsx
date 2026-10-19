@@ -31,6 +31,9 @@ import GalleryPage from "./pages/GalleryPage";
 import PresentationPage from "./pages/PresentationPage";
 import AccountPage from "./pages/AccountPage";
 import SharedSpacesPage from "./pages/SharedSpacesPage";
+import SharedProjectsPage from "./pages/SharedProjectsPage";
+import SharedProjectPage from "./pages/SharedProjectPage";
+import SharedProposalPage from "./pages/SharedProposalPage";
 
 type RootRoutes = {
   Home: undefined;
@@ -39,6 +42,9 @@ type RootRoutes = {
   Presentation: undefined;
   Account: undefined;
   SharedSpaces: undefined;
+  SharedProjects: undefined;
+  SharedProject: { projectId: string; privateView?: boolean };
+  SharedProposal: { projectId?: string } | undefined;
 };
 type TabRoutes = {
   map: undefined;
@@ -289,16 +295,24 @@ function AppShell() {
         key={role}
         onReady={() =>
           setRemoteOpen(
-            ["Account", "SharedSpaces"].includes(
-              navigation.getCurrentRoute()?.name ?? "",
-            ),
+            [
+              "Account",
+              "SharedSpaces",
+              "SharedProjects",
+              "SharedProject",
+              "SharedProposal",
+            ].includes(navigation.getCurrentRoute()?.name ?? ""),
           )
         }
         onStateChange={() =>
           setRemoteOpen(
-            ["Account", "SharedSpaces"].includes(
-              navigation.getCurrentRoute()?.name ?? "",
-            ),
+            [
+              "Account",
+              "SharedSpaces",
+              "SharedProjects",
+              "SharedProject",
+              "SharedProposal",
+            ].includes(navigation.getCurrentRoute()?.name ?? ""),
           )
         }
       >
@@ -320,7 +334,67 @@ function AppShell() {
             options={{ title: "Espacios compartidos" }}
           >
             {({ navigation }) => (
-              <SharedSpacesPage onDemo={() => navigation.navigate("Home")} />
+              <SharedSpacesPage
+                onDemo={() => navigation.navigate("Home")}
+                onProjects={() => navigation.navigate("SharedProjects")}
+                onSelectProject={(id) =>
+                  navigation.navigate("SharedProject", { projectId: id })
+                }
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen
+            name="SharedProjects"
+            options={{ title: "Proyectos compartidos" }}
+          >
+            {({ navigation }) => (
+              <SharedProjectsPage
+                onSelect={(id, privateView) =>
+                  navigation.navigate("SharedProject", {
+                    projectId: id,
+                    privateView,
+                  })
+                }
+                onCreate={() => navigation.navigate("SharedProposal")}
+                onSpaces={() => navigation.popTo("SharedSpaces")}
+                onAccount={() => navigation.navigate("Account")}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen
+            name="SharedProject"
+            options={{ title: "Proyecto compartido" }}
+          >
+            {({ route, navigation }) => (
+              <SharedProjectPage
+                projectId={route.params.projectId}
+                privateView={!!route.params.privateView}
+                onEdit={() =>
+                  navigation.navigate("SharedProposal", {
+                    projectId: route.params.projectId,
+                  })
+                }
+                onBack={() => navigation.popTo("SharedProjects")}
+                onAccount={() => navigation.navigate("Account")}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen
+            name="SharedProposal"
+            options={{ title: "Propuesta del equipo" }}
+          >
+            {({ route, navigation }) => (
+              <SharedProposalPage
+                projectId={route.params?.projectId}
+                onSaved={(id) =>
+                  navigation.replace("SharedProject", {
+                    projectId: id,
+                    privateView: true,
+                  })
+                }
+                onBack={() => navigation.goBack()}
+                onAccount={() => navigation.navigate("Account")}
+              />
             )}
           </Stack.Screen>
           <Stack.Screen name="Account" options={{ title: "Mi cuenta" }}>
@@ -328,6 +402,7 @@ function AppShell() {
               <AccountPage
                 onDemo={() => navigation.navigate("Home")}
                 onSpaces={() => navigation.popTo("SharedSpaces")}
+                onProjects={() => navigation.popTo("SharedProjects")}
               />
             )}
           </Stack.Screen>

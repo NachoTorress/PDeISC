@@ -31,11 +31,11 @@ Decisión pendiente: confirmar si profesor y encargado son perfiles separados o 
 5. El puesto ocupado permite abrir la ficha del proyecto y conocer su ubicación.
 6. Si se piden cambios, el alumno ve el motivo, corrige y vuelve a enviar.
 
-Estados propuestos: borrador, pendiente, requiere cambios, confirmado y cancelado. Deben revisarse antes de implementar.
+Estados implementados en 7D: pendiente, requiere cambios, confirmado y cancelado. El borrador existe en memoria del formulario, sin guardado en el servidor.
 
 Los proyectos confirmados no podrán modificar silenciosamente su ubicación o recursos. Reabrir o cancelar deberá liberar o recalcular sus asignaciones, conservando el historial de préstamos.
 
-Cada proyecto admite varios integrantes. El alumno que presenta la propuesta queda incluido; los integrantes pueden editar una propuesta antes de su confirmación. En el prototipo se registran sus nombres y apellidos; el sistema final deberá relacionar los integrantes con las cuentas de alumnos mediante una tabla de relación. Decisión pendiente: determinar si un alumno podrá mantener más de un proyecto.
+Cada proyecto admite varios integrantes. El alumno que presenta la propuesta queda incluido; los integrantes pueden editar una propuesta antes de su confirmación. Desde el hito 7D se vinculan con cuentas de alumnos mediante una tabla de relación y un alumno puede integrar varios proyectos. La demostración conserva sus participantes ficticios por nombre y apellido.
 
 ## Espacios y editor de distribución
 
@@ -105,7 +105,7 @@ Por indicación posterior del usuario, la aplicación pasa a una única base de 
 
 La referencia anterior en React con Vite y Bootstrap queda en `frontend/web/`; no será un segundo cliente activo. La decisión posterior de usar React Native sustituye el uso de Vite, Bootstrap y CSS para esta etapa. Los estilos nativos conservarán los temas claro y oscuro separados.
 
-Las pantallas de proyectos, inventario y préstamos siguen siendo una demostración funcional con datos de ejemplo. El hito 7A incorpora el backend Express de cuentas, sesiones y permisos, junto con las migraciones de autenticación. TiDB y los dos proyectos Vercel están publicados y comprobados. El hito 7B conecta las pantallas de cuentas y la persistencia de sesión. El hito 7C conecta espacios, mobiliario y puestos compartidos, separados de la demostración. Integrar proyectos, inventario, préstamos, proveedores sociales y recuperación de contraseñas permanece pendiente. Cambiar el perfil de demostración no equivale a autenticar usuarios.
+La aplicación conserva una demostración funcional de proyectos, inventario y préstamos con datos de ejemplo, separada de las pantallas compartidas. El hito 7A incorpora el backend Express de cuentas, sesiones y permisos, junto con las migraciones de autenticación. TiDB y los dos proyectos Vercel están publicados y comprobados. El hito 7B conecta las pantallas de cuentas y la persistencia de sesión. El hito 7C conecta espacios, mobiliario y puestos compartidos, separados de la demostración. El hito 7D conecta proyectos, equipos con cuentas reales, profesores, materias, revisión y confirmación atómica del puesto. Integrar inventario, recursos, préstamos, presentación TV compartida, proveedores sociales y recuperación de contraseñas permanece pendiente. Cambiar el perfil de demostración no equivale a autenticar usuarios.
 
 Decisión posterior del usuario, 14/10/2026: alojar la base relacional en TiDB y desplegar el frontend y el backend como proyectos separados en Vercel. `frontend/native` se exporta para web; `frontend/web` continúa como referencia. Esta decisión ajusta el hosting, conservando MySQL como protocolo y el requisito de normalización relacional. La preparación y los límites actuales se documentan en [DESPLIEGUE.md](DESPLIEGUE.md).
 
@@ -216,6 +216,8 @@ El hito **7B: acceso desde la aplicación**, implementado el 19/10/2026, conecta
 
 El hito **7C: espacios compartidos** incorpora la consulta pública y la edición de planos por administradores reales, con espacios, mobiliario y puestos normalizados en TiDB. Las mesas se habilitan como puestos por separado. El guardado verifica versiones y es transaccional; las bajas conservan registros. No se importan automáticamente los datos ficticios ni se inventa el plano de la escuela.
 
-Los siguientes bloques trasladarán los proyectos, sus confirmaciones, el inventario y los préstamos al servidor con transacciones; posteriormente se completarán recuperación y accesos sociales. Los hitos 7A–7C no dan por finalizada la etapa 7. Los perfiles y datos del área de demostración siguen siendo ficticios e independientes de la cuenta real. Por indicación del usuario del 19/10/2026, Android se retoma al final.
+El hito **7D: proyectos compartidos** incorpora propuestas, equipos vinculados a cuentas activas, materias, profesores, pedidos de cambios, reenvíos y confirmación del puesto en una transacción. El creador y quien edita permanecen en el equipo. Un alumno puede integrar varios proyectos. Los confirmados aparecen en el plano y en la muestra pública, sin correos ni UUID de participantes; administración puede reabrir o cancelar conservando revisiones. Los proyectos vigentes impiden retirar su puesto o dar de baja su espacio. Se usan enlaces HTTPS de imagen y video ya alojados; el borrador solo se conserva mientras la pantalla permanece abierta.
+
+Los siguientes bloques trasladarán el inventario, las solicitudes y reservas de recursos y los préstamos al servidor con transacciones; luego se conectará la presentación TV compartida y se completarán archivos, recuperación y accesos sociales. La confirmación actual asigna únicamente el puesto. Al integrar préstamos se extenderán las protecciones de reapertura y cancelación. Los hitos 7A–7D no dan por finalizada la etapa 7. Los perfiles y datos del área de demostración siguen siendo ficticios e independientes de la cuenta real. Por indicación del usuario del 19/10/2026, Android se retoma al final.
 
 Cada etapa tendrá alcance explícito, controles funcionales y comprobaciones propias. La verificación final incluirá aprobaciones simultáneas, stock insuficiente, permisos, devolución parcial, renovación de sesión, enlaces de video inválidos y recuperación frente a errores de conexión.

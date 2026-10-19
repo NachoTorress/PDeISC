@@ -31,9 +31,11 @@ const empty: Credentials = {
 export default function AccountPage({
   onDemo,
   onSpaces,
+  onProjects,
 }: {
   onDemo: () => void;
   onSpaces: () => void;
+  onProjects: () => void;
 }) {
   const { colors } = useTheme();
   const { user, ready, error: sessionError, client, retry } = useAuth();
@@ -153,8 +155,8 @@ export default function AccountPage({
               Cuenta creada el {formatDate(user.createdAt)}
             </Text>
             <Text style={paragraph}>
-              Tu cuenta y los espacios compartidos se guardan en el servidor.
-              Los proyectos, el inventario y los préstamos de la demostración
+              Tu cuenta, los espacios y los proyectos compartidos se guardan en
+              el servidor. El inventario y los préstamos de la demostración
               siguen siendo ejemplos locales.
             </Text>
             <Button
@@ -328,6 +330,7 @@ export default function AccountPage({
             />
           </Card>
         )}
+        <Button title="Ver proyectos" icon="projects" onPress={onProjects} />
         <Button
           title="Ver espacios compartidos"
           icon="map"

@@ -5,7 +5,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useTheme } from "../contexts/ThemeContext";
 
 /** Reproduce un enlace directo con controles nativos y muestra errores dentro de la ficha. */
-export default function ProjectVideo({ uri }: { uri: string }) {
+export default function ProjectVideo({ uri, showPresentationHint = true }: { uri: string; showPresentationHint?: boolean }) {
   const { colors } = useTheme();
   const [error, setError] = useState("");
   const player = useVideoPlayer(uri);
@@ -35,9 +35,9 @@ export default function ProjectVideo({ uri }: { uri: string }) {
           {error}
         </Text>
       )}
-      <Text style={{ color: colors.muted }}>
+      {showPresentationHint && <Text style={{ color: colors.muted }}>
         Los videos de proyectos confirmados se incluyen en el modo TV.
-      </Text>
+      </Text>}
     </View>
   );
 }
