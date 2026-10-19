@@ -105,7 +105,7 @@ Por indicación posterior del usuario, la aplicación pasa a una única base de 
 
 La referencia anterior en React con Vite y Bootstrap queda en `frontend/web/`; no será un segundo cliente activo. La decisión posterior de usar React Native sustituye el uso de Vite, Bootstrap y CSS para esta etapa. Los estilos nativos conservarán los temas claro y oscuro separados.
 
-Las pantallas siguen siendo una demostración funcional con datos de ejemplo. El hito 7A incorpora por separado el backend Express de cuentas, sesiones y permisos, junto con las migraciones de autenticación. TiDB y los dos proyectos Vercel están publicados y comprobados. Conectar las pantallas y las entidades de ExpoTec a la base, integrar proveedores sociales y recuperar contraseñas permanece pendiente. Cambiar el perfil de demostración no equivale a autenticar usuarios.
+Las pantallas de proyectos, espacios, inventario y préstamos siguen siendo una demostración funcional con datos de ejemplo. El hito 7A incorpora el backend Express de cuentas, sesiones y permisos, junto con las migraciones de autenticación. TiDB y los dos proyectos Vercel están publicados y comprobados. El hito 7B conecta las pantallas de cuentas y la persistencia de sesión. Conectar las entidades de ExpoTec a la base, integrar proveedores sociales y recuperar contraseñas permanece pendiente. Cambiar el perfil de demostración no equivale a autenticar usuarios.
 
 Decisión posterior del usuario, 14/10/2026: alojar la base relacional en TiDB y desplegar el frontend y el backend como proyectos separados en Vercel. `frontend/native` se exporta para web; `frontend/web` continúa como referencia. Esta decisión ajusta el hosting, conservando MySQL como protocolo y el requisito de normalización relacional. La preparación y los límites actuales se documentan en [DESPLIEGUE.md](DESPLIEGUE.md).
 
@@ -144,7 +144,7 @@ Proyecto Final - ExpoTec/
 └── README.md                 Instalación, configuración y API
 ```
 
-React Native utilizará componentes y estilos nativos también cuando se ejecute en el navegador. Context API administra el estado de la demostración; la integración de autenticación y sesión seguras se realizará en la etapa del backend. La persistencia local de datos de ejemplo no reemplaza la base de datos ni las comprobaciones de permisos del servidor.
+React Native utiliza componentes y estilos nativos también cuando se ejecuta en el navegador. Context API administra por separado el estado de la demostración y el de autenticación. La sesión real se integra con el backend desde el hito 7B. La persistencia local de datos de ejemplo no reemplaza la base de datos ni las comprobaciones de permisos del servidor.
 
 En Android, los datos de demostración se guardarán en un archivo privado de documentos de la aplicación, con archivo temporal y respaldo fijo recuperable. Esto evita el límite por registro de AsyncStorage al incluir imágenes en los proyectos. La carga debe validar el contenido y recuperar una copia válida frente a una escritura incompleta; si ninguna copia puede leerse, se conserva el almacenamiento y se informa el error. Los datos anteriores de AsyncStorage se podrán leer sin eliminarlos automáticamente. En el navegador se mantiene AsyncStorage con la clave original para conservar los datos existentes.
 
@@ -210,6 +210,10 @@ No se considerará entregado el APK hasta disponer del archivo compilado y una p
 6. Implementar modo invitados y presentación para televisión.
 7. Implementar y verificar backend, TiDB/MySQL, autenticación, recuperación y permisos reales; verificar los flujos completos, accesibilidad, temas y tamaños de pantalla. Preparar documentación y retomar el APK cuando el usuario lo indique.
 
-La etapa 7 comienza con el hito **7A: cuentas, sesiones y preparación del hosting**, comprobado el 14/10/2026: 18 pruebas locales, integración SQL real en TiDB, web y API publicadas por separado y conexión a TiDB verificada desde Vercel. Los siguientes bloques conectarán las pantallas y trasladarán las reglas de proyectos, espacios, confirmación y préstamos al servidor con transacciones; posteriormente se completarán recuperación y accesos sociales. El hito 7A no da por finalizada la etapa 7.
+La etapa 7 comienza con el hito **7A: cuentas, sesiones y preparación del hosting**, comprobado el 14/10/2026: 18 pruebas locales, integración SQL real en TiDB, web y API publicadas por separado y conexión a TiDB verificada desde Vercel.
+
+El hito **7B: acceso desde la aplicación**, implementado el 19/10/2026, conecta registro, ingreso, cuenta, permisos actuales y cierre con confirmación. Conserva la sesión mediante SecureStore en Android y cookie HttpOnly en web; el token de acceso permanece en memoria. Se comprobaron registro, ingreso, errores de credenciales, recarga, renovación simultánea en dos pestañas y cierre en navegador, además de las pruebas automáticas. El empaquetado Android se comprueba por separado y no sustituye la prueba en dispositivo físico.
+
+Los siguientes bloques trasladarán las reglas y los datos de proyectos, espacios, confirmación y préstamos al servidor con transacciones; posteriormente se completarán recuperación y accesos sociales. Los hitos 7A y 7B no dan por finalizada la etapa 7. Los perfiles y datos del área de demostración siguen siendo ficticios e independientes de la cuenta real.
 
 Cada etapa tendrá alcance explícito, controles funcionales y comprobaciones propias. La verificación final incluirá aprobaciones simultáneas, stock insuficiente, permisos, devolución parcial, renovación de sesión, enlaces de video inválidos y recuperación frente a errores de conexión.

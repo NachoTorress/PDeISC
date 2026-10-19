@@ -20,7 +20,7 @@ Los requisitos completos están en docs/REQUISITOS.md. El usuario confirmó Reac
 
 La interfaz actual es un prototipo migrado a componentes nativos para revisar los flujos y el diseño. Sus datos son ficticios y se guardan localmente en cada dispositivo; no se comparten entre equipos. La selección de una vista por perfil no es autenticación ni control de acceso real. Los equipos admiten varios integrantes y los proyectos informáticos admiten enlaces opcionales de GitHub y de su página.
 
-El hito 7A incorpora por separado una API Express de cuentas, sesiones y permisos, con SQL para TiDB. El usuario confirmó el 14/10/2026 la base en TiDB y dos proyectos separados en Vercel para backend y frontend. TiDB está configurado y la web y API están publicadas; la conexión de la API a TiDB está comprobada. La conexión de las pantallas, los datos de ExpoTec y los servicios de acceso social, correo y archivos siguen pendientes. Las direcciones y las pruebas están en docs/DESPLIEGUE.md.
+El hito 7A incorpora una API Express de cuentas, sesiones y permisos, con SQL para TiDB. El usuario confirmó el 14/10/2026 la base en TiDB y dos proyectos separados en Vercel para backend y frontend. TiDB está configurado y la web y API están publicadas; la conexión de la API a TiDB está comprobada. El hito 7B del 19/10/2026 conecta **Mi cuenta**: registro como alumno, ingreso, consulta de permisos, renovación y cierre con confirmación. Android utiliza Expo SecureStore; la web, cookie HttpOnly y un proxy del mismo origen. La ejecución de esta sesión en un teléfono físico queda pendiente. Los datos de ExpoTec y los servicios de acceso social, recuperación por correo y archivos siguen pendientes. Las direcciones y las pruebas están en docs/DESPLIEGUE.md.
 
 ## Operating Context
 

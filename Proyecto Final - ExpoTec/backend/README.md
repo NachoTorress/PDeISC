@@ -1,6 +1,25 @@
-# ExpoTec API — hito 7A
+# ExpoTec API — cuentas y sesiones
 
-Backend Node.js 24 + Express 5 con módulos import/export. Esta etapa implementa cuentas locales, sesiones y permisos; usa mysql2 y SQL relacional compatible con MySQL/TiDB. El frontend todavía utiliza sus datos de demostración y no inicia sesión contra esta API.
+Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas locales, sesiones y permisos; usa mysql2 y SQL relacional compatible con MySQL/TiDB. Desde el hito 7B, la pantalla **Mi cuenta** utiliza esta API. Los datos de proyectos, espacios y préstamos todavía pertenecen a la demostración local.
+
+## Sesión web — hito 7B
+
+Las rutas nativas existentes mantienen su contrato JSON con `refreshToken`. La web utiliza estas rutas adicionales, con `Content-Type: application/json`, `credentials: include` y un encabezado `Origin` exacto autorizado en `CORS_ORIGINS`:
+
+| Método y ruta | Cuerpo | Respuesta |
+| --- | --- | --- |
+| POST `/api/auth/browser/register` | `firstName`, `lastName`, `email`, `password` | 201: usuario, `accessToken`, `tokenType`, `expiresIn`; cookie de renovación |
+| POST `/api/auth/browser/login` | `email`, `password` | 200: mismo formato y cookie |
+| POST `/api/auth/browser/refresh` | `{}` y cookie vigente | 200: sesión renovada y cookie rotada |
+| POST `/api/auth/browser/logout` | `{}` y cookie, si existe | 204: revoca la sesión y elimina la cookie; admite ausencia o expiración |
+
+Estas respuestas nunca incluyen `refreshToken` en el JSON. La cookie es HttpOnly, SameSite=Strict, sin Domain y con ruta `/api/auth/browser`. En producción se llama `__Secure-expotec-refresh` y exige Secure; en desarrollo HTTP se llama `expotec-refresh`. Su duración máxima es de 30 días; la expiración absoluta registrada en TiDB sigue siendo la autoridad. Una renovación inválida elimina la cookie. Si la base falla durante el cierre, la operación informa el error para permitir reintentar la revocación.
+
+Las rutas web rechazan Origin ausente, `null` o ajeno y tipos de contenido distintos de JSON. Se aplican los mismos límites de intentos y validaciones que a las rutas nativas. Consultar la cuenta y los permisos actuales sigue usando POST `/api/auth/session` con Bearer y `{}`. La configuración CORS permite credenciales exclusivamente para los orígenes explícitos.
+
+El frontend Vercel reenvía `/api/:path*` a la API para que la cookie permanezca en el origen de la web. No usar la URL de otro dominio Vercel como base del cliente web: sería una cookie entre sitios. En desarrollo, usar el mismo hostname en ambos servicios o la vista previa con proxy. Las renovaciones del cliente se serializan; en navegadores con Web Locks también entre pestañas.
+
+Comprobación del 19/10/2026: 20 pruebas locales de backend aprobadas, incluidas cookie de producción, rechazo de solicitudes entre sitios, rotación, eliminación y revocación. No hubo cambios de esquema SQL en este hito.
 
 ## Preparación local
 

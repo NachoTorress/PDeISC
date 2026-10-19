@@ -1,4 +1,5 @@
 import http from "node:http";
+import https from "node:https";
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,6 +11,7 @@ const root = path.resolve(
 );
 const port = Number(process.env.PORT ?? 5173);
 const host = process.env.HOST ?? "127.0.0.1";
+const api = new URL(process.env.API_PROXY_URL ?? "http://127.0.0.1:3001");
 if (!Number.isInteger(port) || port < 1 || port > 65535)
   throw new Error("PORT debe ser un puerto válido.");
 const mime = {
@@ -31,6 +33,35 @@ http
       const pathname = decodeURIComponent(
         new URL(request.url ?? "/", `http://${host}:${port}`).pathname,
       );
+      if (pathname.startsWith("/api/")) {
+        const target = new URL(api);
+        target.pathname = pathname;
+        const upstream = (target.protocol === "https:" ? https : http).request(
+          target,
+          {
+            method: request.method,
+            headers: { ...request.headers, host: target.host },
+          },
+          (result) => {
+            response.writeHead(result.statusCode ?? 502, result.headers);
+            result.pipe(response);
+          },
+        );
+        upstream.on("error", () => {
+          if (!response.headersSent)
+            response.writeHead(503, { "Content-Type": "application/json" });
+          response.end(
+            JSON.stringify({
+              error: {
+                message:
+                  "La API local no está disponible. Iniciá el backend y reintentá.",
+              },
+            }),
+          );
+        });
+        request.pipe(upstream);
+        return;
+      }
       let target = path.resolve(root, `.${pathname}`);
       if (target !== root && !target.startsWith(root + path.sep)) {
         response.writeHead(403);

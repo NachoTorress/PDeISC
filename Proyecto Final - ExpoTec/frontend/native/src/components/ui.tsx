@@ -11,7 +11,12 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import type { KeyboardTypeOptions, StyleProp, ViewStyle } from "react-native";
+import type {
+  KeyboardTypeOptions,
+  StyleProp,
+  TextInputProps,
+  ViewStyle,
+} from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { Icon } from "./Icon";
 import type { IconName } from "./Icon";
@@ -103,6 +108,10 @@ export function Field({
   editable = true,
   maxLength,
   autoFocus = false,
+  secureTextEntry = false,
+  autoComplete,
+  onBlur,
+  onSubmitEditing,
 }: {
   label: string;
   value: string;
@@ -114,6 +123,10 @@ export function Field({
   editable?: boolean;
   maxLength?: number;
   autoFocus?: boolean;
+  secureTextEntry?: boolean;
+  autoComplete?: TextInputProps["autoComplete"];
+  onBlur?: () => void;
+  onSubmitEditing?: () => void;
 }) {
   const { colors } = useTheme();
   const [focused, setFocused] = useState(false);
@@ -129,18 +142,35 @@ export function Field({
         value={value}
         onChangeText={onChangeText}
         onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
+        onBlur={() => {
+          setFocused(false);
+          onBlur?.();
+        }}
+        onSubmitEditing={onSubmitEditing}
+        returnKeyType={onSubmitEditing ? "go" : undefined}
+        secureTextEntry={secureTextEntry}
+        autoComplete={autoComplete}
         editable={editable}
         autoFocus={autoFocus}
         maxLength={maxLength}
         multiline={multiline}
         keyboardType={keyboardType}
         autoCapitalize={
-          keyboardType === "url" || keyboardType === "email-address"
+          secureTextEntry ||
+          autoComplete === "current-password" ||
+          autoComplete === "new-password" ||
+          keyboardType === "url" ||
+          keyboardType === "email-address"
             ? "none"
             : "sentences"
         }
-        autoCorrect={keyboardType !== "url" && keyboardType !== "email-address"}
+        autoCorrect={
+          !secureTextEntry &&
+          autoComplete !== "current-password" &&
+          autoComplete !== "new-password" &&
+          keyboardType !== "url" &&
+          keyboardType !== "email-address"
+        }
         selectionColor={colors.primary}
         style={[
           styles.input,

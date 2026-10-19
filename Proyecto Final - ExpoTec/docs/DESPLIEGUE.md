@@ -28,7 +28,7 @@ flowchart LR
     API -->|MySQL con TLS| DB[(TiDB)]
 ```
 
-El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. La API atenderá ambos clientes cuando se conecten sus pantallas; actualmente conservan la demostración local.
+El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. **Mi cuenta** utiliza la API desde el hito 7B. Los proyectos, espacios, inventario y préstamos continúan en la demostración local.
 
 ## 1. Base en TiDB
 
@@ -60,7 +60,13 @@ Tras publicar, comprobar POST `/api/health` y POST `/api/health/ready` con cuerp
 
 El proyecto `expotec-web` importa el mismo repositorio con **Root Directory: `Proyecto Final - ExpoTec/frontend/native`**, Node **24.x** y framework **Other**. `vercel.json` establece build `npm run export:web`, salida `dist` y reescritura de las rutas a la entrada de la aplicación.
 
-El frontend todavía no consume la API; no necesita variables para TiDB ni secretos. En el hito de integración se agregará la URL pública de la API y el manejo de sesión. Publicar ahora muestra el prototipo con datos locales de ejemplo.
+El frontend consume la API de cuentas mediante una reescritura de `/api/:path*` a `https://expotec-api-gn19.vercel.app/api/:path*`, antes de la ruta general de Expo. Dejar `EXPO_PUBLIC_API_URL` sin definir en Vercel para usar este proxy. Esto mantiene la cookie de renovación en el mismo origen de la web, evitando depender de cookies entre dominios. El backend sigue desplegándose en su propio proyecto. No necesita cambios de esquema ni nuevas variables privadas.
+
+La cookie de producción es HttpOnly, Secure y SameSite=Strict, sin Domain. El frontend solo recibe el token de acceso en memoria. Los endpoints `/api/auth/browser/*` exigen Origin autorizado y JSON; el proxy debe conservar el Origin de la web. Para un frontend alojado en otra dirección, agregar ese origen exacto a `CORS_ORIGINS` de la API. Los previews requieren la misma configuración y una API de pruebas.
+
+Para desarrollo con Expo Web, copiar `.env.example` de `frontend/native` a `.env.local` si no existe y configurar la API en el mismo hostname, por ejemplo `http://localhost:3001`; abrir el frontend también con `localhost`. Autorizar en el backend su origen y puerto exactos. Reiniciar Expo al cambiar la variable. La vista previa de la exportación incluye un proxy a `http://127.0.0.1:3001`, configurable mediante `API_PROXY_URL`. En Android, sin variable se utiliza la API pública; un emulador puede apuntar a `http://10.0.2.2:3001`. Expo SecureStore conserva la renovación; el empaquetado no sustituye su comprobación en un teléfono.
+
+Después de publicar, comprobar POST `/api/health/ready` a través del dominio de la web y el formulario **Mi cuenta**. Un refresh sin cookie debe responder 401 y eliminar la cookie; Origin ausente o ajeno debe dar 403. No crear cuentas ficticias en la base de producción para las pruebas.
 
 ## Entornos de prueba y archivos
 
@@ -85,6 +91,9 @@ Una API desplegada en funciones no debe conservar fotos, videos, copias de desca
 | Prueba completa MySQL/TiDB de concurrencia y restricciones | Aprobada en expotec_test_01 el 14/10/2026 |
 | API pública conectada a TiDB | POST health y ready devuelven 200; ready confirma database: connected |
 | Acceso público y CORS | Sesión sin token devuelve 401; preflight de la web devuelve 204; origen ajeno devuelve 403 |
-| Pantallas conectadas, dominio ExpoTec y acceso social/recuperación | Próximos bloques de la etapa 7 |
+| Pantallas de cuentas conectadas y persistencia de sesión | Implementadas en el hito 7B; pruebas en navegador local aprobadas |
+| Dominio ExpoTec y acceso social/recuperación | Próximos bloques de la etapa 7 |
 
-El hito 7A de infraestructura queda comprobado el 14/10/2026. La autenticación del frontend y los datos compartidos de ExpoTec siguen pendientes. El APK continúa postergado por indicación del usuario.
+El hito 7A de infraestructura queda comprobado el 14/10/2026. El hito 7B del 19/10/2026 incorpora el acceso desde la aplicación: 20 pruebas de backend y 57 de frontend aprobadas, revisión de tipos y estilos y exportaciones web y Android comprobadas. En navegador local se verificaron registro, contraseña incorrecta, ingreso, recarga, renovación en dos pestañas, cierre con confirmación, tamaño de teléfono y tema oscuro. Los datos compartidos de ExpoTec siguen pendientes. El APK continúa postergado por indicación del usuario.
+
+Referencias de la persistencia de sesión: [Expo SecureStore](https://docs.expo.dev/versions/v57.0.0/sdk/securestore/), [cookies HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies) y [reescrituras de Vercel](https://vercel.com/docs/rewrites).

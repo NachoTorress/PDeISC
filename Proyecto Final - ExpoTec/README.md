@@ -2,7 +2,7 @@
 
 Prototipo de organización escolar migrado a **React Native con Expo SDK 57**. El código activo está en `frontend/native`; la versión anterior de Vite queda en `frontend/web` como referencia. La generación del APK quedó para una etapa posterior, como indicó el usuario.
 
-Los datos y perfiles de las pantallas son de ejemplo y todavía no se sincronizan entre dispositivos. El primer bloque del backend ya implementa cuentas, sesiones y permisos; la aplicación aún no se conecta a esa API.
+Los proyectos, espacios y préstamos de la demostración son ejemplos locales y todavía no se sincronizan entre dispositivos. **Mi cuenta** ya conecta la aplicación con la API: permite registrarse como alumno, ingresar, consultar los permisos asignados por el servidor, recuperar la sesión y cerrarla con confirmación.
 
 La [web pública](https://expotec-web-gn19.vercel.app) ya está en Vercel. La API está publicada por separado en `https://expotec-api-gn19.vercel.app` y conectada a TiDB. Los pasos para probarla y actualizar los despliegues están en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
 
@@ -62,7 +62,11 @@ La configuración de `eas.json` incluye el perfil `preview` para un APK futuro. 
 
 ## Guía breve de uso
 
-**Probar vista como** permite cambiar entre perfiles ficticios. Es una herramienta de demostración y no un inicio de sesión. El estudiante de ejemplo es Lucía Fernández; el profesor es Martín García.
+**Mi cuenta** abre el acceso real. El registro pide nombre, apellido, correo y contraseña de 12–128 caracteres, con repetición para comprobarla. Las nuevas cuentas reciben únicamente el permiso de alumno. La ficha muestra los permisos actuales y permite actualizarlos o cerrar sesión con confirmación. Si falla la conexión, se puede reintentar sin eliminar la sesión guardada. La recuperación de contraseña y los proveedores sociales siguen pendientes.
+
+La sesión se conserva con Expo SecureStore en Android y con una cookie HttpOnly, Secure y SameSite=Strict en la web de producción. El token de acceso vive en memoria. La web utiliza `/api` a través de Vercel para mantener la cookie en su propio origen; no guarda tokens en AsyncStorage ni localStorage.
+
+**Cambiar vista → Probar vista como** permite cambiar entre perfiles ficticios. Es una herramienta de demostración independiente de la cuenta real. El estudiante de ejemplo es Lucía Fernández; el profesor es Martín García. Los cambios en proyectos, espacios, inventario y préstamos continúan guardándose solo en este dispositivo.
 
 En **Espacios → Acomodar espacio**, mantener una pieza de la paleta (Mesa, Banco, Toma o Zona) y arrastrarla al plano. Se crea únicamente al soltarla dentro; tocarla o soltarla fuera no agrega elementos. Seleccionar un objeto existente y arrastrarlo lo mueve; los tiradores achican o agrandan las mesas. **Girar** cambia su orientación. Arrastrar **Zona** agrega una etiqueta cuyo texto se edita en el inspector. **Guardar plano** conserva los cambios; **Cancelar** descarta el borrador. La eliminación requiere confirmación dentro del editor. Con teclado, Enter o Espacio sobre una pieza de la paleta la coloca en el centro; los lectores de pantalla ofrecen la misma acción. Escape cancela un gesto activo. Los campos de texto continúan editables y seleccionables.
 
@@ -118,11 +122,15 @@ Esos pasos corresponden a una instalación nueva: no reemplazar el `.env` existe
 
 La [documentación de la API](backend/README.md) detalla todos los métodos, rutas, permisos, cuerpos, respuestas y errores. Las consultas usan POST mientras se confirma la restricción sobre GET de la consigna. La [guía de TiDB y Vercel](docs/DESPLIEGUE.md) explica raíces de los dos proyectos, variables y orden de configuración. Las credenciales de base y `JWT_SECRET` se guardan exclusivamente en el backend.
 
-El frontend conserva sus perfiles ficticios hasta implementar las pantallas de acceso y conectar los datos de proyectos, espacios e inventario al servidor. La API de cuentas todavía no equivale a una aplicación completa lista para datos reales.
+El hito **7B: acceso desde la aplicación**, implementado el 19/10/2026, incorpora las pantallas y la persistencia de sesión. Los perfiles ficticios se mantienen exclusivamente para la demostración local, separados de los permisos de la cuenta. Conectar los datos de proyectos, espacios e inventario al servidor sigue pendiente.
+
+En desarrollo web, copiar `frontend/native/.env.example` a `.env.local` únicamente si no existe y configurar `EXPO_PUBLIC_API_URL=http://localhost:3001`. Abrir Expo Web con `localhost` y autorizar su origen y puerto exactos en `CORS_ORIGINS` del backend. Reiniciar Expo tras modificar variables. En Android sin variable se usa la API pública; para el emulador con API local usar `http://10.0.2.2:3001`. Nunca colocar credenciales de base ni secretos en variables `EXPO_PUBLIC_`.
+
+Para probar una exportación local, iniciar el backend y ejecutar `npm run preview`: su servidor reenvía `/api` al puerto 3001. `API_PROXY_URL` permite cambiar ese destino. La vista previa y la API deben usar un origen incluido en `CORS_ORIGINS`.
 
 ## Entrega final pendiente
 
-Integración de pantallas con el backend, entidades y transacciones de ExpoTec en TiDB, persistencia segura de sesión, tres proveedores sociales, recuperación de contraseña, permisos de proyectos/préstamos en servidor, pruebas contra los servicios reales, manual final en APA y APK probado. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
+Integración de proyectos, espacios, inventario y préstamos con TiDB, transacciones y permisos del dominio en servidor, tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. La persistencia de sesión está implementada; su ejecución en un Android físico queda por comprobar. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
 
 Las fechas, el plano real, el relevamiento eléctrico, los proveedores externos y el almacenamiento de videos requieren definición antes de reemplazar los ejemplos. El prototipo usa enlaces directos MP4/WebM; su reproducción final depende del formato compatible con cada dispositivo.
 

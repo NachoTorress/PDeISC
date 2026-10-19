@@ -7,12 +7,14 @@ import {
   DefaultTheme,
   NavigationContainer,
   useNavigation,
+  useNavigationContainerRef,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { DemoProvider } from "./contexts/DemoContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { useDemo } from "./hooks/useDemo";
 import { Button } from "./components/ui";
 import { Icon } from "./components/Icon";
@@ -26,12 +28,14 @@ import LoansPage from "./pages/LoansPage";
 import InventoryPage from "./pages/InventoryPage";
 import GalleryPage from "./pages/GalleryPage";
 import PresentationPage from "./pages/PresentationPage";
+import AccountPage from "./pages/AccountPage";
 
 type RootRoutes = {
   Home: undefined;
   Detail: { projectId: string };
   Form: { projectId?: string } | undefined;
   Presentation: undefined;
+  Account: undefined;
 };
 type TabRoutes = {
   map: undefined;
@@ -93,9 +97,11 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <DemoProvider>
-          <AppShell />
-        </DemoProvider>
+        <AuthProvider>
+          <DemoProvider>
+            <AppShell />
+          </DemoProvider>
+        </AuthProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );
@@ -103,7 +109,10 @@ export default function App() {
 function AppShell() {
   const { colors, toggle } = useTheme();
   const { role, setRole, notice } = useDemo();
+  const { user } = useAuth();
   const [menu, setMenu] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const navigation = useNavigationContainerRef<RootRoutes>();
   const { width } = useWindowDimensions();
   const profile = profiles.find((item) => item.role === role)!;
   const navTheme = {
@@ -175,15 +184,18 @@ function AppShell() {
             <Icon name={colors.dark ? "sun" : "moon"} color={colors.text} />
           </Pressable>
           <Button
-            title={profile.label}
-            endIcon={menu ? "chevronUp" : "chevronDown"}
+            title="Mi cuenta"
+            icon={user ? "check" : "users"}
             variant="secondary"
             style={{ flexShrink: 1, minWidth: 0 }}
-            onPress={() => setMenu(!menu)}
+            onPress={() => {
+              setMenu(false);
+              if (navigation.isReady()) navigation.navigate("Account");
+            }}
           />
         </View>
       </View>
-      {menu && (
+      {menu && !accountOpen && (
         <View
           style={{
             padding: 16,
@@ -211,23 +223,34 @@ function AppShell() {
             ))}
           </View>
           <Text style={{ color: colors.muted, fontSize: 13 }}>
-            Perfiles de demostración. La autenticación real se incorporará en la
-            siguiente etapa.
+            Perfiles ficticios para probar datos locales. Los permisos de tu
+            cuenta real se consultan desde Mi cuenta.
           </Text>
         </View>
       )}
-      <View
-        style={{
-          paddingHorizontal: width > 700 ? 32 : 18,
-          paddingVertical: 8,
-          backgroundColor: colors.surfaceVariant,
-        }}
-      >
-        <Text style={{ color: colors.muted, fontSize: 12 }}>
-          Vista de ejemplo · {profile.identity}
-        </Text>
-      </View>
-      {!!notice && (
+      {!accountOpen && (
+        <View
+          style={{
+            paddingHorizontal: width > 700 ? 32 : 18,
+            paddingVertical: 8,
+            backgroundColor: colors.surfaceVariant,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <Text style={{ color: colors.muted, fontSize: 12, flex: 1 }}>
+            Demostración · {profile.identity}
+          </Text>
+          <Button
+            title="Cambiar vista"
+            variant="quiet"
+            endIcon={menu ? "chevronUp" : "chevronDown"}
+            onPress={() => setMenu(!menu)}
+          />
+        </View>
+      )}
+      {!!notice && !accountOpen && (
         <View
           style={{
             paddingHorizontal: 18,
@@ -247,7 +270,17 @@ function AppShell() {
           </Text>
         </View>
       )}
-      <NavigationContainer theme={navTheme} key={role}>
+      <NavigationContainer
+        ref={navigation}
+        theme={navTheme}
+        key={role}
+        onReady={() =>
+          setAccountOpen(navigation.getCurrentRoute()?.name === "Account")
+        }
+        onStateChange={() =>
+          setAccountOpen(navigation.getCurrentRoute()?.name === "Account")
+        }
+      >
         <Stack.Navigator
           screenOptions={{
             headerStyle: { backgroundColor: colors.surface },
@@ -260,6 +293,11 @@ function AppShell() {
             component={HomeTabs}
             options={{ headerShown: false }}
           />
+          <Stack.Screen name="Account" options={{ title: "Mi cuenta" }}>
+            {({ navigation }) => (
+              <AccountPage onDemo={() => navigation.navigate("Home")} />
+            )}
+          </Stack.Screen>
           <Stack.Screen name="Detail" options={{ title: "Proyecto" }}>
             {({ route, navigation }) => (
               <ProjectDetailPage
