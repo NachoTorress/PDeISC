@@ -1,0 +1,34 @@
+CREATE TABLE IF NOT EXISTS spaces (
+  id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
+  name VARCHAR(80) NOT NULL,
+  description VARCHAR(150) NOT NULL DEFAULT '',
+  version INT UNSIGNED NOT NULL DEFAULT 1,
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  archived_at DATETIME(3) NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS furniture (
+  space_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  code VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  type VARCHAR(8) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  x DOUBLE NOT NULL,
+  y DOUBLE NOT NULL,
+  rotation SMALLINT UNSIGNED NOT NULL,
+  width DOUBLE NULL,
+  height DOUBLE NULL,
+  text VARCHAR(60) NULL,
+  sort_order INT UNSIGNED NOT NULL,
+  active BOOLEAN NOT NULL DEFAULT TRUE,
+  PRIMARY KEY (space_id, code),
+  FOREIGN KEY (space_id) REFERENCES spaces(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS booths (
+  id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
+  space_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  furniture_code VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  active BOOLEAN NOT NULL DEFAULT TRUE,
+  UNIQUE (space_id, furniture_code),
+  FOREIGN KEY (space_id, furniture_code) REFERENCES furniture(space_id, code)
+) ENGINE=InnoDB;

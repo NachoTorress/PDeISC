@@ -15,7 +15,8 @@
     "db:check": "node --env-file-if-exists=.env scripts/check-db.mjs",
     "db:prune": "node --env-file-if-exists=.env scripts/prune.mjs",
     "admin:grant": "node --env-file-if-exists=.env scripts/grant-admin.mjs",
-    "test:database": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/database.integration.mjs"
+    "test:database": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/database.integration.mjs",
+    "test:spaces": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/spaces.integration.mjs"
   },
   "dependencies": {
     "@vercel/functions": "3.10.1",
