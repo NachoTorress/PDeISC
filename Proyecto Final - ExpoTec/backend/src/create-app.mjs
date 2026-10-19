@@ -22,6 +22,7 @@ export function createApp(repository, config, logger = console, app = express())
       if (!origin || config.origins.includes(origin)) return callback(null, true);
       callback(new HttpError(403, 'ORIGIN_FORBIDDEN', 'Ese origen no está autorizado.'));
     },
+    credentials: true,
     methods: ['POST', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Retry-After', 'X-Request-Id'], maxAge: 600,
