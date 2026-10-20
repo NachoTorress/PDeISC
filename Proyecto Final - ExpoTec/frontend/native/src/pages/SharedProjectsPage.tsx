@@ -15,6 +15,7 @@ export default function SharedProjectsPage({
   onAccount,
   onInventory,
   onLoans,
+  onPresentation,
 }: {
   onSelect: (id: string, privateView: boolean) => void;
   onCreate: () => void;
@@ -22,6 +23,7 @@ export default function SharedProjectsPage({
   onAccount: () => void;
   onInventory: () => void;
   onLoans: () => void;
+  onPresentation: () => void;
 }) {
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
@@ -131,6 +133,12 @@ export default function SharedProjectsPage({
           onPress={() => {
             void load();
           }}
+        />
+        <Button
+          title="Presentación TV"
+          icon="tv"
+          variant="secondary"
+          onPress={onPresentation}
         />
       </View>
       {ready && user ? (

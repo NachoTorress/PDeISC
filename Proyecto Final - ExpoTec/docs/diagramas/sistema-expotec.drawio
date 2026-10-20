@@ -1,0 +1,479 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="26.0.0" type="device" data-project="ExpoTec" data-date="2026-10-19">
+  <diagram id="architecture" name="01 · Cómo se conecta ExpoTec">
+    <mxGraphModel dx="1400" dy="1060" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1060" background="#ffffff" data-source="frontend/native/src/app.tsx; backend/src/create-app.mjs; docs/DESPLIEGUE.md">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="architecture-title" value="01 · Cómo se conecta ExpoTec" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=30;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry x="40" y="28" width="1320" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="architecture-subtitle" value="Una aplicación con web y TV públicas, API separada y persistencia relacional. Android se retoma al final." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="88" width="1320" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="a-people" value="&lt;b&gt;Personas&lt;/b&gt;&lt;br&gt;Invitados · alumnos&lt;br&gt;Profesores · préstamos&lt;br&gt;Administración" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="a-people" data-role="neutral">
+          <mxGeometry x="40" y="180" width="260" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="a-web" value="&lt;b&gt;Web y TV&lt;/b&gt;&lt;br&gt;React Native Web&lt;br&gt;Vercel: expotec-web&lt;br&gt;Consulta pública y cuenta real" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="frontend/native/src/app.tsx" data-model-id="a-web" data-role="primary">
+          <mxGeometry x="420" y="180" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="a-android" value="&lt;b&gt;Android / Expo&lt;/b&gt;&lt;br&gt;Misma base de código&lt;br&gt;APK y prueba en equipo: pendientes" vertex="1" parent="1" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="a-android" data-role="neutral">
+          <mxGeometry x="800" y="180" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="a-api" value="&lt;b&gt;API de ExpoTec&lt;/b&gt;&lt;br&gt;Node.js 24 + Express&lt;br&gt;Vercel: expotec-api&lt;br&gt;Consultas por POST&lt;br&gt;Escrituras con permisos" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="backend/src/create-app.mjs" data-model-id="a-api" data-role="accent">
+          <mxGeometry x="420" y="420" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="a-auth" value="&lt;b&gt;Control en la API&lt;/b&gt;&lt;br&gt;Sesión, permisos y pertenencia&lt;br&gt;Versiones y validaciones" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="backend/src/middleware/auth.mjs" data-model-id="a-auth" data-role="secondary">
+          <mxGeometry x="40" y="420" width="260" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="a-modules" value="&lt;b&gt;Módulos de la API&lt;/b&gt;&lt;br&gt;Cuentas · espacios y puestos · proyectos&lt;br&gt;Inventario y reservas · préstamos y devoluciones&lt;br&gt;Secuencia pública de presentación" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="backend/src/routes" data-model-id="a-modules" data-role="primary">
+          <mxGeometry x="800" y="420" width="480" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="a-db" value="&lt;b&gt;TiDB&lt;/b&gt;&lt;br&gt;Protocolo MySQL con TLS&lt;br&gt;Transacciones y claves foráneas&lt;br&gt;Historial conservado" vertex="1" parent="1" style="shape=cylinder3;spacingTop=20;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="backend/sql/001_auth.sql .. 005_loans.sql" data-model-id="a-db" data-role="success">
+          <mxGeometry x="420" y="700" width="300" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="a-data" value="&lt;b&gt;Relaciones guardadas&lt;/b&gt;&lt;br&gt;Usuarios, roles y sesiones&lt;br&gt;Espacios, mobiliario, puestos y proyectos&lt;br&gt;Equipos, profesores, materias y revisiones&lt;br&gt;Pedidos, reservas, préstamos y devoluciones" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="a-data" data-role="success">
+          <mxGeometry x="800" y="700" width="480" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="a-tv" value="&lt;b&gt;Presentación pública&lt;/b&gt;&lt;br&gt;Solo proyectos confirmados&lt;br&gt;Fichas, videos y ubicación&lt;br&gt;Sin correos ni préstamos" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="a-tv" data-role="primary">
+          <mxGeometry x="40" y="700" width="260" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="a-e1" source="a-people" target="a-web" value="Usan la app" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a-e2" source="a-web" target="a-api" value="HTTPS · proxy /api" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.25;exitY=1;entryX=0.25;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a-e3" source="a-android" target="a-api" value="HTTPS · etapa final" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.75;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="950" y="360" />
+              <mxPoint x="645" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a-e4" source="a-api" target="a-auth" value="Comprueba" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a-e5" source="a-api" target="a-modules" value="Organiza" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a-e6" source="a-api" target="a-db" value="SQL parametrizado" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a-e7" source="a-db" target="a-data" value="Almacena" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a-e8" source="a-api" target="a-tv" value="Datos publicados" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.85;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="522" />
+              <mxPoint x="350" y="765" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a-footnote" value="La web no se conecta directamente a TiDB. Los secretos quedan en backend. La demostración local conserva datos ficticios separados." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=15;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="878" width="1320" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a-legend-neutral" value="Actor / pendiente" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="40" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="a-legend-primary" value="Proceso / interfaz" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="230" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="a-legend-accent" value="Servidor" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="420" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="a-legend-secondary" value="Permisos / control" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="610" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="a-legend-success" value="Datos / resultado" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="800" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="a-source" value="Fuentes del repositorio: frontend/native/src/app.tsx · backend/src/create-app.mjs · backend/sql/001–005 · docs/DESPLIEGUE.md" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="995" width="1320" height="35" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="projects" name="02 · Del proyecto a la muestra">
+    <mxGraphModel dx="1400" dy="1060" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1060" background="#ffffff" data-source="backend/src/repositories/projects.mjs; backend/src/repositories/inventory.mjs">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="projects-title" value="02 · Del proyecto a la muestra" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=30;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry x="40" y="28" width="1320" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="projects-subtitle" value="Solicitar un puesto no lo ocupa. La confirmación reserva el puesto y todos los elementos en una transacción." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="88" width="1320" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p-layout" value="&lt;b&gt;Administración&lt;/b&gt;&lt;br&gt;Carga espacios y habilita&lt;br&gt;mesas como puestos" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-layout" data-role="secondary">
+          <mxGeometry x="40" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p-proposal" value="&lt;b&gt;Alumno / equipo&lt;/b&gt;&lt;br&gt;Presenta proyecto y equipo&lt;br&gt;Profesores, materias y puesto&lt;br&gt;Pedido de recursos" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-proposal" data-role="primary">
+          <mxGeometry x="350" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p-pending" value="&lt;b&gt;Propuesta pendiente&lt;/b&gt;&lt;br&gt;Sin puesto ocupado&lt;br&gt;Sin reserva de recursos" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-pending" data-role="primary">
+          <mxGeometry x="660" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p-review" value="&lt;b&gt;Profesor asignado&lt;/b&gt;&lt;br&gt;Revisa la propuesta completa" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-review" data-role="secondary">
+          <mxGeometry x="970" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p-decision" value="¿Confirmar?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#263238;fontFamily=Helvetica;fontSize=15;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-decision" data-role="warning">
+          <mxGeometry x="1000" y="350" width="190" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p-changes" value="&lt;b&gt;Solicitar cambios&lt;/b&gt;&lt;br&gt;Motivo obligatorio&lt;br&gt;El equipo corrige y reenvía" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-changes" data-role="primary">
+          <mxGeometry x="660" y="350" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p-transaction" value="&lt;b&gt;Confirmación en la API&lt;/b&gt;&lt;br&gt;Permisos y versión vigentes&lt;br&gt;Cuentas, puesto y stock&lt;br&gt;Una sola transacción" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-transaction" data-role="accent">
+          <mxGeometry x="970" y="550" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p-stock" value="¿Puesto y recursos&lt;br&gt;disponibles?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#263238;fontFamily=Helvetica;fontSize=15;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-stock" data-role="warning">
+          <mxGeometry x="660" y="550" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p-conflict" value="&lt;b&gt;Conflicto o faltante&lt;/b&gt;&lt;br&gt;No se guarda ninguna&lt;br&gt;asignación parcial" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-conflict" data-role="danger">
+          <mxGeometry x="350" y="550" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p-approved" value="&lt;b&gt;Proyecto confirmado&lt;/b&gt;&lt;br&gt;Puesto ocupado y recursos&lt;br&gt;reservados en conjunto" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-approved" data-role="success">
+          <mxGeometry x="660" y="750" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p-public" value="&lt;b&gt;Muestra y TV públicas&lt;/b&gt;&lt;br&gt;Equipo, profesores, materias&lt;br&gt;Imágenes, video y ubicación" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-public" data-role="primary">
+          <mxGeometry x="970" y="750" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p-reopen" value="&lt;b&gt;Administración&lt;/b&gt;&lt;br&gt;Reabrir: vuelve a pendiente&lt;br&gt;Cancelar: fuera de la muestra&lt;br&gt;Exige préstamos devueltos" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="p-reopen" data-role="secondary">
+          <mxGeometry x="350" y="750" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e1" source="p-layout" target="p-proposal" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e2" source="p-proposal" target="p-pending" value="Envía" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e3" source="p-pending" target="p-review" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e4" source="p-review" target="p-decision" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e5" source="p-decision" target="p-changes" value="Cambios" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e6" source="p-changes" target="p-proposal" value="Corrige y reenvía" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.5;entryY=1;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="785" y="310" />
+              <mxPoint x="475" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-e7" source="p-decision" target="p-transaction" value="Sí" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e8" source="p-transaction" target="p-stock" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e9" source="p-stock" target="p-conflict" value="No" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e10" source="p-stock" target="p-approved" value="Sí" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e11" source="p-approved" target="p-public" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-e12" source="p-approved" target="p-reopen" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-footnote" value="Reabrir deja la propuesta pendiente. Cancelar la retira de la muestra. Se conservan revisiones, pedidos e historial de préstamos." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=15;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="878" width="1320" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p-legend-secondary" value="Permisos / control" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="40" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="p-legend-primary" value="Proceso / interfaz" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="230" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="p-legend-warning" value="Comprobación" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="420" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="p-legend-accent" value="Servidor" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="610" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="p-legend-danger" value="Conflicto / fallo" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="800" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="p-legend-success" value="Datos / resultado" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="990" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="p-source" value="Fuentes del repositorio: backend/src/repositories/projects.mjs · backend/src/repositories/inventory.mjs · docs/REQUISITOS.md" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="995" width="1320" height="35" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="loans" name="03 · Entregas, devoluciones y daños">
+    <mxGraphModel dx="1400" dy="1060" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1060" background="#ffffff" data-source="backend/src/repositories/loans.mjs; backend/src/repositories/inventory.mjs">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="loans-title" value="03 · Entregas, devoluciones y daños" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=30;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry x="40" y="28" width="1320" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="loans-subtitle" value="Las jornadas 1, 2 y 3 no borran saldos. La reserva del proyecto y la disponibilidad física se controlan por separado." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="88" width="1320" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="l-project" value="&lt;b&gt;Proyecto confirmado&lt;/b&gt;&lt;br&gt;Con una reserva activa&lt;br&gt;de elementos" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-project" data-role="success">
+          <mxGeometry x="40" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="l-deliver" value="&lt;b&gt;Préstamos / administración&lt;/b&gt;&lt;br&gt;Elige jornada y cantidad&lt;br&gt;Elemento reservado&lt;br&gt;Integrante activo que retira" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-deliver" data-role="primary">
+          <mxGeometry x="370" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="l-check" value="¿Reserva y stock?&lt;br&gt;¿Entrega única?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#263238;fontFamily=Helvetica;fontSize=15;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-check" data-role="warning">
+          <mxGeometry x="700" y="160" width="250" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="l-open" value="&lt;b&gt;Entrega registrada&lt;/b&gt;&lt;br&gt;Proyecto y receptor&lt;br&gt;Operador, jornada y fecha&lt;br&gt;Cantidades entregadas" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-open" data-role="success">
+          <mxGeometry x="1060" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="l-reject" value="&lt;b&gt;Rechazo de la entrega&lt;/b&gt;&lt;br&gt;No modifica préstamos&lt;br&gt;ni existencias" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-reject" data-role="danger">
+          <mxGeometry x="700" y="370" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="l-note" value="&lt;b&gt;Registrar novedad&lt;/b&gt;&lt;br&gt;Cantidad 0 + explicación&lt;br&gt;No devuelve unidades" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-note" data-role="primary">
+          <mxGeometry x="370" y="370" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="l-pending" value="&lt;b&gt;Saldo sin devolver&lt;/b&gt;&lt;br&gt;Consume disponibilidad&lt;br&gt;en todas las jornadas" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-pending" data-role="primary">
+          <mxGeometry x="1060" y="370" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="l-return" value="&lt;b&gt;Recibir unidades&lt;/b&gt;&lt;br&gt;Devolución parcial o completa&lt;br&gt;Con versión y responsable" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-return" data-role="primary">
+          <mxGeometry x="1060" y="560" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l-damage" value="¿Alguna unidad&lt;br&gt;volvió dañada?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#263238;fontFamily=Helvetica;fontSize=15;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-damage" data-role="warning">
+          <mxGeometry x="700" y="560" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l-unavailable" value="&lt;b&gt;Fuera de servicio&lt;/b&gt;&lt;br&gt;Cuenta como unidad devuelta&lt;br&gt;Daño con motivo e historial" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-unavailable" data-role="danger">
+          <mxGeometry x="370" y="560" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l-repair" value="&lt;b&gt;Administración&lt;/b&gt;&lt;br&gt;Revisa o repara y ajusta&lt;br&gt;el estado con un motivo" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-repair" data-role="secondary">
+          <mxGeometry x="40" y="560" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l-balance" value="¿Saldo del&lt;br&gt;préstamo en 0?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#263238;fontFamily=Helvetica;fontSize=15;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-balance" data-role="warning">
+          <mxGeometry x="700" y="750" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l-closed" value="&lt;b&gt;Préstamo devuelto&lt;/b&gt;&lt;br&gt;Conserva su reserva&lt;br&gt;para la jornada siguiente" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="l-closed" data-role="success">
+          <mxGeometry x="1060" y="750" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e1" source="l-project" target="l-deliver" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e2" source="l-deliver" target="l-check" value="Valida" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e3" source="l-check" target="l-open" value="Sí" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e4" source="l-check" target="l-reject" value="No" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e5" source="l-open" target="l-pending" value="Conserva saldo" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.75;exitY=1;entryX=0.75;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e6" source="l-open" target="l-note" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.25;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1122.5" y="315" />
+              <mxPoint x="495" y="315" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l-e7" source="l-pending" target="l-return" value="Al recibir" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e8" source="l-return" target="l-damage" value="Daños" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e9" source="l-damage" target="l-unavailable" value="Sí" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e10" source="l-unavailable" target="l-repair" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e11" source="l-damage" target="l-balance" value="No" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e12" source="l-unavailable" target="l-balance" value="Recalcula saldo" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="495" y="805" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l-e13" source="l-balance" target="l-closed" value="Sí" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-e14" source="l-balance" target="l-pending" value="No · queda saldo" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="825" y="870" />
+              <mxPoint x="1370" y="870" />
+              <mxPoint x="1370" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l-footnote" value="No se reabre ni cancela un proyecto con pendientes. No se da de baja un elemento prestado. Devolución y daños se guardan juntos." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=15;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="878" width="1320" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="l-legend-success" value="Datos / resultado" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="40" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="l-legend-primary" value="Proceso / interfaz" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="230" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="l-legend-warning" value="Comprobación" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="420" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="l-legend-danger" value="Conflicto / fallo" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="610" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="l-legend-secondary" value="Permisos / control" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="800" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="l-source" value="Fuentes del repositorio: backend/src/repositories/loans.mjs · loan-balances.mjs · inventory.mjs · backend/sql/005_loans.sql" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="995" width="1320" height="35" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="presentation" name="04 · Cómo funciona la presentación TV">
+    <mxGraphModel dx="1400" dy="1060" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1060" background="#ffffff" data-source="frontend/native/src/pages/SharedPresentationPage.tsx; backend/src/repositories/projects.mjs">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="presentation-title" value="04 · Cómo funciona la presentación TV" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=30;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry x="40" y="28" width="1320" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="presentation-subtitle" value="Acceso público, inicio manual, video sin sonido por defecto y controles de pausa, avance, retroceso y pantalla completa." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="88" width="1320" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="t-approved" value="&lt;b&gt;Proyectos confirmados&lt;/b&gt;&lt;br&gt;Con puesto asignado&lt;br&gt;y espacio activo" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-approved" data-role="success">
+          <mxGeometry x="40" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t-feed" value="&lt;b&gt;Consulta pública&lt;/b&gt;&lt;br&gt;Solo campos publicados&lt;br&gt;Sin correos ni datos de préstamos" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-feed" data-role="accent">
+          <mxGeometry x="370" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t-pages" value="&lt;b&gt;Cargar la secuencia&lt;/b&gt;&lt;br&gt;Páginas de hasta 100&lt;br&gt;Reemplazar solo al terminar&lt;br&gt;la carga completa" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-pages" data-role="primary">
+          <mxGeometry x="700" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t-ready" value="&lt;b&gt;Muestra lista, pausada&lt;/b&gt;&lt;br&gt;Conserva el proyecto actual&lt;br&gt;si sigue confirmado" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-ready" data-role="primary">
+          <mxGeometry x="1030" y="170" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t-start" value="&lt;b&gt;Iniciar presentación&lt;/b&gt;&lt;br&gt;Inicio manual&lt;br&gt;Sonido opcional" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-start" data-role="primary">
+          <mxGeometry x="1030" y="370" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t-video" value="¿Tiene video&lt;br&gt;disponible?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#263238;fontFamily=Helvetica;fontSize=15;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-video" data-role="warning">
+          <mxGeometry x="700" y="370" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t-card" value="&lt;b&gt;Mostrar ficha&lt;/b&gt;&lt;br&gt;Imagen, descripción y equipo&lt;br&gt;Profesores y materias&lt;br&gt;Aula y puesto" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-card" data-role="primary">
+          <mxGeometry x="370" y="370" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t-timer" value="&lt;b&gt;Avanzar la ficha&lt;/b&gt;&lt;br&gt;Tras 8, 15 o 30 segundos&lt;br&gt;Solo mientras está en curso" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-timer" data-role="primary">
+          <mxGeometry x="370" y="570" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t-play" value="&lt;b&gt;Reproducir video&lt;/b&gt;&lt;br&gt;Avanzar al terminar&lt;br&gt;Pausar al salir u ocultar TV" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-play" data-role="primary">
+          <mxGeometry x="700" y="570" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t-fail" value="&lt;b&gt;Video no disponible&lt;/b&gt;&lt;br&gt;Error o 30 s sin avance:&lt;br&gt;mostrar ficha y ofrecer reintento" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-fail" data-role="danger">
+          <mxGeometry x="1030" y="570" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t-next" value="&lt;b&gt;Siguiente proyecto&lt;/b&gt;&lt;br&gt;Al terminar la secuencia,&lt;br&gt;volver al primero" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-next" data-role="success">
+          <mxGeometry x="700" y="760" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t-refresh" value="&lt;b&gt;Actualizar cada minuto&lt;/b&gt;&lt;br&gt;Reabiertos y cancelados salen&lt;br&gt;de la secuencia" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-refresh" data-role="accent">
+          <mxGeometry x="40" y="760" width="560" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t-offline" value="&lt;b&gt;Sin conexión&lt;/b&gt;&lt;br&gt;Pausar y ocultar secuencia&lt;br&gt;Actualizar y reiniciar" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#263238;fontFamily=Helvetica;fontSize=16;spacing=12;strokeWidth=1.5;" data-source="" data-model-id="t-offline" data-role="danger">
+          <mxGeometry x="1030" y="760" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e1" source="t-approved" target="t-feed" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e2" source="t-feed" target="t-pages" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e3" source="t-pages" target="t-ready" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e4" source="t-ready" target="t-start" value="Acción del usuario" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e5" source="t-start" target="t-video" value="Al iniciar" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e6" source="t-video" target="t-card" value="No" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e7" source="t-video" target="t-play" value="Sí" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e8" source="t-card" target="t-timer" value="" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e9" source="t-timer" target="t-next" value="Tiempo cumplido" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="495" y="715" />
+              <mxPoint x="660" y="715" />
+              <mxPoint x="660" y="810" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t-e10" source="t-play" target="t-next" value="Video terminado" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e11" source="t-play" target="t-fail" value="Si falla" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t-e12" source="t-fail" target="t-card" value="Usar ficha" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1155" y="520" />
+              <mxPoint x="320" y="520" />
+              <mxPoint x="320" y="330" />
+              <mxPoint x="495" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t-e13" source="t-next" target="t-video" value="En curso: continuar" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#52616b;fontColor=#33434c;fontFamily=Helvetica;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=1;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="825" y="870" />
+              <mxPoint x="1360" y="870" />
+              <mxPoint x="1360" y="510" />
+              <mxPoint x="990" y="510" />
+              <mxPoint x="990" y="425" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t-footnote" value="La pausa no cambia de proyecto. Una actualización fallida detiene la reproducción. La ficha completa se puede abrir para leer más." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=15;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="878" width="1320" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="t-legend-success" value="Datos / resultado" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="40" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="t-legend-accent" value="Servidor" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="230" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="t-legend-primary" value="Proceso / interfaz" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="420" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="t-legend-warning" value="Comprobación" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="610" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="t-legend-danger" value="Conflicto / fallo" vertex="1" parent="1" style="rounded=1;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#263238;fontFamily=Helvetica;fontSize=13;">
+          <mxGeometry x="800" y="940" width="175" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="t-source" value="Fuentes del repositorio: SharedPresentationPage.tsx · SharedPresentationVideo.web.tsx · sharedPresentation.ts · projects.mjs" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=#263238;strokeColor=none;fillColor=none;fontStyle=0;">
+          <mxGeometry x="40" y="995" width="1320" height="35" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -9,7 +9,7 @@ test('presentación valida páginas y cursores, sin aceptar filtros privados', (
   assert.deepEqual(presentationQuery({}), { limit: 100, after: undefined });
   const after = randomUUID();
   assert.deepEqual(presentationQuery({ limit: 1, after }), { limit: 1, after });
-  for (const body of [{ limit: 0 }, { limit: 101 }, { limit: '10' }, { limit: 1.5 }, { after: 'SQL' }, { after: null }, { status: 'pending' }, { userId: after }])
+  for (const body of [{ limit: 0 }, { limit: null }, { limit: 101 }, { limit: '10' }, { limit: 1.5 }, { after: 'SQL' }, { after: null }, { status: 'pending' }, { userId: after }])
     assert.throws(() => presentationQuery(body), error => error.status === 400);
 });
 

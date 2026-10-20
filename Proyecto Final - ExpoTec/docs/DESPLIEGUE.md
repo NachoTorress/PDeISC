@@ -28,7 +28,7 @@ flowchart LR
     API -->|MySQL con TLS| DB[(TiDB)]
 ```
 
-El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. **Mi cuenta** utiliza la API desde el hito 7B y **Espacios compartidos** desde el hito 7C. **Proyectos de ExpoTec** utiliza la API desde el hito 7D. El inventario y las reservas usan la API desde el hito 7E. Los préstamos y las devoluciones usan la API desde el hito 7F. La presentación TV continúa en la demostración local.
+El código activo de la web sigue siendo `frontend/native`, exportado mediante React Native Web. `frontend/web` conserva el prototipo anterior como referencia. **Mi cuenta** utiliza la API desde el hito 7B y **Espacios compartidos** desde el hito 7C. **Proyectos de ExpoTec** utiliza la API desde el hito 7D. El inventario y las reservas usan la API desde el hito 7E. Los préstamos y las devoluciones usan la API desde el hito 7F. La presentación TV compartida utiliza la API desde 7G; su demostración permanece separada.
 
 ## 1. Base en TiDB
 
@@ -143,4 +143,21 @@ Comprobaciones automáticas del 19/10/2026: 30 pruebas de backend y 66 de fronte
 
 En navegador contra la base de pruebas se verificaron entrega de tres unidades por una cuenta de préstamos, saldo al cambiar de jornada, devolución parcial, novedad con explicación, devolución con daño, actualización e historial del inventario, reparación por administración con motivo y una entrega de dos unidades en la jornada siguiente, respetando el saldo anterior. Se completaron ambas devoluciones y se comprobó el historial y la habilitación de cancelación al quedar sin pendientes. La vista móvil de 390 px no desborda. Los ejemplos temporales se retiran de la base de pruebas al terminar; no se crean cuentas ni movimientos ficticios en producción.
 
-Después de publicar, comprobar POST `/api/health/ready` tanto en la API como a través de la web: 200 y `database: connected`. POST `/api/loans/query`, `/api/loans/projects/query`, `/api/loans/deliver` y `/api/loans/:id/return` sin Bearer deben devolver 401. La muestra pública debe seguir respondiendo 200 y omitir inventario y préstamos. El siguiente hito es la presentación TV compartida; archivos, accesos sociales, recuperación y entrega final siguen pendientes.
+Después de publicar, comprobar POST `/api/health/ready` tanto en la API como a través de la web: 200 y `database: connected`. POST `/api/loans/query`, `/api/loans/projects/query`, `/api/loans/deliver` y `/api/loans/:id/return` sin Bearer deben devolver 401. La muestra pública debe seguir respondiendo 200 y omitir inventario y préstamos. La presentación TV compartida se incorpora en 7G; archivos, accesos sociales, recuperación y entrega final siguen pendientes.
+
+
+## Presentación TV compartida — hito 7G
+
+El endpoint público POST `/api/projects/presentation/query` entrega páginas de hasta 100 proyectos confirmados, con cursor UUID y solo información pública. Las relaciones se leen por lotes; no se requieren cambios de esquema, nuevas variables ni credenciales adicionales. La web se abre desde **Presentación TV** en espacios o proyectos, sin cuenta. La presentación local de demostración conserva sus datos separados.
+
+Verificación del hito: 32 pruebas de backend y 69 de frontend aprobadas, tipos, lint y exportación web. Integración real `test:presentation` con TiDB: paginación de una ficha por página, exclusión de pendientes y cancelados, privacidad y retirada tras reapertura y cancelación. Regresión `test:projects` aprobada. Las integraciones usan y limpian solo sus registros en la base de pruebas. Las cuatro integraciones de dominio de 7F conservan sus resultados históricos; no se afirman nuevas ejecuciones de esas cuatro en este hito.
+
+En navegador, con datos temporales en TiDB de pruebas, se comprobaron acceso público, ficha con imagen, avance automático, pausa, anterior/siguiente, video válido con sonido opcional y avance al terminar con las fichas configuradas a 30 segundos, video no disponible con ficha y reintento, pantalla completa con salida, temas claro y oscuro, actualización automática al retirar un proyecto, consulta fallida con pausa y secuencia oculta, recuperación manual y estado vacío tras cancelar los confirmados. El reproductor web captura el rechazo de reproducción automática y ofrece continuar sin sonido; el bloqueo específico del navegador queda condicionado a su política. Android y la prueba en teléfono físico siguen al final.
+
+Después de publicar, verificar POST `/api/health/ready` y `/api/projects/presentation/query` tanto en la API como a través de la web: deben responder 200, conexión activa y secuencia sin ejemplos. Un cuerpo con `status: pending` o cursor inválido debe dar 400. Las rutas de préstamos y de proyectos privados deben seguir dando 401 sin sesión. Conservar ambas versiones compatibles al revertir: volver a una web anterior es posible, pero la nueva web necesita el endpoint 7G. No revertir a una API anterior a 7F mientras existan préstamos abiertos.
+
+La vista de teléfono se comprobó en una ventana local de contenido de 390 × 844 píxeles: ficha, imagen y controles adaptados, sin desborde horizontal. No sustituye una prueba en Android físico. La revisión de dependencias y los avisos preexistentes de las herramientas Expo están en [DEPENDENCIAS.md](DEPENDENCIAS.md).
+
+El archivo `docs/diagramas/sistema-expotec.drawio` documenta arquitectura, proyectos, préstamos y TV; incluye referencias al código, distinción de Android pendiente y vistas PNG/SVG generadas localmente. Su validación XML no reemplaza las pruebas del sistema.
+
+Fuentes técnicas: [Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen) para activación mediante un gesto del usuario y [video de Expo](https://docs.expo.dev/versions/latest/sdk/video/) para la base nativa. La web de TV usa un elemento de video con promesa de reproducción controlada; no carga reproductores externos embebidos.

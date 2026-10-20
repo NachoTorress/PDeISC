@@ -43,11 +43,13 @@ function summary(space: SharedSpace): SpaceSummary {
 }
 
 export default function SharedSpacesPage({
+  onPresentation,
   onDemo,
   onProjects,
   onSelectProject,
 }: {
   onDemo: () => void;
+  onPresentation: () => void;
   onProjects: () => void;
   onSelectProject: (id: string) => void;
 }) {
@@ -243,6 +245,13 @@ export default function SharedSpacesPage({
           title="Ver proyectos"
           icon="projects"
           onPress={onProjects}
+          disabled={!!editing || busy}
+        />
+        <Button
+          title="Presentación TV"
+          icon="tv"
+          variant="secondary"
+          onPress={onPresentation}
           disabled={!!editing || busy}
         />
         <Button

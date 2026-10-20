@@ -1,6 +1,16 @@
 # ExpoTec API — cuentas y organización de la exposición
 
-Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas, sesiones, permisos, espacios, proyectos, inventario, reservas, préstamos y devoluciones compartidas; usa mysql2 y SQL relacional compatible con MySQL/TiDB. Las pantallas compartidas utilizan esta API. La presentación TV compartida sigue pendiente; su demostración conserva datos locales.
+Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas, sesiones, permisos, espacios, proyectos, inventario, reservas, préstamos y devoluciones compartidas; usa mysql2 y SQL relacional compatible con MySQL/TiDB. Las pantallas compartidas utilizan esta API. La presentación TV compartida usa una secuencia pública de proyectos confirmados; su demostración conserva datos locales.
+
+## Presentación TV compartida — hito 7G
+
+**POST `/api/projects/presentation/query`**, público, JSON y sin Bearer. Cuerpo: `limit` opcional, entero de 1–100 (100 por defecto), y `after` opcional, UUID del último proyecto de la página anterior. Rechaza campos adicionales, null, strings como cantidad y cursores inválidos. Devuelve 200 `{ projects, nextCursor }`; cursor null indica el final. Sin confirmados devuelve `{ projects: [], nextCursor: null }`. Errores: 400 `VALIDATION_ERROR`, 413 sobre el límite de proyectos (64 KB), 503 por base no disponible, además del formato común `{ error: { code, message, fields? }, requestId }`. No modifica datos y no agrega migraciones.
+
+Cada proyecto contiene exclusivamente `id`, `name`, `description`, `course`, `imageUrl`, `videoUrl`, `spaceName`, `furnitureId`, `members`, `teachers` y `subjects`. Integrantes y profesores contienen solo `firstName` y `lastName`; no correos ni identificadores de cuentas. No devuelve creador, versiones, revisiones, observaciones privadas, pedidos, reservas ni préstamos. Incluye solo confirmados con asignación de puesto y espacio activo. Las referencias se consultan por lotes y cada página se obtiene dentro de una transacción. Orden ascendente estable por UUID del proyecto; el cursor evita los desplazamientos propios de una paginación por offset. Las páginas sucesivas son consultas nuevas, no una instantánea global persistente.
+
+El frontend reúne todas las páginas antes de reemplazar la secuencia; una página fallida no publica una carga parcial. Actualiza al abrir, recuperar visibilidad y cada 60 segundos mientras la pantalla está enfocada y visible. Mantiene la selección por identidad si el proyecto continúa confirmado. La retirada se refleja en la siguiente actualización correcta; no es una transmisión en tiempo real. Ante fallo de consulta oculta la secuencia, pausa y permite actualizar. El retorno de datos no inicia automáticamente la reproducción.
+
+Pruebas del hito: 32 de backend y 69 de frontend; `npm run test:presentation` en una base `expotec_test_*` distinta de producción verifica paginación real, privacidad, estados, reapertura y cancelación. `test:projects` comprueba la regresión de propuestas y revisiones. Ambas integraciones limpian únicamente sus propios registros. La web utiliza el mismo proxy de API existente y no requiere nuevas variables privadas.
 
 ## Préstamos y devoluciones — hito 7F
 
@@ -87,7 +97,7 @@ Solicitar un puesto no lo reserva: varias propuestas pueden pedirlo. La confirma
 
 Errores: 400 `VALIDATION_ERROR`/`PARTICIPANTS_INVALID`; 401 sesión inválida; 403 permiso insuficiente; 404 `PROJECT_NOT_FOUND` o `PERSON_NOT_FOUND`; 409 `PROJECT_CHANGED`, `PROJECT_LOCKED`, `BOOTH_UNAVAILABLE` o `BOOTH_OCCUPIED`; 413 sobre 64 KB; 429 exceso de operaciones. Un conflicto no se reintenta automáticamente. El formulario conserva su borrador en memoria y permite actualizar los puestos; salir sin enviarlo pide confirmación. El borrador no persiste al cerrar la aplicación.
 
-Desde el hito 7E los pedidos y reservas de recursos se confirman con el puesto, según el contrato de inventario anterior. Desde 7F, los préstamos pendientes bloquean edición, reapertura y cancelación y se conservan al cerrar cada jornada. La presentación TV compartida y el almacenamiento de archivos siguen pendientes.
+Desde el hito 7E los pedidos y reservas de recursos se confirman con el puesto, según el contrato de inventario anterior. Desde 7F, los préstamos pendientes bloquean edición, reapertura y cancelación y se conservan al cerrar cada jornada. La presentación TV compartida se conecta en 7G. El almacenamiento de archivos sigue pendiente.
 
 `npm run test:projects` exige una base `expotec_test_*` distinta de producción. Comprueba equipos, permisos, privacidad, pedido de cambios, reenvío, versiones, dos confirmaciones concurrentes, reapertura, cancelación y protección del plano; elimina solo sus cuentas, proyectos y espacio temporales. `npm run test:spaces` continúa comprobando la distribución real en esa base.
 
@@ -268,6 +278,6 @@ La prueba rechaza la base de producción y cualquier base con tablas; deja sus d
 
 API publicada el 14/10/2026 en `https://expotec-api-gn19.vercel.app`, con base `expotec` en TiDB. POST `/api/health` y `/api/health/ready` responden 200; ready confirma `database: connected`. Se comprobaron la sesión sin token (401), el preflight del origen de la web (204) y el rechazo de otro origen (403). La entrada `src/app.mjs` importa Express directamente para que Vercel la reconozca. Las direcciones, raíces y pasos de prueba están en [../docs/DESPLIEGUE.md](../docs/DESPLIEGUE.md).
 
-Pendiente: presentación compartida, proveedores sociales, recuperación y verificación del correo. Registro e ingreso con correo no implican verificación de su titularidad. La API no guarda imágenes, videos ni archivos en el disco del hosting; la solución de archivos aún debe definirse.
+Pendiente: proveedores sociales, recuperación y verificación del correo. Registro e ingreso con correo no implican verificación de su titularidad. La API no guarda imágenes, videos ni archivos en el disco del hosting; la solución de archivos aún debe definirse.
 
 La configuración de despliegue está en [docs/DESPLIEGUE.md](../docs/DESPLIEGUE.md). Este hito no completa toda la etapa 7 ni habilita el uso con datos reales de la escuela.

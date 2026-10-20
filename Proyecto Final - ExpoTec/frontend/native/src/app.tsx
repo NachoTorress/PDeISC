@@ -36,6 +36,7 @@ import SharedProjectPage from "./pages/SharedProjectPage";
 import SharedProposalPage from "./pages/SharedProposalPage";
 import SharedInventoryPage from "./pages/SharedInventoryPage";
 import SharedLoansPage from "./pages/SharedLoansPage";
+import SharedPresentationPage from "./pages/SharedPresentationPage";
 
 type RootRoutes = {
   Home: undefined;
@@ -49,6 +50,7 @@ type RootRoutes = {
   SharedProposal: { projectId?: string } | undefined;
   SharedInventory: undefined;
   SharedLoans: undefined;
+  SharedPresentation: undefined;
 };
 type TabRoutes = {
   map: undefined;
@@ -307,6 +309,7 @@ function AppShell() {
               "SharedProposal",
               "SharedInventory",
               "SharedLoans",
+              "SharedPresentation",
             ].includes(navigation.getCurrentRoute()?.name ?? ""),
           )
         }
@@ -320,6 +323,7 @@ function AppShell() {
               "SharedProposal",
               "SharedInventory",
               "SharedLoans",
+              "SharedPresentation",
             ].includes(navigation.getCurrentRoute()?.name ?? ""),
           )
         }
@@ -343,6 +347,7 @@ function AppShell() {
           >
             {({ navigation }) => (
               <SharedSpacesPage
+                onPresentation={() => navigation.navigate("SharedPresentation")}
                 onDemo={() => navigation.navigate("Home")}
                 onProjects={() => navigation.navigate("SharedProjects")}
                 onSelectProject={(id) =>
@@ -357,6 +362,7 @@ function AppShell() {
           >
             {({ navigation }) => (
               <SharedProjectsPage
+                onPresentation={() => navigation.navigate("SharedPresentation")}
                 onSelect={(id, privateView) =>
                   navigation.navigate("SharedProject", {
                     projectId: id,
@@ -459,6 +465,19 @@ function AppShell() {
                 onAccount={() => navigation.navigate("Account")}
                 onInventory={() => navigation.popTo("SharedInventory")}
                 onProjects={() => navigation.popTo("SharedProjects")}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen
+            name="SharedPresentation"
+            options={{ title: "Presentación TV", headerShown: false }}
+          >
+            {({ navigation }) => (
+              <SharedPresentationPage
+                onBack={() => navigation.popTo("SharedProjects")}
+                onProject={(id) =>
+                  navigation.navigate("SharedProject", { projectId: id })
+                }
               />
             )}
           </Stack.Screen>

@@ -47,6 +47,18 @@ npm run preview
 
 La configuración de `eas.json` incluye el perfil `preview` para un APK futuro. Su generación e instalación se realizarán después; requieren preparar EAS y probar en Android.
 
+## Presentación TV compartida
+
+**Presentación TV** se abre desde los espacios o proyectos compartidos, sin iniciar sesión. Carga los proyectos confirmados y muestra su descripción, equipo, profesores, materias y ubicación. **Iniciar presentación** comienza la secuencia; **Pausar**, **Anterior** y **Siguiente** permiten manejarla. Las fichas duran 8 segundos por defecto, con opciones de 15 y 30; los videos avanzan al terminar. La secuencia vuelve al primer proyecto al completarse.
+
+Los videos empiezan sin sonido; **Activar sonido** lo habilita. Si el navegador bloquea la reproducción, la pantalla permite continuar sin sonido. Un video con error o 30 segundos sin avanzar se reemplaza por su ficha y ofrece **Reintentar video**. Una imagen no disponible conserva los textos del proyecto. Al ocultar la página o salir, la reproducción se pausa.
+
+**Pantalla completa** está disponible cuando el navegador la admite, requiere pulsar el botón y permite salir también con Escape. **Ver ficha completa del proyecto** abre la consulta pública y pausa la presentación. En pantallas anchas se resume visualmente la descripción larga; la ficha completa conserva todo el texto.
+
+La muestra se consulta cada minuto y al volver a la pantalla. Los proyectos reabiertos o cancelados salen en la siguiente actualización correcta. **Actualizar muestra** permite comprobarlos en el momento. Se cargan todas las páginas antes de reemplazar la secuencia, conservando el proyecto actual si sigue publicado. Ante un fallo se pausa y oculta la secuencia; al recuperar los datos hay que volver a iniciarla. No se usan proyectos ficticios de la demostración.
+
+El [diagrama editable del sistema](docs/diagramas/sistema-expotec.drawio) tiene cuatro páginas: arquitectura, aprobación de proyectos, préstamos y presentación. Sus [imágenes y guía](docs/diagramas/README.md) permiten consultarlo sin un editor.
+
 ## Demostración local
 
 - Mapa de aulas y patio, con consulta del proyecto que ocupa cada mesa.
@@ -144,7 +156,7 @@ Esos pasos corresponden a una instalación nueva: no reemplazar el `.env` existe
 
 La [documentación de la API](backend/README.md) detalla todos los métodos, rutas, permisos, cuerpos, respuestas y errores. Las consultas usan POST mientras se confirma la restricción sobre GET de la consigna. La [guía de TiDB y Vercel](docs/DESPLIEGUE.md) explica raíces de los dos proyectos, variables y orden de configuración. Las credenciales de base y `JWT_SECRET` se guardan exclusivamente en el backend.
 
-El hito **7B: acceso desde la aplicación**, implementado el 19/10/2026, incorpora las pantallas y la persistencia de sesión. El hito **7C: espacios compartidos** añade las tablas relacionales de espacios, mobiliario y puestos, con edición atómica, control de versiones y baja sin borrado. Los perfiles ficticios se mantienen exclusivamente para la demostración local. El hito **7D: proyectos compartidos** conecta equipos, materias, profesores, revisiones, confirmación transaccional y consulta pública. El hito **7E: inventario y reservas** incorpora existencias, pedidos y reservas transaccionales. El hito **7F: préstamos y devoluciones** conecta entregas por jornada, devoluciones parciales, novedades y unidades fuera de servicio. La presentación TV compartida sigue pendiente.
+El hito **7B: acceso desde la aplicación**, implementado el 19/10/2026, incorpora las pantallas y la persistencia de sesión. El hito **7C: espacios compartidos** añade las tablas relacionales de espacios, mobiliario y puestos, con edición atómica, control de versiones y baja sin borrado. Los perfiles ficticios se mantienen exclusivamente para la demostración local. El hito **7D: proyectos compartidos** conecta equipos, materias, profesores, revisiones, confirmación transaccional y consulta pública. El hito **7E: inventario y reservas** incorpora existencias, pedidos y reservas transaccionales. El hito **7F: préstamos y devoluciones** conecta entregas por jornada, devoluciones parciales, novedades y unidades fuera de servicio. El hito **7G: presentación TV compartida** reproduce los proyectos confirmados del servidor, con fichas, videos, controles y pantalla completa.
 
 En desarrollo web, copiar `frontend/native/.env.example` a `.env.local` únicamente si no existe y configurar `EXPO_PUBLIC_API_URL=http://localhost:3001`. Abrir Expo Web con `localhost` y autorizar su origen y puerto exactos en `CORS_ORIGINS` del backend. Reiniciar Expo tras modificar variables. En Android sin variable se usa la API pública; para el emulador con API local usar `http://10.0.2.2:3001`. Nunca colocar credenciales de base ni secretos en variables `EXPO_PUBLIC_`.
 
@@ -152,7 +164,7 @@ Para probar una exportación local, iniciar el backend y ejecutar `npm run previ
 
 ## Entrega final pendiente
 
-Presentación TV compartida, almacenamiento de archivos, tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
+Almacenamiento de archivos, tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
 
 Las fechas, el plano real, el relevamiento eléctrico, los proveedores externos y el almacenamiento de videos requieren definición antes de reemplazar los ejemplos. El prototipo usa enlaces directos MP4/WebM; su reproducción final depende del formato compatible con cada dispositivo.
 
