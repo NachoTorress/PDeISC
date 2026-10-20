@@ -4,6 +4,49 @@ import { useTheme } from "../contexts/ThemeContext";
 import type { Furniture, Space } from "../lib/types";
 import { Button, Card, Field, InlineConfirm } from "./ui";
 
+function RotationControl({
+  rotation,
+  onChange,
+}: {
+  rotation: number;
+  onChange: (rotation: number) => void;
+}) {
+  const [angle, setAngle] = useState(String(rotation));
+  const valid = /^\d{1,3}$/.test(angle) && Number(angle) <= 360;
+  return (
+    <View style={{ gap: 8 }}>
+      <Field
+        label="Giro en grados"
+        value={angle}
+        onChangeText={setAngle}
+        keyboardType="number-pad"
+        maxLength={3}
+        error={valid ? undefined : "Ingresá un número entero entre 0 y 360."}
+        hint="Elegí cualquier ángulo y pulsá Aplicar giro. 360° equivale a 0°."
+      />
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+        <Button
+          title="Aplicar giro"
+          icon="rotate"
+          variant="secondary"
+          disabled={!valid || Number(angle) % 360 === rotation}
+          onPress={() => onChange(Number(angle) % 360)}
+        />
+        <Button
+          title="−15°"
+          variant="quiet"
+          onPress={() => onChange((rotation + 345) % 360)}
+        />
+        <Button
+          title="+15°"
+          variant="quiet"
+          onPress={() => onChange((rotation + 15) % 360)}
+        />
+      </View>
+    </View>
+  );
+}
+
 /** Edita el borrador del espacio. El plano guarda los cambios cuando administración confirma. */
 export default function NativeSpaceEditor({
   space,
@@ -72,16 +115,11 @@ export default function NativeSpaceEditor({
                   : "Punto eléctrico"}{" "}
             · {current.id}
           </Text>
-          {current.type !== "label" && (
-            <Button
-              title="Girar 90°"
-              icon="rotate"
-              variant="secondary"
-              onPress={() =>
-                update({ rotation: (current.rotation + 90) % 360 })
-              }
-            />
-          )}
+          <RotationControl
+            key={`${current.id}:${current.rotation}`}
+            rotation={current.rotation}
+            onChange={(rotation) => update({ rotation })}
+          />
           {current.type === "label" && (
             <Field
               label="Texto de la etiqueta"
@@ -137,5 +175,5 @@ export default function NativeSpaceEditor({
 }
 
 const styles = StyleSheet.create({
-  selected: { borderTopWidth: 1, paddingTop: 18, gap: 12 },
+  selected: { borderTopWidth: 1, paddingTop: 12, gap: 10 },
 });

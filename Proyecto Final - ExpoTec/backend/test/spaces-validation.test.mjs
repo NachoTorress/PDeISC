@@ -15,7 +15,7 @@ test('rechaza códigos repetidos, tamaños, versiones y puestos fuera del plano'
   for (const value of [
     { ...plan, version: 0 }, { ...plan, version: 1.5 }, { ...plan, furniture: [table, table] },
     { ...plan, furniture: [{ ...table, x: NaN }] }, { ...plan, furniture: [{ ...table, width: 31 }] },
-    { ...plan, furniture: [{ ...table, rotation: 45 }] }, { ...plan, boothFurnitureIds: ['missing'] },
+    { ...plan, furniture: [{ ...table, rotation: 360 }] }, { ...plan, boothFurnitureIds: ['missing'] },
     { ...plan, furniture: [{ id: 'B01', type: 'bench', x: 50, y: 50, rotation: 0 }], boothFurnitureIds: ['B01'] },
     { ...plan, furniture: [{ id: 'Z01', type: 'label', x: 50, y: 50, rotation: 0, text: ' ' }], boothFurnitureIds: [] },
     { ...plan, furniture: [{ ...table, admin: true }] }, { ...plan, furniture: Array(151).fill(table) },

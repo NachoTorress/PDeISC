@@ -72,6 +72,8 @@ El [diagrama editable del sistema](docs/diagramas/sistema-expotec.drawio) tiene 
 - Presentación en TV: avance automático de fichas, reproducción de videos y paso al siguiente cuando terminan.
 - Temas claro y oscuro separados, navegación adaptable, retroceso nativo, validación inmediata y confirmaciones dentro de la interfaz.
 
+La interfaz usa tarjetas y controles compactos. En el editor, seleccioná cualquier mueble, escribí su **Giro en grados** (0–360) y pulsá **Aplicar giro**; también hay ajustes de ±15°. Después pulsá **Guardar plano** para conservar la distribución. El giro se guarda grado a grado; 360° equivale a 0°.
+
 ## Guía breve de uso
 
 **Espacios compartidos** es la entrada de la aplicación. Al principio puede estar vacío: la organización debe cargar la distribución real. **Actualizar espacios** consulta el servidor. Los invitados y alumnos pueden ver los planos sin editarlos. Un administrador puede crear un espacio, abrir **Acomodar espacio**, agregar y mover mobiliario y guardar el plano para todos los dispositivos. Cada mesa se agrega como mobiliario; seleccionarla y marcar **Habilitar esta mesa como puesto para proyectos** la convierte en un puesto inscribible. Los alumnos pueden solicitar esos puestos desde **Ver proyectos → Presentar proyecto**; el puesto se ocupa cuando un profesor responsable confirma la propuesta.

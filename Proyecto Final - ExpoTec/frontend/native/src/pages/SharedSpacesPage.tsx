@@ -373,12 +373,12 @@ export default function SharedSpacesPage({
       {space && (
         <View
           style={{
-            flexDirection: width >= 1050 ? "row" : "column",
-            gap: 16,
+            flexDirection: width >= 900 ? "row" : "column",
+            gap: 12,
             alignItems: "stretch",
           }}
         >
-          <Card style={width >= 1050 ? { flex: 1, minWidth: 0 } : undefined}>
+          <Card style={width >= 900 ? { flex: 1, minWidth: 0 } : undefined}>
             <Heading
               title={space.name}
               subtitle={space.description || undefined}
@@ -473,7 +473,7 @@ export default function SharedSpacesPage({
             </View>
           </Card>
           <View
-            style={{ width: width >= 1050 ? 330 : "100%", gap: 16 }}
+            style={{ width: width >= 900 ? 300 : "100%", gap: 12 }}
             pointerEvents={busy ? "none" : "auto"}
           >
             {editing ? (

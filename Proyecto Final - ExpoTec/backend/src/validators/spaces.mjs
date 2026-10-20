@@ -37,7 +37,7 @@ export function saveSpaceBody(body) {
     seen.add(item.id);
     if (!['table', 'bench', 'power', 'label'].includes(item.type)) fields.furniture = 'El tipo de elemento no es válido.';
     if (![item.x, item.y].every(value => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 100) ||
-        ![0, 90, 180, 270].includes(item.rotation)) fields.furniture = 'La ubicación o el giro no son válidos.';
+        !Number.isInteger(item.rotation) || item.rotation < 0 || item.rotation >= 360) fields.furniture = 'La ubicación o el giro no son válidos. Usá un giro entero entre 0 y 359 grados.';
     if (item.type === 'table') {
       if (typeof item.width !== 'number' || !Number.isFinite(item.width) || item.width < 6 || item.width > 30 ||
           typeof item.height !== 'number' || !Number.isFinite(item.height) || item.height < 4 || item.height > 25)

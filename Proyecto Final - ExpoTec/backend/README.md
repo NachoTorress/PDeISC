@@ -129,7 +129,7 @@ Ejemplo de guardado de una mesa habilitada como puesto:
 }
 ```
 
-Límites: 100 espacios activos, 150 muebles por plano, nombre de 2–80 caracteres y descripción de hasta 150. Los códigos admiten 1–64 letras ASCII, números, guiones y guion bajo. Coordenadas finitas de 0–100; giros de 0, 90, 180 o 270 grados; ancho relativo de mesa 6–30 y alto 4–25. Las etiquetas requieren 2–60 caracteres. Solo las mesas pueden habilitarse como puestos. Los valores del plano no representan metros ni validan la instalación eléctrica.
+Límites: 100 espacios activos, 150 muebles por plano, nombre de 2–80 caracteres y descripción de hasta 150. Los códigos admiten 1–64 letras ASCII, números, guiones y guion bajo. Coordenadas finitas de 0–100; giros enteros de 0 a 359 grados; ancho relativo de mesa 6–30 y alto 4–25. Las etiquetas requieren 2–60 caracteres. Solo las mesas pueden habilitarse como puestos. Los valores del plano no representan metros ni validan la instalación eléctrica.
 
 Errores: 400 por campos desconocidos o datos inválidos; 401 sin sesión o con sesión vencida; 403 por permisos; 404 por espacio inexistente o dado de baja; 409 `SPACE_CHANGED` si la versión ya cambió, `FURNITURE_ID_RESERVED` si se intenta reutilizar un código retirado/cambiar su tipo, o `SPACE_LIMIT` al superar 100 espacios; 413 por cuerpo mayor a 128 KB; 429 por exceso de escrituras. El formato común es `{ error: { code, message, fields? }, requestId }`. Los endpoints de autenticación conservan su límite de 16 KB.
 

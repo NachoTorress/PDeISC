@@ -183,7 +183,7 @@ export function Field({
                 ? colors.primary
                 : colors.controlOutline,
             borderWidth: focused || error ? 2 : 1,
-            minHeight: multiline ? 96 : 48,
+            minHeight: multiline ? 88 : 44,
             textAlignVertical: multiline ? "top" : "center",
             opacity: editable ? 1 : 0.65,
           },
@@ -265,7 +265,7 @@ export function Heading({
         selectable={false}
         style={{
           color: colors.text,
-          fontSize: 28,
+          fontSize: 24,
           fontWeight: "700",
           letterSpacing: -0.6,
         }}
@@ -482,10 +482,10 @@ export function Screen({
         scrollEventThrottle={160}
         onScroll={(e) => setShowTop(e.nativeEvent.contentOffset.y > 550)}
         contentContainerStyle={{
-          paddingHorizontal: width > 700 ? 24 : 16,
-          paddingTop: 16,
-          paddingBottom: 32,
-          gap: 16,
+          paddingHorizontal: width > 700 ? 20 : 12,
+          paddingTop: 12,
+          paddingBottom: 24,
+          gap: 12,
           flexGrow: 1,
         }}
       >
@@ -513,11 +513,11 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: "flex-start",
     maxWidth: "100%",
-    minHeight: 48,
-    minWidth: 48,
-    paddingHorizontal: 16,
-    paddingVertical: 11,
-    borderRadius: 24,
+    minHeight: 44,
+    minWidth: 44,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
@@ -526,14 +526,14 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 10,
     paddingHorizontal: 12,
-    paddingVertical: 11,
+    paddingVertical: 8,
     fontSize: 16,
   },
-  field: { gap: 6 },
+  field: { gap: 4 },
   label: { fontSize: 14, fontWeight: "600" },
-  card: { padding: 16, gap: 12, borderWidth: 1, borderRadius: 14 },
-  section: { gap: 12 },
-  heading: { gap: 6 },
+  card: { padding: 12, gap: 10, borderWidth: 1, borderRadius: 14 },
+  section: { gap: 10 },
+  heading: { gap: 4 },
   chip: {
     alignSelf: "flex-start",
     paddingHorizontal: 10,
@@ -542,9 +542,9 @@ const styles = StyleSheet.create({
   },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   choice: {
-    minHeight: 48,
+    minHeight: 44,
     paddingHorizontal: 14,
-    paddingVertical: 11,
+    paddingVertical: 8,
     borderWidth: 1,
     borderRadius: 24,
     justifyContent: "center",
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   checkRow: {
-    minHeight: 48,
+    minHeight: 44,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
@@ -567,5 +567,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  confirm: { borderRadius: 12, padding: 16, gap: 12 },
+  confirm: { borderRadius: 12, padding: 12, gap: 10 },
 });

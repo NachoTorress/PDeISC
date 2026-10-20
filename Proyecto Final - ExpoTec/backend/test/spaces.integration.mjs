@@ -45,7 +45,7 @@ test('TiDB real: espacios, planos atómicos, conflictos y bajas sin borrar histo
   const id = created.body.space.id;
   ids.push(id);
   const table = { id: 'M01', type: 'table', x: 50, y: 50, rotation: 90, width: 14, height: 9 };
-  const bench = { id: 'B01', type: 'bench', x: 20, y: 30, rotation: 0 };
+  const bench = { id: 'B01', type: 'bench', x: 20, y: 30, rotation: 37 };
   const input = { name: 'Plano compartido', description: 'Prueba', version: 1, furniture: [table, bench], boothFurnitureIds: ['M01'] };
   const saved = await api.request(`/api/spaces/${id}/save`, input, accessToken);
   assert.equal(saved.status, 200, JSON.stringify(saved.body));

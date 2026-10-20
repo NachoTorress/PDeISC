@@ -168,8 +168,8 @@ Decisión pendiente: la consigna pide REST y también «NO usar más get». Para
 ## Interfaz y validaciones
 
 - Interfaz en español, amigable, responsive y con buen uso del ancho en computadora.
-- Pedido del usuario del 20/10/2026 para los próximos hitos, pendiente de implementación: hacer la interfaz más compacta para reducir el desplazamiento vertical, ajustando tamaños de componentes, márgenes y espacios y aprovechando el ancho disponible, sin perder legibilidad ni facilidad de uso.
-- Pedido del usuario del 20/10/2026 para los próximos hitos, pendiente de implementación: permitir girar los bancos y el mobiliario editable en cualquier ángulo, con rotación libre de 360°, sin limitarla a pasos de 90°.
+- Implementado el 20/10/2026: interfaz más compacta con menores márgenes, espacios y tarjetas, controles de al menos 44 puntos y editor en dos columnas desde 900 píxeles de ancho.
+- Implementado el 20/10/2026: giro del mobiliario grado a grado entre 0° y 359°, con campo de ángulo y ajustes de ±15°. Ingresar 360° equivale a 0°. Funciona en los espacios compartidos y la demostración; el servidor valida y conserva los ángulos enteros.
 - Etiquetas visibles fuera de los campos; los placeholders no reemplazarán labels.
 - Modos claro sutil y oscuro, con contraste legible y cambio de tema implementado. En la aplicación acordada los temas se definen en archivos nativos separados, `theme/light.ts` y `theme/dark.ts`; el CSS separado corresponde al prototipo web anterior.
 - Formularios con errores visibles mientras se escribe, al abandonar el campo o cuando llega una respuesta del servidor; no solo al enviar.

@@ -37,6 +37,18 @@ test('API de espacios: lectura pública, escritura solo de administradores y val
   assert.equal((await api.request(`/api/spaces/${id}/archive`, { version: 2 }, accessToken)).status, 204);
   assert.equal((await api.request(`/api/spaces/${id}/archive`, { version: 0 }, accessToken)).status, 400);
   assert.equal((await api.request(`/api/spaces/${id}/save`, { ...input, version: 1, furniture: [], boothFurnitureIds: [], roles: ['admin'] }, accessToken)).status, 400);
+  const beforeInvalid = calls.length;
+  for (const rotation of [-1, 360, 37.5, '37', null]) {
+    const furniture = [{ id: 'B01', type: 'bench', x: 50, y: 50, rotation }];
+    assert.equal((await api.request(`/api/spaces/${id}/save`, { ...input, version: 1, furniture, boothFurnitureIds: [] }, accessToken)).status, 400);
+  }
+  assert.equal(calls.length, beforeInvalid);
+  for (const rotation of [1, 37, 135, 271, 359]) {
+    const furniture = [{ id: 'B01', type: 'bench', x: 50, y: 50, rotation }];
+    const result = await api.request(`/api/spaces/${id}/save`, { ...input, version: 1, furniture, boothFurnitureIds: [] }, accessToken);
+    assert.equal(result.status, 200);
+    assert.equal(result.body.space.furniture[0].rotation, rotation);
+  }
   auth.users.get(user.id).roles = ['student'];
   assert.equal((await api.request(`/api/spaces/${id}/archive`, { version: 2 }, accessToken)).status, 403);
 });
