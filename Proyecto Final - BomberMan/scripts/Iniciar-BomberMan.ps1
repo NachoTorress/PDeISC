@@ -113,23 +113,33 @@ try {
     Write-Host ''
     Write-Host ("Proyecto: {0}" -f $proyecto.Name) -ForegroundColor Cyan
     Write-Host '  1. Abrir en web'
-    Write-Host '  2. Abrir Android con tunel'
+    Write-Host '  2. Abrir Android con tunel (red local si falla)'
     Write-Host '  3. Probar motor del juego'
     Write-Host '  4. Instalar o actualizar dependencias'
+    Write-Host '  5. Abrir Android en red local'
     Write-Host '  0. Salir'
-    $acciones = @{ web = '1'; android = '2'; test = '3'; install = '4' }
+    $acciones = @{ web = '1'; android = '2'; test = '3'; install = '4'; lan = '5' }
     if ($Action) { $accion = $acciones[$Action] }
     else { $accion = Read-Host 'Elige una opcion' }
     if ($accion -eq '0') { exit 0 }
-    if ($accion -notin @('1', '2', '3', '4')) { throw 'Opcion no valida.' }
+    if ($accion -notin @('1', '2', '3', '4', '5')) { throw 'Opcion no valida.' }
 
     Push-Location -LiteralPath $frontend
     try {
-        if ($accion -in @('1', '2', '4')) { Ensure-Dependencies $frontend ($proyecto.Name -replace '^BomberMan ', '') ($accion -eq '4') }
+        if ($accion -in @('1', '2', '4', '5')) { Ensure-Dependencies $frontend ($proyecto.Name -replace '^BomberMan ', '') ($accion -eq '4') }
         if ($accion -eq '1') { & npm.cmd run web }
-        if ($accion -eq '2') { & npm.cmd run tunnel }
+        if ($accion -eq '2') {
+            & npm.cmd run tunnel
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host ''
+                Write-Host 'El tunel no esta disponible. Se intentara por red local.' -ForegroundColor Yellow
+                Write-Host 'El celular y la computadora deben usar la misma red Wi-Fi.' -ForegroundColor Yellow
+                & (Join-Path $frontend 'node_modules\.bin\expo.cmd') start --lan
+            }
+        }
+        if ($accion -eq '5') { & (Join-Path $frontend 'node_modules\.bin\expo.cmd') start --lan }
         if ($accion -eq '3') { & npm.cmd run test:engine }
-        if ($accion -in @('1', '2', '3') -and $LASTEXITCODE -ne 0) { throw 'El comando termino con un error.' }
+        if ($accion -in @('1', '2', '3', '5') -and $LASTEXITCODE -ne 0) { throw 'El comando termino con un error.' }
     }
     finally { Pop-Location }
 }

@@ -88,7 +88,9 @@ En 7G se usan enlaces HTTPS directos a MP4/WebM, orden estable por identificador
 ## Autenticación y seguridad
 
 - Registro, inicio de sesión y recuperación de contraseña.
-- Acceso mediante tres proveedores sociales reales. Propuesta para revisar: Google, Facebook y GitHub.
+- Acceso mediante tres proveedores sociales reales: Google, Discord y GitHub, confirmados por el usuario el 20/10/2026.
+- Decisión del usuario del 20/10/2026, pendiente de implementación: si el correo se registra por primera vez mediante un proveedor social, solicitar también una contraseña propia de ExpoTec para completar el alta. La misma cuenta permitirá ingresar con el proveedor o con correo y contraseña, compartiendo identidad, permisos y datos; no crear cuentas duplicadas. Guardar únicamente el hash de la contraseña, nunca el texto original; no solicitar la contraseña de Google, Discord ni GitHub.
+- La vinculación de proveedores a una cuenta existente debe comprobar la titularidad de la cuenta; no unir cuentas automáticamente por un correo sin verificar. Si el proveedor no entrega un correo verificado, verificarlo antes de completar el alta o la vinculación.
 - Tokens JWT de acceso y renovación, expiración, revocación y cierre de sesión.
 - Persistencia segura de la sesión al cerrar y volver a abrir la aplicación.
 - Contraseñas con hash adaptativo; nunca guardarlas ni registrarlas en texto plano.
@@ -166,6 +168,8 @@ Decisión pendiente: la consigna pide REST y también «NO usar más get». Para
 ## Interfaz y validaciones
 
 - Interfaz en español, amigable, responsive y con buen uso del ancho en computadora.
+- Pedido del usuario del 20/10/2026 para los próximos hitos, pendiente de implementación: hacer la interfaz más compacta para reducir el desplazamiento vertical, ajustando tamaños de componentes, márgenes y espacios y aprovechando el ancho disponible, sin perder legibilidad ni facilidad de uso.
+- Pedido del usuario del 20/10/2026 para los próximos hitos, pendiente de implementación: permitir girar los bancos y el mobiliario editable en cualquier ángulo, con rotación libre de 360°, sin limitarla a pasos de 90°.
 - Etiquetas visibles fuera de los campos; los placeholders no reemplazarán labels.
 - Modos claro sutil y oscuro, con contraste legible y cambio de tema implementado. En la aplicación acordada los temas se definen en archivos nativos separados, `theme/light.ts` y `theme/dark.ts`; el CSS separado corresponde al prototipo web anterior.
 - Formularios con errores visibles mientras se escribe, al abandonar el campo o cuando llega una respuesta del servidor; no solo al enviar.

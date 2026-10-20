@@ -1,0 +1,8 @@
+:root[data-theme='light'] {
+  color-scheme: light;
+  --pulso-bg: #f4f5ef;
+  --pulso-text: #19291f;
+  --pulso-accent: #285c3d;
+  --pulso-selection: #d9f279;
+  --pulso-line: #d8ded1;
+}

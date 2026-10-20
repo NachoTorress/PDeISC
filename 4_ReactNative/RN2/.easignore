@@ -1,0 +1,15 @@
+node_modules/
+.expo/
+dist/
+artifacts/
+.git/
+tests/
+*.log
+.env
+.env.*
+credentials.json
+*.jks
+*.keystore
+android/
+ios/
+graphify-out/

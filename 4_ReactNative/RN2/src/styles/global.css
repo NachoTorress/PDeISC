@@ -1,0 +1,59 @@
+@import './light.css';
+@import './dark.css';
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: var(--pulso-bg, #f4f5ef);
+}
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  color: var(--pulso-text);
+  -webkit-font-smoothing: antialiased;
+}
+#root {
+  display: flex;
+  height: 100%;
+}
+* {
+  box-sizing: border-box;
+}
+::selection {
+  background: var(--pulso-selection);
+  color: var(--pulso-text);
+}
+:focus-visible {
+  outline: 3px solid var(--pulso-accent) !important;
+  outline-offset: 4px;
+}
+input,
+textarea {
+  caret-color: var(--pulso-accent);
+}
+[role='heading'] {
+  text-wrap: balance;
+}
+input:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
+/* Expo usa cover en web; contain muestra el encuadre completo que conserva la captura. */
+#pulso-camera-preview video {
+  object-fit: contain;
+  object-position: center;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pulso-line) var(--pulso-bg);
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}

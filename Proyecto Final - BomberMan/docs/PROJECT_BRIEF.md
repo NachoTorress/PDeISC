@@ -6,12 +6,12 @@
 
 - Una sola aplicación React Native con Expo SDK 57 y TypeScript para web y Android; no usar Vite ni migrar de SDK.
 - Desarrollo móvil con `npx expo start --tunnel`. El APK de EAS Build debe funcionar sin servidor de desarrollo.
-- Web y API REST como dos proyectos distintos de Vercel conectados al mismo repositorio: directorios raíz `BomberMan 0.x/frontend` y `BomberMan 0.x/backend` para la versión publicada. Al publicar una versión nueva, actualizar ambos directorios raíz.
+- Web y API REST como dos proyectos distintos de Vercel conectados al mismo repositorio `PDelSC`: directorios raíz `Proyecto Final - BomberMan/BomberMan 0.x/frontend` y `Proyecto Final - BomberMan/BomberMan 0.x/backend` para la versión publicada. Al publicar una versión nueva, actualizar ambos directorios raíz.
 - Cada frontend y backend tiene `.env` local ignorado por Git y `.env.example` versionado. En Expo, solo `EXPO_PUBLIC_API_URL` es público; las credenciales de TiDB y los secretos JWT pertenecen exclusivamente al backend y a las variables de entorno de Vercel.
 - TiDB Cloud es la única base de datos persistente. El frontend accede exclusivamente al backend, sin credenciales de base de datos. SQL y conexión compatible con TiDB y Vercel.
 - APKs instalables mediante EAS Build para probar hitos.
 - Interfaz, mensajes y documentación en español.
-- En Android, la versión 0.3 se orienta horizontalmente para jugar y adapta tablero y controles táctiles al ancho del teléfono. La web conserva su diseño adaptable.
+- En Android, el juego se orienta horizontalmente; muestra flechas a la izquierda, tablero centrado y bomba a la derecha, y solicita ocultar ambas barras del sistema durante la partida. La web conserva su diseño adaptable. En la 0.5 el tablero usa más espacio y el mando táctil sigue la disposición de `JS3Juegos/Snake_1.2`: arriba en una fila, izquierda/abajo/derecha debajo.
 - Web: 1P contra bots y 2P local con el mismo teclado. Android: 1P contra bots con controles táctiles, sin opción 2P. 2P online fuera de alcance.
 - Motor compartido y separado de controles e interfaz: tablero, movimiento, colisiones, bloques, bombas, explosiones, daño, eliminación y victoria. IA sencilla que se mueve, evita peligro cuando puede y coloca bombas.
 - Registro e inicio de sesión, recuperación de contraseña, Google, Facebook y un tercer proveedor común a web y Android; JWT de acceso y renovación, sesión persistente y cierre de sesión con confirmación estilizada.
@@ -32,13 +32,15 @@
 - Incorporar sprites para personajes, bloques, bombas y explosiones.
 - Mejorar la fluidez del movimiento, los controles y las animaciones. El usuario probó la versión 0.1 y señaló que funciona, pero todavía se siente poco fluida.
 - Agregar poderes durante la partida. Sus efectos concretos se definirán antes de implementarlos.
-- Agregar más de un bot a las partidas y adaptar la IA y las condiciones de victoria.
+- Ampliar y ajustar la IA de los dos bots introducidos en la 0.5, a partir de las pruebas de juego.
 
-Estas mejoras quedan pendientes: no deben presentarse como funciones ya implementadas en la versión 0.1.
+Sprites, poderes y más trabajo de fluidez quedan pendientes. Los dos bots sí están implementados desde la 0.5.
 
 ## Estado actual
 
-La versión 0.1 contiene una primera partida local 1P contra un bot. En la 0.2 se mejoró la fluidez y se corrigió la velocidad de movimiento tras la prueba del usuario: confirmó que ahora se siente mejor. En la 0.3 se prepara el juego horizontal para Android, con tablero y controles uno al lado del otro. Las versiones anteriores quedan intactas. La instalación directa en OneDrive tuvo errores de extracción; el lanzador usa dependencias en `%LOCALAPPDATA%\BomberMan\dependencies` enlazadas al frontend. Aún no se probó un APK instalado en Android ni la disposición horizontal en el dispositivo del usuario.
+La versión 0.1 contiene una primera partida local 1P contra un bot. En la 0.2 se mejoró la fluidez y se corrigió la velocidad de movimiento tras la prueba del usuario: confirmó que ahora se siente mejor. La 0.4 centró el tablero en Android horizontal, separó flechas y bomba y solicitó ocultar la barra inferior del sistema. La 0.5 toma como referencia el mando del Snake anterior, agranda el tablero, añade un segundo bot en 1P y habilita 2P local con teclado solo en web. Las reglas compartidas, pruebas del motor, comprobación de tipos, ESLint y exportaciones web y Android pasaron. Falta validar la experiencia en un teléfono real y completar una compilación EAS instalable.
+
+La instalación directa en OneDrive tuvo errores de extracción; el lanzador usa dependencias en `%LOCALAPPDATA%\BomberMan\dependencies` enlazadas al frontend. El túnel de Expo presentó `Cannot read properties of undefined (reading 'body')` en el dispositivo del usuario y `remote gone away` en esta máquina, pero un reintento llegó a **Tunnel ready**: el fallo es intermitente. El lanzador conserva `expo start --tunnel` y, si falla, inicia `expo start --lan`; también ofrece LAN directamente. La opción LAN produjo un QR válido y exige celular y computadora en la misma Wi-Fi.
 
 Los cambios nuevos se dejan sin commit para que el usuario pueda confirmarlos en GitHub Desktop, abierto en `PDelSC`, y luego enviarlos a GitHub con **Push origin**. El historial del repositorio anidado creado anteriormente se conserva en una copia local ignorada por Git; el historial principal y su remoto pertenecen a `PDelSC`.
 

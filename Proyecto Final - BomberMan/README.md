@@ -7,9 +7,10 @@ Cada cambio importante se desarrolla en una carpeta nueva: `BomberMan 0.1`, lueg
 Hacé doble clic en **`Iniciar BomberMan.bat`**. Elegí una versión y después una acción:
 
 1. Abrir la app en web.
-2. Abrirla en Android mediante túnel de Expo.
+2. Abrirla en Android mediante túnel de Expo; si el servicio falla, el lanzador intenta la red local.
 3. Ejecutar las pruebas del motor.
 4. Instalar o actualizar dependencias.
+5. Abrirla en Android directamente por red local, con el celular y la computadora en la misma Wi-Fi.
 
 Si pulsás Enter al elegir versión, se usa la más reciente. La primera vez que abras web o Android, el lanzador instalará las dependencias si faltan en `%LOCALAPPDATA%\BomberMan\dependencies` y enlazará `node_modules` con la versión elegida. Así se evita extraer cientos de archivos dentro de OneDrive; el código que editás sigue en `BomberMan 0.x`. Se necesita Node.js, npm y conexión a internet para esa instalación. El servidor de desarrollo se detiene con `Ctrl+C`.
 
@@ -17,6 +18,6 @@ Si pulsás Enter al elegir versión, se usa la más reciente. La primera vez que
 
 Antes de un cambio importante, ejecutá **`Crear version.bat`**. Propone el siguiente número y copia la última versión sin `node_modules`, resultados de compilación ni secretos de archivos `.env`. Crea `.env` nuevos desde los ejemplos, sin copiar credenciales anteriores. También actualiza el número de versión de Expo y el código de versión de Android. Revisá y confirmá los cambios con un commit de Git al cerrar el hito.
 
-Las decisiones vigentes están en [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md). Cada versión guarda una copia de ese documento y su propio README. La versión actual está en [BomberMan 0.3](BomberMan%200.3/README.md); las versiones anteriores permanecen como referencia.
+Las decisiones vigentes están en [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md). Cada versión guarda una copia de ese documento y su propio README. La versión actual está en [BomberMan 0.5](BomberMan%200.5/README.md); las versiones anteriores permanecen como referencia.
 
 Abrí en GitHub Desktop el repositorio `PDelSC`. La carpeta `Proyecto Final - BomberMan` forma parte de ese repositorio y sus archivos aparecerán en **Changes** hasta que los confirmes. Después del commit, usá **Push origin** para enviarlos a GitHub. El historial del repositorio local que se había creado por error dentro de BomberMan se conservó en `.git-local-backup` y `.local-history.bundle`, ambos excluidos de Git.
