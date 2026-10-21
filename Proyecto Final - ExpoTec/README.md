@@ -182,6 +182,10 @@ Administración dispone de **Moderar fotos**, con filtros de pendientes, publica
 
 Aplicar `backend/sql/006_gallery.sql` mediante `npm run db:migrate` antes de publicar esta versión. `npm run test:gallery` verifica el circuito en una base exclusiva de pruebas. No requiere nuevas credenciales ni servicios externos.
 
+## Navegación
+
+Las secciones compartidas se abren desde el panel lateral en ventanas de al menos 1200 px. En móvil y ventanas menores, el botón hamburguesa abre el mismo menú, con accesos alineados y sección actual marcada. Se cierra al elegir una sección, tocar afuera, pulsar la cruz o Escape en web. Inventario, préstamos y usuarios aparecen según los permisos de la cuenta real. Los accesos generales repetidos se retiraron de las pantallas; sus acciones de trabajo permanecen dentro de cada sección. La demostración conserva sus perfiles ficticios independientes.
+
 ## Entrega final pendiente
 
 El hito **7J** prepara el acceso web con Google, Discord y GitHub: alta con contraseña propia, vinculación a cuentas existentes mediante su contraseña y sesión de un solo uso. La implementación está comprobada con proveedores simulados y TiDB de pruebas; **todavía falta crear las aplicaciones externas, configurar sus credenciales y verificar cada proveedor real**. Los botones se muestran solo al configurar el proveedor. Las instrucciones y retornos exactos están en [docs/ACCESOS_SOCIALES.md](docs/ACCESOS_SOCIALES.md). Aplicar las migraciones 007 y 008 antes de publicar; `npm run test:social` comprueba el circuito en la base exclusiva de pruebas. Android sigue al final.

@@ -23,12 +23,8 @@ function moment(value: string) {
 
 export default function SharedLoansPage({
   onAccount,
-  onInventory,
-  onProjects,
 }: {
   onAccount: () => void;
-  onInventory: () => void;
-  onProjects: () => void;
 }) {
   const { client, user, ready } = useAuth(),
     { colors } = useTheme();
@@ -165,11 +161,6 @@ export default function SharedLoansPage({
           subtitle="Ingresá con permiso de préstamos o administración para gestionar las entregas."
         />
         <Button title="Ir a Mi cuenta" onPress={onAccount} />
-        <Button
-          title="Ver proyectos"
-          variant="secondary"
-          onPress={onProjects}
-        />
       </Screen>
     );
   return (
@@ -179,19 +170,6 @@ export default function SharedLoansPage({
         subtitle="Entregas, devoluciones parciales y novedades de las tres jornadas."
       />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        <Button
-          title="Ver inventario"
-          icon="inventory"
-          variant="secondary"
-          disabled={busy || editing}
-          onPress={onInventory}
-        />
-        <Button
-          title="Ver proyectos"
-          variant="secondary"
-          disabled={busy || editing}
-          onPress={onProjects}
-        />
         <Button
           title="Actualizar préstamos"
           variant="quiet"

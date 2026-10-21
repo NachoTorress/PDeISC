@@ -280,6 +280,10 @@ El plano deriva su tamaño del ancho exterior y la ventana, sin realimentar su a
 Las comprobaciones en Expo Web revisan los mismos componentes, recorridos y adaptación visual. No sustituyen las pruebas de ejecución, teclado y gestos en Android. El APK quedó postergado por el usuario.
 
 La galería de la experiencia (7I) comparte tarjetas, campos, botones y paletas con la aplicación. Distingue consulta pública, aportes propios y moderación sin mezclarla con la muestra de proyectos. Las fotos conservan su proporción dentro de una vista contenida; un error de imagen mantiene la descripción. Estados de revisión en texto, confirmación de publicación/retiro y motivo visible al autor. El formulario de aporte muestra antes del envío qué nombre y descripción serán públicos. Las tarjetas se organizan en una, dos o tres columnas según el ancho.
+## Navegación general (21/10/2026)
+
+Los accesos a espacios, proyectos, galería, TV, cuenta y demostración se reúnen en filas uniformes de un panel lateral. Inventario, préstamos y usuarios se agregan según los permisos reales. Desde 1200 px el panel permanece visible; en ventanas menores se abre con el botón hamburguesa y se cierra al elegir destino, tocar fuera, usar la cruz o Escape. El menú móvil utiliza el foco contenido y su restauración de Modal; los controles tienen etiquetas y un mínimo de 44 px. Las pantallas compartidas conservan únicamente sus acciones de trabajo y los accesos contextuales necesarios para ingresar o volver de una ficha.
+
 ## Accesos sociales web — preparación 7J
 
 Los botones de Google, Discord y GitHub aparecen en Mi cuenta únicamente para proveedores configurados. El retorno abre esa pantalla en la misma pestaña, muestra el correo verificado y pide completar registro, autorizar vinculación con contraseña o confirmar ingreso. El alta conserva etiquetas y validación de nombres, selección alumno/invitado, contraseña propia y repetición. No se muestran botones sociales operativos en Android hasta implementar su retorno nativo. La activación real sigue pendiente de las aplicaciones externas.

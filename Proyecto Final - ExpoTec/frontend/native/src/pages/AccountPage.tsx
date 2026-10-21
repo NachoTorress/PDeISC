@@ -32,28 +32,16 @@ const empty: Credentials = {
   lastName: "",
 };
 
-export default function AccountPage({
-  onDemo,
-  onSpaces,
-  onProjects,
-  onInventory,
-  onLoans,
-  onUsers,
-  onGallery,
-}: {
-  onDemo: () => void;
-  onSpaces: () => void;
-  onProjects: () => void;
-  onInventory: () => void;
-  onLoans: () => void;
-  onUsers: () => void;
-  onGallery: () => void;
-}) {
+export default function AccountPage() {
   const { colors } = useTheme();
   const { user, ready, error: sessionError, client, retry } = useAuth();
   const [register, setRegister] = useState(false);
-  const [socialPending, setSocialPending] = useState(() => Boolean(socialBridge.pending()));
-  const [accountType, setAccountType] = useState<"student" | "guest">("student");
+  const [socialPending, setSocialPending] = useState(() =>
+    Boolean(socialBridge.pending()),
+  );
+  const [accountType, setAccountType] = useState<"student" | "guest">(
+    "student",
+  );
   const [input, setInput] = useState<Credentials>(empty);
   const [confirmation, setConfirmation] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -124,7 +112,9 @@ export default function AccountPage({
         setTouched({});
         setShowPassword(false);
       },
-      register ? `Tu cuenta de ${accountType === "guest" ? "invitado" : "alumno"} está creada.` : "Iniciaste sesión.",
+      register
+        ? `Tu cuenta de ${accountType === "guest" ? "invitado" : "alumno"} está creada.`
+        : "Iniciaste sesión.",
     );
   }
   const paragraph = { color: colors.muted, fontSize: 15, lineHeight: 22 };
@@ -250,9 +240,18 @@ export default function AccountPage({
             />
             {register && (
               <>
-                <Choice label="Tipo de cuenta" value={accountType}
-                  options={[{ value: "student", label: "Alumno" }, { value: "guest", label: "Invitado" }]}
-                  disabled={busy} onChange={value => setAccountType(value as "student" | "guest")} />
+                <Choice
+                  label="Tipo de cuenta"
+                  value={accountType}
+                  options={[
+                    { value: "student", label: "Alumno" },
+                    { value: "guest", label: "Invitado" },
+                  ]}
+                  disabled={busy}
+                  onChange={(value) =>
+                    setAccountType(value as "student" | "guest")
+                  }
+                />
                 <Field
                   label="Nombre"
                   value={input.firstName ?? ""}
@@ -331,9 +330,7 @@ export default function AccountPage({
               style={{ alignSelf: "stretch" }}
             />
             <Button
-              title={
-                register ? "Ya tengo una cuenta" : "Crear una cuenta"
-              }
+              title={register ? "Ya tengo una cuenta" : "Crear una cuenta"}
               variant="quiet"
               disabled={busy}
               onPress={() => {
@@ -349,37 +346,6 @@ export default function AccountPage({
             />
           </Card>
         )}
-        <Button title="Ver proyectos" icon="projects" onPress={onProjects} />
-        <Button title="Galería de la ExpoTec" icon="gallery" onPress={onGallery} />
-        {ready && user?.roles.includes("admin") && (
-          <Button title="Usuarios y permisos" onPress={onUsers} />
-        )}
-        {user?.roles.some((role) => role === "admin" || role === "loans") && (
-          <Button
-            title="Ver préstamos compartidos"
-            icon="loans"
-            onPress={onLoans}
-          />
-        )}
-        {ready &&
-          user?.roles.some((role) => role === "admin" || role === "loans") && (
-            <Button
-              title="Ver inventario compartido"
-              icon="inventory"
-              onPress={onInventory}
-            />
-          )}
-        <Button
-          title="Ver espacios compartidos"
-          icon="map"
-          onPress={onSpaces}
-        />
-        <Button
-          title="Volver a la demostración"
-          icon="arrowLeft"
-          variant="secondary"
-          onPress={onDemo}
-        />
       </View>
     </Screen>
   );

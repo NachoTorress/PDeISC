@@ -18,14 +18,8 @@ import type { InventoryResource } from "../lib/sharedInventory";
 
 export default function SharedInventoryPage({
   onAccount,
-  onProjects,
-  onSpaces,
-  onLoans,
 }: {
   onAccount: () => void;
-  onProjects: () => void;
-  onSpaces: () => void;
-  onLoans: () => void;
 }) {
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
@@ -141,11 +135,6 @@ export default function SharedInventoryPage({
           subtitle="Ingresá con una cuenta de administración o préstamos para consultar el inventario."
         />
         <Button title="Ir a Mi cuenta" onPress={onAccount} />
-        <Button
-          title="Ver proyectos"
-          variant="secondary"
-          onPress={onProjects}
-        />
       </Screen>
     );
   return (
@@ -156,18 +145,6 @@ export default function SharedInventoryPage({
       />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
         <Button
-          title="Ver proyectos"
-          variant="secondary"
-          onPress={onProjects}
-          disabled={!!editing || busy}
-        />
-        <Button
-          title="Ver espacios"
-          variant="secondary"
-          onPress={onSpaces}
-          disabled={!!editing || busy}
-        />
-        <Button
           title="Actualizar inventario"
           variant="quiet"
           disabled={loading || busy || !!editing}
@@ -175,13 +152,6 @@ export default function SharedInventoryPage({
             setHistory(null);
             void load();
           }}
-        />
-        <Button
-          title="Ver préstamos y devoluciones"
-          icon="loans"
-          variant="secondary"
-          onPress={onLoans}
-          disabled={busy || !!editing}
         />
         {canManage && (
           <Button

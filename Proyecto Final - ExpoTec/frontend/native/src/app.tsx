@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -40,6 +40,8 @@ import SharedInventoryPage from "./pages/SharedInventoryPage";
 import SharedLoansPage from "./pages/SharedLoansPage";
 import SharedPresentationPage from "./pages/SharedPresentationPage";
 import { hasSocialReturn, socialBridge } from "./lib/socialBridge";
+import { AppNavigation } from "./components/AppNavigation";
+import type { NavigationItem } from "./components/AppNavigation";
 
 type RootRoutes = {
   Home: undefined;
@@ -131,11 +133,112 @@ function AppShell() {
   const { role, setRole, notice } = useDemo();
   const { user } = useAuth();
   const [menu, setMenu] = useState(false);
+  const [navigationOpen, setNavigationOpen] = useState(false);
+  const [activeRoute, setActiveRoute] = useState("SharedSpaces");
+  const menuButton = useRef<View>(null);
   const [remoteOpen, setRemoteOpen] = useState(true);
   const [startInDemo, setStartInDemo] = useState(false);
   const navigation = useNavigationContainerRef<RootRoutes>();
   const { width } = useWindowDimensions();
   const profile = profiles.find((item) => item.role === role)!;
+  const desktopNavigation = width >= 1200 && remoteOpen;
+  useEffect(() => {
+    setNavigationOpen(false);
+  }, [desktopNavigation]);
+  const openSection = (
+    route:
+      | "Account"
+      | "SharedSpaces"
+      | "SharedProjects"
+      | "SharedGallery"
+      | "SharedPresentation"
+      | "SharedInventory"
+      | "SharedLoans"
+      | "AdminUsers"
+      | "Home",
+  ) => {
+    setMenu(false);
+    if (navigation.isReady()) navigation.navigate(route);
+  };
+  const navigationItems: NavigationItem[] = [
+    {
+      id: "SharedSpaces",
+      label: "Espacios",
+      icon: "map",
+      onPress: () => openSection("SharedSpaces"),
+    },
+    {
+      id: "SharedProjects",
+      label: "Proyectos",
+      icon: "projects",
+      onPress: () => openSection("SharedProjects"),
+    },
+    {
+      id: "SharedGallery",
+      label: "Galería de la ExpoTec",
+      icon: "gallery",
+      onPress: () => openSection("SharedGallery"),
+    },
+    {
+      id: "SharedPresentation",
+      label: "Presentación TV",
+      icon: "tv",
+      onPress: () => openSection("SharedPresentation"),
+    },
+    ...(user?.roles.some((item) => item === "admin" || item === "loans")
+      ? [
+          {
+            id: "SharedInventory",
+            label: "Inventario",
+            icon: "inventory" as const,
+            onPress: () => openSection("SharedInventory"),
+          },
+          {
+            id: "SharedLoans",
+            label: "Préstamos",
+            icon: "loans" as const,
+            onPress: () => openSection("SharedLoans"),
+          },
+        ]
+      : []),
+    ...(user?.roles.includes("admin")
+      ? [
+          {
+            id: "AdminUsers",
+            label: "Usuarios y permisos",
+            icon: "users" as const,
+            onPress: () => openSection("AdminUsers"),
+          },
+        ]
+      : []),
+    {
+      id: "Account",
+      label: "Mi cuenta",
+      icon: "users",
+      onPress: () => openSection("Account"),
+    },
+    {
+      id: "Home",
+      label: "Demostración",
+      icon: "play",
+      onPress: () => openSection("Home"),
+    },
+  ];
+  const updateNavigation = () => {
+    const route = navigation.getCurrentRoute()?.name ?? "SharedSpaces";
+    const shared =
+      route.startsWith("Shared") ||
+      route === "Account" ||
+      route === "AdminUsers";
+    setActiveRoute(
+      !shared
+        ? "Home"
+        : route === "SharedProject" || route === "SharedProposal"
+          ? "SharedProjects"
+          : route,
+    );
+    setRemoteOpen(shared);
+  };
   const navTheme = {
     ...(colors.dark ? DarkTheme : DefaultTheme),
     colors: {
@@ -166,17 +269,41 @@ function AppShell() {
           borderColor: colors.outline,
         }}
       >
-        <Text
-          accessibilityRole="header"
-          style={{
-            color: colors.text,
-            fontSize: 23,
-            fontWeight: "700",
-            letterSpacing: -0.6,
-          }}
-        >
-          expotec<Text style={{ color: colors.primary }}>.</Text>
-        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+          {!desktopNavigation && (
+            <Pressable
+              ref={menuButton}
+              accessibilityRole="button"
+              accessibilityLabel="Abrir menú de navegación"
+              accessibilityState={{ expanded: navigationOpen }}
+              onPress={() => {
+                (
+                  menuButton.current as unknown as { focus?: () => void }
+                )?.focus?.();
+                setNavigationOpen(true);
+              }}
+              style={{
+                width: 44,
+                height: 44,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Icon name="menu" color={colors.text} />
+            </Pressable>
+          )}
+          <Text
+            accessibilityRole="header"
+            style={{
+              color: colors.text,
+              fontSize: 23,
+              fontWeight: "700",
+              letterSpacing: -0.6,
+            }}
+          >
+            expotec<Text style={{ color: colors.primary }}>.</Text>
+          </Text>
+        </View>
         {width > 750 && (
           <Text style={{ color: colors.muted }}>Todo en su lugar.</Text>
         )}
@@ -204,16 +331,6 @@ function AppShell() {
           >
             <Icon name={colors.dark ? "sun" : "moon"} color={colors.text} />
           </Pressable>
-          <Button
-            title="Mi cuenta"
-            icon={user ? "check" : "users"}
-            variant="secondary"
-            style={{ flexShrink: 1, minWidth: 0 }}
-            onPress={() => {
-              setMenu(false);
-              if (navigation.isReady()) navigation.navigate("Account");
-            }}
-          />
         </View>
       </View>
       {menu && !remoteOpen && (
@@ -300,213 +417,197 @@ function AppShell() {
           </Text>
         </View>
       )}
-      <NavigationContainer
-        ref={navigation}
-        theme={navTheme}
-        key={role}
-        onReady={() =>
-          setRemoteOpen(
-            [
-              "Account",
-              "AdminUsers",
-              "SharedGallery",
-              "SharedSpaces",
-              "SharedProjects",
-              "SharedProject",
-              "SharedProposal",
-              "SharedInventory",
-              "SharedLoans",
-              "SharedPresentation",
-            ].includes(navigation.getCurrentRoute()?.name ?? ""),
-          )
-        }
-        onStateChange={() =>
-          setRemoteOpen(
-            [
-              "Account",
-              "AdminUsers",
-              "SharedGallery",
-              "SharedSpaces",
-              "SharedProjects",
-              "SharedProject",
-              "SharedProposal",
-              "SharedInventory",
-              "SharedLoans",
-              "SharedPresentation",
-            ].includes(navigation.getCurrentRoute()?.name ?? ""),
-          )
-        }
-      >
-        <Stack.Navigator
-          initialRouteName={hasSocialReturn || socialBridge.pending() ? "Account" : startInDemo ? "Home" : "SharedSpaces"}
-          screenOptions={{
-            headerStyle: { backgroundColor: colors.surface },
-            headerTintColor: colors.text,
-            contentStyle: { backgroundColor: colors.page },
-          }}
-        >
-          <Stack.Screen
-            name="Home"
-            component={HomeTabs}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SharedSpaces"
-            options={{ title: "Espacios compartidos" }}
+      <View style={{ flex: 1, flexDirection: "row" }}>
+        <AppNavigation
+          items={navigationItems}
+          activeId={activeRoute}
+          desktop={desktopNavigation}
+          open={navigationOpen && !desktopNavigation}
+          onClose={() => setNavigationOpen(false)}
+        />
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <NavigationContainer
+            ref={navigation}
+            theme={navTheme}
+            key={role}
+            onReady={updateNavigation}
+            onStateChange={updateNavigation}
           >
-            {({ navigation }) => (
-              <SharedSpacesPage
-                onGallery={() => navigation.navigate("SharedGallery")}
-                onPresentation={() => navigation.navigate("SharedPresentation")}
-                onDemo={() => navigation.navigate("Home")}
-                onProjects={() => navigation.navigate("SharedProjects")}
-                onSelectProject={(id) =>
-                  navigation.navigate("SharedProject", { projectId: id })
-                }
+            <Stack.Navigator
+              initialRouteName={
+                hasSocialReturn || socialBridge.pending()
+                  ? "Account"
+                  : startInDemo
+                    ? "Home"
+                    : "SharedSpaces"
+              }
+              screenOptions={{
+                headerStyle: { backgroundColor: colors.surface },
+                headerTintColor: colors.text,
+                contentStyle: { backgroundColor: colors.page },
+              }}
+            >
+              <Stack.Screen
+                name="Home"
+                component={HomeTabs}
+                options={{ headerShown: false }}
               />
-            )}
-          </Stack.Screen>
-          <Stack.Screen
-            name="SharedProjects"
-            options={{ title: "Proyectos compartidos" }}
-          >
-            {({ navigation }) => (
-              <SharedProjectsPage
-                onGallery={() => navigation.navigate("SharedGallery")}
-                onPresentation={() => navigation.navigate("SharedPresentation")}
-                onSelect={(id, privateView) =>
-                  navigation.navigate("SharedProject", {
-                    projectId: id,
-                    privateView,
-                  })
-                }
-                onCreate={() => navigation.navigate("SharedProposal")}
-                onLoans={() => navigation.navigate("SharedLoans")}
-                onInventory={() => navigation.navigate("SharedInventory")}
-                onSpaces={() => navigation.popTo("SharedSpaces")}
-                onAccount={() => navigation.navigate("Account")}
+              <Stack.Screen
+                name="SharedSpaces"
+                options={{ title: "Espacios compartidos" }}
+              >
+                {({ navigation }) => (
+                  <SharedSpacesPage
+                    onSelectProject={(id) =>
+                      navigation.navigate("SharedProject", { projectId: id })
+                    }
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen
+                name="SharedProjects"
+                options={{ title: "Proyectos compartidos" }}
+              >
+                {({ navigation }) => (
+                  <SharedProjectsPage
+                    onSelect={(id, privateView) =>
+                      navigation.navigate("SharedProject", {
+                        projectId: id,
+                        privateView,
+                      })
+                    }
+                    onCreate={() => navigation.navigate("SharedProposal")}
+                    onAccount={() => navigation.navigate("Account")}
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen
+                name="SharedProject"
+                options={{ title: "Proyecto compartido" }}
+              >
+                {({ route, navigation }) => (
+                  <SharedProjectPage
+                    projectId={route.params.projectId}
+                    privateView={!!route.params.privateView}
+                    onEdit={() =>
+                      navigation.navigate("SharedProposal", {
+                        projectId: route.params.projectId,
+                      })
+                    }
+                    onBack={() => navigation.popTo("SharedProjects")}
+                    onAccount={() => navigation.navigate("Account")}
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen
+                name="SharedProposal"
+                options={{ title: "Propuesta del equipo" }}
+              >
+                {({ route, navigation }) => (
+                  <SharedProposalPage
+                    projectId={route.params?.projectId}
+                    onSaved={(id) =>
+                      navigation.replace("SharedProject", {
+                        projectId: id,
+                        privateView: true,
+                      })
+                    }
+                    onBack={() => navigation.goBack()}
+                    onAccount={() => navigation.navigate("Account")}
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen
+                name="Account"
+                component={AccountPage}
+                options={{ title: "Mi cuenta" }}
               />
-            )}
-          </Stack.Screen>
-          <Stack.Screen
-            name="SharedProject"
-            options={{ title: "Proyecto compartido" }}
-          >
-            {({ route, navigation }) => (
-              <SharedProjectPage
-                projectId={route.params.projectId}
-                privateView={!!route.params.privateView}
-                onEdit={() =>
-                  navigation.navigate("SharedProposal", {
-                    projectId: route.params.projectId,
-                  })
-                }
-                onBack={() => navigation.popTo("SharedProjects")}
-                onAccount={() => navigation.navigate("Account")}
-              />
-            )}
-          </Stack.Screen>
-          <Stack.Screen
-            name="SharedProposal"
-            options={{ title: "Propuesta del equipo" }}
-          >
-            {({ route, navigation }) => (
-              <SharedProposalPage
-                projectId={route.params?.projectId}
-                onSaved={(id) =>
-                  navigation.replace("SharedProject", {
-                    projectId: id,
-                    privateView: true,
-                  })
-                }
-                onBack={() => navigation.goBack()}
-                onAccount={() => navigation.navigate("Account")}
-              />
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="Account" options={{ title: "Mi cuenta" }}>
-            {({ navigation }) => (
-              <AccountPage
-                onGallery={() => navigation.navigate("SharedGallery")}
-                onUsers={() => navigation.navigate("AdminUsers")}
-                onDemo={() => navigation.navigate("Home")}
-                onSpaces={() => navigation.popTo("SharedSpaces")}
-                onProjects={() => navigation.popTo("SharedProjects")}
-                onLoans={() => navigation.navigate("SharedLoans")}
-                onInventory={() => navigation.navigate("SharedInventory")}
-              />
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="AdminUsers" options={{ title: "Usuarios y permisos" }}>
-            {({ navigation }) => <AdminUsersPage onAccount={() => navigation.popTo("Account")} />}
-          </Stack.Screen>
-          <Stack.Screen name="SharedGallery" options={{ title: "Galería de la ExpoTec" }}>
-            {({ navigation }) => <SharedGalleryPage onAccount={() => navigation.navigate("Account")} onSpaces={() => navigation.popTo("SharedSpaces")} />}
-          </Stack.Screen>
-          <Stack.Screen name="Detail" options={{ title: "Proyecto" }}>
-            {({ route, navigation }) => (
-              <ProjectDetailPage
-                projectId={route.params.projectId}
-                onBack={() => navigation.goBack()}
-                onEdit={(id) => navigation.navigate("Form", { projectId: id })}
-              />
-            )}
-          </Stack.Screen>
-          <Stack.Screen
-            name="SharedInventory"
-            options={{ title: "Inventario compartido" }}
-          >
-            {({ navigation }) => (
-              <SharedInventoryPage
-                onLoans={() => navigation.navigate("SharedLoans")}
-                onAccount={() => navigation.navigate("Account")}
-                onProjects={() => navigation.popTo("SharedProjects")}
-                onSpaces={() => navigation.popTo("SharedSpaces")}
-              />
-            )}
-          </Stack.Screen>
-          {role === "student" && (
-            <Stack.Screen name="Form" options={{ title: "Propuesta" }}>
-              {({ route, navigation }) => (
-                <ProjectFormPage
-                  projectId={route.params?.projectId}
-                  onDone={() => navigation.goBack()}
-                />
+              <Stack.Screen
+                name="AdminUsers"
+                options={{ title: "Usuarios y permisos" }}
+              >
+                {({ navigation }) => (
+                  <AdminUsersPage
+                    onAccount={() => navigation.popTo("Account")}
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen
+                name="SharedGallery"
+                options={{ title: "Galería de la ExpoTec" }}
+              >
+                {({ navigation }) => (
+                  <SharedGalleryPage
+                    onAccount={() => navigation.navigate("Account")}
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="Detail" options={{ title: "Proyecto" }}>
+                {({ route, navigation }) => (
+                  <ProjectDetailPage
+                    projectId={route.params.projectId}
+                    onBack={() => navigation.goBack()}
+                    onEdit={(id) =>
+                      navigation.navigate("Form", { projectId: id })
+                    }
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen
+                name="SharedInventory"
+                options={{ title: "Inventario compartido" }}
+              >
+                {({ navigation }) => (
+                  <SharedInventoryPage
+                    onAccount={() => navigation.navigate("Account")}
+                  />
+                )}
+              </Stack.Screen>
+              {role === "student" && (
+                <Stack.Screen name="Form" options={{ title: "Propuesta" }}>
+                  {({ route, navigation }) => (
+                    <ProjectFormPage
+                      projectId={route.params?.projectId}
+                      onDone={() => navigation.goBack()}
+                    />
+                  )}
+                </Stack.Screen>
               )}
-            </Stack.Screen>
-          )}
-          <Stack.Screen
-            name="SharedLoans"
-            options={{ title: "Préstamos compartidos" }}
-          >
-            {({ navigation }) => (
-              <SharedLoansPage
-                onAccount={() => navigation.navigate("Account")}
-                onInventory={() => navigation.popTo("SharedInventory")}
-                onProjects={() => navigation.popTo("SharedProjects")}
-              />
-            )}
-          </Stack.Screen>
-          <Stack.Screen
-            name="SharedPresentation"
-            options={{ title: "Presentación TV", headerShown: false }}
-          >
-            {({ navigation }) => (
-              <SharedPresentationPage
-                onBack={() => navigation.popTo("SharedProjects")}
-                onProject={(id) =>
-                  navigation.navigate("SharedProject", { projectId: id })
-                }
-              />
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="Presentation" options={{ headerShown: false }}>
-            {({ navigation }) => (
-              <PresentationPage onBack={() => navigation.goBack()} />
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
+              <Stack.Screen
+                name="SharedLoans"
+                options={{ title: "Préstamos compartidos" }}
+              >
+                {({ navigation }) => (
+                  <SharedLoansPage
+                    onAccount={() => navigation.navigate("Account")}
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen
+                name="SharedPresentation"
+                options={{ title: "Presentación TV", headerShown: false }}
+              >
+                {({ navigation }) => (
+                  <SharedPresentationPage
+                    onBack={() => navigation.popTo("SharedProjects")}
+                    onProject={(id) =>
+                      navigation.navigate("SharedProject", { projectId: id })
+                    }
+                  />
+                )}
+              </Stack.Screen>
+              <Stack.Screen
+                name="Presentation"
+                options={{ headerShown: false }}
+              >
+                {({ navigation }) => (
+                  <PresentationPage onBack={() => navigation.goBack()} />
+                )}
+              </Stack.Screen>
+            </Stack.Navigator>
+          </NavigationContainer>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }

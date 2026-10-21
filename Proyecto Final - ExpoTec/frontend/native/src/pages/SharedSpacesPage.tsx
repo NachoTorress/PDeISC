@@ -43,16 +43,8 @@ function summary(space: SharedSpace): SpaceSummary {
 }
 
 export default function SharedSpacesPage({
-  onGallery,
-  onPresentation,
-  onDemo,
-  onProjects,
   onSelectProject,
 }: {
-  onGallery: () => void;
-  onDemo: () => void;
-  onPresentation: () => void;
-  onProjects: () => void;
   onSelectProject: (id: string) => void;
 }) {
   const { client, user, ready } = useAuth();
@@ -243,20 +235,6 @@ export default function SharedSpacesPage({
         subtitle="Planos compartidos de la exposición"
       />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        <Button title="Galería de la ExpoTec" icon="gallery" variant="secondary" onPress={onGallery} disabled={!!editing || busy} />
-        <Button
-          title="Ver proyectos"
-          icon="projects"
-          onPress={onProjects}
-          disabled={!!editing || busy}
-        />
-        <Button
-          title="Presentación TV"
-          icon="tv"
-          variant="secondary"
-          onPress={onPresentation}
-          disabled={!!editing || busy}
-        />
         <Button
           title={loading ? "Actualizando…" : "Actualizar espacios"}
           variant="secondary"
@@ -617,11 +595,6 @@ export default function SharedSpacesPage({
           </View>
         </View>
       )}
-      <Button
-        title="Ver demostración con datos de ejemplo"
-        variant="quiet"
-        onPress={onDemo}
-      />
     </Screen>
   );
 }

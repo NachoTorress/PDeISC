@@ -13,7 +13,7 @@ import type { GalleryPhoto } from "../lib/gallery";
 import { formatDate } from "../lib/format";
 
 type Form = { actorId: string; type: "submit" } | { actorId: string; type: "review"; photo: GalleryPhoto };
-export default function SharedGalleryPage({ onAccount, onSpaces }: { onAccount: () => void; onSpaces: () => void }) {
+export default function SharedGalleryPage({ onAccount }: { onAccount: () => void }) {
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
@@ -104,10 +104,6 @@ export default function SharedGalleryPage({ onAccount, onSpaces }: { onAccount: 
           </Card>)}
         </View>
         {hasMore && loadedScope === scope && !error && <Button title="Cargar más fotos" variant="secondary" disabled={loading} onPress={() => void load(nextOffset)} />}
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-          <Button title="Mi cuenta" variant="quiet" onPress={onAccount} />
-          <Button title="Volver a espacios" variant="quiet" onPress={onSpaces} />
-        </View>
       </>}
     </Screen>
   );

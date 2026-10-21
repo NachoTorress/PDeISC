@@ -9,23 +9,13 @@ import { sharedStatusLabel } from "../lib/sharedProjects";
 import type { ProjectSummary } from "../lib/sharedProjects";
 
 export default function SharedProjectsPage({
-  onGallery,
   onSelect,
   onCreate,
-  onSpaces,
   onAccount,
-  onInventory,
-  onLoans,
-  onPresentation,
 }: {
-  onGallery: () => void;
   onSelect: (id: string, privateView: boolean) => void;
   onCreate: () => void;
-  onSpaces: () => void;
   onAccount: () => void;
-  onInventory: () => void;
-  onLoans: () => void;
-  onPresentation: () => void;
 }) {
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
@@ -101,33 +91,9 @@ export default function SharedProjectsPage({
         }
       />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        <Button
-          title="Ver espacios"
-          icon="map"
-          variant="secondary"
-          onPress={onSpaces}
-        />
-        {ready &&
-          user?.roles.some((role) => role === "admin" || role === "loans") && (
-            <Button
-              title="Ver inventario"
-              icon="inventory"
-              variant="secondary"
-              onPress={onInventory}
-            />
-          )}
         {ready && user?.roles.includes("student") && (
           <Button title="Presentar proyecto" icon="plus" onPress={onCreate} />
         )}
-        {ready &&
-          user?.roles.some((role) => role === "admin" || role === "loans") && (
-            <Button
-              title="Ver préstamos"
-              icon="loans"
-              variant="secondary"
-              onPress={onLoans}
-            />
-          )}
         <Button
           title="Actualizar proyectos"
           variant="quiet"
@@ -136,13 +102,6 @@ export default function SharedProjectsPage({
             void load();
           }}
         />
-        <Button
-          title="Presentación TV"
-          icon="tv"
-          variant="secondary"
-          onPress={onPresentation}
-        />
-        <Button title="Galería de la ExpoTec" icon="gallery" variant="secondary" onPress={onGallery} />
       </View>
       {ready && user ? (
         <Choice

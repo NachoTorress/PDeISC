@@ -205,7 +205,7 @@ Decisión pendiente: la consigna pide REST y también «NO usar más get». Para
 - Confirmación estilizada antes de borrar y cerrar sesión.
 - Si existen selecciones múltiples: marcar todos, desmarcar y confirmar acciones destructivas sobre el conjunto.
 - Fechas de creación visibles en DD/MM/AA.
-- Menú móvil funcional y botón para volver arriba cuando la extensión de la pantalla lo requiera.
+- Navegación general en panel lateral de escritorio y menú hamburguesa en móvil, con accesos alineados y sección actual indicada; sin botoneras de navegación repetidas al pie de cada pantalla. Botón para volver arriba cuando la extensión de la pantalla lo requiera.
 - Cada control visible deberá tener un comportamiento implementado. Las funciones de etapas futuras no se mostrarán como botones operativos.
 
 ## Descargas y auditoría
