@@ -15,6 +15,8 @@ import { AuthError } from "../lib/authTypes";
 import type { AccountRole, Credentials } from "../lib/authTypes";
 import { validateCredentials } from "../lib/authValidation";
 import { formatDate } from "../lib/format";
+import { SocialAccess } from "../components/SocialAccess";
+import { socialBridge } from "../lib/socialBridge";
 
 const roleNames: Record<AccountRole, string> = {
   guest: "Invitado",
@@ -50,6 +52,7 @@ export default function AccountPage({
   const { colors } = useTheme();
   const { user, ready, error: sessionError, client, retry } = useAuth();
   const [register, setRegister] = useState(false);
+  const [socialPending, setSocialPending] = useState(() => Boolean(socialBridge.pending()));
   const [accountType, setAccountType] = useState<"student" | "guest">("student");
   const [input, setInput] = useState<Credentials>(empty);
   const [confirmation, setConfirmation] = useState("");
@@ -131,6 +134,7 @@ export default function AccountPage({
         style={{ width: "100%", maxWidth: 560, alignSelf: "center", gap: 18 }}
       >
         <Heading title="Mi cuenta" subtitle="Tu acceso a ExpoTec" />
+        <SocialAccess onPendingChange={setSocialPending} />
         {!!(error || sessionError) && (
           <Text
             accessibilityRole="alert"
@@ -234,7 +238,7 @@ export default function AccountPage({
               }}
             />
           </Card>
-        ) : (
+        ) : socialPending ? null : (
           <Card>
             <Heading
               title={register ? "Crear cuenta" : "Iniciar sesión"}

@@ -91,6 +91,9 @@ export function createAuthClient(
     send: <T>(endpoint: string, body: object) =>
       serial(() => authorized<T>(endpoint, body)),
     restore: () => serial(renew),
+    completeSocial: (input: object) => serial(async () => {
+      await remember(await request<AccountSession>(path("social/complete"), input));
+    }),
     signIn: (input: Credentials, register: boolean) =>
       serial(async () => {
         await remember(

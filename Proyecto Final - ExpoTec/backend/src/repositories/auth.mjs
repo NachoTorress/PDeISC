@@ -4,8 +4,7 @@ import { HttpError, unauthorized } from '../lib/errors.mjs';
 
 const userColumns = 'id, email, first_name AS firstName, last_name AS lastName, active, created_at AS createdAt';
 
-export function createAuthRepository(pool) {
-  async function publicUser(db, id) {
+export async function publicUser(db, id) {
     const [rows] = await db.execute(`SELECT ${userColumns} FROM users WHERE id = ?`, [id]);
     if (!rows[0] || !rows[0].active) throw unauthorized();
     const [assigned] = await db.execute('SELECT role_code AS code FROM user_roles WHERE user_id = ? ORDER BY role_code', [id]);
@@ -13,13 +12,14 @@ export function createAuthRepository(pool) {
     return { ...user, roles: assigned.map(row => row.code) };
   }
 
-  async function addSession(db, userId, hash, expiresAt) {
+export async function addSession(db, userId, hash, expiresAt) {
     const id = randomUUID();
     await db.execute('INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, ?)', [id, userId, expiresAt]);
     await db.execute('INSERT INTO refresh_tokens (token_hash, session_id) VALUES (?, ?)', [hash, id]);
     return id;
   }
 
+export function createAuthRepository(pool) {
   return {
     async ready() { await pool.execute('SELECT 1'); },
     async getUser(id) {

@@ -39,6 +39,7 @@ import SharedProposalPage from "./pages/SharedProposalPage";
 import SharedInventoryPage from "./pages/SharedInventoryPage";
 import SharedLoansPage from "./pages/SharedLoansPage";
 import SharedPresentationPage from "./pages/SharedPresentationPage";
+import { hasSocialReturn, socialBridge } from "./lib/socialBridge";
 
 type RootRoutes = {
   Home: undefined;
@@ -337,7 +338,7 @@ function AppShell() {
         }
       >
         <Stack.Navigator
-          initialRouteName={startInDemo ? "Home" : "SharedSpaces"}
+          initialRouteName={hasSocialReturn || socialBridge.pending() ? "Account" : startInDemo ? "Home" : "SharedSpaces"}
           screenOptions={{
             headerStyle: { backgroundColor: colors.surface },
             headerTintColor: colors.text,

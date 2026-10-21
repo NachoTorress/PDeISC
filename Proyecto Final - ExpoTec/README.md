@@ -184,6 +184,8 @@ Aplicar `backend/sql/006_gallery.sql` mediante `npm run db:migrate` antes de pub
 
 ## Entrega final pendiente
 
+El hito **7J** prepara el acceso web con Google, Discord y GitHub: alta con contraseña propia, vinculación a cuentas existentes mediante su contraseña y sesión de un solo uso. La implementación está comprobada con proveedores simulados y TiDB de pruebas; **todavía falta crear las aplicaciones externas, configurar sus credenciales y verificar cada proveedor real**. Los botones se muestran solo al configurar el proveedor. Las instrucciones y retornos exactos están en [docs/ACCESOS_SOCIALES.md](docs/ACCESOS_SOCIALES.md). Aplicar las migraciones 007 y 008 antes de publicar; `npm run test:social` comprueba el circuito en la base exclusiva de pruebas. Android sigue al final.
+
 Tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. Por decisión del 21/10/2026, los archivos se mantienen por enlace y su carga directa queda postergada; la recuperación usará el correo personal del usuario y se configurará más adelante. El hito 7I ya incorpora la galería pública de fotos por enlace, con cuentas de invitados y aprobación de administración antes de publicar. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
 
 Las fechas, el plano real, el relevamiento eléctrico, los proveedores externos y el almacenamiento de videos requieren definición antes de reemplazar los ejemplos. El prototipo usa enlaces directos MP4/WebM; su reproducción final depende del formato compatible con cada dispositivo.

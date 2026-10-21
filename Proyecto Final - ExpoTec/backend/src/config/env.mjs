@@ -24,7 +24,29 @@ export function readConfig(env = process.env) {
     accessSeconds: 15 * 60,
     sessionSeconds: 30 * 24 * 60 * 60,
     issuer: 'expotec-api', audience: 'expotec-client',
+    social: readSocialConfig(env, origins, production),
   };
+}
+
+export function readSocialConfig(env, origins, production) {
+  const providers = {};
+  for (const name of ['google', 'discord', 'github']) {
+    const prefix = `SOCIAL_${name.toUpperCase()}`;
+    const clientId = env[`${prefix}_CLIENT_ID`]?.trim(), clientSecret = env[`${prefix}_CLIENT_SECRET`]?.trim();
+    if (Boolean(clientId) !== Boolean(clientSecret)) throw new Error(`Configurá el par ${prefix}_CLIENT_ID y ${prefix}_CLIENT_SECRET.`);
+    if (clientId) providers[name] = { clientId, clientSecret };
+  }
+  if (!Object.keys(providers).length) return { providers };
+  const webOrigin = env.SOCIAL_WEB_ORIGIN;
+  for (const origin of [webOrigin]) {
+    let url;
+    try { url = new URL(origin); } catch { throw new Error('Configurá SOCIAL_WEB_ORIGIN con el origen exacto de la web.'); }
+    if (url.origin !== origin || url.username || url.password ||
+        (url.protocol !== 'https:' && !(url.protocol === 'http:' && !production && ['localhost', '127.0.0.1'].includes(url.hostname))))
+      throw new Error('Los orígenes sociales deben usar HTTPS; solo localhost de desarrollo admite HTTP.');
+  }
+  if (!origins.includes(webOrigin)) throw new Error('SOCIAL_WEB_ORIGIN debe estar incluido en CORS_ORIGINS.');
+  return { providers, webOrigin };
 }
 
 export function readDatabaseConfig(env = process.env) {

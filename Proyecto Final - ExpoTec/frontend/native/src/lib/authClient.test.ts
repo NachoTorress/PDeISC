@@ -23,6 +23,18 @@ const session: AccountSession = {
   refreshToken: "refresh",
   expiresIn: 900,
 };
+
+test("el acceso social web adopta la sesión en memoria sin guardar tokens en el navegador", async () => {
+  const body = { id: "flow", proof: "temporary", mode: "login" };
+  const app = setup(async (path, input) => {
+    assert.equal(path, "/api/auth/browser/social/complete");
+    assert.deepEqual(input, body);
+    return { ...session, refreshToken: undefined };
+  }, true);
+  await app.client.completeSocial(body);
+  assert.deepEqual(app.user(), user);
+  assert.equal(app.saved(), "previous");
+});
 function setup(
   handler: (path: string, body: object, token?: string) => Promise<unknown>,
   browser = false,

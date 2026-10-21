@@ -1,1 +1,3 @@
 006_gallery.sql text eol=lf
+007_social.sql text eol=lf
+008_social_browser.sql text eol=lf

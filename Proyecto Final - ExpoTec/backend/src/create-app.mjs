@@ -11,8 +11,9 @@ import { projectsRoutes } from './routes/projects.mjs';
 import { inventoryRoutes } from './routes/inventory.mjs';
 import { loansRoutes } from './routes/loans.mjs';
 import { galleryRoutes } from './routes/gallery.mjs';
+import { createSocialService } from './services/social.mjs';
 
-export function createApp(repository, config, logger = console, app = express(), spacesRepository, projectsRepository, inventoryRepository, loansRepository, galleryRepository) {
+export function createApp(repository, config, logger = console, app = express(), spacesRepository, projectsRepository, inventoryRepository, loansRepository, galleryRepository, socialRepository, providerExchange) {
   app.disable('x-powered-by');
   // Solo Vercel es el proxy de confianza; en ejecución local no se aceptan IP reenviadas.
   if (config.onVercel) app.set('trust proxy', 1);
@@ -45,7 +46,8 @@ export function createApp(repository, config, logger = console, app = express(),
     res.json({ status: 'ok', database: 'connected' });
   });
   const service = createAuthService(repository, config);
-  app.use('/api/auth', authRoutes(repository, service, config));
+  const social = socialRepository ? createSocialService(socialRepository, repository, config, providerExchange) : undefined;
+  app.use('/api/auth', authRoutes(repository, service, config, social));
   app.use('/api/admin', adminRoutes(repository, service, config));
   if (spacesRepository) app.use('/api/spaces', spacesRoutes(spacesRepository, repository, service, config));
   if (projectsRepository) app.use('/api/projects', projectsRoutes(projectsRepository, repository, service, config));

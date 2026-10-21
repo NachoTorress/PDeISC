@@ -30,12 +30,12 @@ const mime = {
 http
   .createServer(async (request, response) => {
     try {
-      const pathname = decodeURIComponent(
-        new URL(request.url ?? "/", `http://${host}:${port}`).pathname,
-      );
+      const address = new URL(request.url ?? "/", `http://${host}:${port}`);
+      const pathname = decodeURIComponent(address.pathname);
       if (pathname.startsWith("/api/")) {
         const target = new URL(api);
         target.pathname = pathname;
+        target.search = address.search;
         const upstream = (target.protocol === "https:" ? https : http).request(
           target,
           {

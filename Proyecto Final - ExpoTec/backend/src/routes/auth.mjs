@@ -2,8 +2,9 @@ import { Router } from 'express';
 import { credentials, refreshToken, objectBody, usersQuery, userId, roleList, rolesChange } from '../validators/auth.mjs';
 import { requireSession, requireAdmin, rateLimit } from '../middleware/auth.mjs';
 import { HttpError } from '../lib/errors.mjs';
+import { randomBytes } from 'node:crypto';
 
-export function authRoutes(repository, service, config) {
+export function authRoutes(repository, service, config, social) {
   const router = Router();
   const ipLimit = rateLimit(repository, config, { scope: 'auth-ip', limit: 40, seconds: 900 });
   const loginLimit = rateLimit(repository, config, { scope: 'login-email', limit: 10, seconds: 900, byEmail: true });
@@ -48,6 +49,29 @@ export function authRoutes(repository, service, config) {
     res.clearCookie(cookieName, cookieOptions);
     res.sendStatus(204);
   });
+  if (social) {
+    const bindingCookie = config.production ? '__Host-expotec-social' : 'expotec-social';
+    const bindingOptions = { httpOnly: true, secure: config.production, sameSite: 'lax', path: '/', maxAge: 10 * 60 * 1000 };
+    const binding = req => {
+      const value = (req.get('cookie') ?? '').split(';').map(value => value.trim()).find(value => value.startsWith(`${bindingCookie}=`))?.slice(bindingCookie.length + 1);
+      return /^[A-Za-z0-9_-]{43}$/.test(value ?? '') ? value : undefined;
+    };
+    router.post('/social/providers/query', (req, res) => {
+      objectBody(req.body, []);
+      res.json(social.providers());
+    });
+    browser.post('/social/start', ipLimit, async (req, res) => {
+      const key = binding(req) ?? randomBytes(32).toString('base64url');
+      const result = await social.start(req.body, key);
+      res.cookie(bindingCookie, key, bindingOptions);
+      res.json(result);
+    });
+    browser.post('/social/status', ipLimit, async (req, res) => res.json(await social.status(req.body)));
+    browser.post('/social/complete', ipLimit, async (req, res) => browserResponse(res, await social.complete(req.body)));
+    router.get('/social/:provider/callback', ipLimit, async (req, res) => {
+      res.redirect(303, await social.callback(req.params.provider, req.query, binding(req)));
+    });
+  }
   router.use('/browser', browser);
   router.post('/register', ipLimit, async (req, res) => {
     res.status(201).json(await service.register(credentials(req.body, true)));
