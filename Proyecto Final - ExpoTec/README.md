@@ -172,7 +172,7 @@ Este hito no necesita nuevas variables ni migraciones. `npm run test:users`, en 
 
 ## Entrega final pendiente
 
-Almacenamiento de archivos, tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
+Tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. Por decisión del 21/10/2026, los archivos se mantienen por enlace y su carga directa queda postergada; la recuperación usará el correo personal del usuario y se configurará más adelante. Se agrega como próximo hito pendiente una galería pública de fotos por enlace, con cuentas de invitados y aprobación de administración antes de publicar. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
 
 Las fechas, el plano real, el relevamiento eléctrico, los proveedores externos y el almacenamiento de videos requieren definición antes de reemplazar los ejemplos. El prototipo usa enlaces directos MP4/WebM; su reproducción final depende del formato compatible con cada dispositivo.
 
