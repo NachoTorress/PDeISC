@@ -31,6 +31,7 @@ import GalleryPage from "./pages/GalleryPage";
 import PresentationPage from "./pages/PresentationPage";
 import AccountPage from "./pages/AccountPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
+import SharedGalleryPage from "./pages/SharedGalleryPage";
 import SharedSpacesPage from "./pages/SharedSpacesPage";
 import SharedProjectsPage from "./pages/SharedProjectsPage";
 import SharedProjectPage from "./pages/SharedProjectPage";
@@ -46,6 +47,7 @@ type RootRoutes = {
   Presentation: undefined;
   Account: undefined;
   AdminUsers: undefined;
+  SharedGallery: undefined;
   SharedSpaces: undefined;
   SharedProjects: undefined;
   SharedProject: { projectId: string; privateView?: boolean };
@@ -306,6 +308,7 @@ function AppShell() {
             [
               "Account",
               "AdminUsers",
+              "SharedGallery",
               "SharedSpaces",
               "SharedProjects",
               "SharedProject",
@@ -321,6 +324,7 @@ function AppShell() {
             [
               "Account",
               "AdminUsers",
+              "SharedGallery",
               "SharedSpaces",
               "SharedProjects",
               "SharedProject",
@@ -351,6 +355,7 @@ function AppShell() {
           >
             {({ navigation }) => (
               <SharedSpacesPage
+                onGallery={() => navigation.navigate("SharedGallery")}
                 onPresentation={() => navigation.navigate("SharedPresentation")}
                 onDemo={() => navigation.navigate("Home")}
                 onProjects={() => navigation.navigate("SharedProjects")}
@@ -366,6 +371,7 @@ function AppShell() {
           >
             {({ navigation }) => (
               <SharedProjectsPage
+                onGallery={() => navigation.navigate("SharedGallery")}
                 onPresentation={() => navigation.navigate("SharedPresentation")}
                 onSelect={(id, privateView) =>
                   navigation.navigate("SharedProject", {
@@ -420,6 +426,7 @@ function AppShell() {
           <Stack.Screen name="Account" options={{ title: "Mi cuenta" }}>
             {({ navigation }) => (
               <AccountPage
+                onGallery={() => navigation.navigate("SharedGallery")}
                 onUsers={() => navigation.navigate("AdminUsers")}
                 onDemo={() => navigation.navigate("Home")}
                 onSpaces={() => navigation.popTo("SharedSpaces")}
@@ -431,6 +438,9 @@ function AppShell() {
           </Stack.Screen>
           <Stack.Screen name="AdminUsers" options={{ title: "Usuarios y permisos" }}>
             {({ navigation }) => <AdminUsersPage onAccount={() => navigation.popTo("Account")} />}
+          </Stack.Screen>
+          <Stack.Screen name="SharedGallery" options={{ title: "Galería de la ExpoTec" }}>
+            {({ navigation }) => <SharedGalleryPage onAccount={() => navigation.navigate("Account")} onSpaces={() => navigation.popTo("SharedSpaces")} />}
           </Stack.Screen>
           <Stack.Screen name="Detail" options={{ title: "Proyecto" }}>
             {({ route, navigation }) => (

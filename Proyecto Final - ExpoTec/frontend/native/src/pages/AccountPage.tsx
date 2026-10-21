@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CheckRow,
+  Choice,
   Field,
   Heading,
   Screen,
@@ -16,6 +17,7 @@ import { validateCredentials } from "../lib/authValidation";
 import { formatDate } from "../lib/format";
 
 const roleNames: Record<AccountRole, string> = {
+  guest: "Invitado",
   student: "Alumno",
   teacher: "Profesor",
   loans: "Encargado de préstamos",
@@ -35,6 +37,7 @@ export default function AccountPage({
   onInventory,
   onLoans,
   onUsers,
+  onGallery,
 }: {
   onDemo: () => void;
   onSpaces: () => void;
@@ -42,10 +45,12 @@ export default function AccountPage({
   onInventory: () => void;
   onLoans: () => void;
   onUsers: () => void;
+  onGallery: () => void;
 }) {
   const { colors } = useTheme();
   const { user, ready, error: sessionError, client, retry } = useAuth();
   const [register, setRegister] = useState(false);
+  const [accountType, setAccountType] = useState<"student" | "guest">("student");
   const [input, setInput] = useState<Credentials>(empty);
   const [confirmation, setConfirmation] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -104,6 +109,7 @@ export default function AccountPage({
     };
     if (register)
       Object.assign(credentials, {
+        accountType,
         firstName: input.firstName?.trim().normalize("NFC"),
         lastName: input.lastName?.trim().normalize("NFC"),
       });
@@ -115,7 +121,7 @@ export default function AccountPage({
         setTouched({});
         setShowPassword(false);
       },
-      register ? "Tu cuenta de alumno está creada." : "Iniciaste sesión.",
+      register ? `Tu cuenta de ${accountType === "guest" ? "invitado" : "alumno"} está creada.` : "Iniciaste sesión.",
     );
   }
   const paragraph = { color: colors.muted, fontSize: 15, lineHeight: 22 };
@@ -234,12 +240,15 @@ export default function AccountPage({
               title={register ? "Crear cuenta" : "Iniciar sesión"}
               subtitle={
                 register
-                  ? "Registrate como alumno. La escuela asigna los demás permisos."
+                  ? "Elegí cómo vas a participar. La escuela asigna los permisos de organización."
                   : "Ingresá con tu correo y contraseña."
               }
             />
             {register && (
               <>
+                <Choice label="Tipo de cuenta" value={accountType}
+                  options={[{ value: "student", label: "Alumno" }, { value: "guest", label: "Invitado" }]}
+                  disabled={busy} onChange={value => setAccountType(value as "student" | "guest")} />
                 <Field
                   label="Nombre"
                   value={input.firstName ?? ""}
@@ -319,7 +328,7 @@ export default function AccountPage({
             />
             <Button
               title={
-                register ? "Ya tengo una cuenta" : "Crear una cuenta de alumno"
+                register ? "Ya tengo una cuenta" : "Crear una cuenta"
               }
               variant="quiet"
               disabled={busy}
@@ -337,6 +346,7 @@ export default function AccountPage({
           </Card>
         )}
         <Button title="Ver proyectos" icon="projects" onPress={onProjects} />
+        <Button title="Galería de la ExpoTec" icon="gallery" onPress={onGallery} />
         {ready && user?.roles.includes("admin") && (
           <Button title="Usuarios y permisos" onPress={onUsers} />
         )}

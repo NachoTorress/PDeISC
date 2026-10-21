@@ -13,7 +13,7 @@ Organizar los proyectos, los espacios y los recursos de una ExpoTec de tres día
 | Perfil | Acciones |
 | --- | --- |
 | Invitado, sin iniciar sesión | Consultar proyectos confirmados, su ubicación, materias, profesores e imágenes; acceder a la presentación pública. |
-| Invitado con cuenta (hito 7I, pendiente) | Enviar fotos por enlace a la galería y consultar el estado de sus aportes. Sin permisos de alumno, revisión de proyectos, préstamos ni administración. |
+| Invitado con cuenta (hito 7I) | Enviar fotos por enlace a la galería y consultar el estado de sus aportes. Sin permisos de alumno, revisión de proyectos, préstamos ni administración. |
 | Alumno | Registrarse, ingresar, recuperar su contraseña y crear, consultar, modificar y eliminar sus proyectos dentro de los estados permitidos. Elegir un puesto disponible, profesores, materias y recursos; adjuntar imagen y video opcional. |
 | Profesor responsable | Revisar los proyectos que lo incluyan como responsable, confirmar el lugar y los recursos solicitados o pedir correcciones. |
 | Encargado de préstamos | Registrar las entregas, devoluciones y novedades de los elementos durante cada uno de los tres días. |
@@ -102,11 +102,11 @@ En 7G se usan enlaces HTTPS directos a MP4/WebM, orden estable por identificador
 
 Los accesos sociales requieren aplicaciones y credenciales de los proveedores. La recuperación por correo se enviará desde el correo personal del usuario, por decisión del 21/10/2026. Su configuración queda postergada; no se habilitará ni se considerará terminada hasta configurar y comprobar el envío real. No guardar credenciales de correo en el repositorio.
 
-## Galería de la experiencia — hito 7I pendiente
+## Galería de la experiencia — hito 7I implementado
 
 Pedido del usuario del 21/10/2026: incorporar una galería pública de fotos de la ExpoTec aportadas por quienes la visitan, con la invitación **«¡Subí tu foto de la ExpoTec!»**. Reunirá recuerdos de la experiencia y será independiente de la muestra de proyectos confirmados.
 
-Propuesta funcional para implementar:
+Implementado el 21/10/2026:
 
 - Cualquier persona puede recorrer las fotos aprobadas sin iniciar sesión.
 - Las cuentas autenticadas pueden enviar una foto mediante enlace HTTPS, con un título o descripción breve. La carga directa de archivos queda postergada por decisión del usuario.
@@ -115,7 +115,7 @@ Propuesta funcional para implementar:
 - La galería pública muestra únicamente aportes aprobados, con descripción, nombre público del autor y fecha; no muestra correos ni datos privados de cuentas.
 - Conservar autor, estado y responsable de moderación en la base compartida. Validar permisos también en el servidor y proteger las decisiones frente a cambios simultáneos.
 
-Esta galería y el invitado con cuenta todavía no están implementados. La consulta anónima existente de proyectos y presentación TV continúa disponible.
+La galería y el registro como invitado están implementados. El servidor admite hasta 20 fotos pendientes por autor y limita el envío a 10 intentos por hora. La moderación comprueba versiones y conserva cada decisión con su responsable; retirar una publicada la excluye de la siguiente consulta pública. No se editan los enlaces ya enviados. La galería se actualiza al abrirla, cambiar de vista o pulsar Actualizar; no transmite cambios en tiempo real. La consulta anónima de proyectos y presentación TV continúa disponible.
 
 ## Decisiones de alcance del 21/10/2026
 
@@ -252,6 +252,6 @@ El hito **7G: presentación TV compartida** carga la secuencia pública con pagi
 
 El hito **7H: usuarios y permisos**, implementado el 21/10/2026, permite a administración buscar cuentas por nombre o correo, consultar páginas de usuarios y asignar uno o varios permisos desde Mi cuenta. La selección requiere revisión y confirmación antes de guardar. El servidor vuelve a comprobar que el actor sea un administrador activo, protege al último administrador y compara los permisos esperados con los actuales para rechazar sobrescrituras simultáneas. Un conflicto conserva la selección y permite descartar y recargar con confirmación. No habilita altas de profesores sin una cuenta previamente registrada ni cambia contraseñas.
 
-El próximo bloque propuesto es la galería moderada con cuentas de invitados (7I). Los accesos sociales siguen pendientes; recuperación por correo personal y carga directa de archivos quedan postergadas. Los hitos 7A–7H no dan por finalizada la etapa 7. Los diagramas editables de arquitectura y funcionamiento están en `docs/diagramas/sistema-expotec.drawio`. Los perfiles y datos del área de demostración siguen siendo ficticios e independientes de la cuenta real. Por indicación del usuario del 19/10/2026, Android se retoma al final.
+El hito 7I incorpora la galería moderada con cuentas de invitados. Los accesos sociales siguen pendientes; recuperación por correo personal y carga directa de archivos quedan postergadas. Los hitos 7A–7I no dan por finalizada la etapa 7. Los diagramas editables de arquitectura y funcionamiento están en `docs/diagramas/sistema-expotec.drawio`. Los perfiles y datos del área de demostración siguen siendo ficticios e independientes de la cuenta real. Por indicación del usuario del 19/10/2026, Android se retoma al final.
 
 Cada etapa tendrá alcance explícito, controles funcionales y comprobaciones propias. La verificación final incluirá aprobaciones simultáneas, stock insuficiente, permisos, devolución parcial, renovación de sesión, enlaces de video inválidos y recuperación frente a errores de conexión.

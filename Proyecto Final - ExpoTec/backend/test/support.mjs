@@ -24,7 +24,8 @@ export function memoryRepository() {
     async register(input, hash, expiresAt) {
       if ([...users.values()].some(user => user.email === input.email))
         throw new HttpError(409, 'EMAIL_REGISTERED', 'Ese correo ya está registrado.');
-      const user = { ...input, id: randomUUID(), roles: ['student'], active: true, createdAt: new Date().toISOString() };
+      const { accountType, ...account } = input;
+      const user = { ...account, id: randomUUID(), roles: [accountType === 'guest' ? 'guest' : 'student'], active: true, createdAt: new Date().toISOString() };
       users.set(user.id, user);
       return open(user, hash, expiresAt);
     },

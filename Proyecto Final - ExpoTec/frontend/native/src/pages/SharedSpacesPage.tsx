@@ -43,11 +43,13 @@ function summary(space: SharedSpace): SpaceSummary {
 }
 
 export default function SharedSpacesPage({
+  onGallery,
   onPresentation,
   onDemo,
   onProjects,
   onSelectProject,
 }: {
+  onGallery: () => void;
   onDemo: () => void;
   onPresentation: () => void;
   onProjects: () => void;
@@ -241,6 +243,7 @@ export default function SharedSpacesPage({
         subtitle="Planos compartidos de la exposición"
       />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+        <Button title="Galería de la ExpoTec" icon="gallery" variant="secondary" onPress={onGallery} disabled={!!editing || busy} />
         <Button
           title="Ver proyectos"
           icon="projects"

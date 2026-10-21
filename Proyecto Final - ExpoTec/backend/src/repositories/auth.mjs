@@ -33,7 +33,7 @@ export function createAuthRepository(pool) {
           const id = randomUUID();
           await db.execute('INSERT INTO users (id, email, first_name, last_name, password_hash) VALUES (?, ?, ?, ?, ?)',
             [id, input.email, input.firstName, input.lastName, input.passwordHash]);
-          await db.execute("INSERT INTO user_roles (user_id, role_code) VALUES (?, 'student')", [id]);
+          await db.execute('INSERT INTO user_roles (user_id, role_code) VALUES (?, ?)', [id, input.accountType === 'guest' ? 'guest' : 'student']);
           const sessionId = await addSession(db, id, hash, expiresAt);
           return { user: await publicUser(db, id), sessionId };
         });

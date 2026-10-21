@@ -1,4 +1,4 @@
-export type AccountRole = "student" | "teacher" | "loans" | "admin";
+export type AccountRole = "student" | "teacher" | "loans" | "admin" | "guest";
 export interface AccountUser {
   id: string;
   email: string;
@@ -12,6 +12,7 @@ export interface Credentials {
   password: string;
   firstName?: string;
   lastName?: string;
+  accountType?: "student" | "guest";
 }
 export interface AccountSession {
   user: AccountUser;

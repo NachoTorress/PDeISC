@@ -1,6 +1,6 @@
 import { HttpError } from '../lib/errors.mjs';
 
-export const roles = ['student', 'teacher', 'loans', 'admin'];
+export const roles = ['student', 'teacher', 'loans', 'admin', 'guest'];
 export function objectBody(body, allowed) {
   if (!body || typeof body !== 'object' || Array.isArray(body))
     throw new HttpError(400, 'VALIDATION_ERROR', 'Enviá un objeto JSON.');
@@ -14,7 +14,7 @@ function invalid(fields) {
 }
 
 export function credentials(body, register = false) {
-  objectBody(body, register ? ['email', 'password', 'firstName', 'lastName'] : ['email', 'password']);
+  objectBody(body, register ? ['email', 'password', 'firstName', 'lastName', 'accountType'] : ['email', 'password']);
   const fields = {};
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
   if (email.length > 254 || !/^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$/i.test(email))
@@ -24,6 +24,9 @@ export function credentials(body, register = false) {
     fields.password = register ? 'Usá entre 12 y 128 caracteres.' : 'Ingresá tu contraseña.';
   const names = {};
   if (register) {
+    if (body.accountType !== undefined && !['student', 'guest'].includes(body.accountType))
+      fields.accountType = 'Elegí alumno o invitado.';
+    if (body.accountType !== undefined) names.accountType = body.accountType;
     for (const key of ['firstName', 'lastName']) {
       names[key] = typeof body[key] === 'string' ? body[key].trim().normalize('NFC') : '';
       if (!/^[\p{L}\p{M}]+(?:[ '’][\p{L}\p{M}]+)*$/u.test(names[key]) || names[key].length > 80)
@@ -52,7 +55,7 @@ export function roleList(body) {
   objectBody(body, ['roles']);
   if (!Array.isArray(body.roles) || !body.roles.length || body.roles.length > roles.length ||
       body.roles.some(role => !roles.includes(role)) || new Set(body.roles).size !== body.roles.length)
-    throw new HttpError(400, 'VALIDATION_ERROR', 'Elegí uno o varios permisos distintos: student, teacher, loans, admin.');
+    throw new HttpError(400, 'VALIDATION_ERROR', 'Elegí uno o varios permisos distintos: student, teacher, loans, admin, guest.');
   return body.roles;
 }
 

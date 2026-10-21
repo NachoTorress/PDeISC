@@ -9,6 +9,7 @@ import { sharedStatusLabel } from "../lib/sharedProjects";
 import type { ProjectSummary } from "../lib/sharedProjects";
 
 export default function SharedProjectsPage({
+  onGallery,
   onSelect,
   onCreate,
   onSpaces,
@@ -17,6 +18,7 @@ export default function SharedProjectsPage({
   onLoans,
   onPresentation,
 }: {
+  onGallery: () => void;
   onSelect: (id: string, privateView: boolean) => void;
   onCreate: () => void;
   onSpaces: () => void;
@@ -140,6 +142,7 @@ export default function SharedProjectsPage({
           variant="secondary"
           onPress={onPresentation}
         />
+        <Button title="Galería de la ExpoTec" icon="gallery" variant="secondary" onPress={onGallery} />
       </View>
       {ready && user ? (
         <Choice

@@ -98,7 +98,7 @@ La vista inicial reúne **Pendientes de todas las jornadas**. También se pueden
 
 Los elementos son cantidades de unidades equivalentes, separadas del mobiliario del plano. La disponibilidad para reservar descuenta reservas y unidades fuera de servicio; la disponibilidad física para entregar descuenta unidades fuera de servicio y préstamos abiertos de todas las jornadas. Un daño puede dejar reservas sin cobertura: se informa el faltante y se protege el stock restante. Las devoluciones completas conservan la reserva para el próximo día. No se calcula ni certifica capacidad eléctrica.
 
-**Mi cuenta** abre el acceso real. El registro pide nombre, apellido, correo y contraseña de 12–128 caracteres, con repetición para comprobarla. Las nuevas cuentas reciben únicamente el permiso de alumno. La ficha muestra los permisos actuales y permite actualizarlos o cerrar sesión con confirmación. Si falla la conexión, se puede reintentar sin eliminar la sesión guardada. La recuperación de contraseña y los proveedores sociales siguen pendientes.
+**Mi cuenta** abre el acceso real. El registro pide nombre, apellido, correo y contraseña de 12–128 caracteres, con repetición para comprobarla. El registro permite elegir alumno o invitado; la cuenta recibe únicamente el permiso elegido. Si un cliente anterior no indica el tipo, se registra como alumno. La ficha muestra los permisos actuales y permite actualizarlos o cerrar sesión con confirmación. Si falla la conexión, se puede reintentar sin eliminar la sesión guardada. La recuperación de contraseña y los proveedores sociales siguen pendientes.
 
 La sesión se conserva con Expo SecureStore en Android y con una cookie HttpOnly, Secure y SameSite=Strict en la web de producción. El token de acceso vive en memoria. La web utiliza `/api` a través de Vercel para mantener la cookie en su propio origen; no guarda tokens en AsyncStorage ni localStorage.
 
@@ -170,9 +170,21 @@ Desde **Mi cuenta → Usuarios y permisos**, administración busca cuentas por n
 
 Este hito no necesita nuevas variables ni migraciones. `npm run test:users`, en backend, comprueba la integración sobre una base exclusiva de pruebas. Recuperación, archivos y accesos sociales continúan pendientes de sus servicios externos.
 
+## Galería de la experiencia — hito 7I
+
+**Galería de la ExpoTec** se abre desde espacios, proyectos o Mi cuenta. Cualquier visitante puede recorrer las fotos aprobadas. Para participar, crear una cuenta de **Invitado** o ingresar con una cuenta existente y pulsar **¡Subí tu foto de la ExpoTec!**. El aporte pide un enlace HTTPS directo a una imagen ya alojada y una descripción de 5–400 caracteres. **Ver vista previa** comprueba cómo se ve; un enlace no accesible conserva la descripción y muestra un aviso. Todavía no hay carga directa de archivos.
+
+**Enviar para aprobación** deja la foto pendiente. **Mis fotos** muestra los aportes propios y los mensajes de organización; ninguna foto pendiente o rechazada se publica. La galería pública muestra nombre del autor, fecha y descripción, sin correo ni datos de moderación. Se admiten hasta 20 fotos pendientes por persona y 10 intentos de envío por hora. Los aportes enviados no se editan silenciosamente.
+
+Administración dispone de **Moderar fotos**, con filtros de pendientes, publicadas y no publicadas. **Revisar foto → Revisar decisión → Confirmar decisión** permite publicar o rechazar. Rechazar o retirar una publicada exige un motivo de 10–1000 caracteres, visible para el autor. Cada decisión queda registrada; las revisiones simultáneas se rechazan conservando el borrador. Salir con un aporte o mensaje sin guardar pide confirmación.
+
+**Actualizar galería**, cambiar de vista o volver a abrir la pantalla consulta el estado del servidor. Una foto retirada deja de aparecer en la siguiente consulta; no hay actualización en tiempo real. Una consulta fallida oculta la lista y permite reintentar. La demostración y su muestra de proyectos permanecen independientes.
+
+Aplicar `backend/sql/006_gallery.sql` mediante `npm run db:migrate` antes de publicar esta versión. `npm run test:gallery` verifica el circuito en una base exclusiva de pruebas. No requiere nuevas credenciales ni servicios externos.
+
 ## Entrega final pendiente
 
-Tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. Por decisión del 21/10/2026, los archivos se mantienen por enlace y su carga directa queda postergada; la recuperación usará el correo personal del usuario y se configurará más adelante. Se agrega como próximo hito pendiente una galería pública de fotos por enlace, con cuentas de invitados y aprobación de administración antes de publicar. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
+Tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. Por decisión del 21/10/2026, los archivos se mantienen por enlace y su carga directa queda postergada; la recuperación usará el correo personal del usuario y se configurará más adelante. El hito 7I ya incorpora la galería pública de fotos por enlace, con cuentas de invitados y aprobación de administración antes de publicar. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
 
 Las fechas, el plano real, el relevamiento eléctrico, los proveedores externos y el almacenamiento de videos requieren definición antes de reemplazar los ejemplos. El prototipo usa enlaces directos MP4/WebM; su reproducción final depende del formato compatible con cada dispositivo.
 

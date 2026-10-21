@@ -145,7 +145,7 @@ Las rutas nativas existentes mantienen su contrato JSON con `refreshToken`. La w
 
 | Método y ruta | Cuerpo | Respuesta |
 | --- | --- | --- |
-| POST `/api/auth/browser/register` | `firstName`, `lastName`, `email`, `password` | 201: usuario, `accessToken`, `tokenType`, `expiresIn`; cookie de renovación |
+| POST `/api/auth/browser/register` | `firstName`, `lastName`, `email`, `password`, opcional `accountType` (`student` o `guest`) | 201: usuario, `accessToken`, `tokenType`, `expiresIn`; cookie de renovación |
 | POST `/api/auth/browser/login` | `email`, `password` | 200: mismo formato y cookie |
 | POST `/api/auth/browser/refresh` | `{}` y cookie vigente | 200: sesión renovada y cookie rotada |
 | POST `/api/auth/browser/logout` | `{}` y cookie, si existe | 204: revoca la sesión y elimina la cookie; admite ausencia o expiración |
@@ -196,7 +196,7 @@ Las consultas de datos también utilizan POST, conservando la restricción regis
 | --- | --- | --- | --- |
 | POST `/api/health` | Público | `{}` | 200: servicio activo; no comprueba la base |
 | POST `/api/health/ready` | Público | `{}` | 200: conexión comprobada; 503: base no disponible |
-| POST `/api/auth/register` | Público, limitado | `firstName`, `lastName`, `email`, `password` | 201: usuario y tokens; 409: correo existente |
+| POST `/api/auth/register` | Público, limitado | `firstName`, `lastName`, `email`, `password`, opcional `accountType` (`student` o `guest`) | 201: usuario y tokens; 409: correo existente |
 | POST `/api/auth/login` | Público, limitado | `email`, `password` | 200: usuario y tokens; 401: credenciales incorrectas |
 | POST `/api/auth/refresh` | JWT de renovación, limitado | `refreshToken` | 200: usuario y nuevo par de tokens; 401: token vencido, usado o revocado |
 | POST `/api/auth/logout` | Token de renovación, limitado | `refreshToken` | 204: cierre idempotente de esa sesión |
@@ -204,9 +204,9 @@ Las consultas de datos también utilizan POST, conservando la restricción regis
 | POST `/api/admin/users/query` | Administrador | `limit` opcional (1–100, default 25), `offset` opcional (0–100000, default 0), `search` opcional (hasta 100 caracteres, nombre o correo) | 200: `{ "users": [...] }` |
 | POST `/api/admin/users/:id/query` | Administrador | `{}` | 200: `{ user }` activo; 404: inexistente o inactivo |
 | POST `/api/admin/users/:id/roles/save` | Administrador activo, 60 intentos cada 15 minutos por actor | `{ roles, expectedRoles }` | 200: `{ user }`; 409: `ROLES_CHANGED` o `LAST_ADMIN`; 404: inexistente o inactivo |
-| PATCH `/api/admin/users/:id/roles` | Administrador | `roles`: lista sin duplicados de `student`, `teacher`, `loans`, `admin` | 200: usuario actualizado; 404: cuenta inexistente; 409: último administrador |
+| PATCH `/api/admin/users/:id/roles` | Administrador | `roles`: lista sin duplicados de `student`, `teacher`, `loans`, `admin`, `guest` | 200: usuario actualizado; 404: cuenta inexistente; 409: último administrador |
 
-Los campos no listados se rechazan. El identificador del usuario es UUID v4. La cuenta nueva siempre recibe `student`; no acepta `role`, `roles` ni `active` desde el registro. Una cuenta puede acumular permisos, por ejemplo profesor y encargado de préstamos, sin concedérselos por sí misma.
+Los campos no listados se rechazan. El identificador del usuario es UUID v4. La cuenta nueva recibe `student` por defecto o `guest` si el registro incluye `accountType: "guest"`; no acepta `role`, `roles` ni `active` desde el registro. Una cuenta puede acumular permisos, por ejemplo profesor y encargado de préstamos, sin concedérselos por sí misma.
 
 El registro valida nombres Unicode, espacios y apóstrofes, correo de hasta 254 caracteres y contraseña de 12–128 caracteres. No se recaban fecha de nacimiento ni otros datos personales cuya necesidad está pendiente de definición. Contraseñas guardadas con scrypt (N=131072, r=8, p=1), sal aleatoria y comparación constante; nunca en texto plano.
 
@@ -291,3 +291,23 @@ La aplicación utiliza POST `roles/save`. `roles` exige al menos un permiso vál
 La búsqueda usa parámetros y coincidencia literal sobre nombre, apellido y correo; `%` y `_` no son comodines. Orden estable por fecha de alta e identificador; la paginación por offset consulta el estado de cada petición, no una instantánea entre páginas. El listado incluye actividad y permisos, nunca hashes ni tokens. El detalle solo admite cuentas activas. Solo administradores autenticados pueden consultar estos datos.
 
 `npm run test:users` usa exclusivamente `TEST_DB_NAME=expotec_test_*`, diferente de producción. Cubre búsqueda, páginas, privacidad, rechazo a alumnos, cambios visibles en sesiones existentes, concurrencia, conflicto y consulta por cuenta; limpia solo sus cuentas temporales. No necesita nuevas tablas, variables ni dependencias.
+
+## Galería e invitados — hito 7I
+
+La migración `006_gallery.sql` agrega el permiso `guest`, `gallery_photos` y `gallery_reviews`. Se aplica explícitamente antes de publicar la API y la web nuevas; no cambia roles de cuentas existentes. La nueva migración fija finales de línea LF para mantener su checksum. `accountType` es opcional al registrar: `guest` concede solo invitado, `student` o ausencia conservan el registro de alumno. Ningún otro tipo se admite. Ingreso, renovación y sesiones mantienen el contrato anterior.
+
+| POST | Acceso | Cuerpo | Respuesta |
+| --- | --- | --- | --- |
+| `/api/gallery/public/query` | Público | `limit` 1–100 (25), `offset` 0–100000 (0), opcionales | 200 `{ photos }`, solo aprobadas |
+| `/api/gallery/mine/query` | Cuenta activa | Misma paginación | 200 `{ photos }`, solo del actor autenticado |
+| `/api/gallery/submit` | Cuenta activa, 10 intentos/hora por actor | `{ imageUrl, caption }` | 201 `{ photo: { id, status: pending, version: 1 } }` |
+| `/api/gallery/moderation/query` | Administración | Paginación y `status`: pending (default), approved, rejected o all | 200 `{ photos }` |
+| `/api/gallery/:id/review` | Administración, 120 intentos/15 min por actor | `{ version, decision, note? }` | 200 `{ photo: { id, status, version } }` |
+
+`imageUrl`: HTTPS completo de hasta 2048 caracteres, sin credenciales ni espacios; `caption`: 5–400 caracteres normalizados, sin controles ni saltos de línea. No se aceptan autor, estado ni permisos desde el envío. `decision`: approved o rejected. Rechazar o retirar exige `note` de 10–1000 caracteres; aprobar admite motivo vacío. No se repite el mismo estado y toda decisión compara versión. UUID v4 para identificar fotos.
+
+La consulta pública proyecta exclusivamente `id`, `imageUrl`, `caption`, `authorName`, `createdAt`. Las consultas propias y administrativas agregan `status`, `version`, `updatedAt` y `reviewNote` de la revisión actual. No se publican correos, identificadores de autor, responsables internos ni motivos. Orden descendente por creación e identificador; las páginas por offset reflejan cada consulta, no una instantánea común.
+
+Envío y revisión son transaccionales. Se vuelve a comprobar la cuenta activa y, al moderar, su permiso administrador. El conteo de pendientes se lee con bloqueo después de bloquear al autor: dos envíos simultáneos no superan 20 pendientes. Cada revisión actualiza estado y versión y registra responsable, motivo y fecha en una única transacción. 409: PHOTO_CHANGED, PHOTO_ALREADY_REVIEWED o GALLERY_PENDING_LIMIT; 403: sin permisos; 404: foto inexistente; 400: datos inválidos; 429: límite con Retry-After.
+
+La API almacena enlaces y no descarga ni verifica el contenido remoto. Las imágenes se cargan en el cliente, que muestra un estado recuperable si fallan. No hay edición o borrado de aportes en este hito; retirar una publicación conserva el historial. `npm run test:gallery` usa `TEST_DB_NAME=expotec_test_*` diferente de producción, y limpia únicamente sus cuentas, fotos y revisiones temporales.

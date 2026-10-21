@@ -5,6 +5,7 @@ export interface ManagedUser extends AccountUser {
 }
 
 export const accountRoles: { value: AccountRole; label: string; description: string }[] = [
+  { value: "guest", label: "Invitado", description: "Participa en la galería de la ExpoTec, sin permisos de alumno." },
   { value: "student", label: "Alumno", description: "Presenta proyectos e integra equipos." },
   { value: "teacher", label: "Profesor", description: "Revisa y confirma los proyectos que lo incluyan." },
   { value: "loans", label: "Encargado de préstamos", description: "Registra entregas, devoluciones y novedades." },
