@@ -22,6 +22,11 @@ export function createAuthRepository(pool) {
 
   return {
     async ready() { await pool.execute('SELECT 1'); },
+    async getUser(id) {
+      const [rows] = await pool.execute('SELECT id FROM users WHERE id = ? AND active = TRUE', [id]);
+      if (!rows.length) throw new HttpError(404, 'USER_NOT_FOUND', 'No encontramos ese usuario activo.');
+      return { ...await publicUser(pool, id), active: true };
+    },
     async register(input, hash, expiresAt) {
       try {
         return await transaction(pool, async db => {
@@ -98,8 +103,10 @@ export function createAuthRepository(pool) {
         return 0;
       });
     },
-    async listUsers({ limit, offset }) {
-      const [rows] = await pool.query(`SELECT ${userColumns} FROM users ORDER BY created_at, id LIMIT ? OFFSET ?`, [limit, offset]);
+    async listUsers({ limit, offset, search = '' }) {
+      const [rows] = await pool.query(`SELECT ${userColumns} FROM users
+        ${search ? "WHERE LOCATE(?, CONCAT(first_name, ' ', last_name, ' ', email)) > 0" : ''}
+        ORDER BY created_at, id LIMIT ? OFFSET ?`, [...(search ? [search] : []), limit, offset]);
       if (!rows.length) return [];
       const [assigned] = await pool.execute(`SELECT user_id AS userId, role_code AS code FROM user_roles
         WHERE user_id IN (${rows.map(() => '?').join(',')}) ORDER BY role_code`, rows.map(row => row.id));
@@ -107,14 +114,19 @@ export function createAuthRepository(pool) {
       for (const role of assigned) grouped.get(role.userId).push(role.code);
       return rows.map(row => ({ ...row, active: Boolean(row.active), roles: grouped.get(row.id) }));
     },
-    async setRoles(id, roles, actorId) {
+    async setRoles(id, roles, actorId, expectedRoles) {
       return transaction(pool, async db => {
         // Serializa cambios de permisos: no pueden quitarse dos últimos administradores a la vez.
         await db.execute("SELECT code FROM roles WHERE code = 'admin' FOR UPDATE");
-        const [actor] = await db.execute("SELECT user_id FROM user_roles WHERE user_id = ? AND role_code = 'admin'", [actorId]);
+        const [actor] = await db.execute("SELECT ur.user_id FROM user_roles ur JOIN users u ON u.id = ur.user_id WHERE ur.user_id = ? AND ur.role_code = 'admin' AND u.active = TRUE", [actorId]);
         if (!actor.length) throw new HttpError(403, 'FORBIDDEN', 'Necesitás permiso de administrador.');
         const [users] = await db.execute('SELECT id FROM users WHERE id = ? AND active = TRUE FOR UPDATE', [id]);
         if (!users.length) throw new HttpError(404, 'USER_NOT_FOUND', 'No encontramos ese usuario.');
+        if (expectedRoles !== undefined) {
+          const [current] = await db.execute('SELECT role_code AS code FROM user_roles WHERE user_id = ? ORDER BY role_code', [id]);
+          if (current.map(row => row.code).sort().join(',') !== [...expectedRoles].sort().join(','))
+            throw new HttpError(409, 'ROLES_CHANGED', 'Otra persona modificó los permisos. Conservá tu selección y recargá la cuenta antes de guardar.');
+        }
         const [admins] = await db.execute("SELECT ur.user_id FROM user_roles ur JOIN users u ON u.id = ur.user_id WHERE ur.role_code = 'admin' AND u.active = TRUE");
         if (!roles.includes('admin') && admins.length === 1 && admins[0].user_id === id)
           throw new HttpError(409, 'LAST_ADMIN', 'Debe quedar al menos un administrador activo.');

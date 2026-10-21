@@ -164,6 +164,12 @@ En desarrollo web, copiar `frontend/native/.env.example` a `.env.local` únicame
 
 Para probar una exportación local, iniciar el backend y ejecutar `npm run preview`: su servidor reenvía `/api` al puerto 3001. `API_PROXY_URL` permite cambiar ese destino. La vista previa y la API deben usar un origen incluido en `CORS_ORIGINS`.
 
+## Usuarios y permisos — hito 7H
+
+Desde **Mi cuenta → Usuarios y permisos**, administración busca cuentas por nombre o correo y carga más resultados. **Editar permisos** permite combinar alumno, profesor, préstamos y administrador. **Revisar cambios** muestra la cuenta y los permisos elegidos antes de confirmar. El servidor protege al último administrador y rechaza una edición si cambiaron los permisos mientras se preparaba. Ante conflicto, se conserva la selección y se puede **Descartar selección y recargar cuenta**, con confirmación. Los cambios rigen en la próxima operación de la cuenta con el servidor. Invitados y cuentas sin administración no pueden consultar este listado.
+
+Este hito no necesita nuevas variables ni migraciones. `npm run test:users`, en backend, comprueba la integración sobre una base exclusiva de pruebas. Recuperación, archivos y accesos sociales continúan pendientes de sus servicios externos.
+
 ## Entrega final pendiente
 
 Almacenamiento de archivos, tres proveedores sociales, recuperación de contraseña, pruebas completas contra los servicios reales, manual final en APA y APK probado. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).

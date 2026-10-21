@@ -30,6 +30,7 @@ import InventoryPage from "./pages/InventoryPage";
 import GalleryPage from "./pages/GalleryPage";
 import PresentationPage from "./pages/PresentationPage";
 import AccountPage from "./pages/AccountPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
 import SharedSpacesPage from "./pages/SharedSpacesPage";
 import SharedProjectsPage from "./pages/SharedProjectsPage";
 import SharedProjectPage from "./pages/SharedProjectPage";
@@ -44,6 +45,7 @@ type RootRoutes = {
   Form: { projectId?: string } | undefined;
   Presentation: undefined;
   Account: undefined;
+  AdminUsers: undefined;
   SharedSpaces: undefined;
   SharedProjects: undefined;
   SharedProject: { projectId: string; privateView?: boolean };
@@ -303,6 +305,7 @@ function AppShell() {
           setRemoteOpen(
             [
               "Account",
+              "AdminUsers",
               "SharedSpaces",
               "SharedProjects",
               "SharedProject",
@@ -317,6 +320,7 @@ function AppShell() {
           setRemoteOpen(
             [
               "Account",
+              "AdminUsers",
               "SharedSpaces",
               "SharedProjects",
               "SharedProject",
@@ -416,6 +420,7 @@ function AppShell() {
           <Stack.Screen name="Account" options={{ title: "Mi cuenta" }}>
             {({ navigation }) => (
               <AccountPage
+                onUsers={() => navigation.navigate("AdminUsers")}
                 onDemo={() => navigation.navigate("Home")}
                 onSpaces={() => navigation.popTo("SharedSpaces")}
                 onProjects={() => navigation.popTo("SharedProjects")}
@@ -423,6 +428,9 @@ function AppShell() {
                 onInventory={() => navigation.navigate("SharedInventory")}
               />
             )}
+          </Stack.Screen>
+          <Stack.Screen name="AdminUsers" options={{ title: "Usuarios y permisos" }}>
+            {({ navigation }) => <AdminUsersPage onAccount={() => navigation.popTo("Account")} />}
           </Stack.Screen>
           <Stack.Screen name="Detail" options={{ title: "Proyecto" }}>
             {({ route, navigation }) => (

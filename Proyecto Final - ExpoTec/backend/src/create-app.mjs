@@ -45,7 +45,7 @@ export function createApp(repository, config, logger = console, app = express(),
   });
   const service = createAuthService(repository, config);
   app.use('/api/auth', authRoutes(repository, service, config));
-  app.use('/api/admin', adminRoutes(repository, service));
+  app.use('/api/admin', adminRoutes(repository, service, config));
   if (spacesRepository) app.use('/api/spaces', spacesRoutes(spacesRepository, repository, service, config));
   if (projectsRepository) app.use('/api/projects', projectsRoutes(projectsRepository, repository, service, config));
   if (inventoryRepository) app.use('/api/inventory', inventoryRoutes(inventoryRepository, repository, service, config));

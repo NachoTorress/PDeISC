@@ -161,3 +161,13 @@ La vista de teléfono se comprobó en una ventana local de contenido de 390 × 8
 El archivo `docs/diagramas/sistema-expotec.drawio` documenta arquitectura, proyectos, préstamos y TV; incluye referencias al código, distinción de Android pendiente y vistas PNG/SVG generadas localmente. Su validación XML no reemplaza las pruebas del sistema.
 
 Fuentes técnicas: [Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen) para activación mediante un gesto del usuario y [video de Expo](https://docs.expo.dev/versions/latest/sdk/video/) para la base nativa. La web de TV usa un elemento de video con promesa de reproducción controlada; no carga reproductores externos embebidos.
+
+## Usuarios y permisos — hito 7H (21/10/2026)
+
+Mi cuenta incluye Usuarios y permisos únicamente para administradores reales. Se agregan POST `/api/admin/users/:id/query` y `/api/admin/users/:id/roles/save`; el listado existente admite `search`. No se requieren migraciones, variables nuevas ni proveedores externos. Publicar la API antes o junto con la web; los clientes anteriores conservan sus rutas.
+
+Comprobaciones: 35 pruebas de backend, 71 de frontend, tipos, lint y exportación web. `npm run test:users` pasó contra TiDB en la base exclusiva de pruebas: búsqueda literal, páginas, permisos, privacidad, cambios visibles en sesiones ya abiertas y dos ediciones simultáneas con un único guardado correcto. La protección del último administrador y del actor que pierde permisos se verifica también en las pruebas del repositorio.
+
+En navegador se comprobaron ingreso con cuenta ficticia, búsqueda por correo, asignación de profesor, revisión y confirmación, estado guardado, error de conflicto conservando la selección, descarte y recarga con confirmación, bloqueo de selección vacía y protección al volver atrás. La vista de 390 × 844 no desborda horizontalmente. Las cuentas de la comprobación son temporales en la base de pruebas; no se modifican permisos de cuentas reales. La prueba web no sustituye la comprobación en Android, que permanece postergada.
+
+Después de publicar, verificar que web y API correspondan al mismo commit, que POST `/api/health/ready` responda 200 con base conectada y que las tres rutas administrativas den 401 sin sesión. Archivos, recuperación y Google/Discord/GitHub continúan pendientes de configuración y comprobación reales.

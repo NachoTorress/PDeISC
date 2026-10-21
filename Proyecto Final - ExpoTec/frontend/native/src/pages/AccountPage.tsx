@@ -34,12 +34,14 @@ export default function AccountPage({
   onProjects,
   onInventory,
   onLoans,
+  onUsers,
 }: {
   onDemo: () => void;
   onSpaces: () => void;
   onProjects: () => void;
   onInventory: () => void;
   onLoans: () => void;
+  onUsers: () => void;
 }) {
   const { colors } = useTheme();
   const { user, ready, error: sessionError, client, retry } = useAuth();
@@ -335,6 +337,9 @@ export default function AccountPage({
           </Card>
         )}
         <Button title="Ver proyectos" icon="projects" onPress={onProjects} />
+        {ready && user?.roles.includes("admin") && (
+          <Button title="Usuarios y permisos" onPress={onUsers} />
+        )}
         {user?.roles.some((role) => role === "admin" || role === "loans") && (
           <Button
             title="Ver préstamos compartidos"

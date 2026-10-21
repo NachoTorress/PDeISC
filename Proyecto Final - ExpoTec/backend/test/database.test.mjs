@@ -58,6 +58,13 @@ test('configuración exige secretos, CORS exacto y TLS en producción', () => {
   assert.throws(() => readDatabaseConfig({ ...env, DB_POOL_LIMIT: '0' }), /DB_POOL_LIMIT/);
 });
 
+test('un borrador de permisos desactualizado revierte sin borrar asignaciones', async () => {
+  const pool = scriptedPool([[{ code: 'admin' }], [{ user_id: 'actor' }], [{ id: 'target' }], [{ code: 'student' }, { code: 'teacher' }]]);
+  await assert.rejects(createAuthRepository(pool).setRoles('target', ['loans'], 'actor', ['student']), error => error.code === 'ROLES_CHANGED');
+  assert.ok(!pool.events.some(event => event.startsWith('DELETE')));
+  assert.deepEqual(pool.events.slice(-2), ['rollback', 'release']);
+});
+
 test('Vercel admite el pool y registra el cierre de conexiones ociosas sin conectarse', async () => {
   const pool = createDatabase({ VERCEL: '1', DB_HOST: 'example.tidbcloud.com', DB_USER: 'prefix.user', DB_NAME: 'expotec' });
   assert.ok(pool.pool.listenerCount('release') > 0);

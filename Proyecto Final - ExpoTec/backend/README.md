@@ -201,7 +201,9 @@ Las consultas de datos también utilizan POST, conservando la restricción regis
 | POST `/api/auth/refresh` | JWT de renovación, limitado | `refreshToken` | 200: usuario y nuevo par de tokens; 401: token vencido, usado o revocado |
 | POST `/api/auth/logout` | Token de renovación, limitado | `refreshToken` | 204: cierre idempotente de esa sesión |
 | POST `/api/auth/session` | Bearer JWT válido | `{}` | 200: `{ "user": ... }`; 401: sesión inválida |
-| POST `/api/admin/users/query` | Administrador | `limit` opcional (1–100, default 25), `offset` opcional (0–100000, default 0) | 200: `{ "users": [...] }` |
+| POST `/api/admin/users/query` | Administrador | `limit` opcional (1–100, default 25), `offset` opcional (0–100000, default 0), `search` opcional (hasta 100 caracteres, nombre o correo) | 200: `{ "users": [...] }` |
+| POST `/api/admin/users/:id/query` | Administrador | `{}` | 200: `{ user }` activo; 404: inexistente o inactivo |
+| POST `/api/admin/users/:id/roles/save` | Administrador activo, 60 intentos cada 15 minutos por actor | `{ roles, expectedRoles }` | 200: `{ user }`; 409: `ROLES_CHANGED` o `LAST_ADMIN`; 404: inexistente o inactivo |
 | PATCH `/api/admin/users/:id/roles` | Administrador | `roles`: lista sin duplicados de `student`, `teacher`, `loans`, `admin` | 200: usuario actualizado; 404: cuenta inexistente; 409: último administrador |
 
 Los campos no listados se rechazan. El identificador del usuario es UUID v4. La cuenta nueva siempre recibe `student`; no acepta `role`, `roles` ni `active` desde el registro. Una cuenta puede acumular permisos, por ejemplo profesor y encargado de préstamos, sin concedérselos por sí misma.
@@ -281,3 +283,11 @@ API publicada el 14/10/2026 en `https://expotec-api-gn19.vercel.app`, con base `
 Pendiente: proveedores sociales, recuperación y verificación del correo. Registro e ingreso con correo no implican verificación de su titularidad. La API no guarda imágenes, videos ni archivos en el disco del hosting; la solución de archivos aún debe definirse.
 
 La configuración de despliegue está en [docs/DESPLIEGUE.md](../docs/DESPLIEGUE.md). Este hito no completa toda la etapa 7 ni habilita el uso con datos reales de la escuela.
+
+## Usuarios y permisos — hito 7H
+
+La aplicación utiliza POST `roles/save`. `roles` exige al menos un permiso válido y sin duplicados. `expectedRoles` es obligatorio, admite vacío para cuentas históricas sin permisos y contiene el conjunto leído al abrir el editor. La comparación se realiza dentro de la misma transacción que reemplaza las asignaciones, bajo el bloqueo compartido del rol administrador. Un conflicto no escribe asignaciones parciales. La ruta PATCH histórica se conserva sin comparación de borrador; los clientes nuevos deben usar POST.
+
+La búsqueda usa parámetros y coincidencia literal sobre nombre, apellido y correo; `%` y `_` no son comodines. Orden estable por fecha de alta e identificador; la paginación por offset consulta el estado de cada petición, no una instantánea entre páginas. El listado incluye actividad y permisos, nunca hashes ni tokens. El detalle solo admite cuentas activas. Solo administradores autenticados pueden consultar estos datos.
+
+`npm run test:users` usa exclusivamente `TEST_DB_NAME=expotec_test_*`, diferente de producción. Cubre búsqueda, páginas, privacidad, rechazo a alumnos, cambios visibles en sesiones existentes, concurrencia, conflicto y consulta por cuenta; limpia solo sus cuentas temporales. No necesita nuevas tablas, variables ni dependencias.

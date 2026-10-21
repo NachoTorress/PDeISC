@@ -17,6 +17,7 @@
     "admin:grant": "node --env-file-if-exists=.env scripts/grant-admin.mjs",
     "test:database": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/database.integration.mjs",
     "test:spaces": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/spaces.integration.mjs",
+    "test:users": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/admin-users.integration.mjs",
     "test:projects": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/projects.integration.mjs",
     "test:inventory": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/inventory.integration.mjs",
     "test:loans": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/loans.integration.mjs",

@@ -389,10 +389,12 @@ export function CheckRow({
   label,
   checked,
   onChange,
+  disabled = false,
 }: {
   label: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
+  disabled?: boolean;
 }) {
   const { colors } = useTheme();
   return (
@@ -400,7 +402,8 @@ export function CheckRow({
       accessibilityRole="checkbox"
       aria-checked={checked}
       accessibilityLabel={label}
-      accessibilityState={{ checked }}
+      accessibilityState={{ checked, disabled }}
+      disabled={disabled}
       onPress={() => onChange(!checked)}
       style={styles.checkRow}
     >

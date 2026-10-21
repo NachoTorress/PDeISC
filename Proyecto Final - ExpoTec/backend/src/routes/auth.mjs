@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { credentials, refreshToken, objectBody, pagination, userId, roleList } from '../validators/auth.mjs';
+import { credentials, refreshToken, objectBody, usersQuery, userId, roleList, rolesChange } from '../validators/auth.mjs';
 import { requireSession, requireAdmin, rateLimit } from '../middleware/auth.mjs';
 import { HttpError } from '../lib/errors.mjs';
 
@@ -69,12 +69,22 @@ export function authRoutes(repository, service, config) {
   return router;
 }
 
-export function adminRoutes(repository, service) {
+export function adminRoutes(repository, service, config) {
   const router = Router();
   router.use(requireSession(service), requireAdmin);
   router.post('/users/query', async (req, res) => {
-    res.json({ users: await repository.listUsers(pagination(req.body)) });
+    res.json({ users: await repository.listUsers(usersQuery(req.body)) });
   });
+  router.post('/users/:id/query', async (req, res) => {
+    objectBody(req.body, []);
+    res.json({ user: await repository.getUser(userId(req.params.id)) });
+  });
+  router.post('/users/:id/roles/save',
+    rateLimit(repository, config, { scope: 'admin-roles', limit: 60, seconds: 900, byUser: true }),
+    async (req, res) => {
+      const { roles, expectedRoles } = rolesChange(req.body);
+      res.json({ user: await repository.setRoles(userId(req.params.id), roles, req.auth.user.id, expectedRoles) });
+    });
   router.patch('/users/:id/roles', async (req, res) => {
     res.json({ user: await repository.setRoles(userId(req.params.id), roleList(req.body), req.auth.user.id) });
   });

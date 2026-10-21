@@ -34,4 +34,6 @@ Consigna aportada por el usuario. No hay plano real, imágenes de proyectos, fec
 
 ## Open Decisions
 
-Distribución real de la escuela, fechas, proveedores sociales, almacenamiento de archivos, criterios de revisión eléctrica y formatos admitidos para videos. Los proyectos compartidos vinculan hasta 12 cuentas de alumnos y 5 profesores habilitados; la demostración local conserva participantes ficticios por nombre. Por ahora las imágenes y videos compartidos usan enlaces HTTPS a contenido ya alojado. No inventar capacidades eléctricas ni presentar el prototipo como sistema terminado.
+Distribución real de la escuela, fechas, configuración de Google/Discord/GitHub, almacenamiento de archivos, criterios de revisión eléctrica y formatos admitidos para videos. Los proyectos compartidos vinculan hasta 12 cuentas de alumnos y 5 profesores habilitados; la demostración local conserva participantes ficticios por nombre. Por ahora las imágenes y videos compartidos usan enlaces HTTPS a contenido ya alojado. No inventar capacidades eléctricas ni presentar el prototipo como sistema terminado.
+
+El hito 7H del 21/10/2026 agrega la gestión administrativa de usuarios desde Mi cuenta: búsqueda, páginas, selección de varios permisos y confirmación. La comparación transaccional de los permisos leídos impide sobrescrituras simultáneas; el servidor protege al último administrador activo. No requiere nuevos servicios ni modifica contraseñas.

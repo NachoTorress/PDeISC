@@ -63,3 +63,26 @@ export function pagination(body) {
     throw new HttpError(400, 'VALIDATION_ERROR', 'limit debe estar entre 1 y 100; offset entre 0 y 100000.');
   return { limit, offset };
 }
+
+export function usersQuery(body) {
+  objectBody(body, ['limit', 'offset', 'search']);
+  const { limit, offset } = pagination({
+    ...(body.limit === undefined ? {} : { limit: body.limit }),
+    ...(body.offset === undefined ? {} : { offset: body.offset }),
+  });
+  const search = body.search === undefined ? '' : body.search;
+  if (typeof search !== 'string' || search.length > 100)
+    throw new HttpError(400, 'VALIDATION_ERROR', 'La búsqueda admite hasta 100 caracteres.');
+  return { limit, offset, search: search.trim().normalize('NFC') };
+}
+
+export function rolesChange(body) {
+  objectBody(body, ['roles', 'expectedRoles']);
+  const next = roleList({ roles: body.roles });
+  // Una cuenta histórica puede no tener permisos; el nuevo conjunto nunca puede quedar vacío.
+  const expected = body.expectedRoles;
+  if (!Array.isArray(expected) || expected.length > roles.length ||
+      expected.some(role => !roles.includes(role)) || new Set(expected).size !== expected.length)
+    throw new HttpError(400, 'VALIDATION_ERROR', 'Recargá los permisos actuales antes de guardar.');
+  return { roles: next, expectedRoles: expected };
+}
