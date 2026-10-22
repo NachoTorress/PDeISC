@@ -2,7 +2,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
 import type { NavigationAction } from "@react-navigation/native";
-import { Button, Card, Choice, Field, Heading, InlineConfirm } from "./ui";
+import {
+  Button,
+  Card,
+  Choice,
+  Field,
+  Heading,
+  InlineConfirm,
+  RefreshButton,
+} from "./ui";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { lendingErrors } from "../lib/sharedLoans";
@@ -158,9 +166,9 @@ export default function SharedLendingForm({
           {error}
         </Text>
       )}
-      <Button
-        title="Actualizar reservas para entregar"
-        variant="quiet"
+      <RefreshButton
+        label="Actualizar reservas para entregar"
+        loading={loading}
         disabled={loading || busy}
         onPress={() => {
           void load();

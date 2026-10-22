@@ -11,6 +11,7 @@ import {
   Heading,
   InlineConfirm,
   Screen,
+  RefreshButton,
 } from "../components/ui";
 import SharedPeoplePicker from "../components/SharedPeoplePicker";
 import SharedResourcePicker from "../components/SharedResourcePicker";
@@ -423,9 +424,9 @@ export default function SharedProposalPage({
                 title="Puesto solicitado"
                 subtitle="La solicitud queda pendiente hasta que un profesor responsable la confirme."
               />
-              <Button
-                title="Actualizar puestos"
-                variant="quiet"
+              <RefreshButton
+                label="Actualizar puestos"
+                loading={spaceLoading}
                 disabled={spaceLoading || busy}
                 onPress={() => {
                   setSpaceLoading(true);

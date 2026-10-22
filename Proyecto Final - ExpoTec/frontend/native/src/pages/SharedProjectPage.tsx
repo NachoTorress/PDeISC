@@ -8,6 +8,7 @@ import {
   Heading,
   InlineConfirm,
   Screen,
+  RefreshButton,
 } from "../components/ui";
 import ProjectVideo from "../components/ProjectVideo";
 import GalleryImage from "../components/GalleryImage";
@@ -160,9 +161,9 @@ export default function SharedProjectPage({
             variant="secondary"
             onPress={onBack}
           />
-          <Button
-            title="Actualizar ficha"
-            variant="quiet"
+          <RefreshButton
+            label="Actualizar ficha"
+            loading={loading}
             disabled={loading || busy}
             onPress={() => {
               setNotice("");

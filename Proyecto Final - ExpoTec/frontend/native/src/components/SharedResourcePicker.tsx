@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
-import { Button, Card, Field, Heading, InlineConfirm } from "./ui";
+import {
+  Button,
+  Card,
+  Field,
+  Heading,
+  InlineConfirm,
+  RefreshButton,
+} from "./ui";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { integerQuantity } from "../lib/sharedInventory";
@@ -79,9 +86,9 @@ export default function SharedResourcePicker({
         Las cantidades disponibles son una referencia: otras propuestas pueden
         confirmarse antes. La reserva se comprueba al confirmar.
       </Text>
-      <Button
-        title={loading ? "Actualizando elementos…" : "Actualizar elementos"}
-        variant="quiet"
+      <RefreshButton
+        label="Actualizar elementos"
+        loading={loading}
         disabled={loading || disabled}
         onPress={() => {
           void load();

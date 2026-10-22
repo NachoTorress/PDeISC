@@ -14,6 +14,7 @@ import {
   Heading,
   InlineConfirm,
   Screen,
+  RefreshButton,
 } from "../components/ui";
 import NativeFloorplan from "../components/NativeFloorplan";
 import NativeSpaceEditor from "../components/NativeSpaceEditor";
@@ -235,9 +236,9 @@ export default function SharedSpacesPage({
         subtitle="Planos compartidos de la exposición"
       />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        <Button
-          title={loading ? "Actualizando…" : "Actualizar espacios"}
-          variant="secondary"
+        <RefreshButton
+          label="Actualizar espacios"
+          loading={loading}
           disabled={busy || loading || !!editing}
           onPress={() => {
             setConfirm(null);

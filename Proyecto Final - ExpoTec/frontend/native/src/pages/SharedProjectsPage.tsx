@@ -2,7 +2,15 @@ import { useCallback, useRef, useState } from "react";
 import ContentGrid from "../components/ContentGrid";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { Button, Card, Chip, Choice, Heading, Screen } from "../components/ui";
+import {
+  Button,
+  Card,
+  Chip,
+  Choice,
+  Heading,
+  Screen,
+  RefreshButton,
+} from "../components/ui";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { formatDate } from "../lib/format";
@@ -95,9 +103,9 @@ export default function SharedProjectsPage({
         {ready && user?.roles.includes("student") && (
           <Button title="Presentar proyecto" icon="plus" onPress={onCreate} />
         )}
-        <Button
-          title="Actualizar proyectos"
-          variant="quiet"
+        <RefreshButton
+          label="Actualizar proyectos"
+          loading={loading}
           disabled={loading}
           onPress={() => {
             void load();

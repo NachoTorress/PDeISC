@@ -9,6 +9,7 @@ import {
   Field,
   Heading,
   Screen,
+  RefreshButton,
 } from "../components/ui";
 import SharedLendingForm from "../components/SharedLendingForm";
 import SharedReturnForm from "../components/SharedReturnForm";
@@ -171,9 +172,9 @@ export default function SharedLoansPage({
         subtitle="Entregas, devoluciones parciales y novedades de las tres jornadas."
       />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        <Button
-          title="Actualizar préstamos"
-          variant="quiet"
+        <RefreshButton
+          label="Actualizar préstamos"
+          loading={loading}
           disabled={busy || loading || editing}
           onPress={() => {
             setHistory(null);

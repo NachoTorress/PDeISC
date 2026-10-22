@@ -1,7 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import { Button, Card, Choice, Heading, Screen } from "../components/ui";
+import {
+  Button,
+  Card,
+  Choice,
+  Heading,
+  Screen,
+  RefreshButton,
+} from "../components/ui";
 import { SharedPresentationCard } from "../components/SharedPresentationCard";
 import { SharedPresentationVideo } from "../components/SharedPresentationVideo";
 import { useAuth } from "../contexts/AuthContext";
@@ -161,9 +168,9 @@ export default function SharedPresentationPage({
               : 0}{" "}
             / {projects.length}
           </Text>
-          <Button
-            title={loading ? "Actualizando muestra…" : "Actualizar muestra"}
-            variant="secondary"
+          <RefreshButton
+            label="Actualizar muestra"
+            loading={loading}
             disabled={loading}
             onPress={() => {
               void load();

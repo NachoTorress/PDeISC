@@ -9,6 +9,7 @@ import {
   Heading,
   InlineConfirm,
   Screen,
+  RefreshButton,
 } from "../components/ui";
 import SharedResourceForm from "../components/SharedResourceForm";
 import ContentGrid from "../components/ContentGrid";
@@ -145,9 +146,9 @@ export default function SharedInventoryPage({
         subtitle="Existencias y reservas compartidas de elementos para los proyectos."
       />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        <Button
-          title="Actualizar inventario"
-          variant="quiet"
+        <RefreshButton
+          label="Actualizar inventario"
+          loading={loading}
           disabled={loading || busy || !!editing}
           onPress={() => {
             setHistory(null);

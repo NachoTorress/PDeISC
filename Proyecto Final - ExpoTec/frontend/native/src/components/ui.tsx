@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -96,6 +97,55 @@ export function Button({
         {title}
       </Text>
       {endIcon && <Icon name={endIcon} color={ink} size={18} />}
+    </Pressable>
+  );
+}
+
+export function RefreshButton({
+  label,
+  onPress,
+  loading = false,
+  disabled = false,
+}: {
+  label: string;
+  onPress: () => void;
+  loading?: boolean;
+  disabled?: boolean;
+}) {
+  const { colors } = useTheme();
+  const [focused, setFocused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const unavailable = disabled || loading;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ disabled: unavailable, busy: loading }}
+      disabled={unavailable}
+      onPress={onPress}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      style={({ pressed }) => ({
+        width: 44,
+        height: 44,
+        alignSelf: "flex-start",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 22,
+        borderWidth: 2,
+        borderColor: focused ? colors.primary : "transparent",
+        backgroundColor:
+          pressed || hovered ? colors.surfaceVariant : "transparent",
+        opacity: unavailable ? 0.45 : 1,
+      })}
+    >
+      {loading ? (
+        <ActivityIndicator size="small" color={colors.text} />
+      ) : (
+        <Icon name="refresh" color={colors.text} size={22} />
+      )}
     </Pressable>
   );
 }

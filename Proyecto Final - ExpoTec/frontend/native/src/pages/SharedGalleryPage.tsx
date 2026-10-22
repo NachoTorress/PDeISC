@@ -1,7 +1,15 @@
 import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { Button, Card, Chip, Choice, Heading, Screen } from "../components/ui";
+import {
+  Button,
+  Card,
+  Chip,
+  Choice,
+  Heading,
+  Screen,
+  RefreshButton,
+} from "../components/ui";
 import GalleryImage from "../components/GalleryImage";
 import GallerySubmissionForm from "../components/GallerySubmissionForm";
 import GalleryReviewForm from "../components/GalleryReviewForm";
@@ -173,9 +181,9 @@ export default function SharedGalleryPage({
                 else onAccount();
               }}
             />
-            <Button
-              title={loading ? "Actualizando…" : "Actualizar galería"}
-              variant="secondary"
+            <RefreshButton
+              label="Actualizar galería"
+              loading={loading}
               disabled={loading}
               onPress={() => void load()}
             />
