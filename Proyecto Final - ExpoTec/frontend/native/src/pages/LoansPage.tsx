@@ -15,6 +15,7 @@ import { useDemo } from "../hooks/useDemo";
 import { formatDate } from "../lib/format";
 import { resourceOut } from "../lib/model";
 import { LendingForm, ReturnForm } from "./LoanForms";
+import ContentGrid from "../components/ContentGrid";
 
 export default function LoansPage() {
   const { state, role } = useDemo();
@@ -115,70 +116,30 @@ export default function LoansPage() {
             )}
           </Card>
         ) : (
-          loans.map((loan) => {
-            const project = state.projects.find(
-              (item) => item.id === loan.projectId,
-            );
-            const resource = state.resources.find(
-              (item) => item.id === loan.resourceId,
-            );
-            const space = state.spaces.find(
-              (item) => item.id === project?.spaceId,
-            );
-            const remaining = loan.quantity - loan.returned;
-            const completed = remaining === 0;
-            return (
-              <Card key={loan.id}>
-                <Text
-                  style={{
-                    color: colors.text,
-                    fontSize: 18,
-                    fontWeight: "600",
-                  }}
-                >
-                  {project?.name ?? "Proyecto no disponible"}
-                </Text>
-                <Text
-                  style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}
-                >
-                  {space?.name}
-                  {project?.furnitureId ? ` · ${project.furnitureId}` : ""}
-                </Text>
-                <Text
-                  style={{ color: colors.text, fontSize: 15, lineHeight: 22 }}
-                >
-                  {resource?.name ?? "Elemento no disponible"}
-                </Text>
-                <View
-                  style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}
-                >
+          <ContentGrid>
+            {loans.map((loan) => {
+              const project = state.projects.find(
+                (item) => item.id === loan.projectId,
+              );
+              const resource = state.resources.find(
+                (item) => item.id === loan.resourceId,
+              );
+              const space = state.spaces.find(
+                (item) => item.id === project?.spaceId,
+              );
+              const remaining = loan.quantity - loan.returned;
+              const completed = remaining === 0;
+              return (
+                <Card key={loan.id}>
                   <Text
-                    style={{ color: colors.text, fontSize: 15, lineHeight: 22 }}
+                    style={{
+                      color: colors.text,
+                      fontSize: 18,
+                      fontWeight: "600",
+                    }}
                   >
-                    Entregados: {loan.quantity}
+                    {project?.name ?? "Proyecto no disponible"}
                   </Text>
-                  <Text
-                    style={{ color: colors.text, fontSize: 15, lineHeight: 22 }}
-                  >
-                    Por devolver: {remaining}
-                  </Text>
-                </View>
-                <Chip
-                  tone={completed ? "success" : "warning"}
-                  label={
-                    completed
-                      ? "Devuelto"
-                      : loan.returned > 0
-                        ? "Devolución parcial"
-                        : "En préstamo"
-                  }
-                />
-                <Text
-                  style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}
-                >
-                  Creado: {formatDate(loan.createdAt)}
-                </Text>
-                {!!loan.notes && (
                   <Text
                     style={{
                       color: colors.muted,
@@ -186,23 +147,81 @@ export default function LoansPage() {
                       lineHeight: 20,
                     }}
                   >
-                    Observación: {loan.notes}
+                    {space?.name}
+                    {project?.furnitureId ? ` · ${project.furnitureId}` : ""}
                   </Text>
-                )}
-                {canManage && !completed && returnId !== loan.id && (
-                  <Button
-                    title="Devolver"
-                    icon="arrowLeft"
-                    variant="secondary"
-                    onPress={() => setReturnId(loan.id)}
+                  <Text
+                    style={{ color: colors.text, fontSize: 15, lineHeight: 22 }}
+                  >
+                    {resource?.name ?? "Elemento no disponible"}
+                  </Text>
+                  <View
+                    style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}
+                  >
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: 15,
+                        lineHeight: 22,
+                      }}
+                    >
+                      Entregados: {loan.quantity}
+                    </Text>
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: 15,
+                        lineHeight: 22,
+                      }}
+                    >
+                      Por devolver: {remaining}
+                    </Text>
+                  </View>
+                  <Chip
+                    tone={completed ? "success" : "warning"}
+                    label={
+                      completed
+                        ? "Devuelto"
+                        : loan.returned > 0
+                          ? "Devolución parcial"
+                          : "En préstamo"
+                    }
                   />
-                )}
-                {canManage && !completed && returnId === loan.id && (
-                  <ReturnForm loan={loan} onClose={() => setReturnId(null)} />
-                )}
-              </Card>
-            );
-          })
+                  <Text
+                    style={{
+                      color: colors.muted,
+                      fontSize: 14,
+                      lineHeight: 20,
+                    }}
+                  >
+                    Creado: {formatDate(loan.createdAt)}
+                  </Text>
+                  {!!loan.notes && (
+                    <Text
+                      style={{
+                        color: colors.muted,
+                        fontSize: 14,
+                        lineHeight: 20,
+                      }}
+                    >
+                      Observación: {loan.notes}
+                    </Text>
+                  )}
+                  {canManage && !completed && returnId !== loan.id && (
+                    <Button
+                      title="Devolver"
+                      icon="arrowLeft"
+                      variant="secondary"
+                      onPress={() => setReturnId(loan.id)}
+                    />
+                  )}
+                  {canManage && !completed && returnId === loan.id && (
+                    <ReturnForm loan={loan} onClose={() => setReturnId(null)} />
+                  )}
+                </Card>
+              );
+            })}
+          </ContentGrid>
         )}
       </Section>
     </Screen>

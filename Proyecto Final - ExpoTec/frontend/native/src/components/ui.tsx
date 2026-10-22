@@ -34,6 +34,7 @@ export function Button({
   style,
   icon,
   endIcon,
+  accessibilityLabel,
 }: {
   title: string;
   onPress: () => void;
@@ -42,6 +43,7 @@ export function Button({
   style?: StyleProp<ViewStyle>;
   icon?: IconName;
   endIcon?: IconName;
+  accessibilityLabel?: string;
 }) {
   const { colors } = useTheme();
   const fill =
@@ -63,6 +65,7 @@ export function Button({
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}

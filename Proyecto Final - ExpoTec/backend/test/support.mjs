@@ -57,6 +57,7 @@ export async function listen(app) {
   await new Promise(resolve => server.once('listening', resolve));
   const base = `http://127.0.0.1:${server.address().port}`;
   return {
+    base,
     close: () => new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve())),
     async request(path, body = {}, accessToken, options = {}) {
       const response = await fetch(`${base}${path}`, {

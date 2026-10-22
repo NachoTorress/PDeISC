@@ -14,6 +14,7 @@ import {
 } from "../components/ui";
 import SharedPeoplePicker from "../components/SharedPeoplePicker";
 import SharedResourcePicker from "../components/SharedResourcePicker";
+import PhotoUploadField from "../components/PhotoUploadField";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { AuthError } from "../lib/authTypes";
@@ -46,7 +47,9 @@ export default function SharedProposalPage({
   const [loading, setLoading] = useState(true);
   const [spaceLoading, setSpaceLoading] = useState(false);
   const [spaceRevision, setSpaceRevision] = useState(0);
-  const [busy, setBusy] = useState(false);
+  const [saving, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const busy = saving || uploading;
   const [error, setError] = useState("");
   const [serverFields, setServerFields] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -61,7 +64,7 @@ export default function SharedProposalPage({
   const loaded = useRef("");
   const working = useRef(false);
   const canSubmit = ready && !!user?.roles.includes("student");
-  usePreventRemove(dirty && !savedId, ({ data }) =>
+  usePreventRemove((dirty || uploading) && !savedId, ({ data }) =>
     setLeaveAction(data.action),
   );
   useEffect(() => {
@@ -180,6 +183,7 @@ export default function SharedProposalPage({
     if (
       !draft ||
       !canSubmit ||
+      busy ||
       working.current ||
       spaceLoading ||
       Object.keys(validation).length
@@ -269,14 +273,13 @@ export default function SharedProposalPage({
                 maxLength={100}
                 error={fieldError("course")}
               />
-              <Field
-                label="Enlace directo a la imagen"
+              <PhotoUploadField
+                purpose="project"
                 value={draft.imageUrl}
-                onChangeText={(value) => change("imageUrl", value)}
-                keyboardType="url"
-                maxLength={2048}
+                onChange={(value) => change("imageUrl", value)}
+                disabled={saving}
+                onBusyChange={setUploading}
                 error={fieldError("imageUrl")}
-                hint="URL HTTPS de una imagen que el equipo pueda compartir públicamente."
               />
               <Field
                 label="Enlace al video (opcional)"

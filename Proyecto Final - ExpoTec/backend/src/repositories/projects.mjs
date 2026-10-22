@@ -3,6 +3,7 @@ import { transaction } from '../config/database.mjs';
 import { HttpError, unauthorized } from '../lib/errors.mjs';
 import { projectResources, checkRequestedResources, replaceResourceRequests, reserveProjectResources, releaseProjectResources } from './inventory.mjs';
 import { assertProjectReturned } from './loan-balances.mjs';
+import { assertOwnedImage } from './uploads.mjs';
 
 const missing = () => new HttpError(404, 'PROJECT_NOT_FOUND', 'No encontramos ese proyecto o no tenés acceso.');
 const forbidden = () => new HttpError(403, 'FORBIDDEN', 'No tenés permiso para realizar esta operación.');
@@ -140,6 +141,7 @@ export function createProjectsRepository(pool) {
       const roles = await actor(db, actorId, true);
       if (!roles.includes('student')) throw forbidden();
       if (!input.memberIds.includes(actorId)) throw new HttpError(400, 'PARTICIPANTS_INVALID', 'La cuenta que presenta el proyecto debe integrar el equipo.');
+      await assertOwnedImage(db, input.imageUrl, actorId, 'project');
       await validatePeople(db, input.memberIds, input.teacherIds, actorId);
       await availableBooth(db, input.boothId);
       await checkRequestedResources(db, input.resources ?? []);
@@ -158,6 +160,7 @@ export function createProjectsRepository(pool) {
       if (!roles.includes('student') || !members.some(person => person.id === actorId)) throw missing();
       version(project, input.version);
       if (!['pending', 'changes'].includes(project.status)) throw new HttpError(409, 'PROJECT_LOCKED', 'Solo se pueden editar propuestas pendientes o con cambios solicitados.');
+      await assertOwnedImage(db, input.imageUrl, actorId, 'project', project.imageUrl);
       await assertProjectReturned(db, id);
       if (!input.memberIds.includes(actorId)) throw new HttpError(400, 'PARTICIPANTS_INVALID', 'La persona que edita debe permanecer en el equipo.');
       await validatePeople(db, input.memberIds, input.teacherIds, project.creatorId);

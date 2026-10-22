@@ -12,8 +12,9 @@ import { inventoryRoutes } from './routes/inventory.mjs';
 import { loansRoutes } from './routes/loans.mjs';
 import { galleryRoutes } from './routes/gallery.mjs';
 import { createSocialService } from './services/social.mjs';
+import { uploadsRoutes } from './routes/uploads.mjs';
 
-export function createApp(repository, config, logger = console, app = express(), spacesRepository, projectsRepository, inventoryRepository, loansRepository, galleryRepository, socialRepository, providerExchange) {
+export function createApp(repository, config, logger = console, app = express(), spacesRepository, projectsRepository, inventoryRepository, loansRepository, galleryRepository, socialRepository, providerExchange, uploadsRepository, uploadStorage) {
   app.disable('x-powered-by');
   // Solo Vercel es el proxy de confianza; en ejecución local no se aceptan IP reenviadas.
   if (config.onVercel) app.set('trust proxy', 1);
@@ -29,7 +30,7 @@ export function createApp(repository, config, logger = console, app = express(),
       callback(new HttpError(403, 'ORIGIN_FORBIDDEN', 'Ese origen no está autorizado.'));
     },
     credentials: true,
-    methods: ['POST', 'PATCH', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Retry-After', 'X-Request-Id'], maxAge: 600,
   }));
@@ -54,6 +55,7 @@ export function createApp(repository, config, logger = console, app = express(),
   if (inventoryRepository) app.use('/api/inventory', inventoryRoutes(inventoryRepository, repository, service, config));
   if (loansRepository) app.use('/api/loans', loansRoutes(loansRepository, repository, service, config));
   if (galleryRepository) app.use('/api/gallery', galleryRoutes(galleryRepository, repository, service, config));
+  if (uploadsRepository) app.use('/api/uploads', uploadsRoutes(uploadsRepository, repository, service, config, uploadStorage));
   app.use((req, res, next) => next(new HttpError(404, 'NOT_FOUND', 'No encontramos esa operación.')));
   app.use((error, req, res, next) => {
     if (res.headersSent) return next(error);

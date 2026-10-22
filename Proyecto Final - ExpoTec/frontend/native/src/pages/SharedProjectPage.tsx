@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Image, Linking, Text, View } from "react-native";
+import { ActivityIndicator, Linking, Text, View } from "react-native";
 import {
   Button,
   Card,
@@ -10,6 +10,7 @@ import {
   Screen,
 } from "../components/ui";
 import ProjectVideo from "../components/ProjectVideo";
+import GalleryImage from "../components/GalleryImage";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { formatDate } from "../lib/format";
@@ -35,7 +36,6 @@ export default function SharedProjectPage({
   const [loadedFor, setLoadedFor] = useState("");
   const [loading, setLoading] = useState(true);
   const [revision, setRevision] = useState(0);
-  const [imageError, setImageError] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [note, setNote] = useState("");
@@ -57,7 +57,6 @@ export default function SharedProjectPage({
     setError("");
     setConfirm(null);
     setNote("");
-    setImageError(false);
     const query = privateView
       ? client.send<{ project: SharedProject }>(
           `/api/projects/${projectId}/query`,
@@ -210,26 +209,12 @@ export default function SharedProjectPage({
                 }
               />
               <Heading title={project.name} subtitle={project.course} />
-              {imageError ? (
-                <Text style={paragraph}>
-                  No pudimos cargar la imagen. Podés volver a intentarlo con
-                  Actualizar ficha.
-                </Text>
-              ) : (
-                <Image
-                  key={`${project.imageUrl}:${revision}`}
-                  source={{ uri: project.imageUrl }}
-                  accessibilityLabel={`Imagen del proyecto ${project.name}`}
-                  resizeMode="contain"
-                  onError={() => setImageError(true)}
-                  style={{
-                    width: "100%",
-                    height: 240,
-                    backgroundColor: colors.surfaceVariant,
-                    borderRadius: 12,
-                  }}
-                />
-              )}
+              <GalleryImage
+                key={`${project.imageUrl}:${revision}`}
+                uri={project.imageUrl}
+                caption={`Imagen del proyecto ${project.name}`}
+                height={240}
+              />
               <Text
                 style={{ color: colors.text, fontSize: 16, lineHeight: 25 }}
               >

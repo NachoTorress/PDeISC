@@ -19,6 +19,7 @@
     "test:spaces": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/spaces.integration.mjs",
     "test:users": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/admin-users.integration.mjs",
     "test:gallery": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/gallery.integration.mjs",
+    "test:uploads": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --env-file-if-exists=.env.uploads --test test/uploads.integration.mjs",
     "test:social": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/social.integration.mjs",
     "test:projects": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/projects.integration.mjs",
     "test:inventory": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/inventory.integration.mjs",
@@ -26,11 +27,13 @@
     "test:presentation": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/presentation.integration.mjs"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.2",
     "@vercel/functions": "3.10.1",
     "cors": "2.8.6",
     "express": "5.3.0",
     "helmet": "8.3.0",
     "jose": "6.2.12",
-    "mysql2": "3.24.6"
+    "mysql2": "3.24.6",
+    "sharp": "^0.35.5"
   }
 }

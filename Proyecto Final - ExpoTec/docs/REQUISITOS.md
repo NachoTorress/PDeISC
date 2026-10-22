@@ -84,7 +84,7 @@ Pendiente: relevamiento real de circuitos, capacidades, equipos y procedimiento 
 - Mostrar un estado recuperable cuando un video no esté disponible o no pueda reproducirse.
 - Respetar las restricciones de reproducción automática del navegador: el inicio con sonido puede necesitar una acción del usuario.
 
-En 7G se usan enlaces HTTPS directos a MP4/WebM, orden estable por identificador y fichas de 8 segundos por defecto (también 15 o 30). El alojamiento y la carga directa de archivos quedan postergados por decisión del 21/10/2026. Un enlace de una plataforma externa no equivale a un archivo reproducible directamente.
+En 7G se usan enlaces HTTPS directos a MP4/WebM, orden estable por identificador y fichas de 8 segundos por defecto (también 15 o 30). Los videos mantienen enlaces directos. Desde el 22/10/2026 se incorpora carga de fotos a almacenamiento privado de Vercel Blob. Un enlace de una plataforma externa no equivale a un archivo reproducible directamente.
 
 ## Autenticación y seguridad
 
@@ -109,7 +109,7 @@ Pedido del usuario del 21/10/2026: incorporar una galería pública de fotos de 
 Implementado el 21/10/2026:
 
 - Cualquier persona puede recorrer las fotos aprobadas sin iniciar sesión.
-- Las cuentas autenticadas pueden enviar una foto mediante enlace HTTPS, con un título o descripción breve. La carga directa de archivos queda postergada por decisión del usuario.
+- Las cuentas autenticadas pueden elegir y subir una foto JPG, PNG o WebP de hasta 10 MB, con un título o descripción breve; el enlace HTTPS se conserva como alternativa. La imagen subida queda privada hasta la aprobación de organización.
 - Incorporar el permiso real de invitado y una opción de registro como invitado, sin concederle automáticamente permisos de alumno. Mantener una sola identidad por correo y la combinación de permisos gestionada por administración.
 - Cada aporte comienza pendiente. Solo administración, como organización de la exposición, puede aprobarlo o rechazarlo. El autor consulta el estado de sus propios aportes.
 - La galería pública muestra únicamente aportes aprobados, con descripción, nombre público del autor y fecha; no muestra correos ni datos privados de cuentas.
@@ -119,7 +119,7 @@ La galería y el registro como invitado están implementados. El servidor admite
 
 ## Decisiones de alcance del 21/10/2026
 
-- Imágenes, videos y demás archivos se mantienen mediante enlaces por ahora. No implementar alojamiento ni carga directa en el alcance inmediato.
+- Por indicación del 22/10/2026, incorporar carga directa de fotos en proyectos y galería, con optimización, validación y almacenamiento privado. Videos y otros documentos mantienen enlaces por ahora.
 - Recuperación de contraseña: envío desde el correo personal del usuario, con configuración postergada para una etapa posterior.
 - Continúan pendientes Google/Discord/GitHub, pruebas finales completas, documentación final y Android. El APK se retoma al final.
 
@@ -129,7 +129,7 @@ Por indicación posterior del usuario, la aplicación pasa a una única base de 
 
 La referencia anterior en React con Vite y Bootstrap queda en `frontend/web/`; no será un segundo cliente activo. La decisión posterior de usar React Native sustituye el uso de Vite, Bootstrap y CSS para esta etapa. Los estilos nativos conservarán los temas claro y oscuro separados.
 
-La aplicación conserva una demostración funcional de proyectos, inventario y préstamos con datos de ejemplo, separada de las pantallas compartidas. El hito 7A incorpora el backend Express de cuentas, sesiones y permisos, junto con las migraciones de autenticación. TiDB y los dos proyectos Vercel están publicados y comprobados. El hito 7B conecta las pantallas de cuentas y la persistencia de sesión. El hito 7C conecta espacios, mobiliario y puestos compartidos, separados de la demostración. El hito 7D conecta proyectos, equipos con cuentas reales, profesores, materias, revisión y confirmación atómica del puesto. El hito 7E conecta inventario, pedidos y reservas de recursos con la confirmación. El hito 7F conecta préstamos, devoluciones parciales, novedades, daños y saldos entre jornadas. El hito 7G conecta la presentación TV pública con los confirmados del servidor. Los proveedores sociales y la recuperación de contraseñas permanecen pendientes; la carga directa de archivos queda postergada. Cambiar el perfil de demostración no equivale a autenticar usuarios.
+La aplicación conserva una demostración funcional de proyectos, inventario y préstamos con datos de ejemplo, separada de las pantallas compartidas. El hito 7A incorpora el backend Express de cuentas, sesiones y permisos, junto con las migraciones de autenticación. TiDB y los dos proyectos Vercel están publicados y comprobados. El hito 7B conecta las pantallas de cuentas y la persistencia de sesión. El hito 7C conecta espacios, mobiliario y puestos compartidos, separados de la demostración. El hito 7D conecta proyectos, equipos con cuentas reales, profesores, materias, revisión y confirmación atómica del puesto. El hito 7E conecta inventario, pedidos y reservas de recursos con la confirmación. El hito 7F conecta préstamos, devoluciones parciales, novedades, daños y saldos entre jornadas. El hito 7G conecta la presentación TV pública con los confirmados del servidor. Los proveedores sociales y la recuperación de contraseñas permanecen pendientes; la carga de fotos se incorpora el 22/10/2026; videos y otros documentos permanecen por enlace. Cambiar el perfil de demostración no equivale a autenticar usuarios.
 
 Decisión posterior del usuario, 14/10/2026: alojar la base relacional en TiDB y desplegar el frontend y el backend como proyectos separados en Vercel. `frontend/native` se exporta para web; `frontend/web` continúa como referencia. Esta decisión ajusta el hosting, conservando MySQL como protocolo y el requisito de normalización relacional. La preparación y los límites actuales se documentan en [DESPLIEGUE.md](DESPLIEGUE.md).
 

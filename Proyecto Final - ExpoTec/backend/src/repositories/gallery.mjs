@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { transaction } from '../config/database.mjs';
 import { HttpError } from '../lib/errors.mjs';
+import { assertOwnedImage } from './uploads.mjs';
 
 const columns = `p.id, p.image_url AS imageUrl, p.caption,
   CONCAT(u.first_name, ' ', u.last_name) AS authorName, p.created_at AS createdAt`;
@@ -35,6 +36,7 @@ export function createGalleryRepository(pool) {
     async submit(input, actorId) {
       return transaction(pool, async db => {
         await member(db, actorId);
+        await assertOwnedImage(db, input.imageUrl, actorId, 'gallery');
         const [pending] = await db.execute("SELECT id FROM gallery_photos WHERE author_id = ? AND status = 'pending' FOR UPDATE", [actorId]);
         if (pending.length >= 20) throw new HttpError(409, 'GALLERY_PENDING_LIMIT', 'Ya tenés 20 fotos pendientes. Esperá a que la organización las revise.');
         const id = randomUUID();

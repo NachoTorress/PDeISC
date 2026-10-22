@@ -12,6 +12,7 @@ import {
 } from "../components/ui";
 import SharedLendingForm from "../components/SharedLendingForm";
 import SharedReturnForm from "../components/SharedReturnForm";
+import ContentGrid from "../components/ContentGrid";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { formatDate } from "../lib/format";
@@ -190,25 +191,27 @@ export default function SharedLoansPage({
           }}
         />
       </View>
-      <Choice
-        label="Jornada para entregas"
-        value={day}
-        disabled={busy || editing}
-        options={[1, 2, 3].map((value) => ({
-          value: String(value),
-          label: `Jornada ${value}`,
-        }))}
-        onChange={(value) => {
-          setDay(value);
-          setHistory(null);
-          setNotice("");
-        }}
-      />
-      <Text style={paragraph}>
-        La jornada identifica la entrega; la fecha y hora se registran al
-        guardarla. Cambiar de jornada no devuelve elementos ni libera sus
-        reservas.
-      </Text>
+      <ContentGrid maxColumns={2} minItemWidth={360}>
+        <Choice
+          label="Jornada para entregas"
+          value={day}
+          disabled={busy || editing}
+          options={[1, 2, 3].map((value) => ({
+            value: String(value),
+            label: `Jornada ${value}`,
+          }))}
+          onChange={(value) => {
+            setDay(value);
+            setHistory(null);
+            setNotice("");
+          }}
+        />
+        <Text key="day-help" style={paragraph}>
+          La jornada identifica la entrega; la fecha y hora se registran al
+          guardarla. Cambiar de jornada no devuelve elementos ni libera sus
+          reservas.
+        </Text>
+      </ContentGrid>
       {loadedFor === listScope && (
         <Text style={{ color: colors.text, fontSize: 16, lineHeight: 24 }}>
           {summary.pendingQuantity} unidades sin devolver ·{" "}
@@ -277,28 +280,30 @@ export default function SharedLoansPage({
           }}
         />
       )}
-      <Choice
-        label="Vista de préstamos"
-        value={view}
-        disabled={busy || editing}
-        options={[
-          { value: "open", label: "Pendientes de todas las jornadas" },
-          { value: "day", label: "Entregas de la jornada elegida" },
-          { value: "all", label: "Todo el historial" },
-        ]}
-        onChange={(value) => {
-          setView(value);
-          setHistory(null);
-          setSearch("");
-        }}
-      />
-      <Field
-        label="Buscar en los préstamos cargados"
-        value={search}
-        onChangeText={setSearch}
-        maxLength={120}
-        hint="Podés buscar por proyecto, elemento u observación. Cargá más registros si faltan resultados."
-      />
+      <ContentGrid maxColumns={2} minItemWidth={360}>
+        <Choice
+          label="Vista de préstamos"
+          value={view}
+          disabled={busy || editing}
+          options={[
+            { value: "open", label: "Pendientes de todas las jornadas" },
+            { value: "day", label: "Entregas de la jornada elegida" },
+            { value: "all", label: "Todo el historial" },
+          ]}
+          onChange={(value) => {
+            setView(value);
+            setHistory(null);
+            setSearch("");
+          }}
+        />
+        <Field
+          label="Buscar en los préstamos cargados"
+          value={search}
+          onChangeText={setSearch}
+          maxLength={120}
+          hint="Podés buscar por proyecto, elemento u observación. Cargá más registros si faltan resultados."
+        />
+      </ContentGrid>
       {loading && !visible.length ? (
         <ActivityIndicator color={colors.primary} />
       ) : !visible.length && !error ? (
@@ -315,137 +320,144 @@ export default function SharedLoansPage({
           No hay coincidencias entre los préstamos cargados.
         </Text>
       )}
-      {matching.map((loan) => {
-        const remaining = loan.quantity - loan.returned,
-          shownHistory =
-            history?.scope === listScope && history.loan.id === loan.id
-              ? history.loan
-              : null;
-        return (
-          <Card key={loan.id}>
-            <Chip
-              label={
-                remaining === 0
-                  ? "Devuelto"
-                  : loan.returned
-                    ? "Devolución parcial"
-                    : "En préstamo"
-              }
-              tone={remaining === 0 ? "success" : "warning"}
-            />
-            <Heading
-              title={loan.projectName}
-              subtitle={`${loan.resourceName} · Jornada ${loan.day}`}
-            />
-            <Text style={{ color: colors.text, lineHeight: 24 }}>
-              Entregadas: {loan.quantity} · Devueltas: {loan.returned} · Sin
-              devolver: {remaining}
-            </Text>
-            <Text style={paragraph}>
-              Entrega: {moment(loan.createdAt)} · {loan.deliveredFirstName}{" "}
-              {loan.deliveredLastName}
-            </Text>
-            <Text style={paragraph}>
-              Retiró: {loan.recipientFirstName} {loan.recipientLastName}
-            </Text>
-            {!!loan.note && (
-              <Text style={paragraph}>Observación de entrega: {loan.note}</Text>
-            )}
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-              {remaining > 0 && (
+      <ContentGrid minItemWidth={360}>
+        {matching.map((loan) => {
+          const remaining = loan.quantity - loan.returned,
+            shownHistory =
+              history?.scope === listScope && history.loan.id === loan.id
+                ? history.loan
+                : null;
+          return (
+            <Card key={loan.id}>
+              <Chip
+                label={
+                  remaining === 0
+                    ? "Devuelto"
+                    : loan.returned
+                      ? "Devolución parcial"
+                      : "En préstamo"
+                }
+                tone={remaining === 0 ? "success" : "warning"}
+              />
+              <Heading
+                title={loan.projectName}
+                subtitle={`${loan.resourceName} · Jornada ${loan.day}`}
+              />
+              <Text style={{ color: colors.text, lineHeight: 24 }}>
+                Entregadas: {loan.quantity} · Devueltas: {loan.returned} · Sin
+                devolver: {remaining}
+              </Text>
+              <Text style={paragraph}>
+                Entrega: {moment(loan.createdAt)} · {loan.deliveredFirstName}{" "}
+                {loan.deliveredLastName}
+              </Text>
+              <Text style={paragraph}>
+                Retiró: {loan.recipientFirstName} {loan.recipientLastName}
+              </Text>
+              {!!loan.note && (
+                <Text style={paragraph}>
+                  Observación de entrega: {loan.note}
+                </Text>
+              )}
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+                {remaining > 0 && (
+                  <Button
+                    title="Devolver"
+                    accessibilityLabel={`Devolver ${loan.resourceName} de ${loan.projectName}`}
+                    icon="check"
+                    disabled={busy || editing}
+                    onPress={() => {
+                      void perform(async () => {
+                        const fresh = await getLoan(loan.id);
+                        if (fresh.quantity === fresh.returned) {
+                          setNotice(
+                            "Este préstamo ya fue devuelto por completo.",
+                          );
+                          void load();
+                        } else {
+                          setOperation({
+                            scope,
+                            loan: fresh,
+                            noteOnly: false,
+                            revision: 0,
+                          });
+                          setNotice("");
+                        }
+                      });
+                    }}
+                  />
+                )}
                 <Button
-                  title={`Devolver ${loan.resourceName} de ${loan.projectName}`}
-                  icon="check"
+                  title="Registrar novedad"
+                  accessibilityLabel={`Registrar novedad de ${loan.resourceName} de ${loan.projectName}`}
+                  variant="secondary"
                   disabled={busy || editing}
                   onPress={() => {
                     void perform(async () => {
-                      const fresh = await getLoan(loan.id);
-                      if (fresh.quantity === fresh.returned) {
-                        setNotice(
-                          "Este préstamo ya fue devuelto por completo.",
-                        );
-                        void load();
-                      } else {
-                        setOperation({
-                          scope,
-                          loan: fresh,
-                          noteOnly: false,
-                          revision: 0,
-                        });
-                        setNotice("");
-                      }
+                      setOperation({
+                        scope,
+                        loan: await getLoan(loan.id),
+                        noteOnly: true,
+                        revision: 0,
+                      });
+                      setNotice("");
                     });
                   }}
                 />
-              )}
-              <Button
-                title={`Registrar novedad de ${loan.resourceName} de ${loan.projectName}`}
-                variant="secondary"
-                disabled={busy || editing}
-                onPress={() => {
-                  void perform(async () => {
-                    setOperation({
-                      scope,
-                      loan: await getLoan(loan.id),
-                      noteOnly: true,
-                      revision: 0,
-                    });
-                    setNotice("");
-                  });
-                }}
-              />
-              <Button
-                title={`Ver movimientos de ${loan.resourceName} de ${loan.projectName}`}
-                variant="quiet"
-                disabled={busy || editing}
-                onPress={() => {
-                  void perform(async () =>
-                    setHistory({
-                      scope: listScope,
-                      loan: await getLoan(loan.id),
-                    }),
-                  );
-                }}
-              />
-            </View>
-            {shownHistory && (
-              <View style={{ gap: 12 }}>
-                <Heading title="Devoluciones y novedades" />
-                {!shownHistory.returns.length && (
-                  <Text style={paragraph}>
-                    Todavía no hay devoluciones ni novedades registradas.
-                  </Text>
-                )}
-                {shownHistory.returns.map((entry) => (
-                  <View key={entry.id} style={{ gap: 4 }}>
-                    <Text style={{ color: colors.text, fontWeight: "600" }}>
-                      {entry.quantity
-                        ? `Devolución: ${entry.quantity} · Dañadas: ${entry.damagedQuantity}`
-                        : "Novedad sin devolución"}
-                    </Text>
-                    <Text style={paragraph}>
-                      {moment(entry.createdAt)} · {entry.firstName}{" "}
-                      {entry.lastName}
-                    </Text>
-                    {!!entry.note && (
-                      <Text style={paragraph}>{entry.note}</Text>
-                    )}
-                  </View>
-                ))}
-                <Text style={paragraph}>
-                  Se muestran los últimos 100 movimientos; el historial se
-                  conserva en el servidor.
-                </Text>
                 <Button
-                  title="Cerrar movimientos"
+                  title="Ver movimientos"
+                  accessibilityLabel={`Ver movimientos de ${loan.resourceName} de ${loan.projectName}`}
                   variant="quiet"
-                  onPress={() => setHistory(null)}
+                  disabled={busy || editing}
+                  onPress={() => {
+                    void perform(async () =>
+                      setHistory({
+                        scope: listScope,
+                        loan: await getLoan(loan.id),
+                      }),
+                    );
+                  }}
                 />
               </View>
-            )}
-          </Card>
-        );
-      })}
+              {shownHistory && (
+                <View style={{ gap: 12 }}>
+                  <Heading title="Devoluciones y novedades" />
+                  {!shownHistory.returns.length && (
+                    <Text style={paragraph}>
+                      Todavía no hay devoluciones ni novedades registradas.
+                    </Text>
+                  )}
+                  {shownHistory.returns.map((entry) => (
+                    <View key={entry.id} style={{ gap: 4 }}>
+                      <Text style={{ color: colors.text, fontWeight: "600" }}>
+                        {entry.quantity
+                          ? `Devolución: ${entry.quantity} · Dañadas: ${entry.damagedQuantity}`
+                          : "Novedad sin devolución"}
+                      </Text>
+                      <Text style={paragraph}>
+                        {moment(entry.createdAt)} · {entry.firstName}{" "}
+                        {entry.lastName}
+                      </Text>
+                      {!!entry.note && (
+                        <Text style={paragraph}>{entry.note}</Text>
+                      )}
+                    </View>
+                  ))}
+                  <Text style={paragraph}>
+                    Se muestran los últimos 100 movimientos; el historial se
+                    conserva en el servidor.
+                  </Text>
+                  <Button
+                    title="Cerrar movimientos"
+                    variant="quiet"
+                    onPress={() => setHistory(null)}
+                  />
+                </View>
+              )}
+            </Card>
+          );
+        })}
+      </ContentGrid>
       {more && loadedFor === listScope && (
         <Button
           title={loading ? "Cargando préstamos…" : "Cargar más préstamos"}

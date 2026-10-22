@@ -123,9 +123,9 @@ export function AppNavigation({
                   style={{
                     flex: 1,
                     color: selected ? colors.primary : colors.text,
-                    fontSize: 15,
+                    fontSize: 14,
                     lineHeight: 21,
-                    fontWeight: selected ? "600" : "400",
+                    fontWeight: "600",
                   }}
                 >
                   {item.label}
