@@ -2,6 +2,8 @@
 
 Se configura únicamente en el backend `expotec-api` de Vercel, para Production.
 
+Estado al 22/10/2026: configuración de producción habilitada y recepción real del correo confirmada por el usuario. Las pruebas con TiDB exclusivo verifican el cambio de contraseña, uso único, caducidad, concurrencia y revocación de sesiones. La contraseña personal la elige el usuario desde el enlace recibido.
+
 1. Activar la verificación en dos pasos de la cuenta remitente.
 2. Entrar en https://myaccount.google.com/apppasswords y crear una contraseña de aplicación llamada ExpoTec. Usar esa clave, nunca la contraseña principal de Google. La cuenta puede no ofrecer esta opción por sus políticas de seguridad; consultar https://support.google.com/accounts/answer/185833?hl=es.
 3. En Settings → Environment Variables de `expotec-api`, cargar:
