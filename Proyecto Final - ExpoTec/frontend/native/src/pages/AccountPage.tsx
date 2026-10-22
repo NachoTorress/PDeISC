@@ -226,20 +226,22 @@ export default function AccountPage() {
                 préstamos se guardan en el servidor. La presentación de la
                 demostración conserva sus ejemplos locales.
               </Text>
-              <Button
-                title={busy ? "Verificando…" : "Actualizar sesión"}
-                variant="secondary"
-                disabled={busy}
-                onPress={() => {
-                  void run(async () => {
-                    if (!(await client.verify()))
-                      throw new AuthError(
-                        "Tu sesión venció. Volvé a ingresar.",
-                        401,
-                      );
-                  }, "Sesión y permisos actualizados.");
-                }}
-              />
+              {!!sessionError && (
+                <Button
+                  title={busy ? "Conectando…" : "Reintentar conexión"}
+                  variant="secondary"
+                  disabled={busy}
+                  onPress={() => {
+                    void run(async () => {
+                      if (!(await client.verify()))
+                        throw new AuthError(
+                          "Tu sesión venció. Volvé a ingresar.",
+                          401,
+                        );
+                    }, "Sesión y permisos actualizados.");
+                  }}
+                />
+              )}
               {confirmLogout ? (
                 <Card>
                   <Text style={paragraph}>

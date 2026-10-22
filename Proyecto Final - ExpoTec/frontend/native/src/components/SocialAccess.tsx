@@ -102,7 +102,9 @@ export function SocialAccess({
     void client
       .query<Status>("/api/auth/browser/social/status", pending)
       .then((result) => {
-        if (active) setStatus(result);
+        if (!active) return;
+        setStatus(result);
+        if (result.mode === "login") void run(() => complete(result));
       })
       .catch((cause) => {
         if (active)
@@ -116,6 +118,25 @@ export function SocialAccess({
       active = false;
     };
   }, [client, pending]);
+  async function complete(access: Status) {
+    if (!pending) return;
+    await client.completeSocial({
+      ...pending,
+      mode: access.mode,
+      ...(access.mode === "login" ? {} : { password: input.password }),
+      ...(access.mode === "signup"
+        ? {
+            firstName: input.firstName,
+            lastName: input.lastName,
+            accountType,
+          }
+        : {}),
+    });
+    socialBridge.clear();
+    setPending(null);
+    setStatus(null);
+    setInput({ firstName: "", lastName: "", password: "", confirmation: "" });
+  }
   function update(key: keyof typeof input, value: string) {
     const next = { ...input, [key]: value };
     setInput(next);
@@ -142,24 +163,7 @@ export function SocialAccess({
       validation.confirmation = "Las contraseñas deben coincidir.";
     setFields(validation);
     if (Object.keys(validation).length) return;
-    void run(async () => {
-      await client.completeSocial({
-        ...pending,
-        mode: status.mode,
-        ...(status.mode === "login" ? {} : { password: input.password }),
-        ...(status.mode === "signup"
-          ? {
-              firstName: input.firstName,
-              lastName: input.lastName,
-              accountType,
-            }
-          : {}),
-      });
-      socialBridge.clear();
-      setPending(null);
-      setStatus(null);
-      setInput({ firstName: "", lastName: "", password: "", confirmation: "" });
-    });
+    void run(() => complete(status));
   }
   if (
     Platform.OS !== "web" ||
@@ -183,12 +187,12 @@ export function SocialAccess({
         <Heading
           title={
             !status
-              ? "Verificando acceso"
+              ? "Ingresando a ExpoTec"
               : status.mode === "signup"
                 ? "Creá tu cuenta de ExpoTec"
                 : status.mode === "link"
                   ? "Vinculá tu cuenta existente"
-                  : "Ingresá a ExpoTec"
+                  : "Ingresando a ExpoTec"
           }
         />
       ) : sideBySide ? (
@@ -231,12 +235,22 @@ export function SocialAccess({
       )}
       {pending ? (
         <>
-          {!status ? (
-            <Text style={text}>
-              {error
-                ? "Reiniciá el acceso para volver a intentarlo."
-                : "Verificando el acceso…"}
-            </Text>
+          {!status || status.mode === "login" ? (
+            <View style={{ gap: 12 }}>
+              {!error && <ActivityIndicator color={colors.primary} />}
+              <Text style={text} accessibilityLiveRegion="polite">
+                {error
+                  ? "No pudimos completar el ingreso. Volvé a intentarlo."
+                  : "Estamos abriendo tu cuenta…"}
+              </Text>
+              {status?.mode === "login" && !!error && (
+                <Button
+                  title="Reintentar ingreso"
+                  onPress={finish}
+                  disabled={busy}
+                />
+              )}
+            </View>
           ) : (
             <>
               <Text selectable style={text}>
@@ -245,9 +259,7 @@ export function SocialAccess({
               <Text style={text}>
                 {status.mode === "signup"
                   ? "Creá también una contraseña propia de ExpoTec. Después podrás ingresar con este proveedor o con tu correo y contraseña."
-                  : status.mode === "link"
-                    ? `Tu cuenta de ExpoTec ya existe. Confirmá tu contraseña actual para vincular ${names[status.provider]}. Conservás tu contraseña y tus permisos. En los próximos accesos con ${names[status.provider]} no te la pediremos.`
-                    : "Este acceso ya está vinculado a tu cuenta de ExpoTec."}
+                  : `Tu cuenta de ExpoTec ya existe. Confirmá tu contraseña actual para vincular ${names[status.provider]}. Conservás tu contraseña y tus permisos. En los próximos accesos con ${names[status.provider]} no te la pediremos.`}
               </Text>
               {status.mode === "signup" && (
                 <>
@@ -283,31 +295,27 @@ export function SocialAccess({
                   />
                 </>
               )}
-              {status.mode !== "login" && (
-                <Field
-                  label={
-                    status.mode === "signup"
-                      ? "Crear contraseña de ExpoTec"
-                      : "Tu contraseña actual de ExpoTec"
-                  }
-                  value={input.password}
-                  onChangeText={(value) => update("password", value)}
-                  error={fields.password}
-                  hint={
-                    status.mode === "signup"
-                      ? "Entre 12 y 128 caracteres."
-                      : "La que ya usás para entrar a ExpoTec, no la de Google u otro proveedor."
-                  }
-                  secureTextEntry
-                  maxLength={128}
-                  editable={!busy}
-                  autoComplete={
-                    status.mode === "signup"
-                      ? "new-password"
-                      : "current-password"
-                  }
-                />
-              )}
+              <Field
+                label={
+                  status.mode === "signup"
+                    ? "Crear contraseña de ExpoTec"
+                    : "Tu contraseña actual de ExpoTec"
+                }
+                value={input.password}
+                onChangeText={(value) => update("password", value)}
+                error={fields.password}
+                hint={
+                  status.mode === "signup"
+                    ? "Entre 12 y 128 caracteres."
+                    : "La que ya usás para entrar a ExpoTec, no la de Google u otro proveedor."
+                }
+                secureTextEntry
+                maxLength={128}
+                editable={!busy}
+                autoComplete={
+                  status.mode === "signup" ? "new-password" : "current-password"
+                }
+              />
               {status.mode === "signup" && (
                 <Field
                   label="Repetir contraseña de ExpoTec"
@@ -326,9 +334,7 @@ export function SocialAccess({
                     ? "Completando…"
                     : status.mode === "signup"
                       ? "Crear cuenta e ingresar"
-                      : status.mode === "link"
-                        ? "Vincular e ingresar"
-                        : "Ingresar a ExpoTec"
+                      : "Vincular e ingresar"
                 }
                 onPress={finish}
                 disabled={busy}
