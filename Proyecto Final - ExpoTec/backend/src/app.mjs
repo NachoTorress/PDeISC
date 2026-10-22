@@ -10,7 +10,8 @@ import { createLoansRepository } from './repositories/loans.mjs';
 import { createGalleryRepository } from './repositories/gallery.mjs';
 import { createSocialRepository } from './repositories/social.mjs';
 import { createUploadsRepository } from './repositories/uploads.mjs';
+import { createRecoveryRepository } from './repositories/recovery.mjs';
 
 export const config = readConfig();
 export const pool = createDatabase();
-export default createApp(createAuthRepository(pool), config, console, express(), createSpacesRepository(pool), createProjectsRepository(pool), createInventoryRepository(pool), createLoansRepository(pool), createGalleryRepository(pool), createSocialRepository(pool), undefined, createUploadsRepository(pool));
+export default createApp(createAuthRepository(pool), config, console, express(), createSpacesRepository(pool), createProjectsRepository(pool), createInventoryRepository(pool), createLoansRepository(pool), createGalleryRepository(pool), createSocialRepository(pool), undefined, createUploadsRepository(pool), undefined, createRecoveryRepository(pool));

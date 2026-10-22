@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -22,6 +22,8 @@ import { validateCredentials } from "../lib/authValidation";
 import { formatDate } from "../lib/format";
 import { SocialAccess } from "../components/SocialAccess";
 import { socialBridge } from "../lib/socialBridge";
+import { passwordReset } from "../lib/passwordReset";
+import PasswordRecovery from "../components/PasswordRecovery";
 
 const roleNames: Record<AccountRole, string> = {
   guest: "Invitado",
@@ -42,6 +44,21 @@ export default function AccountPage() {
   const { width } = useWindowDimensions();
   const { user, ready, error: sessionError, client, retry } = useAuth();
   const [register, setRegister] = useState(false);
+  const [resetToken, setResetToken] = useState(passwordReset.pending);
+  const [recovering, setRecovering] = useState(false);
+  const [recoveryEnabled, setRecoveryEnabled] = useState(false);
+  useEffect(() => {
+    let active = true;
+    void client
+      .query<{ enabled: boolean }>("/api/auth/recovery/query", {})
+      .then((result) => {
+        if (active) setRecoveryEnabled(result.enabled);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [client]);
   const [socialPending, setSocialPending] = useState(() =>
     Boolean(socialBridge.pending()),
   );
@@ -132,6 +149,22 @@ export default function AccountPage() {
     !sessionError &&
     !socialPending &&
     hasSocialProviders;
+  if (resetToken !== null || recovering)
+    return (
+      <PasswordRecovery
+        token={resetToken}
+        initialEmail={input.email}
+        onClose={() => {
+          passwordReset.clear();
+          setResetToken(null);
+          setRecovering(false);
+          setRegister(false);
+          setInput(empty);
+          setConfirmation("");
+          setError("");
+        }}
+      />
+    );
   return (
     <Screen>
       <View
@@ -388,6 +421,14 @@ export default function AccountPage() {
                   borderRadius: 12,
                 }}
               />
+              {!register && recoveryEnabled && (
+                <Button
+                  title="Olvidé mi contraseña"
+                  variant="quiet"
+                  disabled={busy}
+                  onPress={() => setRecovering(true)}
+                />
+              )}
               <View
                 style={{
                   gap: 2,

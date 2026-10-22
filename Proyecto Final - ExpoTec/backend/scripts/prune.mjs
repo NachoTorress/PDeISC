@@ -10,6 +10,7 @@ try {
     await db.execute('DELETE FROM sessions WHERE expires_at < UTC_TIMESTAMP(3)');
     await db.execute('DELETE FROM auth_rate_limits WHERE expires_at < UTC_TIMESTAMP(3)');
     await db.execute('DELETE FROM social_flows WHERE expires_at < UTC_TIMESTAMP(3)');
+    await db.execute('DELETE FROM password_resets WHERE expires_at < UTC_TIMESTAMP(3)');
   });
   if (blobStorage.enabled()) await createUploadsRepository(pool).prune(blobStorage.remove);
   console.log('Se limpiaron sesiones, límites y accesos vencidos, y fotos sin referencias de más de siete días.');

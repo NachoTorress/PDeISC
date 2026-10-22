@@ -25,7 +25,23 @@ export function readConfig(env = process.env) {
     sessionSeconds: 30 * 24 * 60 * 60,
     issuer: 'expotec-api', audience: 'expotec-client',
     social: readSocialConfig(env, origins, production),
+    recovery: readRecoveryConfig(env, origins, production),
   };
+}
+
+export function readRecoveryConfig(env, origins, production) {
+  const user = env.SMTP_USER?.trim(), password = env.SMTP_PASSWORD?.replace(/\s/g, '');
+  if (!user || !password) return null;
+  if (!/^[^\s@<>\r\n]+@[^\s@<>\r\n]+\.[^\s@<>\r\n]+$/.test(user)) throw new Error('Configurá SMTP_USER con el correo remitente.');
+  const host = env.SMTP_HOST?.trim() || 'smtp.gmail.com';
+  if (!/^[a-z0-9.-]+$/i.test(host)) throw new Error('SMTP_HOST debe ser un nombre de servidor.');
+  const port = integer(env, 'SMTP_PORT', 465, 465, 587);
+  if (![465, 587].includes(port)) throw new Error('SMTP_PORT debe ser 465 o 587.');
+  const webOrigin = env.PASSWORD_RESET_WEB_ORIGIN;
+  let url;
+  try { url = new URL(webOrigin); } catch { throw new Error('Configurá PASSWORD_RESET_WEB_ORIGIN.'); }
+  if (url.origin !== webOrigin || !origins.includes(webOrigin) || (url.protocol !== 'https:' && !(url.protocol === 'http:' && !production && ['localhost', '127.0.0.1'].includes(url.hostname)))) throw new Error('PASSWORD_RESET_WEB_ORIGIN debe ser un origen autorizado y seguro.');
+  return { webOrigin, smtp: { host, port, user, password } };
 }
 
 export function readSocialConfig(env, origins, production) {

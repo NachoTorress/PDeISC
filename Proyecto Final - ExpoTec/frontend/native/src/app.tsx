@@ -41,6 +41,7 @@ import SharedInventoryPage from "./pages/SharedInventoryPage";
 import SharedLoansPage from "./pages/SharedLoansPage";
 import SharedPresentationPage from "./pages/SharedPresentationPage";
 import { hasSocialReturn, socialBridge } from "./lib/socialBridge";
+import { passwordReset } from "./lib/passwordReset";
 import { AppNavigation } from "./components/AppNavigation";
 import type { NavigationItem } from "./components/AppNavigation";
 
@@ -443,7 +444,9 @@ function AppShell() {
           >
             <Stack.Navigator
               initialRouteName={
-                hasSocialReturn || socialBridge.pending()
+                hasSocialReturn ||
+                socialBridge.pending() ||
+                passwordReset.pending() !== null
                   ? "Account"
                   : startInDemo
                     ? "Home"

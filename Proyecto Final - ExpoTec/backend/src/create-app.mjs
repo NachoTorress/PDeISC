@@ -13,8 +13,11 @@ import { loansRoutes } from './routes/loans.mjs';
 import { galleryRoutes } from './routes/gallery.mjs';
 import { createSocialService } from './services/social.mjs';
 import { uploadsRoutes } from './routes/uploads.mjs';
+import { recoveryRoutes } from './routes/recovery.mjs';
+import { createRecoveryService } from './services/recovery.mjs';
+import { createRecoveryMailer } from './services/recovery-mail.mjs';
 
-export function createApp(repository, config, logger = console, app = express(), spacesRepository, projectsRepository, inventoryRepository, loansRepository, galleryRepository, socialRepository, providerExchange, uploadsRepository, uploadStorage) {
+export function createApp(repository, config, logger = console, app = express(), spacesRepository, projectsRepository, inventoryRepository, loansRepository, galleryRepository, socialRepository, providerExchange, uploadsRepository, uploadStorage, recoveryRepository, recoveryMailer) {
   app.disable('x-powered-by');
   // Solo Vercel es el proxy de confianza; en ejecución local no se aceptan IP reenviadas.
   if (config.onVercel) app.set('trust proxy', 1);
@@ -47,6 +50,8 @@ export function createApp(repository, config, logger = console, app = express(),
     res.json({ status: 'ok', database: 'connected' });
   });
   const service = createAuthService(repository, config);
+  const recovery = recoveryRepository && config.recovery ? createRecoveryService(recoveryRepository, recoveryMailer ?? createRecoveryMailer(config.recovery), config.recovery, logger) : null;
+  app.use('/api/auth/recovery', recoveryRoutes(repository, recovery, config));
   const social = socialRepository ? createSocialService(socialRepository, repository, config, providerExchange) : undefined;
   app.use('/api/auth', authRoutes(repository, service, config, social));
   app.use('/api/admin', adminRoutes(repository, service, config));

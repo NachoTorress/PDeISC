@@ -24,6 +24,18 @@ const session: AccountSession = {
   expiresIn: 900,
 };
 
+test("recuperar la contraseña descarta la sesión anterior en memoria y almacenamiento", async () => {
+  const app = setup(async () => session);
+  await app.client.signIn(
+    { email: user.email, password: "Contraseña de prueba" },
+    false,
+  );
+  assert.deepEqual(app.user(), user);
+  await app.client.forgetAfterRecovery();
+  assert.equal(app.user(), null);
+  assert.equal(app.saved(), null);
+});
+
 test("el acceso social web adopta la sesión en memoria sin guardar tokens en el navegador", async () => {
   const body = { id: "flow", proof: "temporary", mode: "login" };
   const app = setup(async (path, input) => {

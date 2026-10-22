@@ -5,6 +5,12 @@
   "outputDirectory": "dist",
   "devCommand": "npm run web",
   "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [{ "key": "Referrer-Policy", "value": "no-referrer" }]
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/:path*",
