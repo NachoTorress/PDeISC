@@ -180,7 +180,17 @@ export function SocialAccess({
       }}
     >
       {pending ? (
-        <Heading title="Completar acceso" />
+        <Heading
+          title={
+            !status
+              ? "Verificando acceso"
+              : status.mode === "signup"
+                ? "Creá tu cuenta de ExpoTec"
+                : status.mode === "link"
+                  ? "Vinculá tu cuenta existente"
+                  : "Ingresá a ExpoTec"
+          }
+        />
       ) : sideBySide ? (
         <View style={{ gap: 8 }}>
           <Text
@@ -236,7 +246,7 @@ export function SocialAccess({
                 {status.mode === "signup"
                   ? "Creá también una contraseña propia de ExpoTec. Después podrás ingresar con este proveedor o con tu correo y contraseña."
                   : status.mode === "link"
-                    ? "Este correo ya tiene una cuenta. Ingresá su contraseña de ExpoTec para autorizar la vinculación."
+                    ? `Tu cuenta de ExpoTec ya existe. Confirmá tu contraseña actual para vincular ${names[status.provider]}. Conservás tu contraseña y tus permisos. En los próximos accesos con ${names[status.provider]} no te la pediremos.`
                     : "Este acceso ya está vinculado a tu cuenta de ExpoTec."}
               </Text>
               {status.mode === "signup" && (
@@ -275,14 +285,18 @@ export function SocialAccess({
               )}
               {status.mode !== "login" && (
                 <Field
-                  label="Contraseña de ExpoTec"
+                  label={
+                    status.mode === "signup"
+                      ? "Crear contraseña de ExpoTec"
+                      : "Tu contraseña actual de ExpoTec"
+                  }
                   value={input.password}
                   onChangeText={(value) => update("password", value)}
                   error={fields.password}
                   hint={
                     status.mode === "signup"
                       ? "Entre 12 y 128 caracteres."
-                      : undefined
+                      : "La que ya usás para entrar a ExpoTec, no la de Google u otro proveedor."
                   }
                   secureTextEntry
                   maxLength={128}

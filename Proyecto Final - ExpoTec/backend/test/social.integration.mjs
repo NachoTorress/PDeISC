@@ -20,6 +20,7 @@ test('TiDB social: alta con contraseña, vinculación explícita, concurrencia, 
   const marker = `social-${randomUUID()}`, flows = [];
   t.after(async () => {
     await pool.execute('DELETE FROM auth_rate_limits WHERE bucket = ?', [rateKey(testConfig.secret, `social-link:${marker}@example.com`)]);
+    await pool.execute('DELETE FROM auth_rate_limits WHERE bucket = ?', [rateKey(testConfig.secret, `social-link:${marker}-admin@example.com`)]);
     for (const id of flows) await pool.execute('DELETE FROM social_flows WHERE id = ?', [id]);
     const [users] = await pool.execute('SELECT id FROM users WHERE email LIKE ?', [`${marker}%`]);
     for (const { id } of users) {
@@ -78,6 +79,24 @@ test('TiDB social: alta con contraseña, vinculación explícita, concurrencia, 
   assert.equal(count.count, 1);
   const [[identities]] = await pool.execute('SELECT COUNT(*) AS count FROM social_identities WHERE user_id = ?', [created.user.id]);
   assert.equal(identities.count, 2);
+
+  const adminEmail = `${marker}-admin@example.com`;
+  const admin = await accounts.register({ email: adminEmail, password, firstName: 'Admin', lastName: 'Existente', accountType: 'student' });
+  await pool.execute('INSERT INTO user_roles (user_id, role_code) VALUES (?, ?)', [admin.user.id, 'admin']);
+  const beforeLink = await authRepo.findCredentials(adminEmail);
+  const adminLink = await flow('google', `${marker}-admin`, adminEmail);
+  assert.equal((await social.status(payload(adminLink))).mode, 'link');
+  await assert.rejects(social.complete({ ...payload(adminLink), mode: 'signup', password }), error => error.status === 409);
+  await assert.rejects(social.complete({ ...payload(adminLink), mode: 'link', password: 'Una contraseña nueva' }), error => error.status === 401);
+  const linkedAdmin = await social.complete({ ...payload(adminLink), mode: 'link', password });
+  assert.equal(linkedAdmin.user.id, admin.user.id);
+  assert.deepEqual(linkedAdmin.user.roles, ['admin', 'student']);
+  assert.equal((await authRepo.findCredentials(adminEmail)).passwordHash, beforeLink.passwordHash);
+  const adminReturn = await flow('google', `${marker}-admin`, adminEmail);
+  assert.equal((await social.status(payload(adminReturn))).mode, 'login');
+  const returningAdmin = await social.complete({ ...payload(adminReturn), mode: 'login' });
+  assert.equal(returningAdmin.user.id, admin.user.id);
+  assert.deepEqual(returningAdmin.user.roles, ['admin', 'student']);
 
   const collision = await flow('google', `${marker}-different`, email);
   await assert.rejects(social.complete({ ...payload(collision), mode: 'link', password }), error => error.code === 'SOCIAL_CONFLICT');
