@@ -196,7 +196,10 @@ export function proposalErrors(draft: ProposalDraft, actorId: string) {
     ["githubUrl", "github"],
     ["websiteUrl", "website"],
   ] as const) {
-    const error = sharedLinkError(draft[key], key === "imageUrl", kind);
+    const error =
+      key === "imageUrl" && !draft[key].trim()
+        ? "Elegí una foto o ingresá un enlace HTTPS."
+        : sharedLinkError(draft[key], key === "imageUrl", kind);
     if (error) fields[key] = error;
   }
   if (

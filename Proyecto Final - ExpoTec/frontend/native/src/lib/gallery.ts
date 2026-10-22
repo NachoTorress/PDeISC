@@ -17,12 +17,18 @@ export const galleryStatusLabel: Record<GalleryStatus, string> = {
   approved: "Publicada",
   rejected: "No publicada",
 };
-export function galleryPhotoErrors(input: { imageUrl: string; caption: string }) {
+export function galleryPhotoErrors(input: {
+  imageUrl: string;
+  caption: string;
+}) {
   const errors: Record<string, string> = {};
-  const urlError = sharedLinkError(input.imageUrl.trim(), true);
+  const urlError = input.imageUrl.trim()
+    ? sharedLinkError(input.imageUrl.trim(), true)
+    : "Elegí una foto o ingresá un enlace HTTPS.";
   if (urlError) errors.imageUrl = urlError;
   const caption = input.caption.trim();
   if (caption.length < 5 || caption.length > 400 || /[\p{Cc}]/u.test(caption))
-    errors.caption = "Describí la foto con entre 5 y 400 caracteres, en una sola línea.";
+    errors.caption =
+      "Describí la foto con entre 5 y 400 caracteres, en una sola línea.";
   return errors;
 }

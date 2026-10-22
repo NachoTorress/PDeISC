@@ -167,7 +167,7 @@ export default function PhotoUploadField({
           />
         </>
       )}
-      {!!(failure || error) && (
+      {!!(failure || (!busy && error)) && (
         <Text
           accessibilityRole="alert"
           style={{ color: colors.error, fontSize: 13 }}

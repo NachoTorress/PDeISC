@@ -515,11 +515,13 @@ export default function SharedProposalPage({
             />
             <Button
               title={
-                busy
-                  ? "Enviando propuesta…"
-                  : projectId
-                    ? "Guardar y reenviar"
-                    : "Enviar propuesta"
+                uploading
+                  ? "Subiendo foto…"
+                  : saving
+                    ? "Enviando propuesta…"
+                    : projectId
+                      ? "Guardar y reenviar"
+                      : "Enviar propuesta"
               }
               icon="save"
               disabled={busy || spaceLoading}
