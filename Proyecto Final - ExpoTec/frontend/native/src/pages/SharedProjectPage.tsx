@@ -192,7 +192,7 @@ export default function SharedProjectPage({
             <Text style={paragraph}>
               Ingresá para consultar esta propuesta.
             </Text>
-            <Button title="Ir a Mi cuenta" onPress={onAccount} />
+            <Button title="Ingresar" onPress={onAccount} />
           </Card>
         )}
         {project && (

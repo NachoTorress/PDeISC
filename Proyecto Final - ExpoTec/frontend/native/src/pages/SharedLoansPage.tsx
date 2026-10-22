@@ -161,7 +161,7 @@ export default function SharedLoansPage({
           title="Préstamos y devoluciones"
           subtitle="Ingresá con permiso de préstamos o administración para gestionar las entregas."
         />
-        <Button title="Ir a Mi cuenta" onPress={onAccount} />
+        {!user && <Button title="Ingresar" onPress={onAccount} />}
       </Screen>
     );
   return (

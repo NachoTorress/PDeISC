@@ -190,6 +190,8 @@ Aplicar `backend/sql/006_gallery.sql` mediante `npm run db:migrate` antes de pub
 
 ## Navegación
 
+El botón de cuenta de la barra superior muestra nombre, correo, permisos disponibles y cierre de sesión con confirmación. Sin una sesión iniciada muestra **Ingresar**, con acceso al registro, proveedores y recuperación de contraseña. Al completar el ingreso se abren los espacios compartidos. Las fotos de proyectos y galerías ajustan su altura a su proporción original, sin franjas añadidas ni recortes.
+
 Las secciones compartidas se abren desde el panel lateral en ventanas de al menos 1200 px. En móvil y ventanas menores, el botón hamburguesa abre el mismo menú, con accesos alineados y sección actual marcada. Se cierra al elegir una sección, tocar afuera, pulsar la cruz o Escape en web. Inventario, préstamos y usuarios aparecen según los permisos de la cuenta real. Los accesos generales repetidos se retiraron de las pantallas; sus acciones de trabajo permanecen dentro de cada sección. La demostración conserva sus perfiles ficticios independientes.
 
 ## Entrega final pendiente

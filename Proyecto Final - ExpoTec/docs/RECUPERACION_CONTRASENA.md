@@ -20,7 +20,7 @@ No copiar la clave al chat, GitHub, al frontend ni a variables `EXPO_PUBLIC_`. L
 
 4. Aplicar `npm run db:migrate` antes de publicar el backend. La migración aditiva `010_password_recovery.sql` crea los enlaces de recuperación sin modificar cuentas existentes.
 5. Volver a desplegar el backend tras guardar las variables. POST `/api/auth/recovery/query` con `{}` devuelve `{ "enabled": true }` cuando la configuración está completa. Esto confirma configuración, no entrega de correos.
-6. Abrir Mi cuenta → Olvidé mi contraseña e ingresar el correo de una cuenta propia existente. Revisar Recibidos y Spam. Abrir el enlace del correo, elegir y repetir una contraseña de 12–128 caracteres, guardar e iniciar sesión de nuevo. Comprobar que la contraseña anterior y el enlace ya utilizado no funcionen.
+6. Abrir Ingresar → Olvidé mi contraseña desde la barra superior e ingresar el correo de una cuenta propia existente. Revisar Recibidos y Spam. Abrir el enlace del correo, elegir y repetir una contraseña de 12–128 caracteres, guardar e iniciar sesión de nuevo. Comprobar que la contraseña anterior y el enlace ya utilizado no funcionen.
 
 ## Comportamiento
 

@@ -30,6 +30,7 @@ import InventoryPage from "./pages/InventoryPage";
 import GalleryPage from "./pages/GalleryPage";
 import PresentationPage from "./pages/PresentationPage";
 import AccountPage from "./pages/AccountPage";
+import AccountMenu from "./components/AccountMenu";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import SharedGalleryPage from "./pages/SharedGalleryPage";
 import DemoGalleryPage from "./pages/DemoGalleryPage";
@@ -221,12 +222,6 @@ function AppShell() {
         ]
       : []),
     {
-      id: "Account",
-      label: "Mi cuenta",
-      icon: "users",
-      onPress: () => openSection("Account"),
-    },
-    {
       id: "Home",
       label: "Demostración",
       icon: "play",
@@ -325,6 +320,7 @@ function AppShell() {
             minWidth: 0,
           }}
         >
+          <AccountMenu onSignIn={() => openSection("Account")} />
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={
@@ -372,7 +368,8 @@ function AppShell() {
           </View>
           <Text style={{ color: colors.muted, fontSize: 13 }}>
             Perfiles ficticios para probar datos locales. Los permisos de tu
-            cuenta real se consultan desde Mi cuenta.
+            cuenta real se consultan desde el botón de cuenta de la barra
+            superior.
           </Text>
           <Button
             title="Ver espacios compartidos"
@@ -528,11 +525,13 @@ function AppShell() {
                   />
                 )}
               </Stack.Screen>
-              <Stack.Screen
-                name="Account"
-                component={AccountPage}
-                options={{ title: "Mi cuenta" }}
-              />
+              <Stack.Screen name="Account" options={{ title: "Ingresar" }}>
+                {({ navigation }) => (
+                  <AccountPage
+                    onSignedIn={() => navigation.replace("SharedSpaces")}
+                  />
+                )}
+              </Stack.Screen>
               <Stack.Screen
                 name="AdminUsers"
                 options={{ title: "Usuarios y permisos" }}

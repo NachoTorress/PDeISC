@@ -64,7 +64,7 @@ export default function AdminUsersPage({ onAccount }: { onAccount: () => void })
       <Heading title="Usuarios y permisos" />
       <Card>
         <Text style={paragraph}>Esta pantalla requiere una cuenta de administrador.</Text>
-        <Button title="Ir a Mi cuenta" onPress={onAccount} />
+        {!user && <Button title="Ingresar" onPress={onAccount} />}
       </Card>
     </Screen>
   );
@@ -109,7 +109,6 @@ export default function AdminUsersPage({ onAccount }: { onAccount: () => void })
           {hasMore && <Button title="Cargar más usuarios" variant="secondary" disabled={loading || !!error} onPress={() => void load(applied, users.length)} />}
         </>
       )}
-      {!editing && <Button title="Volver a Mi cuenta" variant="quiet" onPress={onAccount} />}
     </Screen>
   );
 }

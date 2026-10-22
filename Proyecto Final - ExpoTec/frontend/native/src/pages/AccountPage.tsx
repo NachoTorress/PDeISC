@@ -11,27 +11,18 @@ import {
   CheckRow,
   Choice,
   Field,
-  Heading,
   Screen,
 } from "../components/ui";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { AuthError } from "../lib/authTypes";
-import type { AccountRole, Credentials } from "../lib/authTypes";
+import type { Credentials } from "../lib/authTypes";
 import { validateCredentials } from "../lib/authValidation";
-import { formatDate } from "../lib/format";
 import { SocialAccess } from "../components/SocialAccess";
 import { socialBridge } from "../lib/socialBridge";
 import { passwordReset } from "../lib/passwordReset";
 import PasswordRecovery from "../components/PasswordRecovery";
 
-const roleNames: Record<AccountRole, string> = {
-  guest: "Invitado",
-  student: "Alumno",
-  teacher: "Profesor",
-  loans: "Encargado de préstamos",
-  admin: "Administrador",
-};
 const empty: Credentials = {
   email: "",
   password: "",
@@ -39,7 +30,11 @@ const empty: Credentials = {
   lastName: "",
 };
 
-export default function AccountPage() {
+export default function AccountPage({
+  onSignedIn,
+}: {
+  onSignedIn: () => void;
+}) {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const { user, ready, error: sessionError, client, retry } = useAuth();
@@ -74,8 +69,11 @@ export default function AccountPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [confirmLogout, setConfirmLogout] = useState(false);
   const working = useRef(false);
+  useEffect(() => {
+    if (user && !socialPending && resetToken === null && !recovering)
+      onSignedIn();
+  }, [user, socialPending, resetToken, recovering, onSignedIn]);
   const validation = validateCredentials(input, register);
   if (register && confirmation !== input.password)
     validation.confirmation = "Las contraseñas deben coincidir.";
@@ -170,13 +168,12 @@ export default function AccountPage() {
       <View
         style={{
           width: "100%",
-          maxWidth: user ? 560 : sideBySide ? 880 : 460,
+          maxWidth: sideBySide ? 880 : 460,
           alignSelf: "center",
           gap: 18,
           paddingTop: width > 700 ? 16 : 8,
         }}
       >
-        {user && <Heading title="Mi cuenta" subtitle="Tu acceso a ExpoTec" />}
         {!!(error || sessionError) && (
           <Text
             accessibilityRole="alert"
@@ -207,78 +204,7 @@ export default function AccountPage() {
               <ActivityIndicator color={colors.primary} />
               <Text style={paragraph}>Recuperando tu sesión…</Text>
             </View>
-          ) : user ? (
-            <View style={{ gap: 16 }}>
-              <Heading title={`${user.firstName} ${user.lastName}`} />
-              <Text selectable style={{ color: colors.text, fontSize: 16 }}>
-                {user.email}
-              </Text>
-              <Text style={paragraph}>
-                Permisos:{" "}
-                {user.roles.map((role) => roleNames[role]).join(", ") ||
-                  "Sin permisos asignados"}
-              </Text>
-              <Text style={paragraph}>
-                Cuenta creada el {formatDate(user.createdAt)}
-              </Text>
-              <Text style={paragraph}>
-                Tu cuenta, los espacios, los proyectos, el inventario y los
-                préstamos se guardan en el servidor. La presentación de la
-                demostración conserva sus ejemplos locales.
-              </Text>
-              {!!sessionError && (
-                <Button
-                  title={busy ? "Conectando…" : "Reintentar conexión"}
-                  variant="secondary"
-                  disabled={busy}
-                  onPress={() => {
-                    void run(async () => {
-                      if (!(await client.verify()))
-                        throw new AuthError(
-                          "Tu sesión venció. Volvé a ingresar.",
-                          401,
-                        );
-                    }, "Sesión y permisos actualizados.");
-                  }}
-                />
-              )}
-              {confirmLogout ? (
-                <Card>
-                  <Text style={paragraph}>
-                    ¿Querés cerrar la sesión de esta cuenta en este dispositivo?
-                  </Text>
-                  <View
-                    style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}
-                  >
-                    <Button
-                      title={busy ? "Cerrando…" : "Sí, cerrar sesión"}
-                      variant="danger"
-                      disabled={busy}
-                      onPress={() => {
-                        void run(async () => {
-                          await client.signOut();
-                          setConfirmLogout(false);
-                        }, "Cerraste sesión.");
-                      }}
-                    />
-                    <Button
-                      title="Cancelar"
-                      variant="quiet"
-                      disabled={busy}
-                      onPress={() => setConfirmLogout(false)}
-                    />
-                  </View>
-                </Card>
-              ) : (
-                <Button
-                  title="Cerrar sesión"
-                  variant="quiet"
-                  disabled={busy}
-                  onPress={() => setConfirmLogout(true)}
-                />
-              )}
-            </View>
-          ) : sessionError ? (
+          ) : user ? null : sessionError ? (
             <View style={{ gap: 16 }}>
               <Text style={paragraph}>
                 La sesión guardada se conserva para que puedas volver a intentar

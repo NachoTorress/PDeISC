@@ -59,7 +59,7 @@ Para desarrollo, usar aplicaciones separadas con retornos registrados hacia `htt
 
 ## Comportamiento implementado
 
-1. **Mi cuenta → Continuar con…** abre la autorización del proveedor en la misma pestaña.
+1. **Ingresar → Continuar con…**, desde la barra superior, abre la autorización del proveedor en la misma pestaña.
 2. Una cuenta nueva elige nombre, apellido, invitado/alumno y una contraseña propia de ExpoTec de 12–128 caracteres, con repetición en pantalla. No se asignan permisos de organización.
 3. Si el correo verificado ya existe en ExpoTec, el usuario debe introducir su contraseña de ExpoTec y pulsar **Vincular e ingresar**. Nunca se vinculan cuentas solamente porque coinciden sus correos.
 4. Una identidad ya vinculada entra automáticamente al volver del proveedor, sin un segundo botón de ingreso ni otra contraseña. Vuelve a la misma cuenta mediante su identificador estable. No cambia el correo ni los permisos de ExpoTec si cambia el perfil externo. Cada usuario puede vincular como máximo una identidad por proveedor; una identidad externa pertenece a un único usuario.

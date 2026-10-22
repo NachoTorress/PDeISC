@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .then(() => setError(""))
           .catch(() =>
             setError(
-              "No pudimos verificar la sesión. Revisá tu conexión y reintentá desde Mi cuenta.",
+              "No pudimos comprobar la conexión. Reintentá desde el menú de cuenta de la barra superior.",
             ),
           );
     };

@@ -226,7 +226,7 @@ export default function SharedProposalPage({
           title="Presentar un proyecto"
           subtitle="Ingresá con una cuenta de alumno para continuar."
         />
-        <Button title="Ir a Mi cuenta" onPress={onAccount} />
+        {!user && <Button title="Ingresar" onPress={onAccount} />}
         <Button title="Volver" variant="quiet" onPress={onBack} />
       </Screen>
     );

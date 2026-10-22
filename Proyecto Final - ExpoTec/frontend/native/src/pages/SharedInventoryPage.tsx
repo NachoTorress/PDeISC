@@ -135,7 +135,7 @@ export default function SharedInventoryPage({
           title="Inventario de ExpoTec"
           subtitle="Ingresá con una cuenta de administración o préstamos para consultar el inventario."
         />
-        <Button title="Ir a Mi cuenta" onPress={onAccount} />
+        {!user && <Button title="Ingresar" onPress={onAccount} />}
       </Screen>
     );
   return (
