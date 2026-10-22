@@ -4,12 +4,17 @@
     "slug": "expotec-organizacion",
     "scheme": "expotec",
     "version": "0.2.0",
+    "icon": "./assets/brand/expotec-icon-v1.png",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
     "android": {
       "package": "ar.edu.expotec.organizacion",
-      "versionCode": 1,
-      "softwareKeyboardLayoutMode": "resize"
+      "versionCode": 2,
+      "softwareKeyboardLayoutMode": "resize",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/brand/expotec-icon-v1.png",
+        "backgroundColor": "#153B2A"
+      }
     },
     "web": {
       "bundler": "metro",
