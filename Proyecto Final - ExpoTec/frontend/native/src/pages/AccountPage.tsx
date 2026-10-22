@@ -1,5 +1,10 @@
 import { useRef, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import {
   Button,
   Card,
@@ -34,11 +39,13 @@ const empty: Credentials = {
 
 export default function AccountPage() {
   const { colors } = useTheme();
+  const { width } = useWindowDimensions();
   const { user, ready, error: sessionError, client, retry } = useAuth();
   const [register, setRegister] = useState(false);
   const [socialPending, setSocialPending] = useState(() =>
     Boolean(socialBridge.pending()),
   );
+  const [hasSocialProviders, setHasSocialProviders] = useState(false);
   const [accountType, setAccountType] = useState<"student" | "guest">(
     "student",
   );
@@ -118,13 +125,25 @@ export default function AccountPage() {
     );
   }
   const paragraph = { color: colors.muted, fontSize: 15, lineHeight: 22 };
+  const sideBySide =
+    width >= 1100 &&
+    ready &&
+    !user &&
+    !sessionError &&
+    !socialPending &&
+    hasSocialProviders;
   return (
     <Screen>
       <View
-        style={{ width: "100%", maxWidth: 560, alignSelf: "center", gap: 18 }}
+        style={{
+          width: "100%",
+          maxWidth: user ? 560 : sideBySide ? 880 : 460,
+          alignSelf: "center",
+          gap: 18,
+          paddingTop: width > 700 ? 16 : 8,
+        }}
       >
-        <Heading title="Mi cuenta" subtitle="Tu acceso a ExpoTec" />
-        <SocialAccess onPendingChange={setSocialPending} />
+        {user && <Heading title="Mi cuenta" subtitle="Tu acceso a ExpoTec" />}
         {!!(error || sessionError) && (
           <Text
             accessibilityRole="alert"
@@ -141,211 +160,274 @@ export default function AccountPage() {
             {message}
           </Text>
         )}
-        {!ready ? (
-          <Card>
-            <ActivityIndicator color={colors.primary} />
-            <Text style={paragraph}>Recuperando tu sesión…</Text>
-          </Card>
-        ) : user ? (
-          <Card>
-            <Heading title={`${user.firstName} ${user.lastName}`} />
-            <Text selectable style={{ color: colors.text, fontSize: 16 }}>
-              {user.email}
-            </Text>
-            <Text style={paragraph}>
-              Permisos:{" "}
-              {user.roles.map((role) => roleNames[role]).join(", ") ||
-                "Sin permisos asignados"}
-            </Text>
-            <Text style={paragraph}>
-              Cuenta creada el {formatDate(user.createdAt)}
-            </Text>
-            <Text style={paragraph}>
-              Tu cuenta, los espacios, los proyectos, el inventario y los
-              préstamos se guardan en el servidor. La presentación de la
-              demostración conserva sus ejemplos locales.
-            </Text>
-            <Button
-              title={busy ? "Verificando…" : "Actualizar sesión"}
-              variant="secondary"
-              disabled={busy}
-              onPress={() => {
-                void run(async () => {
-                  if (!(await client.verify()))
-                    throw new AuthError(
-                      "Tu sesión venció. Volvé a ingresar.",
-                      401,
-                    );
-                }, "Sesión y permisos actualizados.");
-              }}
-            />
-            {confirmLogout ? (
-              <Card>
-                <Text style={paragraph}>
-                  ¿Querés cerrar la sesión de esta cuenta en este dispositivo?
-                </Text>
-                <View
-                  style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}
-                >
-                  <Button
-                    title={busy ? "Cerrando…" : "Sí, cerrar sesión"}
-                    variant="danger"
-                    disabled={busy}
-                    onPress={() => {
-                      void run(async () => {
-                        await client.signOut();
-                        setConfirmLogout(false);
-                      }, "Cerraste sesión.");
-                    }}
-                  />
-                  <Button
-                    title="Cancelar"
-                    variant="quiet"
-                    disabled={busy}
-                    onPress={() => setConfirmLogout(false)}
-                  />
-                </View>
-              </Card>
-            ) : (
+        <Card
+          style={{
+            padding: width > 700 ? 28 : 20,
+            gap: sideBySide ? 32 : 14,
+            borderRadius: 20,
+            flexDirection: sideBySide ? "row" : "column",
+            alignItems: sideBySide ? "center" : "stretch",
+          }}
+        >
+          {!ready ? (
+            <View style={{ gap: 12 }}>
+              <ActivityIndicator color={colors.primary} />
+              <Text style={paragraph}>Recuperando tu sesión…</Text>
+            </View>
+          ) : user ? (
+            <View style={{ gap: 16 }}>
+              <Heading title={`${user.firstName} ${user.lastName}`} />
+              <Text selectable style={{ color: colors.text, fontSize: 16 }}>
+                {user.email}
+              </Text>
+              <Text style={paragraph}>
+                Permisos:{" "}
+                {user.roles.map((role) => roleNames[role]).join(", ") ||
+                  "Sin permisos asignados"}
+              </Text>
+              <Text style={paragraph}>
+                Cuenta creada el {formatDate(user.createdAt)}
+              </Text>
+              <Text style={paragraph}>
+                Tu cuenta, los espacios, los proyectos, el inventario y los
+                préstamos se guardan en el servidor. La presentación de la
+                demostración conserva sus ejemplos locales.
+              </Text>
               <Button
-                title="Cerrar sesión"
-                variant="quiet"
+                title={busy ? "Verificando…" : "Actualizar sesión"}
+                variant="secondary"
                 disabled={busy}
-                onPress={() => setConfirmLogout(true)}
-              />
-            )}
-          </Card>
-        ) : sessionError ? (
-          <Card>
-            <Text style={paragraph}>
-              La sesión guardada se conserva para que puedas volver a intentar
-              la conexión.
-            </Text>
-            <Button
-              title="Reintentar conexión"
-              onPress={() => {
-                void retry();
-              }}
-            />
-          </Card>
-        ) : socialPending ? null : (
-          <Card>
-            <Heading
-              title={register ? "Crear cuenta" : "Iniciar sesión"}
-              subtitle={
-                register
-                  ? "Elegí cómo vas a participar. La escuela asigna los permisos de organización."
-                  : "Ingresá con tu correo y contraseña."
-              }
-            />
-            {register && (
-              <>
-                <Choice
-                  label="Tipo de cuenta"
-                  value={accountType}
-                  options={[
-                    { value: "student", label: "Alumno" },
-                    { value: "guest", label: "Invitado" },
-                  ]}
-                  disabled={busy}
-                  onChange={(value) =>
-                    setAccountType(value as "student" | "guest")
-                  }
-                />
-                <Field
-                  label="Nombre"
-                  value={input.firstName ?? ""}
-                  onChangeText={(value) => update("firstName", value)}
-                  error={fieldError("firstName")}
-                  maxLength={80}
-                  autoComplete="given-name"
-                  editable={!busy}
-                />
-                <Field
-                  label="Apellido"
-                  value={input.lastName ?? ""}
-                  onChangeText={(value) => update("lastName", value)}
-                  error={fieldError("lastName")}
-                  maxLength={80}
-                  autoComplete="family-name"
-                  editable={!busy}
-                />
-              </>
-            )}
-            <Field
-              label="Correo electrónico"
-              value={input.email}
-              onChangeText={(value) => update("email", value)}
-              error={fieldError("email")}
-              keyboardType="email-address"
-              autoComplete="email"
-              maxLength={254}
-              editable={!busy}
-            />
-            <Field
-              label="Contraseña"
-              value={input.password}
-              onChangeText={(value) => update("password", value)}
-              error={fieldError("password")}
-              hint={register ? "Entre 12 y 128 caracteres." : undefined}
-              secureTextEntry={!showPassword}
-              autoComplete={register ? "new-password" : "current-password"}
-              maxLength={128}
-              editable={!busy}
-              onSubmitEditing={register ? undefined : submit}
-            />
-            {register && (
-              <Field
-                label="Repetir contraseña"
-                value={confirmation}
-                onChangeText={(value) => {
-                  setConfirmation(value);
-                  setTouched((current) => ({ ...current, confirmation: true }));
+                onPress={() => {
+                  void run(async () => {
+                    if (!(await client.verify()))
+                      throw new AuthError(
+                        "Tu sesión venció. Volvé a ingresar.",
+                        401,
+                      );
+                  }, "Sesión y permisos actualizados.");
                 }}
-                error={fieldError("confirmation")}
+              />
+              {confirmLogout ? (
+                <Card>
+                  <Text style={paragraph}>
+                    ¿Querés cerrar la sesión de esta cuenta en este dispositivo?
+                  </Text>
+                  <View
+                    style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}
+                  >
+                    <Button
+                      title={busy ? "Cerrando…" : "Sí, cerrar sesión"}
+                      variant="danger"
+                      disabled={busy}
+                      onPress={() => {
+                        void run(async () => {
+                          await client.signOut();
+                          setConfirmLogout(false);
+                        }, "Cerraste sesión.");
+                      }}
+                    />
+                    <Button
+                      title="Cancelar"
+                      variant="quiet"
+                      disabled={busy}
+                      onPress={() => setConfirmLogout(false)}
+                    />
+                  </View>
+                </Card>
+              ) : (
+                <Button
+                  title="Cerrar sesión"
+                  variant="quiet"
+                  disabled={busy}
+                  onPress={() => setConfirmLogout(true)}
+                />
+              )}
+            </View>
+          ) : sessionError ? (
+            <View style={{ gap: 16 }}>
+              <Text style={paragraph}>
+                La sesión guardada se conserva para que puedas volver a intentar
+                la conexión.
+              </Text>
+              <Button
+                title="Reintentar conexión"
+                onPress={() => {
+                  void retry();
+                }}
+              />
+            </View>
+          ) : socialPending ? null : (
+            <View
+              style={{ gap: 14, flex: sideBySide ? 1 : undefined, minWidth: 0 }}
+            >
+              <View style={{ gap: 10, marginBottom: 4 }}>
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontSize: 22,
+                    fontWeight: "700",
+                    letterSpacing: -1,
+                  }}
+                >
+                  expotec.
+                </Text>
+                <Text
+                  accessibilityRole="header"
+                  style={{
+                    color: colors.text,
+                    fontSize: 30,
+                    lineHeight: 36,
+                    fontWeight: "700",
+                    letterSpacing: -0.9,
+                  }}
+                >
+                  {register ? "Creá tu cuenta" : "Iniciá sesión"}
+                </Text>
+                <Text style={paragraph}>
+                  {register
+                    ? "Elegí cómo vas a participar. La escuela asigna los permisos de organización."
+                    : "Ingresá a tu cuenta para participar de la ExpoTec."}
+                </Text>
+              </View>
+              {register && (
+                <>
+                  <Choice
+                    label="Tipo de cuenta"
+                    value={accountType}
+                    options={[
+                      { value: "student", label: "Alumno" },
+                      { value: "guest", label: "Invitado" },
+                    ]}
+                    disabled={busy}
+                    onChange={(value) =>
+                      setAccountType(value as "student" | "guest")
+                    }
+                  />
+                  <Field
+                    label="Nombre"
+                    value={input.firstName ?? ""}
+                    onChangeText={(value) => update("firstName", value)}
+                    error={fieldError("firstName")}
+                    maxLength={80}
+                    autoComplete="given-name"
+                    editable={!busy}
+                  />
+                  <Field
+                    label="Apellido"
+                    value={input.lastName ?? ""}
+                    onChangeText={(value) => update("lastName", value)}
+                    error={fieldError("lastName")}
+                    maxLength={80}
+                    autoComplete="family-name"
+                    editable={!busy}
+                  />
+                </>
+              )}
+              <Field
+                label="Correo electrónico"
+                value={input.email}
+                onChangeText={(value) => update("email", value)}
+                error={fieldError("email")}
+                keyboardType="email-address"
+                autoComplete="email"
+                maxLength={254}
+                editable={!busy}
+              />
+              <Field
+                label="Contraseña"
+                value={input.password}
+                onChangeText={(value) => update("password", value)}
+                error={fieldError("password")}
+                hint={register ? "Entre 12 y 128 caracteres." : undefined}
                 secureTextEntry={!showPassword}
-                autoComplete="new-password"
+                autoComplete={register ? "new-password" : "current-password"}
                 maxLength={128}
                 editable={!busy}
-                onSubmitEditing={submit}
+                onSubmitEditing={register ? undefined : submit}
               />
-            )}
-            <CheckRow
-              label="Mostrar contraseña"
-              checked={showPassword}
-              onChange={setShowPassword}
-            />
-            <Button
-              title={
-                busy
-                  ? register
-                    ? "Creando cuenta…"
-                    : "Ingresando…"
-                  : register
-                    ? "Crear cuenta"
-                    : "Ingresar"
-              }
-              disabled={busy}
-              onPress={submit}
-              style={{ alignSelf: "stretch" }}
-            />
-            <Button
-              title={register ? "Ya tengo una cuenta" : "Crear una cuenta"}
-              variant="quiet"
-              disabled={busy}
-              onPress={() => {
-                setRegister(!register);
-                setInput(empty);
-                setConfirmation("");
-                setTouched({});
-                setServerFields({});
-                setError("");
-                setMessage("");
-                setShowPassword(false);
-              }}
-            />
-          </Card>
-        )}
+              {register && (
+                <Field
+                  label="Repetir contraseña"
+                  value={confirmation}
+                  onChangeText={(value) => {
+                    setConfirmation(value);
+                    setTouched((current) => ({
+                      ...current,
+                      confirmation: true,
+                    }));
+                  }}
+                  error={fieldError("confirmation")}
+                  secureTextEntry={!showPassword}
+                  autoComplete="new-password"
+                  maxLength={128}
+                  editable={!busy}
+                  onSubmitEditing={submit}
+                />
+              )}
+              <CheckRow
+                label="Mostrar contraseña"
+                checked={showPassword}
+                onChange={setShowPassword}
+              />
+              <Button
+                title={
+                  busy
+                    ? register
+                      ? "Creando cuenta…"
+                      : "Ingresando…"
+                    : register
+                      ? "Crear cuenta"
+                      : "Ingresar"
+                }
+                disabled={busy}
+                onPress={submit}
+                endIcon="arrowRight"
+                style={{
+                  alignSelf: "stretch",
+                  minHeight: 50,
+                  borderRadius: 12,
+                }}
+              />
+              <View
+                style={{
+                  gap: 2,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Text style={{ ...paragraph, fontSize: 14 }}>
+                  {register
+                    ? "¿Ya tenés una cuenta?"
+                    : "¿Primera vez en ExpoTec?"}
+                </Text>
+                <Button
+                  title={register ? "Ya tengo una cuenta" : "Crear una cuenta"}
+                  variant="quiet"
+                  disabled={busy}
+                  style={{ alignSelf: "center" }}
+                  onPress={() => {
+                    setRegister(!register);
+                    setInput(empty);
+                    setConfirmation("");
+                    setTouched({});
+                    setServerFields({});
+                    setError("");
+                    setMessage("");
+                    setShowPassword(false);
+                  }}
+                />
+              </View>
+            </View>
+          )}
+          <SocialAccess
+            onPendingChange={setSocialPending}
+            onAvailableChange={setHasSocialProviders}
+            sideBySide={sideBySide}
+            disabled={busy}
+          />
+        </Card>
       </View>
     </Screen>
   );

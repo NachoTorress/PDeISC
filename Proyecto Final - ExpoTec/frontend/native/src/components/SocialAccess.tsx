@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { Platform, Text, View } from "react-native";
-import { Button, Card, Choice, Field, Heading } from "./ui";
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
+import { Button, Choice, Field, Heading } from "./ui";
+import { SocialProviderIcon } from "./SocialProviderIcon";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { hasSocialReturn, socialBridge } from "../lib/socialBridge";
@@ -20,8 +27,14 @@ const names: Record<string, string> = {
 };
 export function SocialAccess({
   onPendingChange,
+  onAvailableChange,
+  sideBySide = false,
+  disabled = false,
 }: {
   onPendingChange: (pending: boolean) => void;
+  onAvailableChange: (available: boolean) => void;
+  sideBySide?: boolean;
+  disabled?: boolean;
 }) {
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
@@ -34,6 +47,7 @@ export function SocialAccess({
       : "",
   );
   const [busy, setBusy] = useState(false);
+  const [activeProvider, setActiveProvider] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
   const [input, setInput] = useState({
     firstName: "",
@@ -47,6 +61,9 @@ export function SocialAccess({
   useEffect(() => {
     onPendingChange(Boolean(pending));
   }, [pending, onPendingChange]);
+  useEffect(() => {
+    onAvailableChange(providers.length > 0);
+  }, [providers.length, onAvailableChange]);
   useEffect(() => {
     if (Platform.OS !== "web") return;
     let active = true;
@@ -152,10 +169,48 @@ export function SocialAccess({
   )
     return null;
   return (
-    <Card>
-      <Heading
-        title={pending ? "Completar acceso" : "Ingresar con otra cuenta"}
-      />
+    <View
+      style={{
+        gap: 16,
+        width: sideBySide ? 300 : undefined,
+        paddingLeft: sideBySide ? 28 : 0,
+        paddingVertical: sideBySide ? 24 : 0,
+        borderLeftWidth: sideBySide ? 1 : 0,
+        borderLeftColor: colors.outline,
+      }}
+    >
+      {pending ? (
+        <Heading title="Completar acceso" />
+      ) : sideBySide ? (
+        <View style={{ gap: 8 }}>
+          <Text
+            accessibilityRole="header"
+            style={{
+              color: colors.text,
+              fontSize: 20,
+              fontWeight: "600",
+              letterSpacing: -0.4,
+            }}
+          >
+            Continuá con otra cuenta
+          </Text>
+          <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 21 }}>
+            También podés usar estos medios para ingresar.
+          </Text>
+        </View>
+      ) : (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+          <View
+            style={{ flex: 1, height: 1, backgroundColor: colors.outline }}
+          />
+          <Text style={{ color: colors.muted, fontSize: 13 }}>
+            O continuá con
+          </Text>
+          <View
+            style={{ flex: 1, height: 1, backgroundColor: colors.outline }}
+          />
+        </View>
+      )}
       {!!error && (
         <Text
           accessibilityRole="alert"
@@ -287,12 +342,13 @@ export function SocialAccess({
       ) : (
         <View style={{ gap: 8 }}>
           {providers.map((provider) => (
-            <Button
+            <ProviderButton
               key={provider.id}
-              title={`Continuar con ${provider.name}`}
-              variant="secondary"
-              disabled={busy}
+              provider={provider}
+              disabled={busy || disabled}
+              busy={busy && activeProvider === provider.id}
               onPress={() => {
+                setActiveProvider(provider.id);
                 void run(async () => {
                   const { challenge } = await socialBridge.begin();
                   const result = await client.query<{
@@ -309,6 +365,76 @@ export function SocialAccess({
           ))}
         </View>
       )}
-    </Card>
+    </View>
+  );
+}
+
+function ProviderButton({
+  provider,
+  disabled,
+  busy,
+  onPress,
+}: {
+  provider: Provider;
+  disabled: boolean;
+  busy: boolean;
+  onPress: () => void;
+}) {
+  const { colors } = useTheme();
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Continuar con ${provider.name}`}
+      accessibilityState={{ disabled, busy }}
+      disabled={disabled}
+      onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      style={({ pressed }) => ({
+        minHeight: 50,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: focused ? colors.primary : colors.controlOutline,
+        backgroundColor:
+          pressed || hovered ? colors.surfaceVariant : colors.surface,
+        opacity: disabled ? 0.55 : 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 12,
+      })}
+    >
+      {busy ? (
+        <ActivityIndicator size="small" color={colors.text} />
+      ) : (
+        <SocialProviderIcon
+          provider={provider.id}
+          color={
+            provider.id === "discord"
+              ? colors.dark
+                ? "#a4adff"
+                : "#5865F2"
+              : colors.text
+          }
+        />
+      )}
+      <Text
+        style={{
+          color: colors.text,
+          fontSize: 15,
+          fontWeight: "600",
+          flexShrink: 1,
+          textAlign: "center",
+        }}
+      >
+        Continuar con {provider.name}
+      </Text>
+    </Pressable>
   );
 }
