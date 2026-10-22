@@ -1,7 +1,8 @@
 import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
-import { Linking } from "react-native";
+import { Linking, Platform } from "react-native";
+import { nativeGoogleAccess } from "./nativeGoogle";
 import {
   mobileSocialOrigin,
   mobileSocialReturn,
@@ -74,10 +75,28 @@ export const socialBridge = {
     await SecureStore.setItemAsync(key, JSON.stringify(flow));
     return { proof, challenge };
   },
-  async start(provider: string) {
+  async start(provider: string, query: <T>(path: string, body: object) => Promise<T>) {
     if (!["google", "discord", "github"].includes(provider))
       throw new Error("Ese proveedor no está disponible.");
-    const { challenge } = await socialBridge.begin();
+    const { challenge, proof } = await socialBridge.begin();
+    if (provider === "google" && Platform.OS === "android") {
+      try {
+        const id = await nativeGoogleAccess(query, challenge, proof, async () => {
+          const { GoogleOneTapSignIn } = await import("react-native-nitro-google-signin");
+          return GoogleOneTapSignIn;
+        });
+        if (!id) { socialBridge.clear(); return; }
+        if (!flow || flow.proof !== proof || flow.expiresAt <= Date.now())
+          throw new Error("Este acceso venció. Volvé a iniciarlo.");
+        flow = { ...flow, id };
+        await SecureStore.setItemAsync(key, JSON.stringify(flow));
+        hasSocialReturn = true;
+      } catch (error) {
+        socialBridge.clear();
+        throw error;
+      }
+      return;
+    }
     const hash = new URLSearchParams({
       provider,
       challenge,

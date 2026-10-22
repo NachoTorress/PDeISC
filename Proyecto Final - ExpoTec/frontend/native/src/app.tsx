@@ -45,6 +45,8 @@ import { hasSocialReturn, socialBridge } from "./lib/socialBridge";
 import { passwordReset } from "./lib/passwordReset";
 import { AppNavigation } from "./components/AppNavigation";
 import type { NavigationItem } from "./components/AppNavigation";
+import { KeyboardRoot } from "./components/KeyboardLayout";
+import { SystemNavigation } from "./components/SystemNavigation";
 
 type RootRoutes = {
   Home: undefined;
@@ -131,7 +133,7 @@ export default function App() {
       <ThemeProvider>
         <AuthProvider>
           <DemoProvider>
-            <AppShell />
+            <KeyboardRoot><AppShell /></KeyboardRoot>
           </DemoProvider>
         </AuthProvider>
       </ThemeProvider>
@@ -260,6 +262,7 @@ function AppShell() {
       style={{ flex: 1, backgroundColor: colors.page }}
     >
       <StatusBar style={colors.dark ? "light" : "dark"} />
+      <SystemNavigation />
       <View
         style={{
           minHeight: 60,
@@ -525,7 +528,7 @@ function AppShell() {
                   />
                 )}
               </Stack.Screen>
-              <Stack.Screen name="Account" options={{ title: "Ingresar" }}>
+              <Stack.Screen name="Account" options={{ title: "Ingresar", headerShown: false }}>
                 {({ navigation }) => (
                   <AccountPage
                     onSignedIn={() => navigation.replace("SharedSpaces")}

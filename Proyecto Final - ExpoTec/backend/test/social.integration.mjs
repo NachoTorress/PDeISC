@@ -98,6 +98,24 @@ test('TiDB social: alta con contraseña, vinculación explícita, concurrencia, 
   assert.equal(returningAdmin.user.id, admin.user.id);
   assert.deepEqual(returningAdmin.user.roles, ['admin', 'student']);
 
+  const native = createSocialService(repository, authRepo, config, undefined, async (token, nonce) => {
+    assert.equal(token, 'test-native-token'); assert.match(nonce, /^[a-f0-9]{64}$/);
+    return { subject: `${marker}-admin`, email: adminEmail };
+  });
+  const nativeProof = randomBytes(32).toString('base64url');
+  const nativeStart = await native.startNativeGoogle({ challenge: tokenHash(nativeProof) });
+  flows.push(nativeStart.id);
+  const nativeInput = { id: nativeStart.id, proof: nativeProof };
+  await assert.rejects(native.verifyNativeGoogle({ ...nativeInput, proof: 'x'.repeat(43), idToken: 'test-native-token' }), error => error.code === 'SOCIAL_FAILED');
+  await native.verifyNativeGoogle({ ...nativeInput, idToken: 'test-native-token' });
+  await assert.rejects(native.verifyNativeGoogle({ ...nativeInput, idToken: 'test-native-token' }), error => error.code === 'SOCIAL_FAILED');
+  assert.equal((await native.status(nativeInput)).mode, 'login');
+  const nativeSession = await native.complete({ ...nativeInput, mode: 'login' });
+  assert.equal(nativeSession.user.id, admin.user.id);
+  assert.deepEqual(nativeSession.user.roles, ['admin', 'student']);
+  assert.equal((await authRepo.findCredentials(adminEmail)).passwordHash, beforeLink.passwordHash);
+  await assert.rejects(native.complete({ ...nativeInput, mode: 'login' }), error => error.code === 'SOCIAL_FAILED');
+
   const collision = await flow('google', `${marker}-different`, email);
   await assert.rejects(social.complete({ ...payload(collision), mode: 'link', password }), error => error.code === 'SOCIAL_CONFLICT');
   assert.equal((await social.status(payload(collision))).mode, 'link');

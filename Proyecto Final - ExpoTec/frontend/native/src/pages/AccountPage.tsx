@@ -170,8 +170,8 @@ export default function AccountPage({
           width: "100%",
           maxWidth: sideBySide ? 880 : 460,
           alignSelf: "center",
-          gap: 18,
-          paddingTop: width > 700 ? 16 : 8,
+          gap: 14,
+          paddingTop: width > 700 ? 16 : 0,
         }}
       >
         {!!(error || sessionError) && (
@@ -192,7 +192,7 @@ export default function AccountPage({
         )}
         <Card
           style={{
-            padding: width > 700 ? 28 : 20,
+            padding: width > 700 ? 28 : 16,
             gap: sideBySide ? 32 : 14,
             borderRadius: 20,
             flexDirection: sideBySide ? "row" : "column",
@@ -222,7 +222,7 @@ export default function AccountPage({
               style={{ gap: 14, flex: sideBySide ? 1 : undefined, minWidth: 0 }}
             >
               <View style={{ gap: 10, marginBottom: 4 }}>
-                <Text
+                {width > 700 && <Text
                   style={{
                     color: colors.primary,
                     fontSize: 22,
@@ -231,7 +231,7 @@ export default function AccountPage({
                   }}
                 >
                   expotec.
-                </Text>
+                </Text>}
                 <Text
                   accessibilityRole="header"
                   style={{

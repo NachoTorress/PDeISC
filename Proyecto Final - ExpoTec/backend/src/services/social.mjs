@@ -3,6 +3,7 @@ import { HttpError } from '../lib/errors.mjs';
 import { objectBody, credentials, userId } from '../validators/auth.mjs';
 import { tokenHash, rateKey, hashPassword, verifyPassword, dummyPasswordHash, newRefreshToken, accessToken } from './crypto.mjs';
 import { authorizationUrl, providerNames, createProviderExchange, socialFailure } from './social-providers.mjs';
+import { createNativeGoogleVerifier } from './google-native.mjs';
 
 function opaque(value) { return typeof value === 'string' && /^[A-Za-z0-9_-]{43}$/.test(value); }
 function proof(body, allowed = []) {
@@ -11,10 +12,32 @@ function proof(body, allowed = []) {
   if (!opaque(body.proof)) throw socialFailure();
   return { id: body.id, proofHash: tokenHash(body.proof) };
 }
-export function createSocialService(repository, authRepository, config, exchange = createProviderExchange(config)) {
+export function createSocialService(repository, authRepository, config, exchange = createProviderExchange(config), verifyGoogle = createNativeGoogleVerifier(config)) {
   const enabled = provider => Object.hasOwn(config.social?.providers ?? {}, provider);
   return {
     providers() { return { providers: Object.keys(providerNames).filter(enabled).map(id => ({ id, name: providerNames[id] })) }; },
+    async startNativeGoogle(body) {
+      objectBody(body, ['challenge']);
+      if (!enabled('google')) throw new HttpError(404, 'SOCIAL_DISABLED', 'Google todavía no está disponible.');
+      if (typeof body.challenge !== 'string' || !/^[a-f0-9]{64}$/.test(body.challenge)) throw socialFailure();
+      const id = randomUUID(), nonce = randomBytes(32).toString('hex');
+      await repository.start({ id, provider: 'google', stateHash: tokenHash(id), proofHash: body.challenge,
+        bindingHash: body.challenge, verifier: nonce, expiresAt: new Date(Date.now() + 10 * 60 * 1000) });
+      return { id, nonce, webClientId: config.social.providers.google.clientId };
+    },
+    async verifyNativeGoogle(body) {
+      const input = proof(body, ['idToken']);
+      if (!enabled('google')) throw socialFailure();
+      if (typeof body.idToken !== 'string' || !body.idToken || body.idToken.length > 8192) throw socialFailure();
+      const current = await repository.claim('google', tokenHash(input.id), input.proofHash);
+      try {
+        await repository.verified(current.id, await verifyGoogle(body.idToken, current.verifier));
+      } catch {
+        await repository.failed(current.id);
+        throw socialFailure();
+      }
+      return { id: current.id };
+    },
     async start(body, binding) {
       objectBody(body, ['provider', 'challenge']);
       if (typeof body.provider !== 'string' || !enabled(body.provider)) throw new HttpError(404, 'SOCIAL_DISABLED', 'Este proveedor todavía no está disponible.');

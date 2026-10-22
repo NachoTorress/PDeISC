@@ -2,11 +2,17 @@
 
 Versión inicial: 0.2.0, Android versionCode 1. Proyecto Expo: [nachot/expotec-organizacion](https://expo.dev/accounts/nachot/projects/expotec-organizacion).
 
+Siguiente compilación: 0.2.0, Android versionCode 2. Incluye el ícono propio, acceso nativo de Google, formulario que acompaña al teclado y barra inferior del sistema oculta con recuperación por deslizamiento.
+
 ## Alcance
 
 La app incluye el frontend y usa `https://expotec-api-gn19.vercel.app`. Las cuentas, permisos, proyectos, fotos y préstamos son los mismos que en la web; las operaciones realizadas desde la APK se guardan en ese servidor.
 
-Google, Discord y GitHub abren el navegador del teléfono y vuelven a la app mediante `expotec://auth`. El navegador conserva la cookie del inicio; la prueba privada del flujo permanece en SecureStore. Al volver, el servidor valida esa prueba y entrega la sesión móvil. Se conservan la vinculación explícita con contraseña y los permisos de la cuenta existente. Los enlaces no contienen contraseñas ni tokens de sesión.
+Google en Android usa Credential Manager mediante `react-native-nitro-google-signin`. El servidor emite un nonce por intento y verifica la firma del ID token de Google, su emisor, destinatario, vigencia, correo verificado y nonce. El flujo y la prueba privada son de un uso. El cliente web de Google se obtiene del servidor; la APK no contiene secretos de Google. Ver [configuración de Google Android](ANDROID_GOOGLE.md).
+
+Discord y GitHub abren el navegador del teléfono y vuelven a la app mediante `expotec://auth`. El navegador conserva la cookie del inicio; la prueba privada del flujo permanece en SecureStore. Al volver, el servidor valida esa prueba y entrega la sesión móvil. Se conservan la vinculación explícita con contraseña y los permisos de la cuenta existente. Los enlaces no contienen contraseñas ni tokens de sesión. La web conserva el acceso de los tres proveedores en el navegador.
+
+La pantalla de cuenta omite la cabecera adicional «Ingresar». Android usa `KeyboardProvider` y `KeyboardAwareScrollView` para mantener visible el campo activo. La web ajusta el alto al área visible del navegador al abrir el teclado. Se mantienen los márgenes de seguridad inferiores. La barra de navegación de Android se oculta y reaparece temporalmente al deslizar; el sistema puede mostrarla mientras está abierto el teclado.
 
 La recuperación de contraseña envía el correo habitual. El enlace permite cambiarla desde la web y luego usar la contraseña nueva en la app.
 
@@ -32,9 +38,10 @@ La raíz explícita es necesaria porque Git está en la carpeta superior, que co
 La compilación y las pruebas automatizadas no acreditan el funcionamiento en un Android físico. La APK inicial sirve para verificar:
 
 1. Abrir, cerrar y recuperar la sesión con correo y contraseña.
-2. Entrar con Google, Discord y GitHub, volver desde el navegador y cancelar un acceso sin dejar la pantalla bloqueada.
+2. Entrar con el selector nativo de Google y comprobar que conserva los permisos. Probar Discord y GitHub con regreso desde el navegador; cancelar cada acceso sin dejar la pantalla bloqueada.
 3. Subir una foto desde la galería del teléfono y comprobar su vista previa y moderación.
 4. Recorrer espacios, proyectos, préstamos y devoluciones con los permisos correspondientes.
-5. Probar teclado, botón Atrás, modo del sistema, videos y recuperación de contraseña.
+5. Completar el registro propio y social, incluyendo las dos contraseñas, con el teclado abierto y en horizontal. Probar botón Atrás, modo del sistema, videos y recuperación de contraseña.
+6. Comprobar que la barra inferior se oculta y vuelve al deslizar desde abajo, incluso después de regresar del navegador o cerrar el teclado.
 
 Registrar modelo de teléfono, versión de Android y pasos para cualquier error. No compartir contraseñas ni enlaces de recuperación.

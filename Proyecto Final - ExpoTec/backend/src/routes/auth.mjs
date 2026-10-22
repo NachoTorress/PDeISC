@@ -60,6 +60,8 @@ export function authRoutes(repository, service, config, social) {
       objectBody(req.body, []);
       res.json(social.providers());
     });
+    router.post('/social/google/native/start', ipLimit, async (req, res) => res.json(await social.startNativeGoogle(req.body)));
+    router.post('/social/google/native/verify', ipLimit, async (req, res) => res.json(await social.verifyNativeGoogle(req.body)));
     browser.post('/social/start', ipLimit, async (req, res) => {
       const key = binding(req) ?? randomBytes(32).toString('base64url');
       const result = await social.start(req.body, key);

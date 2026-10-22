@@ -118,6 +118,14 @@ test('social HTTP: proveedores sin secretos, inicio y final exigen origen y JSON
   assert.equal(list.body.providers.length, 3);
   assert.equal(JSON.stringify(list.body).includes('secret'), false);
   const input = { provider: 'google', challenge: tokenHash('test') };
+  const native = await api.request('/api/auth/social/google/native/start', { challenge: input.challenge });
+  assert.equal(native.status, 200);
+  assert.match(native.body.nonce, /^[a-f0-9]{64}$/);
+  assert.equal(native.body.webClientId, socialConfig.social.providers.google.clientId);
+  assert.equal(JSON.stringify(native.body).includes('secret'), false);
+  const invalidNative = await api.request('/api/auth/social/google/native/verify', { id: native.body.id, proof: 'invalid', idToken: 'private-token' });
+  assert.equal(invalidNative.status, 400);
+  assert.equal(JSON.stringify(invalidNative.body).includes('private-token'), false);
   assert.equal((await api.request('/api/auth/browser/social/start', input)).status, 403);
   const started = await api.request('/api/auth/browser/social/start', input, undefined, { headers: { Origin: testConfig.origins[0] } });
   assert.equal(started.status, 200);

@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
@@ -21,6 +20,8 @@ import type {
 import { useTheme } from "../contexts/ThemeContext";
 import { Icon } from "./Icon";
 import type { IconName } from "./Icon";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { FormScrollView } from "./KeyboardLayout";
 
 // Reservar la barra evita que bloquear el scroll cambie el ancho durante un gesto.
 const scrollLayoutStyle: ViewStyle & { scrollbarGutter?: string } =
@@ -533,16 +534,16 @@ export function Screen({
 }) {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<Pick<ScrollView, "scrollTo">>(null);
+  const insets = useSafeAreaInsets();
   const [showTop, setShowTop] = useState(false);
   return (
-    <KeyboardAvoidingView
+    <View
       style={{ flex: 1, backgroundColor: colors.page }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <ScrollView
+      <FormScrollView
         ref={scroll}
-        style={scrollLayoutStyle}
+        style={[{ flex: 1, minHeight: 0 }, scrollLayoutStyle]}
         scrollEnabled={scrollEnabled}
         keyboardShouldPersistTaps="handled"
         scrollEventThrottle={160}
@@ -550,13 +551,13 @@ export function Screen({
         contentContainerStyle={{
           paddingHorizontal: width > 700 ? 20 : 12,
           paddingTop: 12,
-          paddingBottom: 24,
+          paddingBottom: 24 + insets.bottom,
           gap: 12,
           flexGrow: 1,
         }}
       >
         {children}
-      </ScrollView>
+      </FormScrollView>
       {showTop && (
         <Button
           title="Subir"
@@ -572,7 +573,7 @@ export function Screen({
           }}
         />
       )}
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
