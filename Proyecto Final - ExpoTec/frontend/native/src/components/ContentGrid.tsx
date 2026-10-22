@@ -7,10 +7,12 @@ export default function ContentGrid({
   children,
   minItemWidth = 360,
   maxColumns = 3,
+  maxItemWidth,
 }: {
   children: ReactNode;
   minItemWidth?: number;
   maxColumns?: number;
+  maxItemWidth?: number;
 }) {
   const [width, setWidth] = useState(0);
   const items = Children.toArray(children),
@@ -24,7 +26,12 @@ export default function ContentGrid({
     ),
   );
   const itemWidth =
-    width > 0 ? (width - gap * (columns - 1)) / columns : "100%";
+    width > 0
+      ? Math.min(
+          maxItemWidth ?? Infinity,
+          (width - gap * (columns - 1)) / columns,
+        )
+      : "100%";
   return (
     <View
       onLayout={(event) => setWidth(event.nativeEvent.layout.width)}

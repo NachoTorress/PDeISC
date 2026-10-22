@@ -56,8 +56,13 @@ export default function PhotoImage({
         ...(fixedHeight !== undefined
           ? { height: fixedHeight }
           : ratio
-            ? { height: "auto", aspectRatio: ratio }
+            ? {
+                height: "auto",
+                aspectRatio: ratio,
+                maxWidth: placeholderHeight * ratio,
+              }
             : { height: placeholderHeight }),
+        alignSelf: "center",
         borderRadius: 12,
       }}
     />

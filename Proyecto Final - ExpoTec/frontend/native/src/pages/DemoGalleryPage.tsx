@@ -206,7 +206,7 @@ export default function DemoGalleryPage() {
               </Text>
             </Card>
           )}
-          <ContentGrid minItemWidth={280}>
+          <ContentGrid minItemWidth={280} maxItemWidth={340}>
             {visible.map((photo) => (
               <Card key={photo.id}>
                 <DemoGalleryImage

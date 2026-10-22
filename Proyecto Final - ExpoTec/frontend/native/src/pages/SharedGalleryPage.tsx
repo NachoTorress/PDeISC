@@ -236,13 +236,14 @@ export default function SharedGalleryPage({
               </Text>
             </Card>
           )}
-          <ContentGrid minItemWidth={280}>
+          <ContentGrid minItemWidth={280} maxItemWidth={340}>
             {visible.map((photo) => (
               <Card key={`${scope}:${photo.id}`}>
                 <GalleryImage
                   key={photo.imageUrl}
                   uri={photo.imageUrl}
                   caption={photo.caption}
+                  height={280}
                 />
                 <Text
                   style={{ color: colors.text, fontSize: 16, lineHeight: 23 }}

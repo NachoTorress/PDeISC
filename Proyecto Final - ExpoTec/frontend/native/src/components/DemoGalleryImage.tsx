@@ -15,5 +15,12 @@ export default function DemoGalleryImage({
       : uri === "sample:electronics"
         ? electronics
         : { uri };
-  return <PhotoImage key={uri} source={source} caption={caption} />;
+  return (
+    <PhotoImage
+      key={uri}
+      source={source}
+      caption={caption}
+      placeholderHeight={280}
+    />
+  );
 }
