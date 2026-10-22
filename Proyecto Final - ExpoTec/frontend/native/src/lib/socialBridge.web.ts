@@ -1,3 +1,4 @@
+import { browserMobileReturn } from "./mobileSocial";
 const key = "expotec-social-flow";
 type Pending = {
   id?: string;
@@ -27,6 +28,16 @@ function captureReturn() {
   if (typeof window === "undefined") return false;
   const hash = new URLSearchParams(window.location.hash.slice(1));
   if (!hash.has("social")) return false;
+  try {
+    if (browserMobileReturn(window.sessionStorage, hash.get("social") ?? "")) {
+      window.location.replace(
+        `/mobile-auth.html#social=${encodeURIComponent(hash.get("social")!)}`,
+      );
+      return false;
+    }
+  } catch {
+    /* El acceso web informa el almacenamiento no disponible. */
+  }
   const value = read(),
     id = hash.get("social");
   try {
@@ -47,6 +58,18 @@ function captureReturn() {
 }
 export let hasSocialReturn = captureReturn();
 export const socialBridge = {
+  async restore() {},
+  async start(
+    provider: string,
+    query: <T>(path: string, body: object) => Promise<T>,
+  ): Promise<void> {
+    const { challenge } = await socialBridge.begin();
+    const result = await query<{ id: string; url: string }>(
+      "/api/auth/browser/social/start",
+      { provider, challenge },
+    );
+    socialBridge.redirect(result.id, result.url);
+  },
   pending(): { id: string; proof: string } | null {
     const value = read();
     return value?.returned && value.id
@@ -54,7 +77,11 @@ export const socialBridge = {
       : null;
   },
   clear() {
-    try { window.sessionStorage.removeItem(key); } catch { /* No conservar el flujo en memoria si el navegador bloqueó el almacenamiento. */ }
+    try {
+      window.sessionStorage.removeItem(key);
+    } catch {
+      /* No conservar el flujo en memoria si el navegador bloqueó el almacenamiento. */
+    }
     hasSocialReturn = false;
   },
   async begin() {

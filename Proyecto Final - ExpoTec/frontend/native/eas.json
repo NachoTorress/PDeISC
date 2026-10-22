@@ -8,6 +8,11 @@
     },
     "preview": {
       "distribution": "internal",
+      "environment": "preview",
+      "env": {
+        "EXPO_NO_DOTENV": "1",
+        "EXPO_PUBLIC_API_URL": "https://expotec-api-gn19.vercel.app"
+      },
       "android": { "buildType": "apk" }
     },
     "production": { "android": { "buildType": "app-bundle" } }

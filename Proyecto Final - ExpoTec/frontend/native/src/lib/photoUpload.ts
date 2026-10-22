@@ -1,5 +1,5 @@
 import type { ImagePickerAsset } from "expo-image-picker";
-import { put } from "@vercel/blob/client";
+import { putPhoto } from "./blobUpload";
 
 export type PhotoPurpose = "gallery" | "project";
 export type PhotoSender = <T>(endpoint: string, body: object) => Promise<T>;
@@ -24,7 +24,12 @@ export function managedPhoto(value: string) {
   }
 }
 export async function selectedPhoto(asset: ImagePickerAsset): Promise<Blob> {
-  const body = asset.file ?? (await (await fetch(asset.uri)).blob());
+  let body = asset.file ?? (await (await fetch(asset.uri)).blob());
+  if (
+    (!body.type || body.type === "application/octet-stream") &&
+    asset.mimeType
+  )
+    body = body.slice(0, body.size, asset.mimeType);
   validatePhoto(body.type, body.size);
   return body;
 }
@@ -46,13 +51,10 @@ export async function uploadPhoto(
     contentType: body.type,
   });
   signal.throwIfAborted();
-  await put(prepared.pathname, body, {
-    access: "private",
+  await putPhoto(prepared.pathname, body, {
     token: prepared.clientToken,
-    contentType: body.type,
-    abortSignal: signal,
-    onUploadProgress: ({ percentage }) =>
-      progress(Math.round(percentage * 0.9)),
+    signal,
+    progress: (percentage) => progress(Math.round(percentage * 0.9)),
   });
   signal.throwIfAborted();
   progress(95);

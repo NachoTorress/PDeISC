@@ -1,0 +1,12 @@
+/*
+!app.json
+!eas.json
+!package.json
+!package-lock.json
+!index.ts
+!metro.config.js
+!tsconfig.json
+!src
+!assets
+!public
+src/**/*.test.ts

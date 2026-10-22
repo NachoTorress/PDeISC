@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Ingresar a ExpoTec</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, sans-serif;
+        background: #f3f1ed;
+        color: #272b28;
+      }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+      }
+      main {
+        max-width: 26rem;
+        padding: 2rem;
+      }
+      h1 {
+        font-size: 2rem;
+        letter-spacing: -0.04em;
+      }
+      p {
+        line-height: 1.6;
+      }
+      a {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.8rem 1.2rem;
+        border-radius: 2rem;
+        color: white;
+        background: #316d4c;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      [hidden] {
+        display: none;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          background: #17191b;
+          color: #eef0ed;
+        }
+        a {
+          background: #91c3a0;
+          color: #182c20;
+        }
+      }
+    </style>
+    <script src="/mobile-auth.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <h1>expotec.</h1>
+      <p id="message" role="status">Estamos abriendo tu acceso…</p>
+      <a id="return" hidden>Volver a ExpoTec</a>
+    </main>
+  </body>
+</html>

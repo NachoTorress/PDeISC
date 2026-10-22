@@ -2,14 +2,20 @@
   "expo": {
     "name": "ExpoTec",
     "slug": "expotec-organizacion",
+    "scheme": "expotec",
     "version": "0.2.0",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
     "android": {
       "package": "ar.edu.expotec.organizacion",
+      "versionCode": 1,
       "softwareKeyboardLayoutMode": "resize"
     },
-    "web": { "bundler": "metro", "output": "single", "name": "ExpoTec" },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "name": "ExpoTec"
+    },
     "plugins": [
       [
         "expo-image-picker",
@@ -20,7 +26,14 @@
         }
       ],
       "expo-video",
-      "expo-secure-store"
-    ]
+      "expo-secure-store",
+      "expo-web-browser"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6f64b206-e059-4037-ab1a-4fa0c2459cf7"
+      }
+    },
+    "owner": "nachot"
   }
 }

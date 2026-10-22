@@ -7,12 +7,45 @@ import { createSocialService } from '../src/services/social.mjs';
 import { tokenHash } from '../src/services/crypto.mjs';
 import { createApp } from '../src/create-app.mjs';
 import { listen, memoryRepository, testConfig } from './support.mjs';
+import { HttpError } from '../src/lib/errors.mjs';
 
 export const socialConfig = { ...testConfig, social: {
   webOrigin: testConfig.origins[0],
   providers: Object.fromEntries(['google', 'discord', 'github'].map(name => [name, { clientId: `test-${name}`, clientSecret: 'test-only-client-secret' }])),
 } };
 const binding = 'b'.repeat(43);
+
+test('social Android: los tres proveedores exigen la prueba propia y entregan renovación sin cookies', async t => {
+  for (const provider of ['google', 'discord', 'github']) {
+    const auth = memoryRepository();
+    const account = await auth.register({ email: 'mobile@example.com', firstName: 'Prueba', lastName: 'Android', passwordHash: 'unused', accountType: 'student' }, 'initial', new Date(Date.now() + 60000));
+    account.user.roles.push('admin');
+    auth.users.get(account.user.id).roles.push('admin');
+    const id = randomUUID(), proof = 'p'.repeat(43);
+    let consumed = false;
+    const social = {
+      async inspect(flowId, proofHash) {
+        if (flowId !== id || proofHash !== tokenHash(proof) || consumed) throw new HttpError(400, 'SOCIAL_FAILED', 'Acceso inválido.');
+        return { provider, email: account.user.email };
+      },
+      mode: async () => 'login',
+      async complete(input, hash, expires) {
+        assert.equal(input.mode, 'login'); consumed = true;
+        return auth.openSession(account.user.id, hash, expires);
+      },
+    };
+    const api = await listen(createApp(auth, socialConfig, console, undefined, undefined, undefined, undefined, undefined, undefined, social));
+    t.after(api.close);
+    assert.equal((await api.request('/api/auth/social/status', { id, proof: 'x'.repeat(43) })).status, 400);
+    const status = await api.request('/api/auth/social/status', { id, proof });
+    assert.equal(status.status, 200); assert.equal(status.body.provider, provider);
+    const result = await api.request('/api/auth/social/complete', { id, proof, mode: 'login' });
+    assert.equal(result.status, 200); assert.equal(result.headers.get('set-cookie'), null);
+    assert.ok(result.body.accessToken); assert.ok(result.body.refreshToken);
+    assert.ok(result.body.user.roles.includes('admin'));
+    assert.equal((await api.request('/api/auth/social/complete', { id, proof, mode: 'login' })).status, 400);
+  }
+});
 
 test('social: configuración cerrada, pares completos y destinos exactos', () => {
   assert.deepEqual(readSocialConfig({}, [], true), { providers: {} });

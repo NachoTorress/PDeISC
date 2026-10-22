@@ -43,7 +43,7 @@ export function SocialAccess({
   const [status, setStatus] = useState<Status | null>(null);
   const [error, setError] = useState(
     hasSocialReturn && !pending
-      ? "Este acceso no pertenece a esta pestaña o venció. Volvé a iniciarlo."
+      ? "Este acceso no pertenece a esta sesión o venció. Volvé a iniciarlo."
       : "",
   );
   const [busy, setBusy] = useState(false);
@@ -65,7 +65,6 @@ export function SocialAccess({
     onAvailableChange(providers.length > 0);
   }, [providers.length, onAvailableChange]);
   useEffect(() => {
-    if (Platform.OS !== "web") return;
     let active = true;
     void client
       .query<{ providers: Provider[] }>("/api/auth/social/providers/query")
@@ -100,7 +99,10 @@ export function SocialAccess({
     if (!pending) return;
     let active = true;
     void client
-      .query<Status>("/api/auth/browser/social/status", pending)
+      .query<Status>(
+        `/api/auth/${Platform.OS === "web" ? "browser/" : ""}social/status`,
+        pending,
+      )
       .then((result) => {
         if (!active) return;
         setStatus(result);
@@ -165,12 +167,7 @@ export function SocialAccess({
     if (Object.keys(validation).length) return;
     void run(() => complete(status));
   }
-  if (
-    Platform.OS !== "web" ||
-    !ready ||
-    (!pending && user) ||
-    (!providers.length && !pending && !error)
-  )
+  if (!ready || (!pending && user) || (!providers.length && !pending && !error))
     return null;
   return (
     <View
@@ -370,15 +367,8 @@ export function SocialAccess({
               onPress={() => {
                 setActiveProvider(provider.id);
                 void run(async () => {
-                  const { challenge } = await socialBridge.begin();
-                  const result = await client.query<{
-                    id: string;
-                    url: string;
-                  }>("/api/auth/browser/social/start", {
-                    provider: provider.id,
-                    challenge,
-                  });
-                  socialBridge.redirect(result.id, result.url);
+                  await socialBridge.start(provider.id, client.query);
+                  setPending(socialBridge.pending());
                 });
               }}
             />

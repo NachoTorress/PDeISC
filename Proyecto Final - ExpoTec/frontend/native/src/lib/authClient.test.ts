@@ -36,6 +36,18 @@ test("recuperar la contraseña descarta la sesión anterior en memoria y almacen
   assert.equal(app.saved(), null);
 });
 
+test("el acceso social Android conserva la renovación usando el almacenamiento de la app", async () => {
+  const body = { id: "flow", proof: "temporary", mode: "login" };
+  const app = setup(async (path, input) => {
+    assert.equal(path, "/api/auth/social/complete");
+    assert.deepEqual(input, body);
+    return session;
+  });
+  await app.client.completeSocial(body);
+  assert.deepEqual(app.user(), user);
+  assert.equal(app.saved(), session.refreshToken);
+});
+
 test("el acceso social web adopta la sesión en memoria sin guardar tokens en el navegador", async () => {
   const body = { id: "flow", proof: "temporary", mode: "login" };
   const app = setup(async (path, input) => {

@@ -68,6 +68,8 @@ export function authRoutes(repository, service, config, social) {
     });
     browser.post('/social/status', ipLimit, async (req, res) => res.json(await social.status(req.body)));
     browser.post('/social/complete', ipLimit, async (req, res) => browserResponse(res, await social.complete(req.body)));
+    router.post('/social/status', ipLimit, async (req, res) => res.json(await social.status(req.body)));
+    router.post('/social/complete', ipLimit, async (req, res) => res.json(await social.complete(req.body)));
     router.get('/social/:provider/callback', ipLimit, async (req, res) => {
       res.redirect(303, await social.callback(req.params.provider, req.query, binding(req)));
     });
