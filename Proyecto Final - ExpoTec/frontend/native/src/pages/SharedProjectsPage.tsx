@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+import ContentGrid from "../components/ContentGrid";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Button, Card, Chip, Choice, Heading, Screen } from "../components/ui";
@@ -144,30 +145,32 @@ export default function SharedProjectsPage({
           </Text>
         </Card>
       ) : null}
-      {visible.map((project) => (
-        <Card key={project.id}>
-          <Chip
-            label={sharedStatusLabel[project.status]}
-            tone={
-              project.status === "approved"
-                ? "success"
-                : project.status === "changes"
-                  ? "warning"
-                  : "neutral"
-            }
-          />
-          <Heading title={project.name} subtitle={project.course} />
-          <Text style={{ color: colors.muted }}>
-            {project.spaceName} · {project.furnitureId} ·{" "}
-            {formatDate(project.createdAt)}
-          </Text>
-          <Button
-            title={`Ver proyecto ${project.name}`}
-            variant="secondary"
-            onPress={() => onSelect(project.id, privateView)}
-          />
-        </Card>
-      ))}
+      <ContentGrid>
+        {visible.map((project) => (
+          <Card key={project.id}>
+            <Chip
+              label={sharedStatusLabel[project.status]}
+              tone={
+                project.status === "approved"
+                  ? "success"
+                  : project.status === "changes"
+                    ? "warning"
+                    : "neutral"
+              }
+            />
+            <Heading title={project.name} subtitle={project.course} />
+            <Text style={{ color: colors.muted }}>
+              {project.spaceName} · {project.furnitureId} ·{" "}
+              {formatDate(project.createdAt)}
+            </Text>
+            <Button
+              title={`Ver proyecto ${project.name}`}
+              variant="secondary"
+              onPress={() => onSelect(project.id, privateView)}
+            />
+          </Card>
+        ))}
+      </ContentGrid>
       {more && loadedScope === scope && (
         <Button
           title={loading ? "Cargando…" : "Cargar más proyectos"}

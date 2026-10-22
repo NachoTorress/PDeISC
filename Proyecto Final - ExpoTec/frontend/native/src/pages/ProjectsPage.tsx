@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Text, View, useWindowDimensions } from "react-native";
+import { Text, View } from "react-native";
+import ContentGrid from "../components/ContentGrid";
 import { useTheme } from "../contexts/ThemeContext";
 import { useDemo } from "../hooks/useDemo";
 import { formatDate, statusLabel } from "../lib/format";
@@ -29,7 +30,6 @@ type Props = {
 export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
   const { state, role, mutate, notify } = useDemo();
   const { colors } = useTheme();
-  const { width } = useWindowDimensions();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<ProjectStatus | "all">("all");
   const [deleting, setDeleting] = useState("");
@@ -94,7 +94,7 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
       <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}>
         {filtered.length} {filtered.length === 1 ? "proyecto" : "proyectos"}
       </Text>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
+      <ContentGrid>
         {filtered.map((project) => {
           const members = projectMembers(project);
           const space = state.spaces.find(
@@ -107,21 +107,20 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
             <Card key={project.id} style={{ width: "100%" }}>
               <View
                 style={{
-                  flexDirection: width >= 850 ? "row" : "column",
+                  flexDirection: "column",
                   gap: 20,
                   alignItems: "flex-start",
                 }}
               >
-                <View style={{ width: width >= 850 ? 156 : "100%" }}>
+                <View style={{ width: "100%" }}>
                   <ProjectArt
                     project={project}
-                    height={width >= 850 ? 132 : project.image ? 190 : 104}
+                    height={project.image ? 190 : 104}
                   />
                 </View>
                 <View
                   style={{
-                    flex: width >= 850 ? 1 : undefined,
-                    width: width >= 850 ? undefined : "100%",
+                    width: "100%",
                     minWidth: 0,
                     gap: 12,
                   }}
@@ -257,7 +256,7 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
             </Card>
           );
         })}
-      </View>
+      </ContentGrid>
       {!filtered.length && (
         <View style={{ gap: 12 }}>
           <Text style={{ color: colors.text, fontSize: 20, fontWeight: "600" }}>

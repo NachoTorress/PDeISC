@@ -7,6 +7,7 @@ import ProjectArt from "../components/ProjectArt";
 import { Icon } from "../components/Icon";
 import { projectMembers } from "../lib/team";
 import { formatDate } from "../lib/format";
+import ContentGrid from "../components/ContentGrid";
 
 export default function GalleryPage({
   onSelect,
@@ -26,7 +27,6 @@ export default function GalleryPage({
         .toLocaleLowerCase()
         .includes(query.toLocaleLowerCase()),
   );
-  const columns = width >= 1150 ? 3 : width >= 750 ? 2 : 1;
   return (
     <Screen>
       <Heading
@@ -75,18 +75,9 @@ export default function GalleryPage({
       <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}>
         {projects.length} proyectos confirmados
       </Text>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
+      <ContentGrid minItemWidth={300}>
         {projects.map((project) => (
-          <Card
-            key={project.id}
-            style={{
-              width: columns === 1 ? "100%" : undefined,
-              flexBasis:
-                columns === 1 ? undefined : columns === 2 ? "45%" : "30%",
-              flexGrow: columns === 1 ? 0 : 1,
-              minWidth: columns === 1 ? 0 : 260,
-            }}
-          >
+          <Card key={project.id}>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={`Ver ${project.name}`}
@@ -135,7 +126,7 @@ export default function GalleryPage({
             </Text>
           </Card>
         ))}
-      </View>
+      </ContentGrid>
       {!projects.length && (
         <Card>
           <Text style={{ color: colors.text, fontSize: 18, fontWeight: "600" }}>
