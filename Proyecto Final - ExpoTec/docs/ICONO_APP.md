@@ -10,7 +10,7 @@ Preparado para la próxima APK: versión 0.2.0, Android versionCode 2. La APK in
 
 `frontend/native/app.json` contiene las referencias. Expo genera los tamaños correspondientes al compilar. Los archivos están dentro de `assets`, incluida en la lista permitida de `.easignore`.
 
-No se recompiló la APK por este cambio. Se comprobó la configuración de Expo y la generación de recursos de Android; la apariencia en un teléfono físico queda para la próxima compilación.
+El ícono se incluye en la segunda APK de prueba (versionCode 2), junto con Google nativo y las mejoras del teclado. Se comprobó la configuración de Expo y la generación de recursos de Android; su apariencia final debe comprobarse en un teléfono físico.
 
 ## Generación
 
