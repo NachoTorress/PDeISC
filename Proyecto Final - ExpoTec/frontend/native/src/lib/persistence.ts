@@ -2,6 +2,7 @@ import { LABEL_TEXT_LIMITS, TABLE_LIMITS } from "./layout";
 import { projectLinkError } from "./projectLinks";
 import { migrateProjectTeams, teamErrors } from "./team";
 import type { DemoState } from "./types";
+import { demoGalleryImageError, demoCaptionError } from "./demoGallery";
 
 function invalid(path: string): never {
   throw new Error(`Los datos guardados no son válidos: ${path}.`);
@@ -190,5 +191,36 @@ export function parseSavedState(raw: string): DemoState {
     text(loan.notes, `${path}.notes`, true);
     date(loan.createdAt, `${path}.createdAt`);
   });
+  if (state.galleryPhotos !== undefined) {
+    records(state.galleryPhotos, "galleryPhotos").forEach((photo, index) => {
+      const path = `galleryPhotos[${index}]`;
+      if (demoGalleryImageError(text(photo.imageUrl, `${path}.imageUrl`), true))
+        invalid(`${path}.imageUrl`);
+      if (demoCaptionError(text(photo.caption, `${path}.caption`)))
+        invalid(`${path}.caption`);
+      text(photo.authorName, `${path}.authorName`);
+      if (
+        !["student", "teacher", "loans", "admin"].includes(
+          text(photo.authorRole, `${path}.authorRole`),
+        )
+      )
+        invalid(`${path}.authorRole`);
+      if (
+        !["pending", "approved", "rejected"].includes(
+          text(photo.status, `${path}.status`),
+        )
+      )
+        invalid(`${path}.status`);
+      if (photo.reviewNote !== undefined) {
+        const note = text(photo.reviewNote, `${path}.reviewNote`, true);
+        if (
+          note.length > 1000 ||
+          (photo.status === "rejected" && note.trim().length < 10)
+        )
+          invalid(`${path}.reviewNote`);
+      } else if (photo.status === "rejected") invalid(`${path}.reviewNote`);
+      date(photo.createdAt, `${path}.createdAt`);
+    });
+  }
   return migrateProjectTeams(state as unknown as DemoState);
 }

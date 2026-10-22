@@ -10,6 +10,12 @@ import { LABEL_TEXT_LIMITS, TABLE_LIMITS } from "./layout";
 import { isProjectMember, teamErrors } from "./team";
 import { projectLinkError, safeProjectLink } from "./projectLinks";
 import { cloneData } from "./clone";
+import {
+  demoGalleryPhotos,
+  demoGalleryAuthors,
+  demoGalleryImageError,
+  demoCaptionError,
+} from "./demoGallery";
 
 const STUDENT = "Lucía Fernández";
 const TEACHER = "Martín García";
@@ -345,6 +351,54 @@ export function applyMutation(
 ): DemoState {
   const next = cloneData(state);
   switch (action.type) {
+    case "submitGalleryPhoto": {
+      requireRole(role, "student", "teacher", "loans", "admin");
+      const error =
+        demoGalleryImageError(action.imageUrl, true) ||
+        demoCaptionError(action.caption);
+      if (error) throw new Error(error);
+      if (
+        JSON.stringify(next).length + action.imageUrl.length >
+        4 * 1024 * 1024
+      )
+        throw new Error(
+          "La demostración no tiene espacio para esta foto. Probá con una imagen más liviana.",
+        );
+      next.galleryPhotos = [
+        {
+          id: createId(),
+          imageUrl: action.imageUrl,
+          caption: action.caption.trim().normalize("NFC"),
+          authorName: demoGalleryAuthors[role],
+          authorRole: role as Exclude<Role, "guest">,
+          status: "pending",
+          createdAt: new Intl.DateTimeFormat("sv-SE", {
+            timeZone: "America/Argentina/Buenos_Aires",
+          }).format(new Date()),
+        },
+        ...cloneData(demoGalleryPhotos(next)),
+      ];
+      break;
+    }
+    case "reviewGalleryPhoto": {
+      requireRole(role, "admin");
+      next.galleryPhotos = cloneData(demoGalleryPhotos(next));
+      const photo = next.galleryPhotos.find((item) => item.id === action.id);
+      if (!photo) throw new Error("La foto ya no existe.");
+      if (!["approved", "rejected"].includes(action.decision))
+        throw new Error("Elegí una decisión válida.");
+      if (action.decision === photo.status)
+        throw new Error("La foto ya tiene ese estado.");
+      requireText(
+        action.note,
+        "El mensaje para el autor",
+        action.decision === "rejected" ? 10 : 0,
+        1000,
+      );
+      photo.status = action.decision;
+      photo.reviewNote = action.note.trim();
+      break;
+    }
     case "saveProject": {
       requireRole(role, "student");
       const previous = next.projects.find(

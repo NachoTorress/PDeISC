@@ -1,6 +1,8 @@
+import type { DemoGalleryPhoto } from "./demoGallery";
+
 export type Role = "student" | "teacher" | "loans" | "admin" | "guest";
 export type Page =
-  "map" | "projects" | "loans" | "inventory" | "gallery" | "tv";
+  "map" | "projects" | "loans" | "inventory" | "gallery" | "photos" | "tv";
 export type ProjectStatus = "pending" | "approved" | "changes";
 export interface Furniture {
   id: string;
@@ -67,8 +69,16 @@ export interface DemoState {
   projects: Project[];
   resources: Resource[];
   loans: Loan[];
+  galleryPhotos?: DemoGalleryPhoto[];
 }
 export type Mutation =
+  | { type: "submitGalleryPhoto"; imageUrl: string; caption: string }
+  | {
+      type: "reviewGalleryPhoto";
+      id: string;
+      decision: "approved" | "rejected";
+      note: string;
+    }
   | { type: "saveProject"; project: Project }
   | {
       type: "review";

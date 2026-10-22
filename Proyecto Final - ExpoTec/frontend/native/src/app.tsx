@@ -32,6 +32,7 @@ import PresentationPage from "./pages/PresentationPage";
 import AccountPage from "./pages/AccountPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import SharedGalleryPage from "./pages/SharedGalleryPage";
+import DemoGalleryPage from "./pages/DemoGalleryPage";
 import SharedSpacesPage from "./pages/SharedSpacesPage";
 import SharedProjectsPage from "./pages/SharedProjectsPage";
 import SharedProjectPage from "./pages/SharedProjectPage";
@@ -65,6 +66,7 @@ type TabRoutes = {
   loans: undefined;
   inventory: undefined;
   gallery: undefined;
+  photos: undefined;
   tv: undefined;
 };
 const Stack = createNativeStackNavigator<RootRoutes>();
@@ -99,6 +101,12 @@ const destinations: Destination[] = [
     id: "gallery",
     label: "Muestra",
     icon: "gallery",
+    roles: ["admin", "student", "teacher", "loans", "guest"],
+  },
+  {
+    id: "photos",
+    label: "Galería",
+    icon: "image",
     roles: ["admin", "student", "teacher", "loans", "guest"],
   },
   { id: "tv", label: "TV", icon: "tv", roles: ["guest"] },
@@ -697,6 +705,8 @@ function HomeTabs() {
                 return <LoansPage />;
               case "inventory":
                 return <InventoryPage />;
+              case "photos":
+                return <DemoGalleryPage key={role} />;
               case "gallery":
                 return (
                   <GalleryPage
