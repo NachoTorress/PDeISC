@@ -86,6 +86,7 @@ export default function PresentationPage({ onBack }: { onBack: () => void }) {
             ) : (
               <ProjectArt
                 project={project}
+                bounded
                 height={
                   project.image
                     ? width > 900

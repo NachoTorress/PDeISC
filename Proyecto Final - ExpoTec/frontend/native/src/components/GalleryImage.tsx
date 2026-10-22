@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { useAuth } from "../contexts/AuthContext";
 import { managedPhoto } from "../lib/photoUpload";
+import PhotoImage from "./PhotoImage";
 
 export default function GalleryImage({
   uri,
@@ -43,10 +44,10 @@ export default function GalleryImage({
   return (
     <View
       style={{
-        height,
+        minHeight: !source || failed ? height : undefined,
         borderRadius: 10,
         overflow: "hidden",
-        backgroundColor: colors.surfaceVariant,
+        backgroundColor: !source || failed ? colors.surfaceVariant : undefined,
         justifyContent: "center",
       }}
     >
@@ -57,11 +58,11 @@ export default function GalleryImage({
           No pudimos cargar esta imagen. Su descripción sigue disponible.
         </Text>
       ) : (
-        <Image
+        <PhotoImage
+          key={source}
           source={{ uri: source }}
-          accessibilityLabel={caption}
-          resizeMode="contain"
-          style={{ width: "100%", height: "100%" }}
+          caption={caption}
+          placeholderHeight={height}
           onError={() => setFailed(true)}
         />
       )}

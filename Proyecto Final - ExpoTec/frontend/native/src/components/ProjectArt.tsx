@@ -1,29 +1,28 @@
-import { Image, View } from "react-native";
+import { View } from "react-native";
 import type { Project } from "../lib/types";
 import { Icon } from "./Icon";
 import { useTheme } from "../contexts/ThemeContext";
+import PhotoImage from "./PhotoImage";
 export default function ProjectArt({
   project,
   compact = false,
   height,
+  bounded = false,
 }: {
   project: Project;
   compact?: boolean;
   height?: number;
+  bounded?: boolean;
 }) {
   const { colors } = useTheme();
   if (project.image)
     return (
-      <Image
-        accessibilityLabel={`Imagen de ${project.name}`}
+      <PhotoImage
+        key={project.image}
+        caption={`Imagen de ${project.name}`}
         source={{ uri: project.image }}
-        resizeMode="contain"
-        style={{
-          width: "100%",
-          height: height ?? (compact ? 108 : 172),
-          borderRadius: 12,
-          backgroundColor: colors.surfaceVariant,
-        }}
+        placeholderHeight={height ?? (compact ? 108 : 172)}
+        fixedHeight={bounded ? height : undefined}
       />
     );
   return (

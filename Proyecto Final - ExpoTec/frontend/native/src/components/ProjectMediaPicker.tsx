@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Image, Text } from "react-native";
+import { Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useTheme } from "../contexts/ThemeContext";
 import { projectVideoError } from "./projectFormModel";
 import { projectImageFromBase64 } from "./projectImage";
 import { Button, Field, Section } from "./ui";
+import PhotoImage from "./PhotoImage";
 
 type Props = {
   image: string;
@@ -77,11 +78,11 @@ export default function ProjectMediaPicker({
         {editing ? " Podés reemplazar la imagen actual." : ""}
       </Text>
       {image ? (
-        <Image
+        <PhotoImage
+          key={image}
           source={{ uri: image }}
-          accessibilityLabel="Vista previa de la imagen del proyecto"
-          style={{ width: "100%", height: 190, borderRadius: 12 }}
-          resizeMode="contain"
+          caption="Vista previa de la imagen del proyecto"
+          placeholderHeight={190}
         />
       ) : null}
       <Button
