@@ -17,11 +17,12 @@ export default function ProjectArt({
       <Image
         accessibilityLabel={`Imagen de ${project.name}`}
         source={{ uri: project.image }}
-        resizeMode="cover"
+        resizeMode="contain"
         style={{
           width: "100%",
           height: height ?? (compact ? 108 : 172),
           borderRadius: 12,
+          backgroundColor: colors.surfaceVariant,
         }}
       />
     );

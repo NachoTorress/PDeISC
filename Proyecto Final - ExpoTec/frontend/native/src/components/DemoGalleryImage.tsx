@@ -1,4 +1,5 @@
 import { Image } from "react-native";
+import { useTheme } from "../contexts/ThemeContext";
 import robot from "../../assets/demo-gallery/robot.jpg";
 import electronics from "../../assets/demo-gallery/electronics.jpg";
 
@@ -9,6 +10,7 @@ export default function DemoGalleryImage({
   uri: string;
   caption: string;
 }) {
+  const { colors } = useTheme();
   const source =
     uri === "sample:robot"
       ? robot
@@ -19,8 +21,13 @@ export default function DemoGalleryImage({
     <Image
       source={source}
       accessibilityLabel={caption}
-      resizeMode="cover"
-      style={{ width: "100%", height: 220, borderRadius: 12 }}
+      resizeMode="contain"
+      style={{
+        width: "100%",
+        height: 220,
+        borderRadius: 12,
+        backgroundColor: colors.surfaceVariant,
+      }}
     />
   );
 }
