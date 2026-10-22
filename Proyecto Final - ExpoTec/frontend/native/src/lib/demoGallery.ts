@@ -3,7 +3,7 @@ import type { GalleryPhoto, GalleryStatus } from "./gallery";
 import { projectImageFromBase64 } from "../components/projectImage";
 
 export interface DemoGalleryPhoto extends GalleryPhoto {
-  authorRole: Exclude<Role, "guest">;
+  authorRole: Role;
   status: GalleryStatus;
 }
 

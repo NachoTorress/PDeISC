@@ -63,28 +63,66 @@ test("una imagen JPEG elegida del dispositivo conserva sus bytes al enviar y rec
   assert.equal(photo.status, "pending");
 });
 
-test("invitados no envían fotos y sólo organización puede moderar", () => {
-  assert.throws(
-    () =>
-      applyMutation(
-        seed,
-        {
-          type: "submitGalleryPhoto",
-          imageUrl: "sample:robot",
-          caption: "Un robot de ejemplo.",
-        },
-        "guest",
-      ),
-    /permiso/,
+test("el invitado puede enviar fotos pendientes y consultar el resultado después de recargar", () => {
+  const submitted = applyMutation(
+    seed,
+    {
+      type: "submitGalleryPhoto",
+      imageUrl: "sample:robot",
+      caption: "Un robot de ejemplo.",
+    },
+    "guest",
+    () => "guest-photo",
+  );
+  const restored = parseSavedState(JSON.stringify(submitted));
+  const photo = demoGalleryPhotos(restored).find(
+    (item) => item.id === "guest-photo",
+  );
+  assert.equal(photo?.authorRole, "guest");
+  assert.equal(photo?.authorName, "Invitado");
+  assert.equal(photo?.status, "pending");
+  assert.equal(
+    demoGalleryPhotos(restored)
+      .filter((item) => item.status === "approved")
+      .some((item) => item.id === "guest-photo"),
+    false,
+  );
+  const approved = applyMutation(
+    restored,
+    {
+      type: "reviewGalleryPhoto",
+      id: "guest-photo",
+      decision: "approved",
+      note: "Aprobada por organización.",
+    },
+    "admin",
+  );
+  const reviewed = demoGalleryPhotos(
+    parseSavedState(JSON.stringify(approved)),
+  ).find((item) => item.id === "guest-photo");
+  assert.equal(reviewed?.status, "approved");
+  assert.equal(reviewed?.reviewNote, "Aprobada por organización.");
+});
+
+test("sólo organización puede moderar, incluido el aporte de un invitado", () => {
+  const submitted = applyMutation(
+    seed,
+    {
+      type: "submitGalleryPhoto",
+      imageUrl: "sample:robot",
+      caption: "Una foto de un invitado.",
+    },
+    "guest",
+    () => "guest-photo",
   );
   for (const role of ["student", "teacher", "loans", "guest"] as const)
     assert.throws(
       () =>
         applyMutation(
-          seed,
+          submitted,
           {
             type: "reviewGalleryPhoto",
-            id: "demo-circuit",
+            id: "guest-photo",
             decision: "approved",
             note: "",
           },

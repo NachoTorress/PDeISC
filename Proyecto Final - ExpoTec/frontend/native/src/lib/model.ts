@@ -352,7 +352,7 @@ export function applyMutation(
   const next = cloneData(state);
   switch (action.type) {
     case "submitGalleryPhoto": {
-      requireRole(role, "student", "teacher", "loans", "admin");
+      requireRole(role, "student", "teacher", "loans", "admin", "guest");
       const error =
         demoGalleryImageError(action.imageUrl, true) ||
         demoCaptionError(action.caption);
@@ -370,7 +370,7 @@ export function applyMutation(
           imageUrl: action.imageUrl,
           caption: action.caption.trim().normalize("NFC"),
           authorName: demoGalleryAuthors[role],
-          authorRole: role as Exclude<Role, "guest">,
+          authorRole: role,
           status: "pending",
           createdAt: new Intl.DateTimeFormat("sv-SE", {
             timeZone: "America/Argentina/Buenos_Aires",

@@ -32,10 +32,8 @@ export default function DemoGalleryPage() {
   const [note, setNote] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [error, setError] = useState("");
-  const canSubmit = role !== "guest",
-    canModerate = role === "admin";
-  const effectiveMode =
-    !canSubmit || (mode === "admin" && !canModerate) ? "public" : mode;
+  const canModerate = role === "admin";
+  const effectiveMode = mode === "admin" && !canModerate ? "public" : mode;
   const photos = demoGalleryPhotos(state);
   const visible = photos.filter((photo) =>
     effectiveMode === "public"
@@ -167,25 +165,18 @@ export default function DemoGalleryPage() {
         </Card>
       ) : (
         <>
-          {canSubmit ? (
-            <Button
-              title="¡Subí tu foto de la ExpoTec!"
-              icon="gallery"
-              onPress={() => setForm({ role })}
-            />
-          ) : (
-            <Text style={paragraph}>
-              Para probar el envío, elegí un perfil como Estudiante en Cambiar
-              vista.
-            </Text>
-          )}
+          <Button
+            title="¡Subí tu foto de la ExpoTec!"
+            icon="gallery"
+            onPress={() => setForm({ role })}
+          />
           <Choice
             label="Ver fotos"
             value={effectiveMode}
             onChange={setMode}
             options={[
               { value: "public", label: "Fotos publicadas" },
-              ...(canSubmit ? [{ value: "mine", label: "Mis fotos" }] : []),
+              { value: "mine", label: "Mis fotos" },
               ...(canModerate
                 ? [{ value: "admin", label: "Moderar fotos" }]
                 : []),

@@ -200,7 +200,7 @@ export function parseSavedState(raw: string): DemoState {
         invalid(`${path}.caption`);
       text(photo.authorName, `${path}.authorName`);
       if (
-        !["student", "teacher", "loans", "admin"].includes(
+        !["student", "teacher", "loans", "admin", "guest"].includes(
           text(photo.authorRole, `${path}.authorRole`),
         )
       )
