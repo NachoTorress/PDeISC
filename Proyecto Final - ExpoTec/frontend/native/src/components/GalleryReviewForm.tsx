@@ -58,7 +58,7 @@ export default function GalleryReviewForm({ photo, onClose, onReviewed }: { phot
       <Field label="Mensaje para el autor" value={note} onChangeText={setNote} maxLength={1000} editable={!busy && !confirm && !leave}
         hint="El autor podrá leer el mensaje. Es obligatorio al rechazar o retirar." error={noteError} />
       {!!error && <Text accessibilityRole="alert" style={{ color: colors.error }}>{error}</Text>}
-      {confirm === "save" ? <InlineConfirm text={decision === "approved" ? "¿Publicar esta foto para todos los visitantes?" : "¿Dejar esta foto fuera de la galería pública y comunicar el motivo al autor?"}
+      {confirm === "save" ? <InlineConfirm tone={decision === "approved" ? "success" : "danger"} text={decision === "approved" ? "¿Publicar esta foto para todos los visitantes?" : "¿Dejar esta foto fuera de la galería pública y comunicar el motivo al autor?"}
         confirmLabel="Confirmar decisión" onCancel={() => setConfirm(null)} onConfirm={() => void review()} /> : confirm === "close" || leave ? (
           <InlineConfirm text="¿Descartar la revisión y actualizar la lista?" confirmLabel="Descartar y volver" onCancel={() => { setConfirm(null); setLeave(null); }} onConfirm={close} />
         ) : <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>

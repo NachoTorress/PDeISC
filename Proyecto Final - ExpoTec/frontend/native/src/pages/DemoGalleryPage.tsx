@@ -139,6 +139,7 @@ export default function DemoGalleryPage() {
           )}
           {confirm ? (
             <InlineConfirm
+              tone={decision === "approved" ? "success" : "danger"}
               text={
                 decision === "approved"
                   ? "¿Publicar esta foto en la galería de demostración?"

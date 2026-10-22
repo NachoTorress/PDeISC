@@ -69,6 +69,7 @@ export default function UserPermissionsForm({ account, onClose, onSaved }: {
       {conflict && <Button title="Descartar selección y recargar cuenta" variant="secondary" disabled={busy} onPress={() => setConfirm("reload")} />}
       {confirm === "save" ? (
         <InlineConfirm
+          tone="success"
           text={`¿Guardar estos permisos para ${source.firstName} ${source.lastName}: ${accountRoles.filter(role => roles.includes(role.value)).map(role => role.label).join(", ")}?${source.id === user?.id && !roles.includes("admin") ? " Vas a perder el acceso a la administración." : ""}`}
           confirmLabel="Sí, guardar permisos"
           onCancel={() => setConfirm(null)}

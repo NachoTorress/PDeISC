@@ -316,6 +316,7 @@ export default function SharedLendingForm({
       {confirm && (
         <View pointerEvents={busy ? "none" : "auto"}>
           <InlineConfirm
+            tone={confirm === "deliver" ? "success" : "danger"}
             text={
               confirm === "close"
                 ? "¿Descartar el borrador de esta entrega?"

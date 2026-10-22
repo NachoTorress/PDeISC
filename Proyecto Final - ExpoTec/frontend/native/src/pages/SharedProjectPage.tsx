@@ -401,6 +401,11 @@ export default function SharedProjectPage({
             {confirm && (
               <View pointerEvents={busy ? "none" : "auto"}>
                 <InlineConfirm
+                  tone={
+                    confirm === "approve" || confirm === "changes"
+                      ? "success"
+                      : "danger"
+                  }
                   text={
                     confirm === "approve"
                       ? `¿Confirmar ${project.name}, ocupar el puesto ${project.booth.furnitureId}${project.resources?.length ? " y reservar todos sus elementos" : ""}?`

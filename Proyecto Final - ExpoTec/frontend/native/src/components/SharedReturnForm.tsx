@@ -175,6 +175,7 @@ export default function SharedReturnForm({
       {confirm && (
         <View pointerEvents={busy ? "none" : "auto"}>
           <InlineConfirm
+            tone={confirm === "receive" ? "success" : "danger"}
             text={
               confirm === "close"
                 ? "¿Descartar el borrador del movimiento?"

@@ -485,15 +485,25 @@ export function InlineConfirm({
   onConfirm,
   onCancel,
   confirmLabel = "Sí, eliminar",
+  tone = "danger",
 }: {
   text: string;
   onConfirm: () => void;
   onCancel: () => void;
   confirmLabel?: string;
+  tone?: "success" | "danger";
 }) {
   const { colors } = useTheme();
   return (
-    <View style={[styles.confirm, { backgroundColor: colors.errorContainer }]}>
+    <View
+      style={[
+        styles.confirm,
+        {
+          backgroundColor:
+            tone === "success" ? colors.successContainer : colors.errorContainer,
+        },
+      ]}
+    >
       <Text style={{ color: colors.text, fontSize: 15, lineHeight: 22 }}>
         {text}
       </Text>
@@ -501,7 +511,7 @@ export function InlineConfirm({
         <Button
           title={confirmLabel}
           icon="check"
-          variant="danger"
+          variant={tone === "success" ? "primary" : "danger"}
           onPress={onConfirm}
         />
         <Button
