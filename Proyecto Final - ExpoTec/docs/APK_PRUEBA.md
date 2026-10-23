@@ -4,6 +4,8 @@ Versión inicial: 0.2.0, Android versionCode 1. Proyecto Expo: [nachot/expotec-o
 
 Segunda APK de prueba: 0.2.0, Android versionCode 2. Compilación EAS `0d0b28a2-ba16-4f7c-83a0-659c5c540415`, terminada el 22/10/2026, desde el código de `46ce1920`. Incluye el ícono propio, acceso nativo de Google, formulario que acompaña al teclado y barra inferior del sistema oculta con recuperación por deslizamiento. La confirmación de uso en un teléfono físico sigue pendiente.
 
+Próxima actualización solicitada: 0.3.0, Android versionCode 3. Incluye paleta azul profundo/naranja y selectores alineados en filas completas. Se mantiene el perfil `preview`, el proyecto de Expo y su firma para permitir la actualización de la APK anterior. El archivo compilado y su identificación se registrarán al terminar EAS.
+
 ## Alcance
 
 La app incluye el frontend y usa `https://expotec-api-gn19.vercel.app`. Las cuentas, permisos, proyectos, fotos y préstamos son los mismos que en la web; las operaciones realizadas desde la APK se guardan en ese servidor.

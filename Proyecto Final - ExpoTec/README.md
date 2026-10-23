@@ -1,6 +1,6 @@
 # ExpoTec
 
-Rediseño del 22/10/2026: navegación petróleo, secciones con color, botones y filtros compartidos, tarjetas alineadas e imágenes contenidas en marcos uniformes. [Decisiones y referencias de la interfaz](docs/DISENO_INTERFAZ.md).
+Rediseño del 22/10/2026: navegación azul profundo, acentos naranja, filtros en filas completas, tarjetas alineadas e imágenes contenidas en marcos uniformes. [Decisiones y referencias de la interfaz](docs/DISENO_INTERFAZ.md).
 
 Actualización del 22/10/2026: [carga directa de fotos](docs/CARGA_FOTOS.md) en proyectos y galería mediante Vercel Blob privado, con optimización y aprobación antes del acceso público. Préstamos aprovecha el ancho disponible con fichas en columnas; la navegación mantiene estable la posición de sus títulos.
 

@@ -160,7 +160,9 @@ export default function SharedLoansPage({
   if (!canManage)
     return (
       <Screen>
-        <PageHeading icon="loans" tone="accent"
+        <PageHeading
+          icon="loans"
+          tone="accent"
           title="Préstamos y devoluciones"
           subtitle="Ingresá con permiso de préstamos o administración para gestionar las entregas."
         />
@@ -169,7 +171,9 @@ export default function SharedLoansPage({
     );
   return (
     <Screen>
-      <PageHeading icon="loans" tone="accent"
+      <PageHeading
+        icon="loans"
+        tone="accent"
         title="Préstamos y devoluciones"
         subtitle="Entregas, devoluciones parciales y novedades de las tres jornadas."
       />
@@ -194,7 +198,7 @@ export default function SharedLoansPage({
           }}
         />
       </View>
-      <ContentGrid maxColumns={2} minItemWidth={360}>
+      <View style={{ gap: 12 }}>
         <Choice
           label="Jornada para entregas"
           value={day}
@@ -209,12 +213,12 @@ export default function SharedLoansPage({
             setNotice("");
           }}
         />
-        <Text key="day-help" style={paragraph}>
+        <Text style={{ ...paragraph, maxWidth: 760 }}>
           La jornada identifica la entrega; la fecha y hora se registran al
           guardarla. Cambiar de jornada no devuelve elementos ni libera sus
           reservas.
         </Text>
-      </ContentGrid>
+      </View>
       {loadedFor === listScope && (
         <Text style={{ color: colors.text, fontSize: 16, lineHeight: 24 }}>
           {summary.pendingQuantity} unidades sin devolver ·{" "}
@@ -283,14 +287,14 @@ export default function SharedLoansPage({
           }}
         />
       )}
-      <ContentGrid maxColumns={2} minItemWidth={360}>
+      <View style={{ gap: 20, maxWidth: 760 }}>
         <Choice
           label="Vista de préstamos"
           value={view}
           disabled={busy || editing}
           options={[
-            { value: "open", label: "Pendientes de todas las jornadas" },
-            { value: "day", label: "Entregas de la jornada elegida" },
+            { value: "open", label: "Pendientes de devolución" },
+            { value: "day", label: "Entregas de esta jornada" },
             { value: "all", label: "Todo el historial" },
           ]}
           onChange={(value) => {
@@ -306,7 +310,7 @@ export default function SharedLoansPage({
           maxLength={120}
           hint="Podés buscar por proyecto, elemento u observación. Cargá más registros si faltan resultados."
         />
-      </ContentGrid>
+      </View>
       {loading && !visible.length ? (
         <ActivityIndicator color={colors.primary} />
       ) : !visible.length && !error ? (

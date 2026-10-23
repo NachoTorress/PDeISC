@@ -1,6 +1,6 @@
 ---
 name: ExpoTec — interfaz nativa
-description: Interfaz operativa de Expo SDK 57; navegación petróleo, acciones verdes y secciones azules y ámbar con controles compartidos.
+description: Interfaz operativa de Expo SDK 57; navegación azul profundo, acciones azules y acentos naranja con controles compartidos.
 colors:
   page: "#f3f1ed"
   surface: "#faf9f6"

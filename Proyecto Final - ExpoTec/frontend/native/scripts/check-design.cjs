@@ -71,30 +71,28 @@ const resources = seed.resources.map((resource) => ({
   archivedAt: null,
   events: [],
 }));
-const loans = projects
-  .slice(0, 3)
-  .map((project, index) => ({
-    id: `loan-${index}`,
-    projectId: project.id,
-    resourceId: resources[index].id,
-    projectName: project.name,
-    resourceName: resources[index].name,
-    day: 1,
-    quantity: index + 2,
-    returned: index,
-    version: 1,
-    recipientId: user.id,
-    note:
-      index === 1
-        ? "Observación de prueba con una descripción más larga para comprobar el ajuste de las fichas."
-        : "",
-    createdAt: project.createdAt,
-    recipientFirstName: "Equipo",
-    recipientLastName: "de prueba",
-    deliveredFirstName: "Cuenta",
-    deliveredLastName: "de prueba",
-    returns: [],
-  }));
+const loans = projects.slice(0, 3).map((project, index) => ({
+  id: `loan-${index}`,
+  projectId: project.id,
+  resourceId: resources[index].id,
+  projectName: project.name,
+  resourceName: resources[index].name,
+  day: 1,
+  quantity: index + 2,
+  returned: index,
+  version: 1,
+  recipientId: user.id,
+  note:
+    index === 1
+      ? "Observación de prueba con una descripción más larga para comprobar el ajuste de las fichas."
+      : "",
+  createdAt: project.createdAt,
+  recipientFirstName: "Equipo",
+  recipientLastName: "de prueba",
+  deliveredFirstName: "Cuenta",
+  deliveredLastName: "de prueba",
+  returns: [],
+}));
 
 async function main() {
   await fs.mkdir(output, { recursive: true });
@@ -241,21 +239,19 @@ async function main() {
       });
     if (endpoint === "/api/gallery/public/query")
       return reply({
-        photos: projects
-          .slice(0, 3)
-          .map((project, index) => ({
-            id: project.id,
-            imageUrl:
-              mode === "partial" && index === 0
-                ? `${base}/missing-photo.jpg`
-                : project.imageUrl,
-            caption:
-              index === 1
-                ? "Una descripción más larga de la exposición para verificar que las tarjetas mantengan su alineación."
-                : "Recuerdo de demostración de la exposición.",
-            authorName: "Equipo de prueba",
-            createdAt: project.createdAt,
-          })),
+        photos: projects.slice(0, 3).map((project, index) => ({
+          id: project.id,
+          imageUrl:
+            mode === "partial" && index === 0
+              ? `${base}/missing-photo.jpg`
+              : project.imageUrl,
+          caption:
+            index === 1
+              ? "Una descripción más larga de la exposición para verificar que las tarjetas mantengan su alineación."
+              : "Recuerdo de demostración de la exposición.",
+          authorName: "Equipo de prueba",
+          createdAt: project.createdAt,
+        })),
       });
     if (endpoint === "/api/inventory/query") return reply({ resources });
     if (/^\/api\/inventory\/[^/]+\/query$/.test(endpoint))
@@ -515,6 +511,69 @@ async function main() {
         exact: true,
       })
       .waitFor();
+    for (const width of [1440, 1024, 872, 768, 600, 390, 320]) {
+      await page.setViewportSize({ width, height: 1000 });
+      await overflow(`Préstamos ${width}`);
+      for (const label of ["Jornada para entregas", "Vista de préstamos"]) {
+        const group = page.getByRole("radiogroup", {
+          name: label,
+          exact: true,
+        });
+        await page.waitForFunction((label) => {
+          const group = [
+            ...document.querySelectorAll('[role="radiogroup"]'),
+          ].find(
+            (element) =>
+              element.getAttribute("aria-label") === label &&
+              element.getBoundingClientRect().width > 0,
+          );
+          if (!group) return false;
+          const rects = [...group.querySelectorAll('[role="radio"]')].map(
+            (element) => element.getBoundingClientRect(),
+          );
+          return (
+            rects.every((rect) => Math.abs(rect.y - rects[0].y) < 1) ||
+            rects.every((rect) => Math.abs(rect.x - rects[0].x) < 1)
+          );
+        }, label);
+        const rects = await group.getByRole("radio").evaluateAll((elements) =>
+          elements.map((element) => {
+            const rect = element.getBoundingClientRect();
+            return {
+              x: rect.x,
+              y: rect.y,
+              width: rect.width,
+              height: rect.height,
+            };
+          }),
+        );
+        assert.equal(rects.length, 3);
+        assert.ok(
+          rects.every((rect) => Math.abs(rect.width - rects[0].width) < 1),
+          `${label}: anchos distintos`,
+        );
+        const oneRow = rects.every((rect) => Math.abs(rect.y - rects[0].y) < 1);
+        const oneColumn = rects.every(
+          (rect) => Math.abs(rect.x - rects[0].x) < 1,
+        );
+        assert.ok(oneRow || oneColumn, `${label}: una opción quedó suelta`);
+        if (oneRow)
+          assert.ok(
+            rects.every((rect) => Math.abs(rect.height - rects[0].height) < 1),
+            `${label}: alturas distintas`,
+          );
+        if (width === 872)
+          assert.ok(
+            oneRow,
+            `${label}: las tres opciones deben compartir fila a 872 px`,
+          );
+      }
+      await capture(
+        "loans-aligned",
+        "Jornada y vista: tres botones de igual ancho en una fila, o una columna completa en móvil. Sin distribución 2+1.",
+      );
+    }
+    await page.setViewportSize({ width: 1440, height: 1000 });
     await capture(
       "loans",
       "Fichas de préstamos con títulos de longitudes distintas y acciones al pie.",

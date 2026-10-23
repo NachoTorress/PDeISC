@@ -14,3 +14,4 @@ dist/
 .install-interrupted/
 dist-android/
 artifacts/design-review/
+artifacts/android/

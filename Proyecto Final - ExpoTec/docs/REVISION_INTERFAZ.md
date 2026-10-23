@@ -2,16 +2,18 @@
 
 Resultado del alcance visual: **PASS**. [Contrato de diseño y referencias](DISENO_INTERFAZ.md).
 
+Segunda revisión del mismo día, a partir de la captura del usuario: paleta azul profundo/naranja y selectores con filas completas. Préstamos se comprueba además a 600 y 872 píxeles. La distribución 2+1 queda cubierta por pruebas de regresión y medidas del navegador.
+
 Se revisaron las superficies de Expo Web modificadas, con Edge aislado y datos de prueba derivados de la demostración existente. El ensayo no conecta con TiDB. Las capturas y el registro JSON se generan localmente en `artifacts/design-review/`, una carpeta excluida de Git.
 
 ## Comprobaciones ejecutadas
 
 - PASS · TypeScript: `npm run typecheck`.
 - PASS · ESLint: `npm run lint`.
-- PASS · Modelo y servicios existentes: `npm test`, 93 pruebas.
+- PASS · Modelo, servicios y distribución de selectores: `npm test`, 95 pruebas.
 - PASS · Exportación web: `npm run export:web`.
 - PASS · Empaquetado Android con Hermes: `npm run export:android`. Esto no constituye una prueba en teléfono ni genera un APK.
-- PASS · Revisión de navegador: `scripts/check-design.cjs`, 18 capturas, 0 errores de JavaScript; controles, textos largos, ingreso, registro, navegación, consulta y guardado simulado.
+- PASS · Revisión de navegador: `scripts/check-design.cjs`, 25 capturas, 0 errores de JavaScript; controles, textos largos, ingreso, registro, navegación, consulta y guardado simulado. Los dos grupos de préstamos se comprueban en siete anchos.
 - PASS · Adaptación: 320×812, 390×844, 768×1024, 1024×900 y 1440×1000. Se verifican desbordes y se inspeccionan las capturas.
 - PASS · Contraste: 38 combinaciones de color de texto/fondo en ambos temas, todas con relación mínima 4,5:1. Los valores exactos se guardan en `evidence.json`.
 - PASS · Registro ECC: `check-evidence.js artifacts/design-review/evidence.json`, además de inspección visual de los archivos.
@@ -39,7 +41,7 @@ Cada entrada corresponde al cambio visual de esta entrega y a los recorridos ind
 - R-17 PASS: los conteos conservan el modelo existente; el ensayo usa fixtures identificados como prueba.
 - R-18 PASS: no se agregaron testimonios ni personas presentadas como usuarios reales.
 - R-19 PASS: no se añadieron animaciones decorativas; menús y desplazamiento respetan movimiento reducido.
-- R-20 PASS: petróleo en navegación, verde en acciones y azul/ámbar por sección, relacionados con la herramienta escolar.
+- R-20 PASS: azul profundo en navegación, azul en acciones y naranja en secciones y selección de destino; paleta elegida tras la corrección del usuario.
 - R-21 PASS: se probaron el cambio a oscuro y el regreso a claro en escritorio y teléfono.
 - R-22 PASS: se reutilizan recursos gráficos del repositorio; las imágenes de prueba se interceptan localmente.
 - R-23 PASS: se reutilizó el icono existente y se conservaron los destinos de navegación.
@@ -61,12 +63,12 @@ Cada entrada corresponde al cambio visual de esta entrega y a los recorridos ind
 
 ## Vitalidad y oficio
 
-- ENERGY 2 PASS: cabeceras con color y navegación petróleo dan identidad sin competir con los datos.
+- ENERGY 2 PASS: cabeceras con color y navegación azul profundo dan identidad sin competir con los datos.
 - RHYTHM 2 PASS: las listas son predecibles; plano, cuenta y presentación conservan composiciones propias.
 - MOTION 1 PASS: feedback de interacción y apertura; preferencia de movimiento reducido aplicada.
 - Foco principal PASS: el título y el contenido de trabajo definen cada pantalla.
 - Espaciado PASS: tokens para controles, tarjetas y grillas; el pie utiliza el espacio libre para alinear acciones.
-- Acento PASS: verde para acción/selección, sin teñir todos los textos o superficies.
+- Acento PASS: naranja para orientación y secciones; azul en los controles y verde sólo para estados exitosos.
 - Motivo de identidad PASS: cabeceras cromáticas y navegación estable se repiten entre las secciones.
 - C-1 PASS: decisiones justificadas en el contrato.
 - C-2 PASS: no se agregaron controles decorativos sin acción.

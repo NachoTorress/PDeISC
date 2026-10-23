@@ -6,8 +6,8 @@ Herramienta escolar para recorrer la exposición, presentar proyectos y gestiona
 
 Lectura de diseño: aplicación educativa de uso público y operativo, con lenguaje cercano y color funcional. ENERGY 2 / RHYTHM 2 / MOTION 1. La dirección responde al pedido de más color y controles estandarizados.
 
-- Petróleo en la navegación: mantiene reconocible la estructura y separa el recorrido del contenido.
-- Verde para acciones y selección; azul para proyectos y recursos; ámbar para fotos y préstamos. Los estados conservan sus etiquetas además del color.
+- Azul profundo en la navegación: mantiene reconocible la estructura y separa el recorrido del contenido.
+- Azul para acciones y selección; naranja para fotos, préstamos y el destino activo. El verde queda reservado a estados exitosos. Los estados conservan sus etiquetas además del color.
 - Superficies claras con texto azul oscuro; la versión oscura mantiene los mismos roles, con tintes legibles.
 - Tipografía del sistema: conserva buena lectura en web y Android sin descargar fuentes.
 - Botones y campos de al menos 48 puntos, radio de 10 y separación de 8; los controles de icono conservan al menos 44. Las acciones de una misma fila se reparten el ancho y se apilan cuando falta espacio.
@@ -16,6 +16,9 @@ Lectura de diseño: aplicación educativa de uso público y operativo, con lengu
 - Fotografías contenidas en marcos uniformes en las listas, sin recortar su contenido. Las fichas de detalle conservan la proporción original.
 - El plano, las fotografías y el icono existentes son los recursos gráficos del producto. No se agregan imágenes decorativas ni nuevos servicios de generación.
 - Una cabecera de sección con fondo de color sustituye la duplicación de títulos entre la barra de navegación y el contenido. Las fichas y formularios de detalle conservan el retroceso.
+- Los selectores sólo forman filas completas: tres opciones se muestran en una fila o en una columna, nunca como dos más una. Jornada y vista de préstamos utilizan todo el ancho del bloque, con la ayuda y la búsqueda debajo.
+
+Corrección solicitada después de la primera revisión: se reemplazó la paleta petróleo/verde por azul profundo y naranja. El ensayo de navegador ahora comprueba explícitamente la alineación de ambos grupos de préstamos a 320, 390, 600, 768, 872, 1024 y 1440 píxeles; la captura del usuario sirve como caso de regresión.
 
 Objetivos de revisión: 320×812, 390×844, 768×1024, 1024×900 y 1440×1000. Menú lateral permanente desde 1200; en anchos menores se mantiene el panel móvil. No debe haber desbordes horizontales, acciones recortadas ni saltos de ancho al seleccionar filtros.
 

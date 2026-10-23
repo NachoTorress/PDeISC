@@ -24,6 +24,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FormScrollView } from "./KeyboardLayout";
 import { layout } from "../theme/tokens";
 import { useReducedMotion } from "../hooks/useReducedMotion";
+import { choiceLayout } from "../lib/choiceLayout";
 
 const ActionRowContext = createContext(false);
 
@@ -526,12 +527,7 @@ export function Choice({
 }) {
   const { colors } = useTheme();
   const [width, setWidth] = useState(0);
-  const columns = Math.max(
-    1,
-    Math.min(options.length, Math.floor((width + 8) / 168)),
-  );
-  const optionWidth =
-    width > 0 ? (width - 8 * (columns - 1)) / columns : undefined;
+  const { optionWidth } = choiceLayout(width, options.length);
   return (
     <View style={styles.field}>
       <Text selectable={false} style={[styles.label, { color: colors.text }]}>
