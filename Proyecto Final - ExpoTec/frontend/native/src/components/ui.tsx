@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type { ReactNode } from "react";
+import type { ReactNode, Ref } from "react";
 import {
   ActivityIndicator,
   Platform,
@@ -272,6 +272,7 @@ export function Field({
   autoFocus = false,
   secureTextEntry = false,
   autoComplete,
+  placeholder,
   onBlur,
   onSubmitEditing,
 }: {
@@ -287,6 +288,7 @@ export function Field({
   autoFocus?: boolean;
   secureTextEntry?: boolean;
   autoComplete?: TextInputProps["autoComplete"];
+  placeholder?: string;
   onBlur?: () => void;
   onSubmitEditing?: () => void;
 }) {
@@ -312,6 +314,8 @@ export function Field({
         returnKeyType={onSubmitEditing ? "go" : undefined}
         secureTextEntry={secureTextEntry}
         autoComplete={autoComplete}
+        placeholder={placeholder}
+        placeholderTextColor={colors.muted}
         editable={editable}
         autoFocus={autoFocus}
         maxLength={maxLength}
@@ -732,9 +736,11 @@ export function InlineConfirm({
 export function Screen({
   children,
   scrollEnabled = true,
+  scrollRef,
 }: {
   children: ReactNode;
   scrollEnabled?: boolean;
+  scrollRef?: Ref<Pick<ScrollView, "scrollTo">>;
 }) {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
@@ -745,7 +751,11 @@ export function Screen({
   return (
     <View style={{ flex: 1, backgroundColor: colors.page }}>
       <FormScrollView
-        ref={scroll}
+        ref={(node) => {
+          scroll.current = node;
+          if (typeof scrollRef === "function") scrollRef(node);
+          else if (scrollRef) scrollRef.current = node;
+        }}
         style={[{ flex: 1, minHeight: 0 }, scrollLayoutStyle]}
         scrollEnabled={scrollEnabled}
         keyboardShouldPersistTaps="handled"

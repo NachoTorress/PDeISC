@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
+import type { ScrollView } from "react-native";
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
 import type { NavigationAction } from "@react-navigation/native";
 import {
+  ActionRow,
   Button,
   Card,
-  CheckRow,
   Choice,
-  Field,
   Heading,
   InlineConfirm,
   Screen,
@@ -15,7 +15,10 @@ import {
 } from "../components/ui";
 import SharedPeoplePicker from "../components/SharedPeoplePicker";
 import SharedResourcePicker from "../components/SharedResourcePicker";
-import PhotoUploadField from "../components/PhotoUploadField";
+import ProjectSubjectsPicker from "../components/ProjectSubjectsPicker";
+import SharedProjectDetails from "../components/SharedProjectDetails";
+import ProposalStepNavigation from "../components/ProposalStepNavigation";
+import ProposalReview from "../components/ProposalReview";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { AuthError } from "../lib/authTypes";
@@ -26,6 +29,21 @@ import {
 } from "../lib/sharedProjects";
 import type { ProposalDraft, SharedProject } from "../lib/sharedProjects";
 import type { SharedSpace, SpaceSummary } from "../lib/sharedSpaces";
+import {
+  firstProposalIssueStep,
+  proposalFieldLabels,
+  proposalFlowErrors,
+  proposalIssuesForStep,
+  proposalStepForField,
+  proposalSteps,
+} from "../lib/proposalSteps";
+import type { ProposalPending } from "../lib/proposalSteps";
+
+const noPending: ProposalPending = {
+  students: false,
+  teachers: false,
+  subjects: false,
+};
 
 export default function SharedProposalPage({
   projectId,
@@ -41,32 +59,40 @@ export default function SharedProposalPage({
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
   const navigation = useNavigation();
+  const scroll = useRef<Pick<ScrollView, "scrollTo">>(null);
   const [draft, setDraft] = useState<ProposalDraft | null>(null);
+  const [draftFor, setDraftFor] = useState("");
   const [spaces, setSpaces] = useState<SpaceSummary[]>([]);
   const [spaceId, setSpaceId] = useState("");
   const [space, setSpace] = useState<SharedSpace | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadRevision, setLoadRevision] = useState(0);
   const [spaceLoading, setSpaceLoading] = useState(false);
   const [spaceRevision, setSpaceRevision] = useState(0);
-  const [saving, setBusy] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const busy = saving || uploading;
   const [error, setError] = useState("");
   const [serverFields, setServerFields] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [attempted, setAttempted] = useState<number[]>([]);
   const [submitted, setSubmitted] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [removeSubject, setRemoveSubject] = useState<string | null>(null);
-  const [clearLinks, setClearLinks] = useState(false);
+  const [step, setStep] = useState(0);
+  const [pending, setPending] = useState(noPending);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [conflict, setConflict] = useState(false);
+  const [reloadConfirm, setReloadConfirm] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [leaveAction, setLeaveAction] = useState<NavigationAction | null>(null);
   const [savedId, setSavedId] = useState("");
-  const [draftFor, setDraftFor] = useState("");
   const loaded = useRef("");
   const working = useRef(false);
   const canSubmit = ready && !!user?.roles.includes("student");
-  usePreventRemove((dirty || uploading) && !savedId, ({ data }) =>
-    setLeaveAction(data.action),
+
+  usePreventRemove(
+    (dirty || uploading || Object.values(pending).some(Boolean)) && !savedId,
+    ({ data }) => setLeaveAction(data.action),
   );
   useEffect(() => {
     if (savedId) onSaved(savedId);
@@ -100,18 +126,29 @@ export default function SharedProposalPage({
           throw new Error(
             "Esta propuesta no se puede editar con tu cuenta y su estado actual.",
           );
-        setDraft(proposalDraft(user, result?.project));
+        const next = proposalDraft(user, result?.project);
+        setDraft(next);
         setDraftFor(key);
         setDirty(false);
         setTouched({});
         setServerFields({});
         setSubmitted(false);
+        setAttempted([]);
+        setPending(noPending);
+        setStep(0);
+        setFeedback(
+          result?.project.status === "changes"
+            ? (result.project.feedback ?? "")
+            : "",
+        );
+        setResourcesOpen(next.resources.length > 0);
+        setConflict(false);
+        setError("");
         setSpaces(options.spaces);
         setSpaceId(
           result?.project.booth.spaceId ?? options.spaces[0]?.id ?? "",
         );
         loaded.current = key;
-        setError("");
       })
       .catch((cause) => {
         if (active)
@@ -127,7 +164,8 @@ export default function SharedProposalPage({
     return () => {
       active = false;
     };
-  }, [client, user, ready, projectId]);
+  }, [client, user, ready, projectId, loadRevision]);
+
   useEffect(() => {
     let active = true;
     setSpace(null);
@@ -153,6 +191,7 @@ export default function SharedProposalPage({
       active = false;
     };
   }, [client, spaceId, spaceRevision]);
+
   const validation = draft && user ? proposalErrors(draft, user.id) : {};
   if (
     draft &&
@@ -164,9 +203,35 @@ export default function SharedProposalPage({
     )
   )
     validation.boothId = "Elegí un puesto habilitado que esté disponible.";
+  const issues = proposalFlowErrors(
+    {
+      ...validation,
+      ...Object.fromEntries(
+        Object.entries(serverFields).filter(([, message]) => message),
+      ),
+    },
+    pending,
+  );
   const fieldError = (key: string) =>
     serverFields[key] ||
-    (submitted || touched[key] ? validation[key] : undefined);
+    (submitted || touched[key] || attempted.includes(proposalStepForField(key))
+      ? issues[key]
+      : undefined);
+  const currentIssues = proposalIssuesForStep(issues, step);
+  const complete = [0, 1, 2].map(
+    (index) => proposalIssuesForStep(issues, index).length === 0,
+  );
+
+  function top() {
+    requestAnimationFrame(() =>
+      scroll.current?.scrollTo({ y: 0, animated: false }),
+    );
+  }
+  function pendingChange(key: keyof ProposalPending, value: boolean) {
+    setPending((current) =>
+      current[key] === value ? current : { ...current, [key]: value },
+    );
+  }
   function change<K extends keyof ProposalDraft>(
     key: K,
     value: ProposalDraft[K],
@@ -179,21 +244,83 @@ export default function SharedProposalPage({
     setServerFields((current) => ({ ...current, [field]: "" }));
     setError("");
   }
+  function goToStep(target: number) {
+    if (busy) return;
+    if (target > step) {
+      const first = firstProposalIssueStep(issues, target);
+      setAttempted((current) => [
+        ...new Set([
+          ...current,
+          ...Array.from({ length: target }, (_, index) => index),
+        ]),
+      ]);
+      if (first !== null) {
+        setStep(first);
+        top();
+        return;
+      }
+      if (target === 3 && spaceLoading) {
+        setError("Esperá a que termine la consulta de puestos.");
+        return;
+      }
+    }
+    setStep(target);
+    setError("");
+    top();
+  }
+  function retryLoad() {
+    loaded.current = "";
+    setError("");
+    setDraft(null);
+    setLoadRevision((value) => value + 1);
+  }
+  async function refreshPlaces() {
+    setSpaceLoading(true);
+    try {
+      const result = await client.query<{ spaces: SpaceSummary[] }>(
+        "/api/spaces/query",
+      );
+      setSpaces(result.spaces);
+      setSpaceId((current) =>
+        result.spaces.some((item) => item.id === current)
+          ? current
+          : (result.spaces[0]?.id ?? ""),
+      );
+      setSpaceRevision((value) => value + 1);
+      setError("");
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "No pudimos actualizar los puestos.",
+      );
+    } finally {
+      setSpaceLoading(false);
+    }
+  }
   async function submit() {
     setSubmitted(true);
+    setAttempted([0, 1, 2]);
+    const first = firstProposalIssueStep(issues);
+    if (first !== null) {
+      setStep(first);
+      top();
+      return;
+    }
     if (
       !draft ||
       !canSubmit ||
       busy ||
       working.current ||
       spaceLoading ||
-      Object.keys(validation).length
+      step !== 3
     )
       return;
     working.current = true;
-    setBusy(true);
+    setSaving(true);
     setError("");
     setServerFields({});
+    setConflict(false);
     try {
       const result = await client.send<{ project: SharedProject }>(
         projectId ? `/api/projects/${projectId}/save` : "/api/projects/create",
@@ -206,13 +333,23 @@ export default function SharedProposalPage({
           ? cause.message
           : "No pudimos enviar la propuesta.",
       );
-      if (cause instanceof AuthError) setServerFields(cause.fields);
+      if (cause instanceof AuthError) {
+        setServerFields(cause.fields);
+        setConflict(cause.status === 409);
+        const target = firstProposalIssueStep(cause.fields);
+        if (target !== null) {
+          setStep(target);
+          if (target === 2) setResourcesOpen(true);
+        }
+      }
+      top();
     } finally {
       working.current = false;
-      setBusy(false);
+      setSaving(false);
     }
   }
-  const paragraph = { color: colors.muted, fontSize: 15, lineHeight: 22 };
+
+  const paragraph = { color: colors.muted, fontSize: 14, lineHeight: 21 };
   if (loading || !ready)
     return (
       <Screen>
@@ -231,305 +368,312 @@ export default function SharedProposalPage({
         <Button title="Volver" variant="quiet" onPress={onBack} />
       </Screen>
     );
+
   return (
-    <Screen>
+    <Screen scrollRef={scroll}>
       <View
         style={{ width: "100%", maxWidth: 860, alignSelf: "center", gap: 16 }}
       >
         <Heading
           title={projectId ? "Editar propuesta" : "Presentar un proyecto"}
-          subtitle="Completá los datos del equipo y elegí el puesto que querés solicitar."
+          subtitle="Completá cada paso. Al final vas a revisar todo antes de enviarlo."
         />
-        {!!error && (
-          <Text
-            accessibilityRole="alert"
-            style={{ ...paragraph, color: colors.error }}
-          >
-            {error}
-          </Text>
+        {!!feedback && (
+          <Card>
+            <Heading title="Correcciones solicitadas" />
+            <Text style={{ color: colors.text, lineHeight: 22 }}>
+              {feedback}
+            </Text>
+          </Card>
         )}
-        {draft && user && draftFor === `${user.id}:${projectId ?? "new"}` && (
-          <View style={{ gap: 16 }} pointerEvents={busy ? "none" : "auto"}>
-            <Card>
-              <Field
-                label="Nombre del proyecto"
-                value={draft.name}
-                onChangeText={(value) => change("name", value)}
-                maxLength={120}
-                error={fieldError("name")}
+        {!!error && (
+          <Card>
+            <Text
+              accessibilityRole="alert"
+              style={{ ...paragraph, color: colors.error }}
+            >
+              {error}
+            </Text>
+            {!draft && (
+              <Button
+                title="Reintentar carga"
+                variant="secondary"
+                onPress={retryLoad}
               />
-              <Field
-                label="Descripción del proyecto"
-                value={draft.description}
-                onChangeText={(value) => change("description", value)}
-                multiline
-                maxLength={5000}
-                error={fieldError("description")}
-                hint="Contá qué hace el proyecto, cómo funciona y qué van a presentar. Mínimo 20 caracteres."
-              />
-              <Field
-                label="Curso y especialidad"
-                value={draft.course}
-                onChangeText={(value) => change("course", value)}
-                maxLength={100}
-                error={fieldError("course")}
-              />
-              <PhotoUploadField
-                purpose="project"
-                value={draft.imageUrl}
-                onChange={(value) => change("imageUrl", value)}
-                disabled={saving}
-                onBusyChange={setUploading}
-                error={fieldError("imageUrl")}
-              />
-              <Field
-                label="Enlace al video (opcional)"
-                value={draft.videoUrl}
-                onChangeText={(value) => change("videoUrl", value)}
-                keyboardType="url"
-                maxLength={2048}
-                error={fieldError("videoUrl")}
-                hint="Enlace HTTPS directo a un archivo MP4 o WebM."
-              />
-              <CheckRow
-                label="Proyecto informático"
-                checked={draft.isSoftwareProject}
-                onChange={(value) => {
-                  if (!value && (draft.githubUrl || draft.websiteUrl))
-                    setClearLinks(true);
-                  else change("isSoftwareProject", value);
-                }}
-              />
-              {clearLinks && (
-                <InlineConfirm
-                  text="¿Desactivar proyecto informático y quitar sus enlaces de esta propuesta?"
-                  confirmLabel="Quitar enlaces"
-                  onCancel={() => setClearLinks(false)}
-                  onConfirm={() => {
-                    setDraft((current) =>
-                      current
-                        ? {
-                            ...current,
-                            isSoftwareProject: false,
-                            githubUrl: "",
-                            websiteUrl: "",
-                          }
-                        : null,
-                    );
-                    setDirty(true);
-                    setClearLinks(false);
+            )}
+            {conflict && (
+              <>
+                <Text style={paragraph}>
+                  Tu borrador se conserva. Podés revisar los datos y actualizar
+                  los puestos antes de volver a enviar.
+                </Text>
+                <Button
+                  title="Revisar puesto y elementos"
+                  variant="secondary"
+                  onPress={() => {
+                    setStep(2);
+                    top();
                   }}
                 />
-              )}
-              {draft.isSoftwareProject && (
-                <>
-                  <Field
-                    label="Repositorio de GitHub (opcional)"
-                    value={draft.githubUrl}
-                    onChangeText={(value) => change("githubUrl", value)}
-                    keyboardType="url"
-                    maxLength={2048}
-                    error={fieldError("githubUrl")}
+                {projectId && (
+                  <Button
+                    title="Recargar propuesta guardada"
+                    variant="quiet"
+                    onPress={() => setReloadConfirm(true)}
                   />
-                  <Field
-                    label="Página del proyecto (opcional)"
-                    value={draft.websiteUrl}
-                    onChangeText={(value) => change("websiteUrl", value)}
-                    keyboardType="url"
-                    maxLength={2048}
-                    error={fieldError("websiteUrl")}
-                  />
-                </>
-              )}
-            </Card>
-            <SharedPeoplePicker
-              role="student"
-              people={draft.members}
-              protectedIds={[draft.creatorId, user.id]}
-              excludedIds={draft.teachers.map((person) => person.id)}
+                )}
+              </>
+            )}
+            {reloadConfirm && (
+              <InlineConfirm
+                text="¿Descartar estos cambios y cargar la última propuesta guardada?"
+                confirmLabel="Descartar y recargar"
+                onCancel={() => setReloadConfirm(false)}
+                onConfirm={() => {
+                  setReloadConfirm(false);
+                  setDirty(false);
+                  retryLoad();
+                }}
+              />
+            )}
+          </Card>
+        )}
+        {draft && user && draftFor === `${user.id}:${projectId ?? "new"}` && (
+          <>
+            <ProposalStepNavigation
+              step={step}
+              complete={[...complete, complete.every(Boolean)]}
               disabled={busy}
-              error={fieldError("memberIds")}
-              onChange={(people) => change("members", people)}
+              onSelect={goToStep}
             />
-            <SharedPeoplePicker
-              role="teacher"
-              people={draft.teachers}
-              excludedIds={draft.members.map((person) => person.id)}
-              disabled={busy}
-              error={fieldError("teacherIds")}
-              onChange={(people) => change("teachers", people)}
-            />
-            <Card>
-              <Heading title="Materias" />
-              {draft.subjects.map((item) => (
-                <View key={item} style={{ gap: 8 }}>
-                  <Text style={{ color: colors.text, fontSize: 16 }}>
-                    {item}
+            <View accessibilityLiveRegion="polite" style={{ gap: 3 }}>
+              <Text style={{ color: colors.muted, fontSize: 12 }}>
+                Paso {step + 1} de 4
+              </Text>
+              <Heading title={proposalSteps[step].subtitle} />
+            </View>
+            {(submitted || attempted.includes(step)) &&
+              currentIssues.length > 0 && (
+                <Card
+                  testID="proposal-step-errors"
+                  style={{ borderColor: colors.error }}
+                >
+                  <Text
+                    accessibilityRole="alert"
+                    style={{ color: colors.error, fontWeight: "600" }}
+                  >
+                    Revisá estos datos para continuar:
                   </Text>
-                  {removeSubject === item ? (
-                    <InlineConfirm
-                      text={`¿Quitar ${item} de esta propuesta?`}
-                      confirmLabel="Quitar materia"
-                      onCancel={() => setRemoveSubject(null)}
-                      onConfirm={() => {
-                        change(
-                          "subjects",
-                          draft.subjects.filter((value) => value !== item),
-                        );
-                        setRemoveSubject(null);
+                  {currentIssues.map(([field, message]) => (
+                    <Text
+                      key={field}
+                      style={{ ...paragraph, color: colors.error }}
+                    >
+                      {proposalFieldLabels[field] ?? "Propuesta"}: {message}
+                    </Text>
+                  ))}
+                </Card>
+              )}
+            <View pointerEvents={saving ? "none" : "auto"} style={{ gap: 16 }}>
+              <View
+                testID="proposal-step-project"
+                style={{ display: step === 0 ? "flex" : "none" }}
+              >
+                <SharedProjectDetails
+                  draft={draft}
+                  saving={saving}
+                  errorFor={fieldError}
+                  onChange={change}
+                  onUploadChange={setUploading}
+                />
+              </View>
+              <View
+                testID="proposal-step-team"
+                style={{ display: step === 1 ? "flex" : "none", gap: 16 }}
+              >
+                <SharedPeoplePicker
+                  role="student"
+                  people={draft.members}
+                  protectedIds={[draft.creatorId, user.id]}
+                  excludedIds={draft.teachers.map((person) => person.id)}
+                  disabled={busy}
+                  error={fieldError("memberIds")}
+                  onChange={(people) => change("members", people)}
+                  onPendingChange={(value) => pendingChange("students", value)}
+                />
+                <SharedPeoplePicker
+                  role="teacher"
+                  people={draft.teachers}
+                  excludedIds={draft.members.map((person) => person.id)}
+                  disabled={busy}
+                  error={fieldError("teacherIds")}
+                  onChange={(people) => change("teachers", people)}
+                  onPendingChange={(value) => pendingChange("teachers", value)}
+                />
+                <ProjectSubjectsPicker
+                  value={draft.subjects}
+                  onChange={(subjects) => change("subjects", subjects)}
+                  disabled={busy}
+                  error={fieldError("subjects")}
+                  onPendingChange={(value) => pendingChange("subjects", value)}
+                />
+              </View>
+              <View
+                testID="proposal-step-place"
+                style={{ display: step === 2 ? "flex" : "none", gap: 16 }}
+              >
+                <Card>
+                  <Heading
+                    title="Elegí dónde presentar"
+                    subtitle="Solicitar un puesto todavía no lo reserva. Un profesor confirmará la propuesta."
+                  />
+                  <RefreshButton
+                    label="Actualizar puestos"
+                    loading={spaceLoading}
+                    disabled={spaceLoading || busy}
+                    onPress={() => void refreshPlaces()}
+                  />
+                  {spaces.length ? (
+                    <Choice
+                      label="Espacio"
+                      value={spaceId}
+                      options={spaces.map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      }))}
+                      disabled={busy}
+                      onChange={(id) => {
+                        setSpaceId(id);
+                        change("boothId", "");
                       }}
                     />
                   ) : (
-                    <Button
-                      title={`Quitar materia ${item}`}
-                      variant="quiet"
-                      onPress={() => setRemoveSubject(item)}
-                    />
+                    <Text style={paragraph}>
+                      La organización todavía no cargó espacios. El borrador se
+                      conserva; actualizá los puestos para volver a consultar.
+                    </Text>
                   )}
-                </View>
-              ))}
-              <Field
-                label="Nombre de la materia"
-                value={subject}
-                onChangeText={setSubject}
-                maxLength={80}
-                error={fieldError("subjects")}
-              />
-              <Button
-                title="Agregar materia"
-                variant="secondary"
-                disabled={
-                  subject.trim().length < 2 || draft.subjects.length >= 10
-                }
-                onPress={() => {
-                  const next = subject.trim();
-                  if (
-                    draft.subjects.some(
-                      (value) =>
-                        value.localeCompare(next, "es", {
-                          sensitivity: "base",
-                        }) === 0,
+                  {spaceLoading ? (
+                    <ActivityIndicator color={colors.primary} />
+                  ) : (
+                    space && (
+                      <Choice
+                        label="Puesto"
+                        value={draft.boothId}
+                        options={space.booths
+                          .filter(
+                            (booth) =>
+                              !booth.projectId || booth.projectId === projectId,
+                          )
+                          .map((booth) => ({
+                            value: booth.id,
+                            label: `Puesto ${booth.furnitureId}`,
+                          }))}
+                        disabled={busy}
+                        onChange={(id) => change("boothId", id)}
+                      />
                     )
-                  ) {
-                    setError("Esa materia ya está incluida.");
-                    return;
+                  )}
+                  {!!fieldError("boothId") && (
+                    <Text
+                      accessibilityRole="alert"
+                      style={{ color: colors.error }}
+                    >
+                      {fieldError("boothId")}
+                    </Text>
+                  )}
+                  {space &&
+                    !spaceLoading &&
+                    !space.booths.some(
+                      (booth) =>
+                        !booth.projectId || booth.projectId === projectId,
+                    ) && (
+                      <Text style={paragraph}>
+                        No quedan puestos disponibles en este espacio. Elegí
+                        otro espacio o actualizá la disponibilidad.
+                      </Text>
+                    )}
+                </Card>
+                <Button
+                  title={
+                    resourcesOpen
+                      ? "Ocultar elementos solicitados"
+                      : draft.resources.length
+                        ? `Ver elementos solicitados (${draft.resources.length})`
+                        : "¿Necesitan elementos de la escuela? (opcional)"
                   }
-                  change("subjects", [...draft.subjects, next]);
-                  setSubject("");
-                }}
-              />
-            </Card>
-            <Card>
-              <Heading
-                title="Puesto solicitado"
-                subtitle="La solicitud queda pendiente hasta que un profesor responsable la confirme."
-              />
-              <RefreshButton
-                label="Actualizar puestos"
-                loading={spaceLoading}
-                disabled={spaceLoading || busy}
-                onPress={() => {
-                  setSpaceLoading(true);
-                  void client
-                    .query<{ spaces: SpaceSummary[] }>("/api/spaces/query")
-                    .then((result) => {
-                      setSpaces(result.spaces);
-                      setSpaceId((current) =>
-                        result.spaces.some((item) => item.id === current)
-                          ? current
-                          : (result.spaces[0]?.id ?? ""),
-                      );
-                      setSpaceRevision((current) => current + 1);
-                      setError("");
-                    })
-                    .catch((cause) =>
-                      setError(
-                        cause instanceof Error
-                          ? cause.message
-                          : "No pudimos actualizar los puestos.",
-                      ),
-                    )
-                    .finally(() => setSpaceLoading(false));
-                }}
-              />
-              {spaces.length ? (
-                <Choice
-                  label="Espacio"
-                  value={spaceId}
-                  options={spaces.map((item) => ({
-                    value: item.id,
-                    label: item.name,
-                  }))}
-                  onChange={(id) => {
-                    setSpaceId(id);
-                    change("boothId", "");
+                  variant="secondary"
+                  endIcon={resourcesOpen ? "chevronUp" : "chevronDown"}
+                  disabled={busy}
+                  onPress={() => setResourcesOpen(!resourcesOpen)}
+                />
+                <View
+                  style={{
+                    display:
+                      resourcesOpen || !!fieldError("resources")
+                        ? "flex"
+                        : "none",
                   }}
+                >
+                  <SharedResourcePicker
+                    requests={draft.resources}
+                    disabled={busy}
+                    error={fieldError("resources")}
+                    onChange={(resources) => change("resources", resources)}
+                  />
+                </View>
+              </View>
+              <View
+                testID="proposal-step-review"
+                style={{ display: step === 3 ? "flex" : "none" }}
+              >
+                <ProposalReview
+                  draft={draft}
+                  spaceName={space?.name ?? "Espacio pendiente"}
+                  boothName={`Puesto ${space?.booths.find((booth) => booth.id === draft.boothId)?.furnitureId ?? "pendiente"}`}
+                  active={step === 3}
+                  onEdit={goToStep}
+                />
+              </View>
+            </View>
+            <ActionRow>
+              {step > 0 && (
+                <Button
+                  title="Anterior"
+                  icon="arrowLeft"
+                  variant="secondary"
+                  disabled={busy}
+                  onPress={() => goToStep(step - 1)}
+                />
+              )}
+              {step < 3 ? (
+                <Button
+                  title={step === 2 ? "Revisar propuesta" : "Continuar"}
+                  endIcon="arrowRight"
+                  disabled={busy || (step === 2 && spaceLoading)}
+                  onPress={() => goToStep(step + 1)}
                 />
               ) : (
-                <Text style={paragraph}>
-                  La organización todavía no cargó espacios. El borrador se
-                  conserva mientras permanezcas en esta pantalla; actualizá los
-                  puestos para volver a consultar.
-                </Text>
+                <Button
+                  title={
+                    saving
+                      ? "Enviando propuesta…"
+                      : projectId
+                        ? "Guardar y reenviar"
+                        : "Enviar propuesta"
+                  }
+                  icon="save"
+                  disabled={busy || spaceLoading}
+                  onPress={() => void submit()}
+                />
               )}
-              {spaceLoading ? (
-                <ActivityIndicator color={colors.primary} />
-              ) : (
-                space && (
-                  <Choice
-                    label="Puesto"
-                    value={draft.boothId}
-                    options={space.booths
-                      .filter(
-                        (booth) =>
-                          !booth.projectId || booth.projectId === projectId,
-                      )
-                      .map((booth) => ({
-                        value: booth.id,
-                        label: booth.furnitureId,
-                      }))}
-                    onChange={(id) => change("boothId", id)}
-                  />
-                )
-              )}
-              {!!fieldError("boothId") && (
-                <Text style={{ color: colors.error }}>
-                  {fieldError("boothId")}
-                </Text>
-              )}
-              {space &&
-                !spaceLoading &&
-                !space.booths.some(
-                  (booth) => !booth.projectId || booth.projectId === projectId,
-                ) && (
-                  <Text style={paragraph}>
-                    No quedan puestos disponibles en este espacio.
-                  </Text>
-                )}
-            </Card>
-            <SharedResourcePicker
-              requests={draft.resources}
-              disabled={busy}
-              error={fieldError("resources")}
-              onChange={(resources) => change("resources", resources)}
-            />
-            <Button
-              title={
-                uploading
-                  ? "Subiendo foto…"
-                  : saving
-                    ? "Enviando propuesta…"
-                    : projectId
-                      ? "Guardar y reenviar"
-                      : "Enviar propuesta"
-              }
-              icon="save"
-              disabled={busy || spaceLoading}
-              onPress={() => {
-                void submit();
-              }}
-            />
-          </View>
+            </ActionRow>
+            {uploading && (
+              <Text accessibilityLiveRegion="polite" style={paragraph}>
+                Esperá a que termine la foto o cancelá su carga para continuar.
+              </Text>
+            )}
+          </>
         )}
         <Button
           title="Volver sin enviar"
