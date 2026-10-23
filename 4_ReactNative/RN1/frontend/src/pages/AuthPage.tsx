@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Platform, Pressable, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, Text, useWindowDimensions, View } from 'react-native';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { ActionButton } from '../components/ActionButton';
 import { AuthHero } from '../components/AuthHero';
 import { Field } from '../components/Field';
@@ -8,7 +9,7 @@ import { SecurityQuestions } from '../components/SecurityQuestions';
 import { useAsyncAction } from '../hooks/useAsyncAction';
 import { api } from '../services/api';
 import type { Palette } from '../styles/theme';
-import { stylesFor } from '../styles/theme';
+import { metrics, stylesFor } from '../styles/theme';
 import type { Answer, Purpose, Route, Session } from '../types';
 import { answersValid, codeError, emailError, nameError, passwordError } from '../utils/validation';
 
@@ -24,8 +25,8 @@ export function AuthPage({ route, go, onSession, onOAuth, oauthBusy, palette }: 
 }) {
   const s = stylesFor(palette);
   const { width } = useWindowDimensions();
-  const wide = width >= 850;
-  const desktopLogin = Platform.OS === 'web' && wide && route === 'login';
+  const wide = width >= metrics.breakpoint;
+  const mobilePadding = width < 390 ? 22 : 28;
   const action = useAsyncAction();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -52,6 +53,7 @@ export function AuthPage({ route, go, onSession, onOAuth, oauthBusy, palette }: 
   }[route];
 
   async function submit() {
+    if (action.busy) return;
     if (route === 'login') {
       if (!loginValid) return;
       const result = await action.run(() => api.login(email.trim(), password));
@@ -81,82 +83,77 @@ export function AuthPage({ route, go, onSession, onOAuth, oauthBusy, palette }: 
     if (result) { setCode(''); setNotice(result.message); if (next) go(next); }
   }
 
-  const emailField = <Field label="Correo electrónico" value={email} onChange={setEmail}
+  const emailField = <Field label="Correo electrónico" value={email} onChange={setEmail} placeholder="vos@ejemplo.com" icon="envelope"
     validate={emailError} keyboard="email-address" autoComplete="email" palette={palette} />;
   const passwordField = route !== 'verify' ? <Field label={route === 'login' ? 'Contraseña' : 'Nueva contraseña'} value={password} onChange={setPassword}
     validate={route === 'login' ? (value) => value ? '' : 'Ingresá tu contraseña.' : passwordError} secret
+    placeholder={route === 'login' ? 'Tu contraseña' : '8 caracteres, letras y números'} icon="lock"
+    labelAction={route === 'login' ? { title: 'Recuperar contraseña', onPress: () => navigate('reset') } : undefined}
+    onSubmit={route === 'login' ? () => void submit() : undefined}
     autoComplete={route === 'login' ? 'current-password' : 'new-password'} palette={palette} /> : null;
   const submitButton = <ActionButton title={{ login: 'Ingresar', register: 'Crear cuenta', verify: 'Verificar e ingresar', activate: 'Activar e ingresar', reset: 'Guardar contraseña' }[route]}
-    onPress={submit} busy={action.busy} palette={palette}
+    onPress={submit} busy={action.busy} palette={palette} icon={route === 'login' ? 'sign-in-alt' : route === 'register' ? 'user-plus' : 'check'}
     disabled={route === 'login' ? !loginValid : route === 'verify' ? Boolean(emailError(email) || codeError(code)) :
       route === 'register' ? Boolean(!passwordFormValid || nameError(name)) : Boolean(!passwordFormValid || codeError(code))} />;
-  const accountRow = <View style={[s.accountRow, !wide ? { flexDirection: 'column', alignItems: 'flex-start' } : undefined]}>
+  const accountRow = <View style={s.accountRow}>
     <Text style={s.accountPrompt}>¿Todavía no tenés cuenta?</Text>
     <TextButton title="Crear una cuenta" onPress={() => navigate('register')} palette={palette} />
   </View>;
   const providers = <>
-    <Text style={[s.dividerLabel, desktopLogin ? s.desktopLoginMethodLabel : undefined]}>O ingresá con una cuenta vinculada</Text>
+    <View style={s.dividerRow}>
+      <View style={s.dividerLine} />
+      <Text style={s.dividerLabel}>o continuá con</Text>
+      <View style={s.dividerLine} />
+    </View>
     <View style={s.providerRow}>{(['google', 'discord', 'github'] as const).map((provider) =>
       <Pressable key={provider} accessibilityRole="button" accessibilityLabel={`Ingresar con ${providerLabel[provider]}`}
         accessibilityState={{ disabled: oauthBusy }} disabled={oauthBusy} onPress={() => onOAuth(provider)}
-        style={({ pressed }) => [s.providerButton, oauthBusy ? { opacity: 0.55 } : undefined, pressed ? { opacity: 0.75 } : undefined]}>
-        <ProviderLogo provider={provider} palette={palette} size={22} />
+        style={({ pressed }) => [s.providerButton, provider === 'google' ? s.providerGoogle : provider === 'discord' ? s.providerDiscord : s.providerGithub,
+          oauthBusy ? { opacity: 0.55 } : undefined, pressed ? s.controlPressed : undefined]}>
+        <ProviderLogo provider={provider} palette={palette} size={17} />
         <Text style={s.providerText}>{providerLabel[provider]}</Text>
       </Pressable>)}</View>
   </>;
   const help = <>
-    <Text style={s.helpTitle}>¿Necesitás ayuda para entrar?</Text>
+    <Text style={s.helpTitle}>Otras opciones de acceso</Text>
     <View style={s.helpLinks}>
-      <TextButton title="Recuperar contraseña" onPress={() => navigate('reset')} palette={palette} />
-      <TextButton title="Activar contraseña" onPress={() => navigate('activate')} palette={palette} />
-      <TextButton title="Verificar cuenta" onPress={() => navigate('verify')} palette={palette} />
+      <Pressable accessibilityRole="button" onPress={() => navigate('activate')}
+        style={({ pressed }) => [s.helpButton, pressed ? s.controlPressed : undefined]}>
+        <FontAwesome5 name="key" size={13} color={palette.secondaryText} />
+        <Text style={s.helpButtonText}>Activar contraseña</Text>
+      </Pressable>
+      <Pressable accessibilityRole="button" onPress={() => navigate('verify')}
+        style={({ pressed }) => [s.helpButton, pressed ? s.controlPressed : undefined]}>
+        <FontAwesome5 name="envelope-open" size={13} color={palette.secondaryText} />
+        <Text style={s.helpButtonText}>Verificar cuenta</Text>
+      </Pressable>
     </View>
   </>;
 
-  if (desktopLogin) return <View style={s.desktopLoginLayout}>
-    <View key={route} style={[s.panel, s.desktopLoginPanel]}>
-      <Text style={[s.heading, s.loginHeading]}>{title}</Text>
-      <Text style={s.desktopLoginIntro}>{intro}</Text>
-      {action.error ? <Text accessibilityRole="alert" style={s.banner}>{action.error}</Text> : null}
-      {notice ? <Text style={s.success}>{notice}</Text> : null}
-      <View style={s.desktopLoginColumns}>
-        <View style={s.desktopLoginPrimary}>
-          {emailField}
-          {passwordField}
-          {submitButton}
-          {accountRow}
-        </View>
-        <View style={s.desktopLoginSecondary}>
-          {providers}
-          <View style={s.desktopLoginDivider} />
-          {help}
-        </View>
+  return <View style={[s.authLayout, wide ? s.authLayoutWide : undefined]}>
+    {wide ? <View style={s.heroColumn}><AuthHero palette={palette} /></View> : null}
+    <View key={route} style={[s.panel, wide ? s.panelColumn : { padding: mobilePadding }]}>
+      <View style={!wide ? [s.mobilePanelHeader, { marginHorizontal: -mobilePadding, marginTop: -mobilePadding, padding: mobilePadding }] : undefined}>
+        <Text style={[s.panelEyebrow, !wide ? { color: palette.highlight } : undefined]}>{{ login: 'Qué bueno verte de nuevo', register: 'Empezá por acá', verify: 'Un paso más', activate: 'Una nueva forma de entrar', reset: 'Volvamos a tu cuenta' }[route]}</Text>
+        <Text accessibilityRole="header" style={[s.heading, !wide ? { color: palette.heroText } : undefined]}>{title}</Text>
+        <Text style={[s.intro, !wide ? { color: palette.heroMuted, marginBottom: 0 } : undefined]}>{intro}</Text>
       </View>
-    </View>
-  </View>;
-
-  return <View style={[s.authLayout, wide ? { flexDirection: 'row', gap: 20, alignItems: 'stretch' } : { maxWidth: 600 }]}>
-    {wide ? <View style={{ flex: 0.9 }}><AuthHero palette={palette} /></View> : null}
-    <View key={route} style={[s.panel, wide ? { flex: 1.1 } : { padding: width < 390 ? 22 : 28 }]}>
-      <Text style={[s.heading, route === 'login' ? s.loginHeading : undefined]}>{title}</Text>
-      <Text style={s.intro}>{intro}</Text>
       {action.error ? <Text accessibilityRole="alert" style={s.banner}>{action.error}</Text> : null}
       {notice ? <Text style={s.success}>{notice}</Text> : null}
       {emailField}
-      {route === 'register' ? <Field label="Nombre y apellido" value={name} onChange={setName} validate={nameError} autoCapitalize="words" autoComplete="name" palette={palette} /> : null}
+      {route === 'register' ? <Field label="Nombre y apellido" value={name} onChange={setName} validate={nameError} placeholder="Cómo te llamás" icon="user" autoCapitalize="words" autoComplete="name" palette={palette} /> : null}
       {route === 'verify' || route === 'activate' || route === 'reset' ?
-        <Field label="Código de seis dígitos" value={code} onChange={(value) => setCode(value.replace(/\D/g, '').slice(0, 6))} validate={codeError} keyboard="number-pad" autoComplete="sms-otp" palette={palette} /> : null}
+        <Field label="Código de seis dígitos" value={code} placeholder="000000" icon="envelope-open-text" onChange={(value) => setCode(value.replace(/\D/g, '').slice(0, 6))} validate={codeError} keyboard="number-pad" autoComplete="sms-otp" palette={palette} /> : null}
       {passwordField}
       {route === 'register' || route === 'activate' || route === 'reset' ? <>
-        <Field label="Repetí la contraseña" value={confirm} onChange={setConfirm} secret revealLabel="confirmación de contraseña" autoComplete="new-password" palette={palette}
+        <Field label="Repetí la contraseña" value={confirm} onChange={setConfirm} placeholder="Escribila una vez más" icon="lock" secret revealLabel="confirmación de contraseña" autoComplete="new-password" palette={palette}
           validate={(value) => value === password ? '' : 'Las contraseñas no coinciden.'} />
         <SecurityQuestions answers={answers} onChange={setAnswers} palette={palette} />
       </> : null}
       {submitButton}
       {route === 'login' ? <>
-        {accountRow}
-        <View style={s.divider} />
         {providers}
+        {accountRow}
       </> : null}
       {route === 'verify' ? <TextButton title="Enviar otro código" onPress={() => sendCode('verify_email')} palette={palette} /> : null}
       {route === 'activate' ? <TextButton title="Enviar código" onPress={() => sendCode('activate_local')} palette={palette} /> : null}
@@ -164,7 +161,10 @@ export function AuthPage({ route, go, onSession, onOAuth, oauthBusy, palette }: 
       {route === 'login' ? <>
         <View style={s.divider} />
         {help}
-      </> : <TextButton title="Volver al ingreso" onPress={() => navigate('login')} palette={palette} />}
+      </> : <Pressable accessibilityRole="button" onPress={() => navigate('login')} style={[s.textButton, s.backButton]}>
+        <FontAwesome5 name="arrow-left" size={12} color={palette.accent} />
+        <Text style={s.textButtonText}>Volver al ingreso</Text>
+      </Pressable>}
     </View>
   </View>;
 }

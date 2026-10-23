@@ -1,6 +1,7 @@
 export type ToolId =
   'camera' | 'scanner' | 'location' | 'accelerometer' | 'gyroscope' | 'biometrics';
 export type Vector3 = { x: number; y: number; z: number };
+/** kind determina los campos disponibles y permite distinguir cada medición al leerla. */
 export type RecordPayload =
   | { kind: 'camera'; uri: string; width: number; height: number }
   | { kind: 'scanner'; content: string; format: string }

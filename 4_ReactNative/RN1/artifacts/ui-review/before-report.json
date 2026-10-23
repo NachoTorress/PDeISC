@@ -1,0 +1,2222 @@
+{
+  "screenshots": [
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-login-1440-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-register-1440-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-verify-1440-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-reset-1440-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-activate-1440-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-login-1440-dark.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-welcome-1440-dark.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-welcome-1440-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-login-768-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-register-768-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-verify-768-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-reset-768-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-activate-768-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-login-768-dark.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-welcome-768-dark.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-welcome-768-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-login-375-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-register-375-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-verify-375-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-reset-375-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-activate-375-light.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-login-375-dark.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-welcome-375-dark.png",
+    "C:\\Users\\ignac\\OneDrive\\Documentos\\GitHub\\PDelSC\\4_ReactNative\\RN1\\artifacts\\ui-review\\before-welcome-375-light.png"
+  ],
+  "pages": [
+    {
+      "route": "login",
+      "mode": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 413,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Contraseña",
+          "width": 365,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar",
+          "width": 415,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Crear una cuenta",
+          "width": 111,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Google",
+          "width": 132,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Discord",
+          "width": 132,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con GitHub",
+          "width": 132,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Recuperar contraseña",
+          "width": 142,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Activar contraseña",
+          "width": 122,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Verificar cuenta",
+          "width": 103,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [],
+      "text": "acceso.\n\nIniciá sesión\nIngresá con tu correo o elegí una cuenta vinculada.\nCorreo electrónico\nContraseña\n\nIngresar\n¿Todavía no tenés cuenta?\nCrear una cuenta\nO ingresá con una cuenta vinculada\n\nGoogle\n\nDiscord\n\nGitHub\n¿Necesitás ayuda para entrar?\nRecuperar contraseña\nActivar contraseña\nVerificar cuenta\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "register",
+      "mode": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nombre y apellido",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nueva contraseña",
+          "width": 517,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar nueva contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Repetí la contraseña",
+          "width": 517,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar confirmación de contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 1",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 2: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 2",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Crear cuenta",
+          "width": 567,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 900,
+          "contentHeight": 1322
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nACCESO\nEntrá como prefieras.\nUsá tu correo o una cuenta vinculada. Si necesitás volver a entrar, también podés recuperar el acceso.\nTu cuenta, tus formas de ingresar.\nCreá tu cuenta\nUnos pocos datos y ya estás adentro.\nCorreo electrónico\nNombre y apellido\nNueva contraseña\n\nRepetí la contraseña\n\n\nPreguntas de seguridad\nElegí dos preguntas distintas y guardá tus respuestas.\nPregunta 1\n\nNombre de tu primera mascota\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 1\nPregunta 2\nNombre de tu primera mascota\n\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 2\nLas respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.\nCrear cuenta\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "verify",
+      "mode": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Código de seis dígitos",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Verificar e ingresar",
+          "width": 567,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Enviar otro código",
+          "width": 122,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [],
+      "text": "acceso.\n\nACCESO\nEntrá como prefieras.\nUsá tu correo o una cuenta vinculada. Si necesitás volver a entrar, también podés recuperar el acceso.\nTu cuenta, tus formas de ingresar.\nVerificá tu correo\nEscribí el código que llegó a tu correo.\nCorreo electrónico\nCódigo de seis dígitos\nVerificar e ingresar\nEnviar otro código\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "reset",
+      "mode": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Código de seis dígitos",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nueva contraseña",
+          "width": 517,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar nueva contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Repetí la contraseña",
+          "width": 517,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar confirmación de contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 1",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 2: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 2",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Guardar contraseña",
+          "width": 567,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Enviar código",
+          "width": 90,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 900,
+          "contentHeight": 1366
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nACCESO\nEntrá como prefieras.\nUsá tu correo o una cuenta vinculada. Si necesitás volver a entrar, también podés recuperar el acceso.\nTu cuenta, tus formas de ingresar.\nRecuperá el acceso\nUsá el código de tu correo y tus respuestas de seguridad.\nCorreo electrónico\nCódigo de seis dígitos\nNueva contraseña\n\nRepetí la contraseña\n\n\nPreguntas de seguridad\nElegí dos preguntas distintas y guardá tus respuestas.\nPregunta 1\n\nNombre de tu primera mascota\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 1\nPregunta 2\nNombre de tu primera mascota\n\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 2\nLas respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.\nGuardar contraseña\nEnviar código\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "activate",
+      "mode": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Código de seis dígitos",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nueva contraseña",
+          "width": 517,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar nueva contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Repetí la contraseña",
+          "width": 517,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar confirmación de contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 1",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 2: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 2",
+          "width": 565,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Activar e ingresar",
+          "width": 567,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Enviar código",
+          "width": 90,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 900,
+          "contentHeight": 1366
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nACCESO\nEntrá como prefieras.\nUsá tu correo o una cuenta vinculada. Si necesitás volver a entrar, también podés recuperar el acceso.\nTu cuenta, tus formas de ingresar.\nActivá tu contraseña\nConfirmá tu correo para sumar el ingreso con contraseña.\nCorreo electrónico\nCódigo de seis dígitos\nNueva contraseña\n\nRepetí la contraseña\n\n\nPreguntas de seguridad\nElegí dos preguntas distintas y guardá tus respuestas.\nPregunta 1\n\nNombre de tu primera mascota\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 1\nPregunta 2\nNombre de tu primera mascota\n\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 2\nLas respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.\nActivar e ingresar\nEnviar código\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "login",
+      "mode": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo claro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 413,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Contraseña",
+          "width": 365,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar",
+          "width": 415,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Crear una cuenta",
+          "width": 111,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Google",
+          "width": 132,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Discord",
+          "width": 132,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con GitHub",
+          "width": 132,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Recuperar contraseña",
+          "width": 142,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Activar contraseña",
+          "width": 122,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Verificar cuenta",
+          "width": 103,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [],
+      "text": "acceso.\n\nIniciá sesión\nIngresá con tu correo o elegí una cuenta vinculada.\nCorreo electrónico\nContraseña\n\nIngresar\n¿Todavía no tenés cuenta?\nCrear una cuenta\nO ingresá con una cuenta vinculada\n\nGoogle\n\nDiscord\n\nGitHub\n¿Necesitás ayuda para entrar?\nRecuperar contraseña\nActivar contraseña\nVerificar cuenta\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "welcome",
+      "mode": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo claro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Cerrar sesión",
+          "width": 564,
+          "height": 52,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [
+        "/login"
+      ],
+      "text": "acceso.\n\nACCESO\nQué bueno tenerte acá.\nTu cuenta está lista. Desde acá podés revisar tus datos y gestionar tu sesión.\nTu cuenta, tus formas de ingresar.\n\nAcceso confirmado\nMP\n¡Hola, Martina Pérez!\nEstos son los datos de tu cuenta.\nCorreo electrónico\ndemo@example.test\nTipo de cuenta\nUsuario\nFecha de creación\n22/10/26\n\nCuentas vinculadas\nTus otras formas de ingresar.\n\nGoogle\nVinculada\n\nDiscord\nSin vincular\n\nGitHub\nVinculada\nCerrar sesión\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "welcome",
+      "mode": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Cerrar sesión",
+          "width": 564,
+          "height": 52,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [
+        "/login"
+      ],
+      "text": "acceso.\n\nACCESO\nQué bueno tenerte acá.\nTu cuenta está lista. Desde acá podés revisar tus datos y gestionar tu sesión.\nTu cuenta, tus formas de ingresar.\n\nAcceso confirmado\nMP\n¡Hola, Martina Pérez!\nEstos son los datos de tu cuenta.\nCorreo electrónico\ndemo@example.test\nTipo de cuenta\nUsuario\nFecha de creación\n22/10/26\n\nCuentas vinculadas\nTus otras formas de ingresar.\n\nGoogle\nVinculada\n\nDiscord\nSin vincular\n\nGitHub\nVinculada\nCerrar sesión\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "login",
+      "mode": "light",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Contraseña",
+          "width": 492,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar",
+          "width": 542,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Crear una cuenta",
+          "width": 111,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Google",
+          "width": 175,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Discord",
+          "width": 175,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con GitHub",
+          "width": 175,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Recuperar contraseña",
+          "width": 142,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Activar contraseña",
+          "width": 122,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Verificar cuenta",
+          "width": 103,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [],
+      "text": "acceso.\n\nIniciá sesión\nIngresá con tu correo o elegí una cuenta vinculada.\nCorreo electrónico\nContraseña\n\nIngresar\n¿Todavía no tenés cuenta?\nCrear una cuenta\nO ingresá con una cuenta vinculada\n\nGoogle\n\nDiscord\n\nGitHub\n¿Necesitás ayuda para entrar?\nRecuperar contraseña\nActivar contraseña\nVerificar cuenta\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "register",
+      "mode": "light",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nombre y apellido",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nueva contraseña",
+          "width": 492,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar nueva contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Repetí la contraseña",
+          "width": 492,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar confirmación de contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 1",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 2: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 2",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Crear cuenta",
+          "width": 542,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 1024,
+          "contentHeight": 1310
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nCreá tu cuenta\nUnos pocos datos y ya estás adentro.\nCorreo electrónico\nNombre y apellido\nNueva contraseña\n\nRepetí la contraseña\n\n\nPreguntas de seguridad\nElegí dos preguntas distintas y guardá tus respuestas.\nPregunta 1\n\nNombre de tu primera mascota\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 1\nPregunta 2\nNombre de tu primera mascota\n\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 2\nLas respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.\nCrear cuenta\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "verify",
+      "mode": "light",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Código de seis dígitos",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Verificar e ingresar",
+          "width": 542,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Enviar otro código",
+          "width": 122,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [],
+      "text": "acceso.\n\nVerificá tu correo\nEscribí el código que llegó a tu correo.\nCorreo electrónico\nCódigo de seis dígitos\nVerificar e ingresar\nEnviar otro código\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "reset",
+      "mode": "light",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Código de seis dígitos",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nueva contraseña",
+          "width": 492,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar nueva contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Repetí la contraseña",
+          "width": 492,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar confirmación de contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 1",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 2: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 2",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Guardar contraseña",
+          "width": 542,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Enviar código",
+          "width": 90,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 1024,
+          "contentHeight": 1354
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nRecuperá el acceso\nUsá el código de tu correo y tus respuestas de seguridad.\nCorreo electrónico\nCódigo de seis dígitos\nNueva contraseña\n\nRepetí la contraseña\n\n\nPreguntas de seguridad\nElegí dos preguntas distintas y guardá tus respuestas.\nPregunta 1\n\nNombre de tu primera mascota\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 1\nPregunta 2\nNombre de tu primera mascota\n\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 2\nLas respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.\nGuardar contraseña\nEnviar código\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "activate",
+      "mode": "light",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Código de seis dígitos",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nueva contraseña",
+          "width": 492,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar nueva contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Repetí la contraseña",
+          "width": 492,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar confirmación de contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 1",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 2: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 2",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Activar e ingresar",
+          "width": 542,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Enviar código",
+          "width": 90,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 1024,
+          "contentHeight": 1354
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nActivá tu contraseña\nConfirmá tu correo para sumar el ingreso con contraseña.\nCorreo electrónico\nCódigo de seis dígitos\nNueva contraseña\n\nRepetí la contraseña\n\n\nPreguntas de seguridad\nElegí dos preguntas distintas y guardá tus respuestas.\nPregunta 1\n\nNombre de tu primera mascota\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 1\nPregunta 2\nNombre de tu primera mascota\n\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 2\nLas respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.\nActivar e ingresar\nEnviar código\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "login",
+      "mode": "dark",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo claro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 540,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Contraseña",
+          "width": 492,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar",
+          "width": 542,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Crear una cuenta",
+          "width": 111,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Google",
+          "width": 175,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Discord",
+          "width": 175,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con GitHub",
+          "width": 175,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Recuperar contraseña",
+          "width": 142,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Activar contraseña",
+          "width": 122,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Verificar cuenta",
+          "width": 103,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [],
+      "text": "acceso.\n\nIniciá sesión\nIngresá con tu correo o elegí una cuenta vinculada.\nCorreo electrónico\nContraseña\n\nIngresar\n¿Todavía no tenés cuenta?\nCrear una cuenta\nO ingresá con una cuenta vinculada\n\nGoogle\n\nDiscord\n\nGitHub\n¿Necesitás ayuda para entrar?\nRecuperar contraseña\nActivar contraseña\nVerificar cuenta\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "welcome",
+      "mode": "dark",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo claro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Cerrar sesión",
+          "width": 502,
+          "height": 52,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [
+        "/login"
+      ],
+      "text": "acceso.\n\n\nAcceso confirmado\nMP\n¡Hola, Martina Pérez!\nEstos son los datos de tu cuenta.\nCorreo electrónico\ndemo@example.test\nTipo de cuenta\nUsuario\nFecha de creación\n22/10/26\n\nCuentas vinculadas\nTus otras formas de ingresar.\n\nGoogle\nVinculada\n\nDiscord\nSin vincular\n\nGitHub\nVinculada\nCerrar sesión\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "welcome",
+      "mode": "light",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Cerrar sesión",
+          "width": 502,
+          "height": 52,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [
+        "/login"
+      ],
+      "text": "acceso.\n\n\nAcceso confirmado\nMP\n¡Hola, Martina Pérez!\nEstos son los datos de tu cuenta.\nCorreo electrónico\ndemo@example.test\nTipo de cuenta\nUsuario\nFecha de creación\n22/10/26\n\nCuentas vinculadas\nTus otras formas de ingresar.\n\nGoogle\nVinculada\n\nDiscord\nSin vincular\n\nGitHub\nVinculada\nCerrar sesión\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "login",
+      "mode": "light",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Contraseña",
+          "width": 224,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar",
+          "width": 274,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Crear una cuenta",
+          "width": 111,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Google",
+          "width": 85,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Discord",
+          "width": 85,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con GitHub",
+          "width": 85,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Recuperar contraseña",
+          "width": 142,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Activar contraseña",
+          "width": 122,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Verificar cuenta",
+          "width": 103,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 812,
+          "contentHeight": 1020
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nIniciá sesión\nIngresá con tu correo o elegí una cuenta vinculada.\nCorreo electrónico\nContraseña\n\nIngresar\n¿Todavía no tenés cuenta?\nCrear una cuenta\nO ingresá con una cuenta vinculada\n\nGoogle\n\nDiscord\n\nGitHub\n¿Necesitás ayuda para entrar?\nRecuperar contraseña\nActivar contraseña\nVerificar cuenta\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "register",
+      "mode": "light",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nombre y apellido",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nueva contraseña",
+          "width": 224,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar nueva contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Repetí la contraseña",
+          "width": 224,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar confirmación de contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Ciudad donde naciste",
+          "width": 134,
+          "height": 19,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 1",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 19,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 2: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 2",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Crear cuenta",
+          "width": 274,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 812,
+          "contentHeight": 1444
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nCreá tu cuenta\nUnos pocos datos y ya estás adentro.\nCorreo electrónico\nNombre y apellido\nNueva contraseña\n\nRepetí la contraseña\n\n\nPreguntas de seguridad\nElegí dos preguntas distintas y guardá tus respuestas.\nPregunta 1\n\nNombre de tu primera mascota\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 1\nPregunta 2\nNombre de tu primera mascota\n\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 2\nLas respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.\nCrear cuenta\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "verify",
+      "mode": "light",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 287,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Código de seis dígitos",
+          "width": 287,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Verificar e ingresar",
+          "width": 289,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Enviar otro código",
+          "width": 122,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [],
+      "text": "acceso.\n\nVerificá tu correo\nEscribí el código que llegó a tu correo.\nCorreo electrónico\nCódigo de seis dígitos\nVerificar e ingresar\nEnviar otro código\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "reset",
+      "mode": "light",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Código de seis dígitos",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nueva contraseña",
+          "width": 224,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar nueva contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Repetí la contraseña",
+          "width": 224,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar confirmación de contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Ciudad donde naciste",
+          "width": 134,
+          "height": 19,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 1",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 19,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 2: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 2",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Guardar contraseña",
+          "width": 274,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Enviar código",
+          "width": 90,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 812,
+          "contentHeight": 1550
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nRecuperá el acceso\nUsá el código de tu correo y tus respuestas de seguridad.\nCorreo electrónico\nCódigo de seis dígitos\nNueva contraseña\n\nRepetí la contraseña\n\n\nPreguntas de seguridad\nElegí dos preguntas distintas y guardá tus respuestas.\nPregunta 1\n\nNombre de tu primera mascota\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 1\nPregunta 2\nNombre de tu primera mascota\n\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 2\nLas respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.\nGuardar contraseña\nEnviar código\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "activate",
+      "mode": "light",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Código de seis dígitos",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Nueva contraseña",
+          "width": 224,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar nueva contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Repetí la contraseña",
+          "width": 224,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar confirmación de contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Ciudad donde naciste",
+          "width": 134,
+          "height": 19,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 1: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 1: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 1",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu primera mascota",
+          "width": 194,
+          "height": 19,
+          "disabled": true
+        },
+        {
+          "label": "Pregunta 2: Ciudad donde naciste",
+          "width": 134,
+          "height": 30,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Nombre de tu escuela primaria",
+          "width": 191,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Pregunta 2: Tu apodo de infancia",
+          "width": 130,
+          "height": 19,
+          "disabled": false
+        },
+        {
+          "label": "Respuesta 2",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Activar e ingresar",
+          "width": 274,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Enviar código",
+          "width": 90,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Volver al ingreso",
+          "width": 110,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 812,
+          "contentHeight": 1550
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nActivá tu contraseña\nConfirmá tu correo para sumar el ingreso con contraseña.\nCorreo electrónico\nCódigo de seis dígitos\nNueva contraseña\n\nRepetí la contraseña\n\n\nPreguntas de seguridad\nElegí dos preguntas distintas y guardá tus respuestas.\nPregunta 1\n\nNombre de tu primera mascota\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 1\nPregunta 2\nNombre de tu primera mascota\n\nCiudad donde naciste\nNombre de tu escuela primaria\nTu apodo de infancia\nRespuesta 2\nLas respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.\nActivar e ingresar\nEnviar código\nVolver al ingreso\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "login",
+      "mode": "dark",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo claro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Correo electrónico",
+          "width": 272,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Contraseña",
+          "width": 224,
+          "height": 50,
+          "disabled": false
+        },
+        {
+          "label": "Mostrar contraseña",
+          "width": 48,
+          "height": 48,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar",
+          "width": 274,
+          "height": 52,
+          "disabled": true
+        },
+        {
+          "label": "Crear una cuenta",
+          "width": 111,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Google",
+          "width": 85,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con Discord",
+          "width": 85,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Ingresar con GitHub",
+          "width": 85,
+          "height": 76,
+          "disabled": false
+        },
+        {
+          "label": "Recuperar contraseña",
+          "width": 142,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Activar contraseña",
+          "width": 122,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Verificar cuenta",
+          "width": 103,
+          "height": 44,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [
+        {
+          "height": 812,
+          "contentHeight": 1020
+        }
+      ],
+      "mockCalls": [],
+      "text": "acceso.\n\nIniciá sesión\nIngresá con tu correo o elegí una cuenta vinculada.\nCorreo electrónico\nContraseña\n\nIngresar\n¿Todavía no tenés cuenta?\nCrear una cuenta\nO ingresá con una cuenta vinculada\n\nGoogle\n\nDiscord\n\nGitHub\n¿Necesitás ayuda para entrar?\nRecuperar contraseña\nActivar contraseña\nVerificar cuenta\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "welcome",
+      "mode": "dark",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo claro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Cerrar sesión",
+          "width": 289,
+          "height": 52,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [
+        "/login"
+      ],
+      "text": "acceso.\n\n\nAcceso confirmado\nMP\n¡Hola, Martina Pérez!\nEstos son los datos de tu cuenta.\nCorreo electrónico\ndemo@example.test\nTipo de cuenta\nUsuario\nFecha de creación\n22/10/26\n\nCuentas vinculadas\nTus otras formas de ingresar.\n\nGoogle\nVinculada\n\nDiscord\nSin vincular\n\nGitHub\nVinculada\nCerrar sesión\nAcceso seguro · Tu sesión permanece en este equipo"
+    },
+    {
+      "route": "welcome",
+      "mode": "light",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "documentWidth": 375,
+      "title": "Acceso",
+      "controls": [
+        {
+          "label": "Activar modo oscuro",
+          "width": 44,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Cerrar sesión",
+          "width": 289,
+          "height": 52,
+          "disabled": false
+        }
+      ],
+      "horizontalOverflow": [],
+      "unnamedInputs": 0,
+      "unnamedButtons": 0,
+      "scrollRegions": [],
+      "mockCalls": [
+        "/login"
+      ],
+      "text": "acceso.\n\n\nAcceso confirmado\nMP\n¡Hola, Martina Pérez!\nEstos son los datos de tu cuenta.\nCorreo electrónico\ndemo@example.test\nTipo de cuenta\nUsuario\nFecha de creación\n22/10/26\n\nCuentas vinculadas\nTus otras formas de ingresar.\n\nGoogle\nVinculada\n\nDiscord\nSin vincular\n\nGitHub\nVinculada\nCerrar sesión\nAcceso seguro · Tu sesión permanece en este equipo"
+    }
+  ],
+  "interactions": [
+    {
+      "viewport": 1440,
+      "loginWithMockSession": "pass",
+      "themeToggle": "pass"
+    },
+    {
+      "viewport": 768,
+      "loginWithMockSession": "pass",
+      "themeToggle": "pass"
+    },
+    {
+      "viewport": 375,
+      "loginWithMockSession": "pass",
+      "themeToggle": "pass"
+    }
+  ],
+  "consoleErrors": [],
+  "remoteBlocked": 0
+}

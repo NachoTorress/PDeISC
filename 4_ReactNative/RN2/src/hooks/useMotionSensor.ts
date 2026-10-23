@@ -17,6 +17,7 @@ export function useMotionSensor(kind: 'accelerometer' | 'gyroscope') {
   const starting = useRef(false);
 
   const stop = useCallback(() => {
+    // Las respuestas de permisos y lecturas de una sesión anterior dejan de ser válidas.
     session.current += 1;
     subscription.current?.remove();
     subscription.current = null;
@@ -63,6 +64,7 @@ export function useMotionSensor(kind: 'accelerometer' | 'gyroscope') {
           timeout.current = null;
         }
         setValue({ x, y, z });
+        // El gráfico conserva las últimas 40 magnitudes; no acumula toda la sesión.
         setHistory((previous) => [...previous.slice(-39), Math.hypot(x, y, z)]);
       });
       setActive(true);

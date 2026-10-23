@@ -1,0 +1,5623 @@
+{
+  "pages": [
+    {
+      "route": "login",
+      "mode": "light",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 10.79,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 4.4,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 7.12,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 4.84,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 7.12,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Qué bueno verte de nuevo",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Iniciá sesión",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 11.93,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Ingresá con tu correo o elegí una cuenta vinculada.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Contraseña",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Recuperar contraseña",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu contraseña",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "o continuá con",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Google",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            240,
+            245,
+            255
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 10.91,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Discord",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            242,
+            240,
+            255
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 10.61,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "GitHub",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            237,
+            243,
+            246
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 10.65,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Todavía no tenés cuenta?",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Crear una cuenta",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Otras opciones de acceso",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Activar contraseña",
+          "color": "rgb(49, 88, 115)",
+          "background": [
+            234,
+            242,
+            247
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 6.68,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Verificar cuenta",
+          "color": "rgb(49, 88, 115)",
+          "background": [
+            234,
+            242,
+            247
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 6.68,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "login",
+      "mode": "dark",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 14.81,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 9.41,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 9,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 6.45,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Qué bueno verte de nuevo",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Iniciá sesión",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 12.75,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Ingresá con tu correo o elegí una cuenta vinculada.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Contraseña",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Recuperar contraseña",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu contraseña",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "o continuá con",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Google",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            36,
+            63,
+            88
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 10.01,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Discord",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            52,
+            61,
+            92
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 9.8,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "GitHub",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            41,
+            65,
+            79
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 9.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Todavía no tenés cuenta?",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Crear una cuenta",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Otras opciones de acceso",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Activar contraseña",
+          "color": "rgb(206, 227, 241)",
+          "background": [
+            41,
+            68,
+            84
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 7.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Verificar cuenta",
+          "color": "rgb(206, 227, 241)",
+          "background": [
+            41,
+            68,
+            84
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 7.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "register",
+      "mode": "light",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 10.79,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 4.4,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 7.12,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 4.84,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 7.12,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Empezá por acá",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Creá tu cuenta",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 11.93,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Unos pocos datos y ya estás adentro.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre y apellido",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Cómo te llamás",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nueva contraseña",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "8 caracteres, letras y números",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Repetí la contraseña",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Escribila una vez más",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Preguntas de seguridad",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 16,
+          "weight": 700,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Elegí dos preguntas distintas y guardá tus respuestas.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 1",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu primera mascota",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 4.23,
+          "minimum": 4.5,
+          "result": "fail"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 2",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Ciudad donde naciste",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 4.23,
+          "minimum": 4.5,
+          "result": "fail"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Las respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volver al ingreso",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "register",
+      "mode": "dark",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 14.81,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 9.41,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 9,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 6.45,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Empezá por acá",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Creá tu cuenta",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 12.75,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Unos pocos datos y ya estás adentro.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre y apellido",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Cómo te llamás",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nueva contraseña",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "8 caracteres, letras y números",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Repetí la contraseña",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Escribila una vez más",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Preguntas de seguridad",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 16,
+          "weight": 700,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Elegí dos preguntas distintas y guardá tus respuestas.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 1",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu primera mascota",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.88,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 2",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Ciudad donde naciste",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.88,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Las respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volver al ingreso",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "verify",
+      "mode": "light",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 10.79,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 4.4,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 7.12,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 4.84,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 7.12,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un paso más",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Verificá tu correo",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 11.93,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Escribí el código que llegó a tu correo.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Código de seis dígitos",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "000000",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Enviar otro código",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volver al ingreso",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "verify",
+      "mode": "dark",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 14.81,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 9.41,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 9,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 6.45,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un paso más",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Verificá tu correo",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 12.75,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Escribí el código que llegó a tu correo.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Código de seis dígitos",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "000000",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Enviar otro código",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volver al ingreso",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "reset",
+      "mode": "light",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 10.79,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 4.4,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 7.12,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 4.84,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 7.12,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volvamos a tu cuenta",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Recuperá el acceso",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 11.93,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Usá el código de tu correo y tus respuestas de seguridad.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Código de seis dígitos",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "000000",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nueva contraseña",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "8 caracteres, letras y números",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Repetí la contraseña",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Escribila una vez más",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Preguntas de seguridad",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 16,
+          "weight": 700,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Elegí dos preguntas distintas y guardá tus respuestas.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 1",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu primera mascota",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 4.23,
+          "minimum": 4.5,
+          "result": "fail"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 2",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Ciudad donde naciste",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 4.23,
+          "minimum": 4.5,
+          "result": "fail"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Las respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Enviar código",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volver al ingreso",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "reset",
+      "mode": "dark",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 14.81,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 9.41,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 9,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 6.45,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volvamos a tu cuenta",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Recuperá el acceso",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 12.75,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Usá el código de tu correo y tus respuestas de seguridad.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Código de seis dígitos",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "000000",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nueva contraseña",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "8 caracteres, letras y números",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Repetí la contraseña",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Escribila una vez más",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Preguntas de seguridad",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 16,
+          "weight": 700,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Elegí dos preguntas distintas y guardá tus respuestas.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 1",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu primera mascota",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.88,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 2",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Ciudad donde naciste",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.88,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Las respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Enviar código",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volver al ingreso",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "activate",
+      "mode": "light",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 10.79,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 4.4,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 7.12,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 4.84,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 7.12,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Una nueva forma de entrar",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Activá tu contraseña",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 11.93,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Confirmá tu correo para sumar el ingreso con contraseña.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Código de seis dígitos",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "000000",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nueva contraseña",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "8 caracteres, letras y números",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Repetí la contraseña",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Escribila una vez más",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Preguntas de seguridad",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 16,
+          "weight": 700,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Elegí dos preguntas distintas y guardá tus respuestas.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 1",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu primera mascota",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 4.23,
+          "minimum": 4.5,
+          "result": "fail"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 2",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Ciudad donde naciste",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 4.23,
+          "minimum": 4.5,
+          "result": "fail"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Las respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Enviar código",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volver al ingreso",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 4.86,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "activate",
+      "mode": "dark",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 14.81,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 9.41,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un lugar para tu cuenta",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta.\nTu punto de",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 9,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "partida.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 6.45,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Entrá con tu correo o con una cuenta vinculada. Elegí la forma que va con vos.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Un acceso, varias opciones",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo · Google · Discord · GitHub",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Una nueva forma de entrar",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Activá tu contraseña",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 12.75,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Confirmá tu correo para sumar el ingreso con contraseña.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 14,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "vos@ejemplo.com",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Código de seis dígitos",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "000000",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nueva contraseña",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "8 caracteres, letras y números",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Repetí la contraseña",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Escribila una vez más",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Preguntas de seguridad",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 16,
+          "weight": 700,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Elegí dos preguntas distintas y guardá tus respuestas.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 1",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu primera mascota",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.88,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 1",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Pregunta 2",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Ciudad donde naciste",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.88,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Nombre de tu escuela primaria",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu apodo de infancia",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Respuesta 2",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 15,
+          "weight": 400,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Las respuestas se guardan protegidas. Recordalas para recuperar tu contraseña.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Enviar código",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Volver al ingreso",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 13,
+          "weight": 700,
+          "ratio": 8.09,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "welcome",
+      "mode": "light",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 10.79,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 4.4,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Ya estás en casa",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Qué bueno\ntenerte",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 7.12,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "acá.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 4.84,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta está lista. Desde acá podés revisar tus datos y gestionar tu sesión.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Todo en tu cuenta",
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 7.12,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tus datos y tus cuentas vinculadas",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(207, 235, 231)",
+          "background": [
+            13,
+            98,
+            100
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 5.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Acceso confirmado",
+          "color": "rgb(23, 100, 83)",
+          "background": [
+            227,
+            244,
+            237
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 6.18,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "MP",
+          "color": "rgb(69, 49, 31)",
+          "background": [
+            255,
+            203,
+            154
+          ],
+          "size": 20,
+          "weight": 800,
+          "ratio": 8.33,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "¡Hola, Martina Pérez!",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 11.93,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Estos son los datos de tu cuenta.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "demo@example.test",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tipo de cuenta",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Usuario",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Fecha de creación",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "22/10/26",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Cuentas vinculadas",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 16,
+          "weight": 700,
+          "ratio": 11.93,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tus otras formas de ingresar.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.56,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Google",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 12,
+          "weight": 700,
+          "ratio": 10.39,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Vinculada",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 11,
+          "weight": 600,
+          "ratio": 4.23,
+          "minimum": 4.5,
+          "result": "fail"
+        },
+        {
+          "text": "Discord",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 12,
+          "weight": 700,
+          "ratio": 11.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Sin vincular",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            245,
+            249,
+            251
+          ],
+          "size": 11,
+          "weight": 600,
+          "ratio": 5.25,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "GitHub",
+          "color": "rgb(24, 59, 73)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 12,
+          "weight": 700,
+          "ratio": 10.39,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Vinculada",
+          "color": "rgb(8, 127, 121)",
+          "background": [
+            226,
+            243,
+            239
+          ],
+          "size": 11,
+          "weight": 600,
+          "ratio": 4.23,
+          "minimum": 4.5,
+          "result": "fail"
+        },
+        {
+          "text": "Cerrar sesión",
+          "color": "rgb(49, 88, 115)",
+          "background": [
+            234,
+            242,
+            247
+          ],
+          "size": 15,
+          "weight": 700,
+          "ratio": 6.68,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(82, 108, 120)",
+          "background": [
+            237,
+            245,
+            247
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 5.03,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "route": "welcome",
+      "mode": "dark",
+      "contrast": [
+        {
+          "text": "acceso",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 14.81,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": ".",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 26,
+          "weight": 800,
+          "ratio": 9.41,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta, a tu manera.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Ya estás en casa",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 600,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Qué bueno\ntenerte",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 9,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "acá.",
+          "color": "rgb(255, 203, 154)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 52,
+          "weight": 800,
+          "ratio": 6.45,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Tu cuenta está lista. Desde acá podés revisar tus datos y gestionar tu sesión.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 16,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Todo en tu cuenta",
+          "color": "rgb(241, 251, 250)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 9,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tus datos y tus cuentas vinculadas",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "¿Te olvidaste la contraseña?\nRecuperá el acceso desde tu correo.",
+          "color": "rgb(197, 227, 223)",
+          "background": [
+            18,
+            77,
+            83
+          ],
+          "size": 13,
+          "weight": 400,
+          "ratio": 6.97,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Acceso confirmado",
+          "color": "rgb(157, 225, 196)",
+          "background": [
+            35,
+            71,
+            63
+          ],
+          "size": 12,
+          "weight": 600,
+          "ratio": 6.85,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "MP",
+          "color": "rgb(69, 49, 31)",
+          "background": [
+            255,
+            203,
+            154
+          ],
+          "size": 20,
+          "weight": 800,
+          "ratio": 8.33,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "¡Hola, Martina Pérez!",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 30,
+          "weight": 800,
+          "ratio": 12.75,
+          "minimum": 3,
+          "result": "pass"
+        },
+        {
+          "text": "Estos son los datos de tu cuenta.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Correo electrónico",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "demo@example.test",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tipo de cuenta",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Usuario",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Fecha de creación",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "22/10/26",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 14,
+          "weight": 600,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Cuentas vinculadas",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 16,
+          "weight": 700,
+          "ratio": 12.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tus otras formas de ingresar.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            25,
+            47,
+            60
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 7.66,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Google",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 12,
+          "weight": 700,
+          "ratio": 9.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Vinculada",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 11,
+          "weight": 600,
+          "ratio": 5.88,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Discord",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 12,
+          "weight": 700,
+          "ratio": 10.82,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Sin vincular",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            32,
+            59,
+            73
+          ],
+          "size": 11,
+          "weight": 600,
+          "ratio": 6.5,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "GitHub",
+          "color": "rgb(237, 247, 250)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 12,
+          "weight": 700,
+          "ratio": 9.26,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Vinculada",
+          "color": "rgb(121, 214, 198)",
+          "background": [
+            37,
+            71,
+            75
+          ],
+          "size": 11,
+          "weight": 600,
+          "ratio": 5.88,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Cerrar sesión",
+          "color": "rgb(206, 227, 241)",
+          "background": [
+            41,
+            68,
+            84
+          ],
+          "size": 15,
+          "weight": 700,
+          "ratio": 7.75,
+          "minimum": 4.5,
+          "result": "pass"
+        },
+        {
+          "text": "Tu sesión se guarda en este dispositivo.",
+          "color": "rgb(173, 196, 208)",
+          "background": [
+            16,
+            35,
+            46
+          ],
+          "size": 12,
+          "weight": 400,
+          "ratio": 8.9,
+          "minimum": 4.5,
+          "result": "pass"
+        }
+      ]
+    }
+  ],
+  "keyboard": [
+    {
+      "tag": "BUTTON",
+      "label": "Activar modo oscuro",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "outlineColor": "rgb(16, 16, 16)"
+    },
+    {
+      "tag": "INPUT",
+      "label": "Correo electrónico",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "outlineColor": "rgb(16, 16, 16)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Recuperar contraseña",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "outlineColor": "rgb(16, 16, 16)"
+    },
+    {
+      "tag": "INPUT",
+      "label": "Contraseña",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "outlineColor": "rgb(16, 16, 16)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Mostrar contraseña",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "outlineColor": "rgb(16, 16, 16)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Ingresar con Google",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "outlineColor": "rgb(16, 16, 16)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Ingresar con Discord",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "outlineColor": "rgb(16, 16, 16)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Ingresar con GitHub",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "outlineColor": "rgb(16, 16, 16)"
+    }
+  ],
+  "loading": {
+    "busy": false,
+    "text": true,
+    "disabledProviders": [
+      null,
+      null,
+      null
+    ]
+  },
+  "providerNavigations": [
+    "google",
+    "discord",
+    "github"
+  ],
+  "longIdentity": {
+    "viewport": {
+      "width": 375,
+      "height": 812
+    },
+    "documentWidth": 375,
+    "title": "Acceso",
+    "controls": [
+      {
+        "label": "Activar modo oscuro",
+        "width": 44,
+        "height": 44,
+        "disabled": false
+      },
+      {
+        "label": "Cerrar sesión",
+        "width": 282,
+        "height": 52,
+        "disabled": false
+      }
+    ],
+    "horizontalOverflow": [],
+    "unnamedInputs": 0,
+    "unnamedButtons": 0,
+    "scrollRegions": [
+      {
+        "height": 812,
+        "contentHeight": 989
+      }
+    ],
+    "mockCalls": [
+      "/login"
+    ],
+    "text": "acceso.\n\n\nAcceso confirmado\nMD\n¡Hola, María de los Ángeles Fernández de la Sierra!\nEstos son los datos de tu cuenta.\nCorreo electrónico\nmaria.delosangeles.fernandez.apellido.muy.extenso@example.test\nTipo de cuenta\nUsuario\nFecha de creación\n22/10/26\n\nCuentas vinculadas\nTus otras formas de ingresar.\n\nGoogle\nVinculada\n\nDiscord\nSin vincular\n\nGitHub\nVinculada\nCerrar sesión\n\nTu sesión se guarda en este dispositivo."
+  }
+}

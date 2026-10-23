@@ -34,6 +34,7 @@ const validDate = (value: unknown): value is string =>
 const vector = (value: unknown): value is Vector3 =>
   object(value) && finite(value.x) && finite(value.y) && finite(value.z);
 
+/** Comprueba datos externos en ejecución; los tipos de TypeScript no validan el JSON guardado. */
 export function isPayload(value: unknown): value is RecordPayload {
   if (!object(value)) return false;
   switch (value.kind) {

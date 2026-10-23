@@ -4,4 +4,5 @@ export async function persistPhoto(uri: string, _id: string): Promise<string> {
   return uri;
 }
 
+// La imagen forma parte del registro; al borrarlo no queda un archivo separado que eliminar.
 export async function removePhoto(_uri: string): Promise<void> {}

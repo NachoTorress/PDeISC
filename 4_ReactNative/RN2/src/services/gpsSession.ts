@@ -65,6 +65,7 @@ export function createGpsSession(
     timer = null;
   }
   function stop() {
+    // Invalida las operaciones pendientes aunque la API nativa todavía responda.
     generation += 1;
     watcher?.remove();
     watcher = null;
@@ -157,6 +158,7 @@ export function createGpsSession(
         )
           return;
         if (watcher) clearTimer();
+        // La consulta inicial y el seguimiento pueden entregar posiciones fuera de orden.
         if (state.point && next.timestamp < state.point.timestamp) return;
         publish({ point: next, busy: watcher === null });
       };

@@ -60,6 +60,7 @@ export function RecordsProvider({ children }: { children: ReactNode }) {
   }
 
   function lock() {
+    // La referencia bloquea de inmediato, antes de que React actualice el estado busy.
     if (!ready.current) throw new Error('Primero se deben cargar los registros.');
     if (locked.current) throw new Error('Hay un cambio en curso. Esperá un momento.');
     locked.current = true;
@@ -101,6 +102,7 @@ export function RecordsProvider({ children }: { children: ReactNode }) {
         ...current.current,
       ]);
     } catch (error) {
+      // Si falla el registro, se intenta eliminar la foto copiada para no dejar archivos huérfanos.
       if (ownedPhoto) await removePhoto(ownedPhoto).catch(() => undefined);
       throw error;
     } finally {
@@ -132,6 +134,7 @@ export function RecordsProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  /** false indica que el registro se borró, pero no se pudo eliminar su foto. */
   async function remove(id: string) {
     lock();
     try {

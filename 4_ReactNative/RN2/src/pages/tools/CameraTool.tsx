@@ -5,7 +5,7 @@ import {
   type CameraType,
 } from 'expo-camera';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Image, View } from 'react-native';
+import { ActivityIndicator, Image, Platform, View } from 'react-native';
 import { useForeground } from '../../hooks/useForeground';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Button } from '../../components/Button';
@@ -247,7 +247,7 @@ export function CameraTool({ scanner = false }: { scanner?: boolean }) {
                 }}
               />
             )}
-            {!scanner && (
+            {!scanner && Platform.OS !== 'web' && (
               <Button
                 label={facing === 'back' ? 'Usar cámara frontal' : 'Usar cámara trasera'}
                 icon="rotate"
@@ -260,7 +260,7 @@ export function CameraTool({ scanner = false }: { scanner?: boolean }) {
                 }}
               />
             )}
-            {facing === 'back' && (
+            {Platform.OS !== 'web' && facing === 'back' && (
               <Button
                 label={torch ? 'Apagar linterna' : 'Encender linterna'}
                 icon="sun"

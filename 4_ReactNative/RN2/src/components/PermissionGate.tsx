@@ -6,6 +6,7 @@ import { Type } from './Typography';
 import { Feedback } from './Feedback';
 import { useTheme } from '../contexts/ThemeContext';
 
+/** Si el sistema ya no permite solicitar acceso, guía al usuario a los ajustes. */
 export function PermissionGate({
   icon,
   title,

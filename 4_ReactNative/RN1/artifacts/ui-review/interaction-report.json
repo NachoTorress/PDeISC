@@ -1,0 +1,102 @@
+{
+  "checks": [
+    {
+      "description": "Login vacío permanece desactivado",
+      "result": "pass"
+    },
+    {
+      "description": "Correo inválido muestra mensaje accesible",
+      "result": "pass"
+    },
+    {
+      "description": "Contraseña está oculta al inicio",
+      "result": "pass"
+    },
+    {
+      "description": "Mostrar contraseña permite revisar el valor",
+      "result": "pass"
+    },
+    {
+      "description": "Ocultar contraseña restablece campo seguro",
+      "result": "pass"
+    },
+    {
+      "description": "Error de API se presenta al usuario",
+      "result": "pass"
+    },
+    {
+      "description": "Login con API mock muestra bienvenida y nombre",
+      "result": "pass"
+    },
+    {
+      "description": "Cerrar sesión solicita confirmación",
+      "result": "pass"
+    },
+    {
+      "description": "Cancelar conserva la sesión demo",
+      "result": "pass"
+    },
+    {
+      "description": "Confirmar cierre elimina la sesión demo",
+      "result": "pass"
+    },
+    {
+      "description": "Pregunta usada en otra respuesta está desactivada",
+      "result": "pass"
+    },
+    {
+      "description": "Cambiar pregunta actualiza selección accesible",
+      "result": "pass"
+    },
+    {
+      "description": "Registro conserva mensaje y navega a verificación",
+      "result": "pass"
+    },
+    {
+      "description": "Reenvío de código pasa por API mock",
+      "result": "pass"
+    },
+    {
+      "description": "Código elimina letras y limita a seis dígitos",
+      "result": "pass"
+    },
+    {
+      "description": "Verificación inicia sesión mediante API mock",
+      "result": "pass"
+    },
+    {
+      "description": "Cerrar sesión solicita confirmación",
+      "result": "pass"
+    },
+    {
+      "description": "Cancelar conserva la sesión demo",
+      "result": "pass"
+    },
+    {
+      "description": "Confirmar cierre elimina la sesión demo",
+      "result": "pass"
+    },
+    {
+      "description": "Recuperación devuelve al login con confirmación",
+      "result": "pass"
+    },
+    {
+      "description": "Activación termina en bienvenida con sesión demo",
+      "result": "pass"
+    },
+    {
+      "description": "Tab mueve el foco a un control interactivo",
+      "result": "pass"
+    },
+    {
+      "description": "Interacciones completan sin errores JavaScript de consola",
+      "result": "pass"
+    },
+    {
+      "description": "No se emitieron solicitudes de red externas",
+      "result": "pass"
+    }
+  ],
+  "consoleErrors": [],
+  "remoteBlocked": 0
+}

@@ -7,7 +7,7 @@ import { SessionProvider, useSession } from './contexts/SessionContext';
 import { AuthPage } from './pages/AuthPage';
 import { WelcomePage } from './pages/WelcomePage';
 import { api, apiBase } from './services/api';
-import { palette, stylesFor } from './styles/theme';
+import { metrics, palette, stylesFor } from './styles/theme';
 import type { Route, Session } from './types';
 
 function AppContent() {
@@ -24,7 +24,7 @@ function AppContent() {
   const { user, loading, signIn, signOut } = useSession();
   const c = palette(mode);
   const s = stylesFor(c);
-  const desktopLogin = Platform.OS === 'web' && !user && route === 'login' && width >= 850;
+  const wide = width >= metrics.breakpoint;
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ y: 0, animated: false });
@@ -93,15 +93,20 @@ function AppContent() {
   return <SafeAreaView style={s.screen}>
   <StatusBar barStyle={mode === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={c.background} />
   <KeyboardAvoidingView style={s.screen} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-    <ScrollView ref={scrollRef} contentContainerStyle={[s.scroll, desktopLogin ? s.desktopLoginScroll : undefined]} keyboardShouldPersistTaps="handled"
+    <ScrollView ref={scrollRef} contentContainerStyle={[s.scroll, width < 390 ? { paddingHorizontal: 16, paddingTop: 20 } : undefined]} keyboardShouldPersistTaps="handled"
       onScroll={(event) => setShowTop(event.nativeEvent.contentOffset.y > 400)} scrollEventThrottle={150}>
       <View style={s.content}>
-        <View style={[s.top, desktopLogin ? s.desktopLoginTop : undefined]}>
-          <Text style={s.brand}>acceso<Text style={s.brandDot}>.</Text></Text>
+        <View style={[s.top, wide ? s.topWide : undefined]}>
+          <View style={s.brandRow}>
+            <Text style={s.brand}>acceso<Text style={s.brandDot}>.</Text></Text>
+          </View>
+          <View style={s.headerActions}>
+          {wide ? <Text style={s.headerCaption}>Tu cuenta, a tu manera.</Text> : null}
           <Pressable accessibilityRole="button" accessibilityLabel={`Activar modo ${mode === 'light' ? 'oscuro' : 'claro'}`}
-            onPress={() => setMode(mode === 'light' ? 'dark' : 'light')} style={s.themeButton}>
-            <FontAwesome5 name={mode === 'light' ? 'moon' : 'sun'} solid size={18} color={c.text} />
+            onPress={() => setMode(mode === 'light' ? 'dark' : 'light')} style={({ pressed }) => [s.themeButton, pressed ? s.controlPressed : undefined]}>
+            <FontAwesome5 name={mode === 'light' ? 'moon' : 'sun'} solid size={17} color={c.accent} />
           </Pressable>
+          </View>
         </View>
         {loading ? <View style={[s.panel, s.loadingPanel]} accessibilityLiveRegion="polite">
           <ActivityIndicator color={c.accent} />
@@ -109,7 +114,7 @@ function AppContent() {
         </View> : user ?
           <WelcomePage user={user} onLogout={signOut} palette={c} /> : <>
             {oauthError ? <Text accessibilityRole="alert" style={s.banner}>{oauthError}</Text> : null}
-            {oauthNotice ? <View style={s.panel}>
+            {oauthNotice ? <View style={[s.panel, { marginBottom: 20 }]}>
               <Text style={s.intro}>{oauthNotice}</Text>
               <Pressable accessibilityRole="button" accessibilityLabel="Cancelar acceso con proveedor" onPress={cancelOauth}>
                 <Text style={{ color: c.accent, fontWeight: '700' }}>Cancelar</Text>
@@ -117,12 +122,15 @@ function AppContent() {
             </View> : null}
             <AuthPage route={route === 'welcome' ? 'login' : route} go={setRoute} onSession={acceptSession} onOAuth={oauthLogin} oauthBusy={oauthBusy} palette={c} />
           </>}
-        <Text style={s.footer}>Acceso seguro · Tu sesión permanece en este equipo</Text>
+        <View style={s.footerRow}>
+          <FontAwesome5 name="lock" size={11} color={c.muted} />
+          <Text style={s.footer}>Tu sesión se guarda en este dispositivo.</Text>
+        </View>
       </View>
     </ScrollView>
     {showTop ? <Pressable accessibilityRole="button" accessibilityLabel="Volver al inicio" onPress={() => scrollRef.current?.scrollTo({ y: 0, animated: true })}
-      style={{ position: 'absolute', right: 22, bottom: 22, backgroundColor: c.accent, borderRadius: 24, paddingHorizontal: 17, paddingVertical: 12 }}>
-      <Text style={{ color: c.accentText, fontWeight: '800' }}>Volver arriba</Text>
+      style={s.floatingButton}>
+      <FontAwesome5 name="arrow-up" size={17} color={c.accentText} />
     </Pressable> : null}
   </KeyboardAvoidingView>
   </SafeAreaView>;
