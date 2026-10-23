@@ -9,10 +9,12 @@ export default function GalleryImage({
   uri,
   caption,
   height = 220,
+  bounded = false,
 }: {
   uri: string;
   caption: string;
   height?: number;
+  bounded?: boolean;
 }) {
   const { colors } = useTheme();
   const { client, user } = useAuth();
@@ -44,10 +46,11 @@ export default function GalleryImage({
   return (
     <View
       style={{
+        height: bounded ? height : undefined,
         minHeight: !source || failed ? height : undefined,
         borderRadius: 10,
         overflow: "hidden",
-        backgroundColor: !source || failed ? colors.surfaceVariant : undefined,
+        backgroundColor: colors.surfaceVariant,
         justifyContent: "center",
       }}
     >
@@ -63,6 +66,7 @@ export default function GalleryImage({
           source={{ uri: source }}
           caption={caption}
           placeholderHeight={height}
+          fixedHeight={bounded ? height : undefined}
           onError={() => setFailed(true)}
         />
       )}

@@ -13,3 +13,4 @@ dist/
 .expo/
 .install-interrupted/
 dist-android/
+artifacts/design-review/

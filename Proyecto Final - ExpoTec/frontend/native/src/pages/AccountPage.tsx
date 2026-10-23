@@ -194,7 +194,7 @@ export default function AccountPage({
           style={{
             padding: width > 700 ? 28 : 16,
             gap: sideBySide ? 32 : 14,
-            borderRadius: 20,
+            borderRadius: 16,
             flexDirection: sideBySide ? "row" : "column",
             alignItems: sideBySide ? "center" : "stretch",
           }}
@@ -221,7 +221,7 @@ export default function AccountPage({
             <View
               style={{ gap: 14, flex: sideBySide ? 1 : undefined, minWidth: 0 }}
             >
-              <View style={{ gap: 10, marginBottom: 4 }}>
+              <View style={{ gap: 10, marginBottom: 4, backgroundColor: colors.selectedContainer, padding: 20, borderRadius: 12 }}>
                 {width > 700 && <Text
                   style={{
                     color: colors.primary,
@@ -345,8 +345,8 @@ export default function AccountPage({
                 endIcon="arrowRight"
                 style={{
                   alignSelf: "stretch",
-                  minHeight: 50,
-                  borderRadius: 12,
+                  minHeight: 48,
+                  borderRadius: 10,
                 }}
               />
               {!register && recoveryEnabled && (

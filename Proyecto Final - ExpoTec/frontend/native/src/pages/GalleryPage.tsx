@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { useDemo } from "../hooks/useDemo";
 import { useTheme } from "../contexts/ThemeContext";
-import { Button, Card, Chip, Field, Heading, Screen } from "../components/ui";
+import { Button, Card, Chip, Field, PageHeading, Screen } from "../components/ui";
 import ProjectArt from "../components/ProjectArt";
 import { Icon } from "../components/Icon";
 import { projectMembers } from "../lib/team";
@@ -29,13 +29,13 @@ export default function GalleryPage({
   );
   return (
     <Screen>
-      <Heading
+      <PageHeading icon="projects" tone="info"
         title="Ideas que toman forma."
         subtitle="Conocé los proyectos de nuestra ExpoTec."
       />
       <View
         style={{
-          backgroundColor: colors.surfaceVariant,
+          backgroundColor: colors.selectedContainer,
           borderRadius: 12,
           padding: 22,
           gap: 16,
@@ -77,13 +77,13 @@ export default function GalleryPage({
       </Text>
       <ContentGrid minItemWidth={300}>
         {projects.map((project) => (
-          <Card key={project.id}>
+          <Card key={project.id} style={{ flex: 1 }}>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={`Ver ${project.name}`}
               onPress={() => onSelect(project.id)}
             >
-              <ProjectArt project={project} />
+              <ProjectArt project={project} height={176} bounded />
             </Pressable>
             <Chip label={project.course} />
             <Pressable
@@ -120,7 +120,7 @@ export default function GalleryPage({
                 <Chip key={subject} label={subject} />
               ))}
             </View>
-            <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}>
+            <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20, marginTop: "auto" }}>
               {state.spaces.find((space) => space.id === project.spaceId)?.name}{" "}
               · {project.furnitureId} · {formatDate(project.createdAt)}
             </Text>

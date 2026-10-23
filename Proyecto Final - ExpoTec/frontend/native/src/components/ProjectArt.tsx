@@ -15,6 +15,11 @@ export default function ProjectArt({
   bounded?: boolean;
 }) {
   const { colors } = useTheme();
+  const tone = project.category === "plant"
+    ? { fill: colors.selectedContainer, ink: colors.onSelectedContainer }
+    : project.category === "energy"
+      ? { fill: colors.accentContainer, ink: colors.accent }
+      : { fill: colors.infoContainer, ink: colors.info };
   if (project.image)
     return (
       <PhotoImage
@@ -30,7 +35,7 @@ export default function ProjectArt({
       style={{
         height: Math.min(height ?? (compact ? 96 : 120), 210),
         borderRadius: 12,
-        backgroundColor: colors.surfaceVariant,
+        backgroundColor: tone.fill,
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -38,7 +43,7 @@ export default function ProjectArt({
       <Icon
         name={project.category}
         size={compact ? 36 : 44}
-        color={colors.muted}
+        color={tone.ink}
       />
     </View>
   );

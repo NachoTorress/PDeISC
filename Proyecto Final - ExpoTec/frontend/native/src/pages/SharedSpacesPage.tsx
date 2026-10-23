@@ -10,11 +10,13 @@ import {
   Button,
   Card,
   CheckRow,
+  Choice,
   Field,
   Heading,
   InlineConfirm,
   Screen,
   RefreshButton,
+  PageHeading,
 } from "../components/ui";
 import NativeFloorplan from "../components/NativeFloorplan";
 import NativeSpaceEditor from "../components/NativeSpaceEditor";
@@ -231,7 +233,8 @@ export default function SharedSpacesPage({
   const paragraph = { color: colors.muted, fontSize: 15, lineHeight: 22 };
   return (
     <Screen scrollEnabled={!gestureActive}>
-      <Heading
+      <PageHeading
+        icon="map"
         title="Espacios de ExpoTec"
         subtitle="Planos compartidos de la exposición"
       />
@@ -332,22 +335,21 @@ export default function SharedSpacesPage({
         </Card>
       ) : null}
       {!!spaces?.length && (
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-          {spaces.map((item) => (
-            <Button
-              key={item.id}
-              title={`${item.name} · ${item.boothCount} ${item.boothCount === 1 ? "puesto" : "puestos"}`}
-              variant={item.id === spaceId ? "primary" : "secondary"}
-              disabled={busy || !!editing || loading}
-              onPress={() => {
-                setSpaceId(item.id);
-                setConfirm(null);
-                setError("");
-                setNotice("");
-              }}
-            />
-          ))}
-        </View>
+        <Choice
+          label="Elegir espacio"
+          value={spaceId ?? ""}
+          options={spaces.map((item) => ({
+            value: item.id,
+            label: `${item.name} · ${item.boothCount} ${item.boothCount === 1 ? "puesto" : "puestos"}`,
+          }))}
+          disabled={busy || !!editing || loading}
+          onChange={(id) => {
+            setSpaceId(id);
+            setConfirm(null);
+            setError("");
+            setNotice("");
+          }}
+        />
       )}
       {detailLoading && !editing && (
         <ActivityIndicator color={colors.primary} />

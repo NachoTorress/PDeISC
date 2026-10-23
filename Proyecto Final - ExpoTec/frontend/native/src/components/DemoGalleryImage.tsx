@@ -21,6 +21,7 @@ export default function DemoGalleryImage({
       source={source}
       caption={caption}
       placeholderHeight={280}
+      fixedHeight={220}
     />
   );
 }

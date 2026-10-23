@@ -1,7 +1,8 @@
 import { useCallback, useRef, useState } from "react";
-import { ActivityIndicator, Text, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, Text } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { Button, Card, Field, Heading, Screen } from "../components/ui";
+import { ActionRow, Button, Card, Field, PageHeading, Screen } from "../components/ui";
+import ContentGrid from "../components/ContentGrid";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { AuthError } from "../lib/authTypes";
@@ -15,7 +16,6 @@ const pageSize = 20;
 export default function AdminUsersPage({ onAccount }: { onAccount: () => void }) {
   const { client, user, ready } = useAuth();
   const { colors } = useTheme();
-  const { width } = useWindowDimensions();
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [search, setSearch] = useState("");
   const [applied, setApplied] = useState("");
@@ -61,7 +61,7 @@ export default function AdminUsersPage({ onAccount }: { onAccount: () => void })
   if (!ready) return <Screen><ActivityIndicator color={colors.primary} /></Screen>;
   if (!canManage) return (
     <Screen>
-      <Heading title="Usuarios y permisos" />
+      <PageHeading icon="users" tone="info" title="Usuarios y permisos" />
       <Card>
         <Text style={paragraph}>Esta pantalla requiere una cuenta de administrador.</Text>
         {!user && <Button title="Ingresar" onPress={onAccount} />}
@@ -70,7 +70,7 @@ export default function AdminUsersPage({ onAccount }: { onAccount: () => void })
   );
   return (
     <Screen>
-      <Heading title="Usuarios y permisos" subtitle="Asigná las responsabilidades de cada cuenta registrada." />
+      <PageHeading icon="users" tone="info" title="Usuarios y permisos" subtitle="Asigná las responsabilidades de cada cuenta registrada." />
       {!!notice && <Text accessibilityLiveRegion="polite" style={{ ...paragraph, color: colors.success }}>{notice}</Text>}
       {editing ? (
         <UserPermissionsForm
@@ -87,25 +87,25 @@ export default function AdminUsersPage({ onAccount }: { onAccount: () => void })
         <>
           <Card>
             <Field label="Buscar por nombre o correo" value={search} onChangeText={setSearch} maxLength={100} editable={!loading} onSubmitEditing={() => void load(search.trim())} />
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+            <ActionRow>
               <Button title={loading ? "Consultando…" : "Buscar usuarios"} disabled={loading} onPress={() => void load(search.trim())} />
               <Button title="Mostrar todos" variant="secondary" disabled={loading} onPress={() => { setSearch(""); void load(""); }} />
-            </View>
+            </ActionRow>
           </Card>
           {!!error && <Text accessibilityRole="alert" style={{ ...paragraph, color: colors.error }}>{error}</Text>}
           {loading && <ActivityIndicator color={colors.primary} />}
           {loaded && !users.length && !loading && !error && <Text style={paragraph}>No hay cuentas que coincidan con la búsqueda.</Text>}
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
+          <ContentGrid maxColumns={2}>
             {users.map(account => (
-              <Card key={account.id} style={{ width: width >= 900 ? "48%" : "100%" }}>
+              <Card key={account.id} style={{ flex: 1 }}>
                 <Text style={{ color: colors.text, fontSize: 18, fontWeight: "600" }}>{account.firstName} {account.lastName}{account.id === user?.id ? " · Tu cuenta" : ""}</Text>
                 <Text selectable style={paragraph}>{account.email}</Text>
                 <Text style={paragraph}>{account.roles.map(role => accountRoles.find(item => item.value === role)?.label).join(", ") || "Sin permisos"}</Text>
                 <Text style={paragraph}>Creada el {formatDate(account.createdAt)} · {account.active ? "Activa" : "Inactiva"}</Text>
-                {account.active && <Button title="Editar permisos" variant="secondary" disabled={loading} onPress={() => { setEditing(account); setNotice(""); }} />}
+                {account.active && <ActionRow footer><Button title="Editar permisos" variant="secondary" disabled={loading} onPress={() => { setEditing(account); setNotice(""); }} /></ActionRow>}
               </Card>
             ))}
-          </View>
+          </ContentGrid>
           {hasMore && <Button title="Cargar más usuarios" variant="secondary" disabled={loading || !!error} onPress={() => void load(applied, users.length)} />}
         </>
       )}

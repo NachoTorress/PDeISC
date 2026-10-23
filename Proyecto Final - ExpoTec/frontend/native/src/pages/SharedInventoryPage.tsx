@@ -7,6 +7,8 @@ import {
   Choice,
   Field,
   Heading,
+  PageHeading,
+  ActionRow,
   InlineConfirm,
   Screen,
   RefreshButton,
@@ -132,7 +134,7 @@ export default function SharedInventoryPage({
   if (!canRead)
     return (
       <Screen>
-        <Heading
+        <PageHeading icon="inventory" tone="info"
           title="Inventario de ExpoTec"
           subtitle="Ingresá con una cuenta de administración o préstamos para consultar el inventario."
         />
@@ -141,7 +143,7 @@ export default function SharedInventoryPage({
     );
   return (
     <Screen>
-      <Heading
+      <PageHeading icon="inventory" tone="info"
         title="Inventario de ExpoTec"
         subtitle="Existencias y reservas compartidas de elementos para los proyectos."
       />
@@ -278,7 +280,7 @@ export default function SharedInventoryPage({
               .includes(search.trim().toLocaleLowerCase("es")),
           )
           .map((resource) => (
-            <Card key={resource.id}>
+            <Card key={resource.id} style={{ flex: 1 }}>
               <Heading
                 title={resource.name}
                 subtitle={resource.description || undefined}
@@ -304,11 +306,12 @@ export default function SharedInventoryPage({
                   ? ` · Baja el ${formatDate(resource.archivedAt)}`
                   : ""}
               </Text>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+              <ActionRow footer>
                 {canManage && !resource.archivedAt && (
                   <>
                     <Button
-                      title={`Editar ${resource.name}`}
+                      title="Editar"
+                      accessibilityLabel={`Editar ${resource.name}`}
                       icon="edit"
                       variant="secondary"
                       disabled={busy || !!editing}
@@ -320,7 +323,8 @@ export default function SharedInventoryPage({
                       }}
                     />
                     <Button
-                      title={`Dar de baja ${resource.name}`}
+                      title="Dar de baja"
+                      accessibilityLabel={`Dar de baja ${resource.name}`}
                       icon="trash"
                       variant="danger"
                       disabled={busy || !!editing}
@@ -332,7 +336,8 @@ export default function SharedInventoryPage({
                   </>
                 )}
                 <Button
-                  title={`Ver historial de ${resource.name}`}
+                  title="Ver historial"
+                  accessibilityLabel={`Ver historial de ${resource.name}`}
                   variant="quiet"
                   disabled={busy || !!editing}
                   onPress={() => {
@@ -347,7 +352,7 @@ export default function SharedInventoryPage({
                     });
                   }}
                 />
-              </View>
+              </ActionRow>
               {archive?.id === resource.id && (
                 <View pointerEvents={busy ? "none" : "auto"}>
                   <InlineConfirm

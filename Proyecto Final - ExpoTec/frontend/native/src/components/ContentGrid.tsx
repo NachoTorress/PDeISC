@@ -1,11 +1,12 @@
 import { Children, useState } from "react";
 import type { ReactNode } from "react";
 import { View } from "react-native";
+import { layout } from "../theme/tokens";
 
 /** Usa el ancho real del contenido, incluyendo el espacio que ocupa la navegación. */
 export default function ContentGrid({
   children,
-  minItemWidth = 360,
+  minItemWidth = 320,
   maxColumns = 3,
   maxItemWidth,
 }: {
@@ -16,12 +17,11 @@ export default function ContentGrid({
 }) {
   const [width, setWidth] = useState(0);
   const items = Children.toArray(children),
-    gap = 12;
+    gap = layout.gap;
   const columns = Math.max(
     1,
     Math.min(
       maxColumns,
-      items.length,
       Math.floor((width + gap) / (minItemWidth + gap)),
     ),
   );
@@ -38,7 +38,7 @@ export default function ContentGrid({
       style={{
         flexDirection: "row",
         flexWrap: "wrap",
-        alignItems: "flex-start",
+        alignItems: "stretch",
         gap,
       }}
     >
@@ -47,7 +47,7 @@ export default function ContentGrid({
           key={
             typeof item === "object" && "key" in item ? item.key : String(item)
           }
-          style={{ width: itemWidth, minWidth: 0 }}
+          style={{ width: itemWidth, minWidth: 0, flexDirection: "column" }}
         >
           {item}
         </View>

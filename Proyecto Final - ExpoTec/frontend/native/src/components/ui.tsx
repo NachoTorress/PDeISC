@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
   ActivityIndicator,
@@ -22,6 +22,39 @@ import { Icon } from "./Icon";
 import type { IconName } from "./Icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FormScrollView } from "./KeyboardLayout";
+import { layout } from "../theme/tokens";
+import { useReducedMotion } from "../hooks/useReducedMotion";
+
+const ActionRowContext = createContext(false);
+
+/** Acciones equivalentes comparten ancho y se apilan cuando falta espacio. */
+export function ActionRow({
+  children,
+  footer = false,
+}: {
+  children: ReactNode;
+  footer?: boolean;
+}) {
+  const { colors } = useTheme();
+  return (
+    <ActionRowContext.Provider value>
+      <View
+        style={[
+          styles.wrap,
+          { alignItems: "stretch" },
+          footer && {
+            marginTop: "auto",
+            paddingTop: 16,
+            borderTopWidth: 1,
+            borderColor: colors.outline,
+          },
+        ]}
+      >
+        {children}
+      </View>
+    </ActionRowContext.Provider>
+  );
+}
 
 // Reservar la barra evita que bloquear el scroll cambie el ancho durante un gesto.
 const scrollLayoutStyle: ViewStyle & { scrollbarGutter?: string } =
@@ -48,6 +81,9 @@ export function Button({
   accessibilityLabel?: string;
 }) {
   const { colors } = useTheme();
+  const grouped = useContext(ActionRowContext);
+  const [focused, setFocused] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const fill =
     variant === "primary"
       ? colors.primary
@@ -71,14 +107,35 @@ export function Button({
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
       android_ripple={{ color: `${ink}20` }}
       style={({ pressed }) => [
         styles.button,
+        grouped && { flexGrow: 1, flexBasis: 144, alignSelf: "stretch" },
         {
           backgroundColor:
-            pressed && variant === "quiet" ? colors.surfaceVariant : fill,
-          borderColor: variant === "secondary" ? colors.outline : "transparent",
-          borderWidth: variant === "secondary" ? 1 : 0,
+            (pressed || hovered) && !disabled
+              ? variant === "primary"
+                ? colors.primaryHover
+                : colors.surfaceVariant
+              : fill,
+          borderColor: focused
+            ? colors.primary
+            : variant === "secondary"
+              ? colors.controlOutline
+              : "transparent",
+          borderWidth: 2,
+          ...(Platform.OS === "web" && focused
+            ? {
+                outlineColor: colors.primary,
+                outlineOffset: 3,
+                outlineStyle: "solid" as const,
+                outlineWidth: 3,
+              }
+            : {}),
           opacity: disabled ? 0.45 : 1,
         },
         style,
@@ -91,6 +148,7 @@ export function Button({
           color: ink,
           fontSize: 15,
           fontWeight: "600",
+          lineHeight: 20,
           textAlign: "center",
           flexShrink: 1,
         }}
@@ -129,16 +187,16 @@ export function RefreshButton({
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       style={({ pressed }) => ({
-        width: 44,
-        height: 44,
+        width: layout.controlHeight,
+        height: layout.controlHeight,
         alignSelf: "flex-start",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 22,
+        borderRadius: layout.controlRadius,
         borderWidth: 2,
-        borderColor: focused ? colors.primary : "transparent",
+        borderColor: focused ? colors.primary : colors.outline,
         backgroundColor:
-          pressed || hovered ? colors.surfaceVariant : "transparent",
+          pressed || hovered ? colors.surfaceVariant : colors.surface,
         opacity: unavailable ? 0.45 : 1,
       })}
     >
@@ -236,8 +294,8 @@ export function Field({
               : focused
                 ? colors.primary
                 : colors.controlOutline,
-            borderWidth: focused || error ? 2 : 1,
-            minHeight: multiline ? 88 : 44,
+            borderWidth: 2,
+            minHeight: multiline ? 112 : layout.controlHeight,
             textAlignVertical: multiline ? "top" : "center",
             opacity: editable ? 1 : 0.65,
           },
@@ -319,7 +377,9 @@ export function Heading({
         selectable={false}
         style={{
           color: colors.text,
-          fontSize: 24,
+          fontSize: 21,
+          lineHeight: 28,
+          flexShrink: 1,
           fontWeight: "700",
           letterSpacing: -0.6,
         }}
@@ -331,6 +391,84 @@ export function Heading({
           {subtitle}
         </Text>
       )}
+    </View>
+  );
+}
+
+export function PageHeading({
+  title,
+  subtitle,
+  icon,
+  tone = "brand",
+}: {
+  title: string;
+  subtitle?: string;
+  icon: IconName;
+  tone?: "brand" | "info" | "accent";
+}) {
+  const { colors } = useTheme();
+  const { width } = useWindowDimensions();
+  const fill =
+    tone === "info"
+      ? colors.infoContainer
+      : tone === "accent"
+        ? colors.accentContainer
+        : colors.selectedContainer;
+  const ink =
+    tone === "info"
+      ? colors.info
+      : tone === "accent"
+        ? colors.accent
+        : colors.onSelectedContainer;
+  return (
+    <View
+      style={{
+        backgroundColor: fill,
+        padding: width < 600 ? 16 : 24,
+        borderRadius: layout.cardRadius,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 16,
+      }}
+    >
+      <View
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: 12,
+          backgroundColor: colors.surface,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Icon name={icon} color={ink} size={26} />
+      </View>
+      <View style={{ flex: 1, minWidth: 0, gap: 6 }}>
+        <Text
+          accessibilityRole="header"
+          style={{
+            color: colors.text,
+            fontSize: width < 600 ? 24 : 30,
+            lineHeight: width < 600 ? 30 : 38,
+            fontWeight: "700",
+            letterSpacing: -0.7,
+          }}
+        >
+          {title}
+        </Text>
+        {!!subtitle && (
+          <Text
+            style={{
+              color: colors.muted,
+              fontSize: 15,
+              lineHeight: 23,
+              maxWidth: 720,
+            }}
+          >
+            {subtitle}
+          </Text>
+        )}
+      </View>
     </View>
   );
 }
@@ -387,12 +525,24 @@ export function Choice({
   disabled?: boolean;
 }) {
   const { colors } = useTheme();
+  const [width, setWidth] = useState(0);
+  const columns = Math.max(
+    1,
+    Math.min(options.length, Math.floor((width + 8) / 168)),
+  );
+  const optionWidth =
+    width > 0 ? (width - 8 * (columns - 1)) / columns : undefined;
   return (
     <View style={styles.field}>
       <Text selectable={false} style={[styles.label, { color: colors.text }]}>
         {label}
       </Text>
-      <View style={styles.wrap}>
+      <View
+        onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+        accessibilityRole="radiogroup"
+        accessibilityLabel={label}
+        style={[styles.wrap, { maxWidth: 760 }]}
+      >
         {options.map((option) => (
           <Pressable
             key={option.value}
@@ -403,6 +553,7 @@ export function Choice({
             onPress={() => onChange(option.value)}
             style={[
               styles.choice,
+              { width: optionWidth },
               {
                 opacity: disabled ? 0.45 : 1,
                 backgroundColor:
@@ -416,9 +567,11 @@ export function Choice({
               },
             ]}
           >
-            {value === option.value && (
-              <Icon name="check" color={colors.primary} size={18} />
-            )}
+            <View style={{ width: 18, height: 18 }}>
+              {value === option.value && (
+                <Icon name="check" color={colors.primary} size={18} />
+              )}
+            </View>
             <Text
               selectable={false}
               style={{
@@ -428,6 +581,7 @@ export function Choice({
                     : colors.text,
                 fontSize: 14,
                 fontWeight: value === option.value ? "600" : "400",
+                textAlign: "center",
                 flexShrink: 1,
               }}
             >
@@ -501,14 +655,16 @@ export function InlineConfirm({
         styles.confirm,
         {
           backgroundColor:
-            tone === "success" ? colors.successContainer : colors.errorContainer,
+            tone === "success"
+              ? colors.successContainer
+              : colors.errorContainer,
         },
       ]}
     >
       <Text style={{ color: colors.text, fontSize: 15, lineHeight: 22 }}>
         {text}
       </Text>
-      <View style={styles.wrap}>
+      <ActionRow>
         <Button
           title={confirmLabel}
           icon="check"
@@ -521,7 +677,7 @@ export function InlineConfirm({
           variant="quiet"
           onPress={onCancel}
         />
-      </View>
+      </ActionRow>
     </View>
   );
 }
@@ -535,12 +691,11 @@ export function Screen({
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const scroll = useRef<Pick<ScrollView, "scrollTo">>(null);
+  const reducedMotion = useReducedMotion();
   const insets = useSafeAreaInsets();
   const [showTop, setShowTop] = useState(false);
   return (
-    <View
-      style={{ flex: 1, backgroundColor: colors.page }}
-    >
+    <View style={{ flex: 1, backgroundColor: colors.page }}>
       <FormScrollView
         ref={scroll}
         style={[{ flex: 1, minHeight: 0 }, scrollLayoutStyle]}
@@ -549,10 +704,11 @@ export function Screen({
         scrollEventThrottle={160}
         onScroll={(e) => setShowTop(e.nativeEvent.contentOffset.y > 550)}
         contentContainerStyle={{
-          paddingHorizontal: width > 700 ? 20 : 12,
-          paddingTop: 12,
+          paddingHorizontal:
+            width >= 1200 ? layout.pagePadding : width > 700 ? 24 : 16,
+          paddingTop: width > 700 ? 24 : 16,
           paddingBottom: 24 + insets.bottom,
-          gap: 12,
+          gap: 20,
           flexGrow: 1,
         }}
       >
@@ -563,7 +719,9 @@ export function Screen({
           title="Subir"
           icon="arrowUp"
           variant="secondary"
-          onPress={() => scroll.current?.scrollTo({ y: 0, animated: true })}
+          onPress={() =>
+            scroll.current?.scrollTo({ y: 0, animated: !reducedMotion })
+          }
           style={{
             position: "absolute",
             right: 18,
@@ -580,27 +738,33 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: "flex-start",
     maxWidth: "100%",
-    minHeight: 44,
-    minWidth: 44,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 22,
+    minHeight: layout.controlHeight,
+    minWidth: 132,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: layout.controlRadius,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
     gap: 8,
   },
   input: {
-    borderRadius: 10,
+    borderRadius: layout.controlRadius,
     paddingHorizontal: 12,
     paddingVertical: 8,
     fontSize: 16,
   },
-  field: { gap: 4 },
+  field: { gap: 8, minWidth: 0 },
   label: { fontSize: 14, fontWeight: "600" },
-  card: { padding: 12, gap: 10, borderWidth: 1, borderRadius: 14 },
+  card: {
+    padding: layout.cardPadding,
+    gap: 16,
+    borderWidth: 1,
+    borderRadius: layout.cardRadius,
+    minWidth: 0,
+  },
   section: { gap: 10 },
-  heading: { gap: 4 },
+  heading: { gap: 4, minWidth: 0, maxWidth: "100%" },
   chip: {
     alignSelf: "flex-start",
     paddingHorizontal: 10,
@@ -609,11 +773,11 @@ const styles = StyleSheet.create({
   },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   choice: {
-    minHeight: 44,
+    minHeight: layout.controlHeight,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderWidth: 1,
-    borderRadius: 24,
+    borderRadius: layout.controlRadius,
     justifyContent: "center",
     flexDirection: "row",
     alignItems: "center",

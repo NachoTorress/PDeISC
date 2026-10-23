@@ -8,6 +8,8 @@ import {
   Choice,
   Field,
   Heading,
+  PageHeading,
+  ActionRow,
   Screen,
   RefreshButton,
 } from "../components/ui";
@@ -158,7 +160,7 @@ export default function SharedLoansPage({
   if (!canManage)
     return (
       <Screen>
-        <Heading
+        <PageHeading icon="loans" tone="accent"
           title="Préstamos y devoluciones"
           subtitle="Ingresá con permiso de préstamos o administración para gestionar las entregas."
         />
@@ -167,7 +169,7 @@ export default function SharedLoansPage({
     );
   return (
     <Screen>
-      <Heading
+      <PageHeading icon="loans" tone="accent"
         title="Préstamos y devoluciones"
         subtitle="Entregas, devoluciones parciales y novedades de las tres jornadas."
       />
@@ -329,7 +331,7 @@ export default function SharedLoansPage({
                 ? history.loan
                 : null;
           return (
-            <Card key={loan.id}>
+            <Card key={loan.id} style={{ flex: 1 }}>
               <Chip
                 label={
                   remaining === 0
@@ -360,7 +362,7 @@ export default function SharedLoansPage({
                   Observación de entrega: {loan.note}
                 </Text>
               )}
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+              <ActionRow footer>
                 {remaining > 0 && (
                   <Button
                     title="Devolver"
@@ -419,7 +421,7 @@ export default function SharedLoansPage({
                     );
                   }}
                 />
-              </View>
+              </ActionRow>
               {shownHistory && (
                 <View style={{ gap: 12 }}>
                   <Heading title="Devoluciones y novedades" />

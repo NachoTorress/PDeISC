@@ -4,7 +4,8 @@ import {
   Button,
   Card,
   Field,
-  Heading,
+  PageHeading,
+  ActionRow,
   InlineConfirm,
   Screen,
   Section,
@@ -47,7 +48,7 @@ export default function InventoryPage() {
 
   return (
     <Screen>
-      <Heading
+      <PageHeading icon="inventory" tone="info"
         title="Inventario"
         subtitle="Organizá los elementos antes de la muestra y seguí su disponibilidad."
       />
@@ -119,7 +120,7 @@ export default function InventoryPage() {
               );
               const canDelete = !hasHistory && !requested;
               return (
-                <Card key={resource.id}>
+                <Card key={resource.id} style={{ flex: 1 }}>
                   <Text
                     style={{
                       color: colors.text,
@@ -181,13 +182,7 @@ export default function InventoryPage() {
                   </Text>
                   {canManage && (
                     <>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          flexWrap: "wrap",
-                          gap: 8,
-                        }}
-                      >
+                      <ActionRow footer>
                         {editingId !== resource.id && (
                           <Button
                             title="Editar"
@@ -213,7 +208,7 @@ export default function InventoryPage() {
                             }}
                           />
                         )}
-                      </View>
+                      </ActionRow>
                       {!canDelete && (
                         <Text
                           style={{

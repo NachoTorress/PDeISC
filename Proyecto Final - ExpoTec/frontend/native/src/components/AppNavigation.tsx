@@ -10,6 +10,7 @@ import {
 import { useTheme } from "../contexts/ThemeContext";
 import { Icon } from "./Icon";
 import type { IconName } from "./Icon";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 
 export type NavigationItem = {
   id: string;
@@ -32,11 +33,12 @@ export function AppNavigation({
   onClose: () => void;
 }) {
   const { colors } = useTheme();
+  const reducedMotion = useReducedMotion();
   const closeButton = useRef<View>(null);
   const [focusedItem, setFocusedItem] = useState<string | null>(null);
   function content(mobile: boolean) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.surface }}>
+      <View style={{ flex: 1, backgroundColor: colors.navigation }}>
         <View
           style={{
             paddingHorizontal: 20,
@@ -49,13 +51,12 @@ export function AppNavigation({
           <Text
             accessibilityRole="header"
             style={{
-              color: colors.muted,
+              color: colors.navigationMuted,
               fontSize: 12,
               fontWeight: "600",
-              letterSpacing: 1,
             }}
           >
-            EXPLORAR
+            La exposición
           </Text>
           {mobile && (
             <Pressable
@@ -70,7 +71,7 @@ export function AppNavigation({
                 justifyContent: "center",
               }}
             >
-              <Icon name="close" color={colors.text} size={22} />
+              <Icon name="close" color={colors.onNavigation} size={22} />
             </Pressable>
           )}
         </View>
@@ -78,7 +79,7 @@ export function AppNavigation({
           contentContainerStyle={{
             paddingHorizontal: 12,
             paddingBottom: 24,
-            gap: 4,
+            gap: 8,
           }}
         >
           {items.map((item) => {
@@ -105,24 +106,24 @@ export function AppNavigation({
                   gap: 12,
                   borderRadius: 10,
                   backgroundColor: selected
-                    ? colors.selectedContainer
+                    ? colors.navigationSelected
                     : pressed
-                      ? colors.surfaceVariant
+                      ? colors.navigationSelected
                       : "transparent",
                   borderWidth: 2,
                   borderColor:
-                    focusedItem === item.id ? colors.primary : "transparent",
+                    focusedItem === item.id ? colors.navigationAccent : "transparent",
                 })}
               >
                 <Icon
                   name={item.icon}
-                  color={selected ? colors.primary : colors.muted}
+                  color={selected ? colors.navigationAccent : colors.navigationMuted}
                   size={21}
                 />
                 <Text
                   style={{
                     flex: 1,
-                    color: selected ? colors.primary : colors.text,
+                    color: selected ? colors.navigationAccent : colors.onNavigation,
                     fontSize: 14,
                     lineHeight: 21,
                     fontWeight: "600",
@@ -142,7 +143,7 @@ export function AppNavigation({
       <View
         role="navigation"
         accessibilityLabel="Navegación principal"
-        style={{ width: 232, borderRightWidth: 1, borderColor: colors.outline }}
+        style={{ width: 248, borderRightWidth: 1, borderColor: colors.navigation }}
       >
         {content(false)}
       </View>
@@ -151,7 +152,7 @@ export function AppNavigation({
     <Modal
       visible={open}
       transparent
-      animationType="fade"
+      animationType={reducedMotion ? "none" : "fade"}
       onRequestClose={onClose}
       onShow={() => {
         if (Platform.OS === "web")

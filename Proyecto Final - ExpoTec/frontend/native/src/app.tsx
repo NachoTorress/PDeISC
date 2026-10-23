@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Pressable, Text, View, useWindowDimensions } from "react-native";
+import { Image, Pressable, Text, View, useWindowDimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -47,6 +47,7 @@ import { AppNavigation } from "./components/AppNavigation";
 import type { NavigationItem } from "./components/AppNavigation";
 import { KeyboardRoot } from "./components/KeyboardLayout";
 import { SystemNavigation } from "./components/SystemNavigation";
+import brandIcon from "../assets/brand/expotec-icon-v1.png";
 
 type RootRoutes = {
   Home: undefined;
@@ -265,18 +266,18 @@ function AppShell() {
       <SystemNavigation />
       <View
         style={{
-          minHeight: 60,
+          minHeight: 72,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
           gap: 8,
-          paddingHorizontal: width > 700 ? 24 : 16,
+          paddingHorizontal: width > 700 ? 24 : 12,
           backgroundColor: colors.surface,
           borderBottomWidth: 1,
           borderColor: colors.outline,
         }}
       >
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: width < 400 ? 6 : 12 }}>
           {!desktopNavigation && (
             <Pressable
               ref={menuButton}
@@ -299,11 +300,12 @@ function AppShell() {
               <Icon name="menu" color={colors.text} />
             </Pressable>
           )}
+          {width >= 600 && <Image source={brandIcon} accessibilityLabel="" accessible={false} style={{ width: 36, height: 36, borderRadius: 10 }} />}
           <Text
             accessibilityRole="header"
             style={{
               color: colors.text,
-              fontSize: 23,
+              fontSize: width < 400 ? 21 : 25,
               fontWeight: "700",
               letterSpacing: -0.6,
             }}
@@ -312,7 +314,7 @@ function AppShell() {
           </Text>
         </View>
         {width > 750 && (
-          <Text style={{ color: colors.muted }}>Todo en su lugar.</Text>
+          <Text style={{ color: colors.muted, fontSize: 14 }}>Ideas, equipos y espacios conectados.</Text>
         )}
         <View
           style={{
@@ -333,6 +335,8 @@ function AppShell() {
             style={{
               minWidth: 48,
               minHeight: 48,
+              borderRadius: 10,
+              backgroundColor: colors.secondaryContainer,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -465,7 +469,7 @@ function AppShell() {
               />
               <Stack.Screen
                 name="SharedSpaces"
-                options={{ title: "Espacios compartidos" }}
+                options={{ title: "Espacios compartidos", headerShown: false }}
               >
                 {({ navigation }) => (
                   <SharedSpacesPage
@@ -477,7 +481,7 @@ function AppShell() {
               </Stack.Screen>
               <Stack.Screen
                 name="SharedProjects"
-                options={{ title: "Proyectos compartidos" }}
+                options={{ title: "Proyectos compartidos", headerShown: false }}
               >
                 {({ navigation }) => (
                   <SharedProjectsPage
@@ -537,7 +541,7 @@ function AppShell() {
               </Stack.Screen>
               <Stack.Screen
                 name="AdminUsers"
-                options={{ title: "Usuarios y permisos" }}
+                options={{ title: "Usuarios y permisos", headerShown: false }}
               >
                 {({ navigation }) => (
                   <AdminUsersPage
@@ -547,7 +551,7 @@ function AppShell() {
               </Stack.Screen>
               <Stack.Screen
                 name="SharedGallery"
-                options={{ title: "Galería de la ExpoTec" }}
+                options={{ title: "Galería de la ExpoTec", headerShown: false }}
               >
                 {({ navigation }) => (
                   <SharedGalleryPage
@@ -568,7 +572,7 @@ function AppShell() {
               </Stack.Screen>
               <Stack.Screen
                 name="SharedInventory"
-                options={{ title: "Inventario compartido" }}
+                options={{ title: "Inventario compartido", headerShown: false }}
               >
                 {({ navigation }) => (
                   <SharedInventoryPage
@@ -588,7 +592,7 @@ function AppShell() {
               )}
               <Stack.Screen
                 name="SharedLoans"
-                options={{ title: "Préstamos compartidos" }}
+                options={{ title: "Préstamos compartidos", headerShown: false }}
               >
                 {({ navigation }) => (
                   <SharedLoansPage
@@ -639,17 +643,17 @@ function HomeTabs() {
       screenOptions={{
         headerShown: false,
         tabBarPosition: width >= 1000 ? "left" : "bottom",
-        tabBarActiveTintColor: colors.primary,
-        tabBarActiveBackgroundColor: colors.selectedContainer,
-        tabBarInactiveTintColor: colors.muted,
+        tabBarActiveTintColor: colors.navigationAccent,
+        tabBarActiveBackgroundColor: colors.navigationSelected,
+        tabBarInactiveTintColor: colors.onNavigation,
         tabBarStyle: {
-          backgroundColor: colors.surface,
-          borderColor: colors.outline,
+          backgroundColor: colors.navigation,
+          borderColor: colors.navigationSelected,
           ...(width >= 1000
             ? { width: 184, minWidth: 184, paddingTop: 16 }
             : { minHeight: 60 }),
         },
-        tabBarItemStyle: { minHeight: 52, height: 52 },
+        tabBarItemStyle: { minHeight: 52, height: 52, borderRadius: 10 },
         tabBarButton: (props) => (
           <Pressable
             onPress={props.onPress}

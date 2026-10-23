@@ -6,9 +6,10 @@ import {
   Card,
   Chip,
   Choice,
-  Heading,
+  PageHeading,
   Screen,
   RefreshButton,
+  ActionRow,
 } from "../components/ui";
 import GalleryImage from "../components/GalleryImage";
 import GallerySubmissionForm from "../components/GallerySubmissionForm";
@@ -120,7 +121,9 @@ export default function SharedGalleryPage({
   const paragraph = { color: colors.muted, fontSize: 15, lineHeight: 22 };
   return (
     <Screen>
-      <Heading
+      <PageHeading
+        icon="gallery"
+        tone="accent"
         title="Galería de la ExpoTec"
         subtitle="La exposición, desde tu mirada."
       />
@@ -169,9 +172,7 @@ export default function SharedGalleryPage({
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
             <Button
               title={
-                user && ready
-                  ? "¡Subí tu foto de la ExpoTec!"
-                  : "Ingresá para compartir tu foto"
+                user && ready ? "Compartir una foto" : "Ingresar para compartir"
               }
               icon="gallery"
               onPress={() => {
@@ -236,14 +237,15 @@ export default function SharedGalleryPage({
               </Text>
             </Card>
           )}
-          <ContentGrid minItemWidth={280} maxItemWidth={340}>
+          <ContentGrid minItemWidth={280}>
             {visible.map((photo) => (
-              <Card key={`${scope}:${photo.id}`}>
+              <Card key={`${scope}:${photo.id}`} style={{ flex: 1 }}>
                 <GalleryImage
                   key={photo.imageUrl}
                   uri={photo.imageUrl}
                   caption={photo.caption}
-                  height={280}
+                  height={220}
+                  bounded
                 />
                 <Text
                   style={{ color: colors.text, fontSize: 16, lineHeight: 23 }}
@@ -271,15 +273,17 @@ export default function SharedGalleryPage({
                   </Text>
                 )}
                 {effectiveMode === "admin" && user && (
-                  <Button
-                    title="Revisar foto"
-                    variant="secondary"
-                    disabled={loading}
-                    onPress={() => {
-                      setNotice("");
-                      setForm({ type: "review", actorId: user.id, photo });
-                    }}
-                  />
+                  <ActionRow footer>
+                    <Button
+                      title="Revisar foto"
+                      variant="secondary"
+                      disabled={loading}
+                      onPress={() => {
+                        setNotice("");
+                        setForm({ type: "review", actorId: user.id, photo });
+                      }}
+                    />
+                  </ActionRow>
                 )}
               </Card>
             ))}

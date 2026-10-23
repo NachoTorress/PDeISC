@@ -6,7 +6,7 @@ import {
   Chip,
   Choice,
   Field,
-  Heading,
+  PageHeading,
   Screen,
   Section,
 } from "../components/ui";
@@ -45,7 +45,7 @@ export default function LoansPage() {
 
   return (
     <Screen>
-      <Heading
+      <PageHeading icon="loans" tone="accent"
         title="Préstamos"
         subtitle="Cada entrega, cada devolución. Todo en su lugar al terminar el día."
       />
@@ -130,7 +130,7 @@ export default function LoansPage() {
               const remaining = loan.quantity - loan.returned;
               const completed = remaining === 0;
               return (
-                <Card key={loan.id}>
+                <Card key={loan.id} style={{ flex: 1 }}>
                   <Text
                     style={{
                       color: colors.text,
@@ -210,6 +210,7 @@ export default function LoansPage() {
                   {canManage && !completed && returnId !== loan.id && (
                     <Button
                       title="Devolver"
+                      style={{ alignSelf: "stretch", marginTop: "auto" }}
                       icon="arrowLeft"
                       variant="secondary"
                       onPress={() => setReturnId(loan.id)}

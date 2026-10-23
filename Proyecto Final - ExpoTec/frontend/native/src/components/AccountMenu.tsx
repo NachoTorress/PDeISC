@@ -14,6 +14,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import type { AccountRole } from "../lib/authTypes";
 import { Button } from "./ui";
 import { Icon } from "./Icon";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 
 const roles: Record<AccountRole, string> = {
   guest: "Invitado",
@@ -26,6 +27,7 @@ const roles: Record<AccountRole, string> = {
 export default function AccountMenu({ onSignIn }: { onSignIn: () => void }) {
   const { user, ready, client, error: sessionError } = useAuth();
   const { colors } = useTheme();
+  const reducedMotion = useReducedMotion();
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const trigger = useRef<View>(null);
@@ -70,8 +72,9 @@ export default function AccountMenu({ onSignIn }: { onSignIn: () => void }) {
     return (
       <Button
         title="Ingresar"
-        icon="users"
-        variant="quiet"
+        icon={width >= 400 ? "users" : undefined}
+        variant="secondary"
+        style={{ minWidth: width >= 400 ? 100 : 88, paddingHorizontal: 10 }}
         disabled={!ready}
         onPress={onSignIn}
       />
@@ -109,7 +112,7 @@ export default function AccountMenu({ onSignIn }: { onSignIn: () => void }) {
       <Modal
         visible={open}
         transparent
-        animationType="fade"
+        animationType={reducedMotion ? "none" : "fade"}
         onRequestClose={close}
         onShow={() => {
           if (Platform.OS === "web")

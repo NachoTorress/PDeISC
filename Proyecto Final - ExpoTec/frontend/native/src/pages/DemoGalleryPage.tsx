@@ -7,6 +7,8 @@ import {
   Choice,
   Field,
   Heading,
+  PageHeading,
+  ActionRow,
   InlineConfirm,
   Screen,
 } from "../components/ui";
@@ -70,7 +72,9 @@ export default function DemoGalleryPage() {
   const paragraph = { color: colors.muted, fontSize: 14, lineHeight: 21 };
   return (
     <Screen>
-      <Heading
+      <PageHeading
+        icon="gallery"
+        tone="accent"
         title="Galería de la ExpoTec"
         subtitle="La exposición, desde tu mirada."
       />
@@ -207,9 +211,9 @@ export default function DemoGalleryPage() {
               </Text>
             </Card>
           )}
-          <ContentGrid minItemWidth={280} maxItemWidth={340}>
+          <ContentGrid minItemWidth={280}>
             {visible.map((photo) => (
-              <Card key={photo.id}>
+              <Card key={photo.id} style={{ flex: 1 }}>
                 <DemoGalleryImage
                   uri={photo.imageUrl}
                   caption={photo.caption}
@@ -240,23 +244,25 @@ export default function DemoGalleryPage() {
                   </Text>
                 )}
                 {effectiveMode === "admin" && (
-                  <Button
-                    title={
-                      photo.status === "approved"
-                        ? "Retirar foto"
-                        : "Revisar foto"
-                    }
-                    variant="secondary"
-                    onPress={() => {
-                      setForm({ role, photoId: photo.id });
-                      setDecision(
-                        photo.status === "approved" ? "rejected" : "approved",
-                      );
-                      setNote("");
-                      setError("");
-                      setConfirm(false);
-                    }}
-                  />
+                  <ActionRow footer>
+                    <Button
+                      title={
+                        photo.status === "approved"
+                          ? "Retirar foto"
+                          : "Revisar foto"
+                      }
+                      variant="secondary"
+                      onPress={() => {
+                        setForm({ role, photoId: photo.id });
+                        setDecision(
+                          photo.status === "approved" ? "rejected" : "approved",
+                        );
+                        setNote("");
+                        setError("");
+                        setConfirm(false);
+                      }}
+                    />
+                  </ActionRow>
                 )}
               </Card>
             ))}

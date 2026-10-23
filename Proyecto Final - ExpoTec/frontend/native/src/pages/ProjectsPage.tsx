@@ -14,7 +14,8 @@ import {
   Chip,
   Choice,
   Field,
-  Heading,
+  PageHeading,
+  ActionRow,
   InlineConfirm,
   Screen,
 } from "../components/ui";
@@ -64,7 +65,7 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
   };
   return (
     <Screen>
-      <Heading
+      <PageHeading icon="projects" tone="info"
         title={role === "guest" ? "Proyectos de la ExpoTec" : "Proyectos"}
         subtitle={
           role === "teacher"
@@ -104,7 +105,7 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
             (loan) => loan.projectId === project.id,
           );
           return (
-            <Card key={project.id} style={{ width: "100%" }}>
+            <Card key={project.id} style={{ width: "100%", flex: 1 }}>
               <View
                 style={{
                   flexDirection: "column",
@@ -115,7 +116,8 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
                 <View style={{ width: "100%" }}>
                   <ProjectArt
                     project={project}
-                    height={project.image ? 190 : 104}
+                    height={176}
+                    bounded
                   />
                 </View>
                 <View
@@ -196,7 +198,7 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
                   </Text>
                 </View>
               </View>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+              <ActionRow footer>
                 <Button
                   title="Ver proyecto"
                   icon="arrowRight"
@@ -224,7 +226,7 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
                       }}
                     />
                   )}
-              </View>
+              </ActionRow>
               {(canEdit(project) || role === "admin") &&
                 !hasLoanHistory &&
                 deleting === project.id && (

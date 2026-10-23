@@ -5,12 +5,15 @@ import { useTheme } from "../contexts/ThemeContext";
 import NativeFloorplan from "../components/NativeFloorplan";
 import NativeSpaceEditor from "../components/NativeSpaceEditor";
 import ProjectArt from "../components/ProjectArt";
+import ContentGrid from "../components/ContentGrid";
 import {
   Button,
+  ActionRow,
   Card,
   Chip,
+  Choice,
   Field,
-  Heading,
+  PageHeading,
   InlineConfirm,
   Screen,
 } from "../components/ui";
@@ -132,7 +135,8 @@ export default function MapPage({
     <Screen scrollEnabled={!gestureActive}>
       <View style={[styles.header, width >= 700 && styles.headerWide]}>
         <View style={width >= 700 ? styles.headingWide : undefined}>
-          <Heading
+          <PageHeading
+            icon="map"
             title="Todo en su lugar."
             subtitle="Organizá los espacios y dale lugar a cada proyecto."
           />
@@ -194,19 +198,16 @@ export default function MapPage({
             />
           </Card>
         )}
-        <View style={styles.tabs}>
-          {state.spaces.map((item) => (
-            <Button
-              key={item.id}
-              title={`${item.name} · ${state.projects.filter((project) => project.spaceId === item.id && project.status === "approved").length}/${item.furniture.filter((entry) => entry.type === "table").length}`}
-              variant={space?.id === item.id ? "primary" : "secondary"}
-              disabled={Boolean(draft && draft.id !== item.id)}
-              onPress={() => {
-                if (draft?.id !== item.id) changeSpace(item.id);
-              }}
-            />
-          ))}
-        </View>
+        <Choice
+          label="Elegir espacio"
+          value={space?.id ?? ""}
+          disabled={!!draft}
+          options={state.spaces.map((item) => ({
+            value: item.id,
+            label: `${item.name} · ${state.projects.filter((project) => project.spaceId === item.id && project.status === "approved").length}/${item.furniture.filter((entry) => entry.type === "table").length}`,
+          }))}
+          onChange={changeSpace}
+        />
       </View>
       {!!error && (
         <Card>
@@ -499,12 +500,9 @@ export default function MapPage({
       <Text style={{ color: colors.text, fontSize: 22, fontWeight: "600" }}>
         Lo que vas a encontrar
       </Text>
-      <View style={styles.featured}>
+      <ContentGrid>
         {approved.slice(0, 3).map((project) => (
-          <Card
-            key={project.id}
-            style={width >= 900 ? styles.featuredWide : undefined}
-          >
+          <Card key={project.id} style={{ flex: 1 }}>
             <ProjectArt project={project} compact />
             <Text
               style={{ color: colors.text, fontWeight: "700", fontSize: 18 }}
@@ -516,15 +514,17 @@ export default function MapPage({
               {state.spaces.find((item) => item.id === project.spaceId)?.name} ·{" "}
               {project.furnitureId}
             </Text>
-            <Button
-              title="Ver proyecto"
-              endIcon="external"
-              variant="secondary"
-              onPress={() => onSelectProject(project.id)}
-            />
+            <ActionRow footer>
+              <Button
+                title="Ver proyecto"
+                endIcon="external"
+                variant="secondary"
+                onPress={() => onSelectProject(project.id)}
+              />
+            </ActionRow>
           </Card>
         ))}
-      </View>
+      </ContentGrid>
       <Button
         title="Todos los proyectos"
         icon="projects"
@@ -541,13 +541,10 @@ const styles = StyleSheet.create({
   headingWide: { flex: 1, minWidth: 0 },
   overview: { gap: 12 },
   stats: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  tabs: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   layout: { gap: 12 },
   wide: { flexDirection: "row", alignItems: "flex-start" },
   planWide: { flex: 1, minWidth: 0 },
   sidebar: { gap: 12 },
   sidebarWide: { width: 296, gap: 12 },
   actions: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  featured: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
-  featuredWide: { flex: 1, minWidth: 240 },
 });

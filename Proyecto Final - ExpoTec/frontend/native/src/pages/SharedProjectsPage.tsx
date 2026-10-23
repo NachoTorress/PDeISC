@@ -10,7 +10,11 @@ import {
   Heading,
   Screen,
   RefreshButton,
+  ActionRow,
+  PageHeading,
 } from "../components/ui";
+import GalleryImage from "../components/GalleryImage";
+import { Icon } from "../components/Icon";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { formatDate } from "../lib/format";
@@ -91,7 +95,9 @@ export default function SharedProjectsPage({
   const visible = loadedScope === scope ? projects : [];
   return (
     <Screen>
-      <Heading
+      <PageHeading
+        icon="projects"
+        tone="info"
         title="Proyectos de ExpoTec"
         subtitle={
           privateView
@@ -155,7 +161,27 @@ export default function SharedProjectsPage({
       ) : null}
       <ContentGrid>
         {visible.map((project) => (
-          <Card key={project.id}>
+          <Card key={project.id} style={{ flex: 1 }}>
+            {project.imageUrl ? (
+              <GalleryImage
+                uri={project.imageUrl}
+                caption={`Imagen de ${project.name}`}
+                height={176}
+                bounded
+              />
+            ) : (
+              <View
+                style={{
+                  height: 176,
+                  backgroundColor: colors.infoContainer,
+                  borderRadius: 12,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Icon name="projects" color={colors.info} size={44} />
+              </View>
+            )}
             <Chip
               label={sharedStatusLabel[project.status]}
               tone={
@@ -171,11 +197,14 @@ export default function SharedProjectsPage({
               {project.spaceName} · {project.furnitureId} ·{" "}
               {formatDate(project.createdAt)}
             </Text>
-            <Button
-              title={`Ver proyecto ${project.name}`}
-              variant="secondary"
-              onPress={() => onSelect(project.id, privateView)}
-            />
+            <ActionRow footer>
+              <Button
+                title="Ver proyecto"
+                accessibilityLabel={`Ver proyecto ${project.name}`}
+                variant="secondary"
+                onPress={() => onSelect(project.id, privateView)}
+              />
+            </ActionRow>
           </Card>
         ))}
       </ContentGrid>
