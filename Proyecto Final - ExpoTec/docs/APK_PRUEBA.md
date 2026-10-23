@@ -4,7 +4,11 @@ Versión inicial: 0.2.0, Android versionCode 1. Proyecto Expo: [nachot/expotec-o
 
 Segunda APK de prueba: 0.2.0, Android versionCode 2. Compilación EAS `0d0b28a2-ba16-4f7c-83a0-659c5c540415`, terminada el 22/10/2026, desde el código de `46ce1920`. Incluye el ícono propio, acceso nativo de Google, formulario que acompaña al teclado y barra inferior del sistema oculta con recuperación por deslizamiento. La confirmación de uso en un teléfono físico sigue pendiente.
 
-Próxima actualización solicitada: 0.3.0, Android versionCode 3. Incluye paleta azul profundo/naranja y selectores alineados en filas completas. Se mantiene el perfil `preview`, el proyecto de Expo y su firma para permitir la actualización de la APK anterior. El archivo compilado y su identificación se registrarán al terminar EAS.
+APK actual: **0.3.0, Android versionCode 3**. [Descargar APK](https://expo.dev/artifacts/eas/CZZjemTc8DIDqac40PhPcTZ-y9-yp_lsdycotgPCCQY.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/f27a7a2c-cfa6-45a7-b654-60165947a1f8), terminada el 22/10/2026 a las 23:40, hora de Argentina, con el frontend de `fca3dbcf`. El archivo local se conserva en `artifacts/android/ExpoTec-0.3.0-3.apk`, excluido de Git.
+
+Incluye modo oscuro carbón y grafito, usuarios en filas compactas, grillas que aprovechan el ancho incluso con zoom, proyectos sin foto con icono pequeño y botones alineados en las pantallas compartidas y la demostración. Conserva la paleta clara azul/naranja y los selectores en filas completas. Se mantiene el perfil `preview`, el proyecto de Expo y su firma para permitir la actualización de la APK anterior.
+
+Verificación del archivo: paquete `ar.edu.expotec.organizacion`, versión `0.3.0` y código `3`, sin modo depuración; integridad ZIP, digest y firma APK v2 correctos. El certificado coincide con la APK `0.2.0-2`. Tamaño: 109.931.099 bytes. SHA-256: `540b344a087dff8ef443fbcdbc755673399ca75d44edab4ba0cdaf0157712063`. El informe local es `artifacts/android/verification-final.json`. La instalación y el uso en teléfono físico siguen pendientes; estas comprobaciones no los sustituyen.
 
 ## Alcance
 

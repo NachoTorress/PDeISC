@@ -19,6 +19,8 @@ Se revisaron las superficies de Expo Web modificadas, con Edge aislado y datos d
 - PASS · Tema oscuro: se comprueba en tokens y DOM que fondo, tarjetas, controles secundarios y navegación son neutrales. Se usan acentos en acciones y estados.
 - PASS · Contraste: 38 combinaciones de color de texto/fondo en ambos temas, todas con relación mínima 4,5:1. Los valores exactos se guardan en `evidence.json`.
 - PASS · Registro ECC: `check-evidence.js artifacts/design-review/evidence.json`, además de inspección visual de los archivos.
+- PASS · Producción: despliegue `dpl_DP6P2aokeoV9CcpTJf6oLAWxhAsF`, desde `fca3dbcf`, publicado en la web habitual. La revisión pública añadió 16 comprobaciones y ocho capturas de proyectos e inventario en claro y oscuro, a 390 y 1536 píxeles: cuatro columnas en escritorio, una en móvil, sin desbordes ni errores de JavaScript. Sólo se consultaron datos públicos y se usó la demostración local; no hubo escrituras externas. Evidencia en `artifacts/design-review/production-handoff-evidence.json`.
+- PASS · APK 0.3.0/3 generada con el mismo frontend: integridad, manifiesto, versión y firma verificados; certificado idéntico al de la APK anterior. [Descarga, identificación y alcance](APK_PRUEBA.md). La prueba en teléfono físico sigue pendiente.
 
 ## Delivery Gate de Anti Slop
 
