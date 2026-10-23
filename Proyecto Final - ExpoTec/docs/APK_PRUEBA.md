@@ -1,6 +1,14 @@
 # APK de prueba de ExpoTec
 
-APK actual: **0.3.1, Android versionCode 4**. [Descargar APK](https://expo.dev/artifacts/eas/bJIiQlxWxtQSKQHvnVZ2YncllrZLonNJD8OPLKUgr8E.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/e7eb2283-76e9-45ab-9df6-51594f1c7a19), terminada el 23/10/2026 a las 00:29, hora de Argentina, desde el frontend de `82a8beb4`.
+APK actual: **0.4.0, Android versionCode 5**. [Descargar APK](https://expo.dev/artifacts/eas/2PBiG--Pnz0L_bkfG5PCBe9A0grheNB3PZSQsYw94F0.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/53774cc9-9297-4fcf-ae97-27a21a2d602f), terminada el 23/10/2026 a las 10:30:46, hora de Argentina, desde el frontend de `b8213d23bd31eb531f4f454829ee3b21d2a575e6`.
+
+La carga y edición de propuestas ahora se organiza en cuatro pasos: proyecto, equipo, puesto y revisión. Alumnos y profesores se buscan por correo, se revisa la cuenta encontrada y se agregan de forma explícita. Las materias tienen sugerencias y entrada personalizada. El recorrido conserva los datos al volver atrás, detecta texto pendiente de agregar y lleva cada error al paso correspondiente. [Cambios y validación del recorrido](REVISION_CARGA_PROYECTOS.md). También conserva las correcciones de fotos y del editor móvil de la versión 0.3.1.
+
+Archivo local excluido de Git: `artifacts/android/ExpoTec-0.4.0-5.apk`, 109.979.231 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.4.0`, código `5`, sin modo depuración. Integridad ZIP, digest y firma APK v2 correctos; certificado idéntico al de la APK 0.3.1, para actualizarla. SHA-256: `c7d0acfbf10d53896d265f4509f56244e2de835dab91ea47e2988f2c1d291c49`. Informe: `artifacts/android/verification-0.4.0.json`. El archivo EAS inspeccionado contiene únicamente 151 archivos de fuentes, recursos y configuración del frontend; sus hashes coincidieron con la fuente final antes de subirlo. La exportación Android terminó correctamente. La instalación y el uso del recorrido en un teléfono físico siguen pendientes de prueba.
+
+## APK anteriores
+
+Cuarta APK de prueba: **0.3.1, Android versionCode 4**. [Descargar APK](https://expo.dev/artifacts/eas/bJIiQlxWxtQSKQHvnVZ2YncllrZLonNJD8OPLKUgr8E.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/e7eb2283-76e9-45ab-9df6-51594f1c7a19), terminada el 23/10/2026 a las 00:29, hora de Argentina, desde el frontend de `82a8beb4`.
 
 Corrige el error «función undefined» de fotos en Android, prepara un JPEG nativo y mejora giro, tamaño y selección de mesas en móvil. También retira el margen superior duplicado sobre los títulos. [Causas, cambios y pruebas](CORRECCIONES_ANDROID_031.md).
 
@@ -55,5 +63,6 @@ La compilación y las pruebas automatizadas no acreditan el funcionamiento en un
 4. Recorrer espacios, proyectos, préstamos y devoluciones con los permisos correspondientes.
 5. Completar el registro propio y social, incluyendo las dos contraseñas, con el teclado abierto y en horizontal. Probar botón Atrás, modo del sistema, videos y recuperación de contraseña.
 6. Comprobar que la barra inferior se oculta y vuelve al deslizar desde abajo, incluso después de regresar del navegador o cerrar el teclado.
+7. Crear y editar una propuesta con los cuatro pasos: buscar y confirmar alumnos y profesores, agregar materias sugeridas y propias, volver atrás sin perder datos, corregir pendientes y revisar todo antes de enviar. Probar con el teclado abierto y en ambos temas.
 
 Registrar modelo de teléfono, versión de Android y pasos para cualquier error. No compartir contraseñas ni enlaces de recuperación.

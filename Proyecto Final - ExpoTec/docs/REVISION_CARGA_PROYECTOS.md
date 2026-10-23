@@ -40,3 +40,5 @@ TypeScript, ESLint y las 118 pruebas del frontend pasaron. También se exportaro
 `frontend/native/scripts/check-proposal-flow.cjs` completó 24 comprobaciones en navegador, con datos ficticios y sin escribir en producción: alta a 390 px en oscuro, edición a 1440 px en claro y los cuatro pasos a 320 y 768 px. Se verificaron confirmación de personas, duplicados, cancelación y respuestas tardías, materias, conservación entre pasos, protección del autor y editor, recursos, errores de campos, conflicto de versión y cancelación de foto. Los cuatro envíos interceptados conservaron el contenido y la versión esperados. No hubo errores de ejecución ni peticiones externas inesperadas.
 
 Las 15 capturas y el informe quedan en `artifacts/proposal-flow/`, excluidos de Git. Estas comprobaciones de navegador y exportación no sustituyen la instalación y el uso de la APK en un Android físico.
+
+La revisión `b8213d23` se publicó en `main` y Vercel la marcó lista en producción. Se comprobó que [ExpoTec web](https://expotec-web-gn19.vercel.app) sirve el formulario nuevo; el resultado de esa lectura está en `artifacts/proposal-flow/deployment.json`.
