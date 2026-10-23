@@ -1,3 +1,6 @@
+import { assertPhotoActive, localPhoto } from "./photoUploadBody";
+import type { PhotoBody } from "./photoUploadBody";
+
 export type PhotoUploadOptions = {
   token: string;
   signal: AbortSignal;
@@ -8,7 +11,7 @@ export type PhotoUploadOptions = {
 export function photoUploadRequest(
   pathname: string,
   token: string,
-  body: Blob,
+  body: Pick<PhotoBody, "type" | "size">,
 ) {
   if (
     !/^incoming\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png|webp)$/.test(
@@ -33,15 +36,18 @@ export function photoUploadRequest(
 
 export async function putPhoto(
   pathname: string,
-  body: Blob,
+  body: PhotoBody,
   options: PhotoUploadOptions,
 ) {
-  options.signal.throwIfAborted();
+  assertPhotoActive(options.signal);
   const request = photoUploadRequest(pathname, options.token, body);
   await new Promise<void>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
+    let settled = false;
     const abort = () => xhr.abort();
     const finish = (error?: Error) => {
+      if (settled) return;
+      settled = true;
       options.signal.removeEventListener("abort", abort);
       if (error) reject(error);
       else resolve();
@@ -73,6 +79,15 @@ export async function putPhoto(
       finish(new Error("Carga cancelada."));
       return;
     }
-    xhr.send(body);
+    try {
+      // React Native abre y transmite el archivo local; no lo copia a un Blob de JavaScript.
+      xhr.send(
+        localPhoto(body)
+          ? ({ uri: body.uri } as unknown as XMLHttpRequestBodyInit)
+          : body,
+      );
+    } catch {
+      finish(new Error("No pudimos leer la foto para subirla. Volvé a elegirla."));
+    }
   });
 }

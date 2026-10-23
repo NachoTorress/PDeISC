@@ -1,5 +1,7 @@
 # ExpoTec
 
+Correcciones de Android 0.3.1: carga de fotos compatible con React Native, giro y tamaño de mesas con botones, selección de piezas en móvil y cabeceras sin margen superior duplicado. [Cambios y verificación](docs/CORRECCIONES_ANDROID_031.md).
+
 Rediseño del 22/10/2026: modo oscuro carbón y grafito, acentos de color, filtros alineados, usuarios en filas compactas y grillas que aprovechan el ancho disponible incluso con zoom. Los proyectos sin foto usan un icono pequeño. [Decisiones y referencias de la interfaz](docs/DISENO_INTERFAZ.md).
 
 Actualización del 22/10/2026: [carga directa de fotos](docs/CARGA_FOTOS.md) en proyectos y galería mediante Vercel Blob privado, con optimización y aprobación antes del acceso público. Préstamos aprovecha el ancho disponible con fichas en columnas; la navegación mantiene estable la posición de sus títulos.
@@ -76,7 +78,7 @@ El [diagrama editable del sistema](docs/diagramas/sistema-expotec.drawio) tiene 
 - Presentación en TV: avance automático de fichas, reproducción de videos y paso al siguiente cuando terminan.
 - Temas claro y oscuro separados, navegación adaptable, retroceso nativo, validación inmediata y confirmaciones dentro de la interfaz.
 
-La interfaz usa tarjetas y controles compactos. En el editor, seleccioná cualquier mueble, escribí su **Giro en grados** (0–360) y pulsá **Aplicar giro**; también hay ajustes de ±15°. Después pulsá **Guardar plano** para conservar la distribución. El giro se guarda grado a grado; 360° equivale a 0°.
+La interfaz usa tarjetas y controles compactos. En el editor, seleccioná una pieza y usá **−15°**, **+15°** o **+90°**; para otro giro, abrí **Ángulo exacto** y pulsá **Aplicar giro**. En móvil podés recorrer las piezas con las flechas sin apuntar a una mesa pequeña, y ajustar **Ancho** y **Fondo** con botones. En escritorio también se conservan los tiradores. Después pulsá **Guardar plano**. El giro se guarda grado a grado; 360° equivale a 0°.
 
 ## Guía breve de uso
 

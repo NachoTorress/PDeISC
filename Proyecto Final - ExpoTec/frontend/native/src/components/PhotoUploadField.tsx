@@ -28,40 +28,38 @@ export default function PhotoUploadField({
     { colors } = useTheme();
   const [busy, setBusy] = useState(false),
     [percent, setPercent] = useState(0);
+  const [preparing, setPreparing] = useState(false);
   const [failure, setFailure] = useState(""),
     [linkMode, setLinkMode] = useState(Boolean(value && !managedPhoto(value)));
   const [preview, setPreview] = useState("");
   const controller = useRef<AbortController | null>(null);
   const selecting = useRef(false),
     mounted = useRef(true);
+  const retryAsset = useRef<ImagePicker.ImagePickerAsset | null>(null);
+  const busyCallback = useRef(onBusyChange);
+  busyCallback.current = onBusyChange;
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
       controller.current?.abort();
+      busyCallback.current(false);
     };
   }, []);
-  useEffect(() => {
-    onBusyChange(busy);
-  }, [busy, onBusyChange]);
-  async function choose() {
-    if (selecting.current || disabled || busy) return;
-    selecting.current = true;
+  async function upload(asset: ImagePicker.ImagePickerAsset) {
+    if (disabled || controller.current || !mounted.current) return;
+    const abort = new AbortController();
+    controller.current = abort;
+    retryAsset.current = asset;
+    setBusy(true);
+    onBusyChange(true);
+    setPreparing(true);
+    setPercent(0);
     setFailure("");
+    setPreview(asset.uri);
     try {
-      const picked = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images"],
-        allowsMultipleSelection: false,
-        quality: 1,
-      });
-      if (!mounted.current || picked.canceled) return;
-      const abort = new AbortController();
-      controller.current = abort;
-      setBusy(true);
-      setPercent(0);
-      setPreview(picked.assets[0].uri);
-      const photo = await preparePhoto(picked.assets[0]);
-      abort.signal.throwIfAborted();
+      const photo = await preparePhoto(asset);
+      if (mounted.current) setPreparing(false);
       const imageUrl = await uploadPhoto(
         photo,
         purpose,
@@ -73,10 +71,11 @@ export default function PhotoUploadField({
       );
       if (!mounted.current) return;
       onChange(imageUrl);
+      retryAsset.current = null;
       setLinkMode(false);
       setPreview("");
     } catch (cause) {
-      if (mounted.current && !controller.current?.signal.aborted) {
+      if (mounted.current && !abort.signal.aborted) {
         setFailure(
           cause instanceof Error
             ? cause.message
@@ -85,8 +84,32 @@ export default function PhotoUploadField({
         setPreview("");
       }
     } finally {
+      if (controller.current === abort) controller.current = null;
+      if (mounted.current) {
+        setBusy(false);
+        setPreparing(false);
+        onBusyChange(false);
+      }
+    }
+  }
+  async function choose() {
+    if (selecting.current || disabled || busy) return;
+    selecting.current = true;
+    setFailure("");
+    try {
+      const picked = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsMultipleSelection: false,
+        quality: 1,
+      });
+      if (!mounted.current || picked.canceled) return;
+      const asset = picked.assets[0];
+      if (!asset) throw new Error("No recibimos la foto seleccionada. Elegila nuevamente.");
+      await upload(asset);
+    } catch {
+      if (mounted.current) setFailure("No pudimos abrir la galería. Volvé a elegir la foto.");
+    } finally {
       selecting.current = false;
-      if (mounted.current) setBusy(false);
     }
   }
   const shown = preview || (managedPhoto(value) ? value : "");
@@ -113,9 +136,11 @@ export default function PhotoUploadField({
         <Button
           title={
             busy
-              ? percent >= 90
-                ? "Preparando foto…"
-                : `Subiendo… ${percent}%`
+              ? preparing
+                ? "Optimizando foto…"
+                : percent >= 90
+                  ? "Guardando foto…"
+                  : `Subiendo… ${percent}%`
               : value
                 ? "Cambiar foto"
                 : "Elegir foto"
@@ -126,7 +151,18 @@ export default function PhotoUploadField({
           onPress={() => void choose()}
         />
         {busy ? (
-          <ActivityIndicator color={colors.primary} />
+          <>
+            <ActivityIndicator color={colors.primary} />
+            <Button
+              title="Cancelar carga"
+              variant="quiet"
+              onPress={() => {
+                retryAsset.current = null;
+                controller.current?.abort();
+                setPreview("");
+              }}
+            />
+          </>
         ) : (
           <Button
             title={linkMode ? "Ocultar enlace" : "Usar un enlace"}
@@ -136,6 +172,16 @@ export default function PhotoUploadField({
           />
         )}
       </View>
+      {!busy && !!failure && !!retryAsset.current && (
+        <Button
+          title="Reintentar carga"
+          variant="secondary"
+          disabled={disabled}
+          onPress={() => {
+            if (retryAsset.current) void upload(retryAsset.current);
+          }}
+        />
+      )}
       <Text
         accessibilityLiveRegion="polite"
         style={{ color: colors.muted, fontSize: 13, lineHeight: 19 }}

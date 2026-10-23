@@ -25,6 +25,8 @@ La revisión posterior corrige el desperdicio de ancho y las fichas demasiado al
 
 Objetivos de revisión: 320×812, 390×844, 768×1024, 1024×900 y 1440×1000. Menú lateral permanente desde 1200; en anchos menores se mantiene el panel móvil. No debe haber desbordes horizontales, acciones recortadas ni saltos de ancho al seleccionar filtros.
 
+Corrección móvil 0.3.1: al editar un plano se retiran las cabeceras y selectores repetidos, y Guardar/Descartar comparten fila. En ventanas de menos de 900 puntos se pueden recorrer las piezas con flechas y ajustar giro y tamaño desde controles junto al plano. El contorno sigue la geometría real, sin imponer un rectángulo mínimo que se separe del mobiliario. Los tiradores permanecen en escritorio y el tamaño del plano de consulta no cambia. La barra global consume una sola vez el margen superior seguro; el navegador interior conserva únicamente los márgenes aún disponibles, evitando el hueco sobre los títulos.
+
 ## Referencias consultadas
 
 - [GOV.UK, botones](https://design-system.service.gov.uk/components/button/): acción principal identificable y etiquetas concretas.

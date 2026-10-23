@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Image, Pressable, Text, View, useWindowDimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaInsetsContext,
+  SafeAreaProvider,
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import {
   DarkTheme,
   DefaultTheme,
@@ -153,6 +158,7 @@ function AppShell() {
   const [startInDemo, setStartInDemo] = useState(false);
   const navigation = useNavigationContainerRef<RootRoutes>();
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const profile = profiles.find((item) => item.role === role)!;
   const desktopNavigation = width >= 1200 && remoteOpen;
   useEffect(() => {
@@ -265,8 +271,9 @@ function AppShell() {
       <StatusBar style={colors.dark ? "light" : "dark"} />
       <SystemNavigation />
       <View
+        testID="app-header"
         style={{
-          minHeight: 72,
+          minHeight: width < 600 ? 64 : 72,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
@@ -439,6 +446,8 @@ function AppShell() {
           onClose={() => setNavigationOpen(false)}
         />
         <View style={{ flex: 1, minWidth: 0 }}>
+          {/* La barra global ya ocupa el margen superior seguro del teléfono. */}
+          <SafeAreaInsetsContext.Provider value={{ ...insets, top: 0 }}>
           <NavigationContainer
             ref={navigation}
             theme={navTheme}
@@ -623,6 +632,7 @@ function AppShell() {
               </Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>
+          </SafeAreaInsetsContext.Provider>
         </View>
       </View>
     </SafeAreaView>

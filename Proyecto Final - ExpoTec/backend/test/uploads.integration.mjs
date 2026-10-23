@@ -11,12 +11,16 @@ import { createUploadsRepository } from '../src/repositories/uploads.mjs';
 import { createApp } from '../src/create-app.mjs';
 import { migrate } from '../scripts/migrations.mjs';
 import { listen, testConfig } from './support.mjs';
+import { createRequire } from 'node:module';
 
 const database = process.env.TEST_DB_NAME;
 test('TiDB y Blob privado: carga real, validación, propiedad, moderación y limpieza', {
   skip: !database || !process.env.BLOB_READ_WRITE_TOKEN ? 'Requiere base exclusiva TEST_DB_NAME y Blob de pruebas configurado.' : false,
 }, async t => {
   assert.match(database, /^expotec_test_[a-z0-9_]+$/); assert.notEqual(database, process.env.DB_NAME);
+  const nativeRequire = createRequire(new URL('../../frontend/native/package.json', import.meta.url));
+  nativeRequire('tsx/cjs');
+  const { photoUploadRequest } = nativeRequire('./src/lib/blobUpload.ts');
   const pool = createDatabase({ ...process.env, DB_NAME: database, VERCEL: '0' }), users = [], paths = [];
   t.after(async () => {
     if (paths.length) await del(paths);
@@ -43,10 +47,15 @@ test('TiDB y Blob privado: carga real, validación, propiedad, moderación y lim
   const owner = await register(), other = await register(), admin = await register();
   await pool.execute("INSERT INTO user_roles (user_id, role_code) VALUES (?, 'admin')", [admin.user.id]);
   const bytes = await sharp({ create: { width: 1800, height: 300, channels: 3, background: '#316d4c' } }).png().toBuffer();
-  const prepared = await api.request('/api/uploads/prepare', { purpose: 'gallery', contentType: 'image/png', size: bytes.length }, owner.accessToken);
+  const preparedBytes = await sharp(bytes).resize({ width: 1600 }).jpeg({ quality: 85 }).toBuffer();
+  const prepared = await api.request('/api/uploads/prepare', { purpose: 'gallery', contentType: 'image/jpeg', size: preparedBytes.length }, owner.accessToken);
   assert.equal(prepared.status, 201, JSON.stringify(prepared.body));
   const image = await uploads.get(prepared.body.id); paths.push(image.rawPath, image.imagePath);
-  const raw = await clientPut(prepared.body.pathname, bytes, { access: 'private', token: prepared.body.clientToken, contentType: 'image/png' });
+  // El mismo destino y encabezados del cliente Android, con bytes JPEG reales.
+  const nativeRequest = photoUploadRequest(prepared.body.pathname, prepared.body.clientToken, { type: 'image/jpeg', size: preparedBytes.length });
+  const nativeResponse = await fetch(nativeRequest.url, { method: 'PUT', body: preparedBytes, headers: nativeRequest.headers });
+  assert.ok(nativeResponse.ok, `Transporte Android: HTTP ${nativeResponse.status}`);
+  const raw = await nativeResponse.json();
   assert([401,403,404].includes((await fetch(raw.url)).status), 'El objeto privado no se puede leer sin autorización');
   assert.equal((await api.request('/api/uploads/complete', { id: image.id }, other.accessToken)).status, 404);
   const completed = await api.request('/api/uploads/complete', { id: image.id }, owner.accessToken);

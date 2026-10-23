@@ -233,33 +233,37 @@ export default function SharedSpacesPage({
   const paragraph = { color: colors.muted, fontSize: 15, lineHeight: 22 };
   return (
     <Screen scrollEnabled={!gestureActive}>
-      <PageHeading
-        icon="map"
-        title="Espacios de ExpoTec"
-        subtitle="Planos compartidos de la exposición"
-      />
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        <RefreshButton
-          label="Actualizar espacios"
-          loading={loading}
-          disabled={busy || loading || !!editing}
-          onPress={() => {
-            setConfirm(null);
-            void reload();
-          }}
+      {!editing && (
+        <PageHeading
+          icon="map"
+          title="Espacios de ExpoTec"
+          subtitle="Planos compartidos de la exposición"
         />
-        {canEdit && (
-          <Button
-            title={adding ? "Cancelar nuevo espacio" : "Nuevo espacio"}
-            icon={adding ? "close" : "plus"}
+      )}
+      {!editing && (
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+          <RefreshButton
+            label="Actualizar espacios"
+            loading={loading}
             disabled={busy || loading || !!editing}
             onPress={() => {
-              setAdding(!adding);
-              setEditorId(user!.id);
+              setConfirm(null);
+              void reload();
             }}
           />
-        )}
-      </View>
+          {canEdit && (
+            <Button
+              title={adding ? "Cancelar nuevo espacio" : "Nuevo espacio"}
+              icon={adding ? "close" : "plus"}
+              disabled={busy || loading || !!editing}
+              onPress={() => {
+                setAdding(!adding);
+                setEditorId(user!.id);
+              }}
+            />
+          )}
+        </View>
+      )}
       {!!error && (
         <Text
           accessibilityRole="alert"
@@ -334,7 +338,7 @@ export default function SharedSpacesPage({
           </Text>
         </Card>
       ) : null}
-      {!!spaces?.length && (
+      {!!spaces?.length && !editing && (
         <Choice
           label="Elegir espacio"
           value={spaceId ?? ""}
@@ -365,7 +369,7 @@ export default function SharedSpacesPage({
           <Card style={width >= 900 ? { flex: 1, minWidth: 0 } : undefined}>
             <Heading
               title={space.name}
-              subtitle={space.description || undefined}
+              subtitle={editing ? undefined : space.description || undefined}
             />
             {canEdit &&
               (editing ? (
@@ -373,8 +377,10 @@ export default function SharedSpacesPage({
                   style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}
                 >
                   <Button
-                    title={busy ? "Guardando…" : "Guardar plano"}
+                    title={busy ? "Guardando…" : "Guardar"}
+                    accessibilityLabel="Guardar plano"
                     icon="save"
+                    style={{ flex: 1, minWidth: 0, paddingHorizontal: 8 }}
                     disabled={
                       busy ||
                       detailLoading ||
@@ -404,8 +410,10 @@ export default function SharedSpacesPage({
                     }}
                   />
                   <Button
-                    title="Descartar borrador y recargar"
+                    title="Descartar"
+                    accessibilityLabel="Descartar borrador y recargar"
                     variant="quiet"
+                    style={{ flex: 1, minWidth: 0, paddingHorizontal: 8 }}
                     disabled={busy}
                     onPress={() => setConfirm("discard")}
                   />

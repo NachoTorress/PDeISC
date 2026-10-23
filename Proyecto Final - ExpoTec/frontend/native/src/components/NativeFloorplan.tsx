@@ -10,12 +10,17 @@ import {
 import Svg, { Polygon } from "react-native-svg";
 import type { Furniture, Project, Space } from "../lib/types";
 import { furnitureSize } from "../lib/furnitureDrop";
+import {
+  furnitureSelection,
+  resizeDirections,
+} from "../lib/floorplanSelection";
 import { floorplanSize } from "../lib/floorplanSize";
 import { useGestureGuard } from "../hooks/useGestureGuard";
 import FurniturePalette from "./FurniturePalette";
 import { resizeTable, type ResizeHandle } from "../lib/resizeTable";
 import { useTheme } from "../contexts/ThemeContext";
 import { Icon } from "./Icon";
+import { Button } from "./ui";
 
 type Size = { width: number; height: number };
 type Geometry = { x: number; y: number; width: number; height: number };
@@ -38,16 +43,7 @@ interface Props {
 
 const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
-const directions: Record<ResizeHandle, [number, number]> = {
-  nw: [-1, -1],
-  n: [0, -1],
-  ne: [1, -1],
-  e: [1, 0],
-  se: [1, 1],
-  s: [0, 1],
-  sw: [-1, 1],
-  w: [-1, 0],
-};
+const directions = resizeDirections;
 
 /** Convierte el tamaño relativo guardado en píxeles, sin cambiar los datos del proyecto. */
 function sizeFor(item: Furniture, stage: Size): Size {
@@ -74,57 +70,6 @@ function fitItem(item: Furniture, stage: Size): { x: number; y: number } {
     x: clamp(item.x, minX, 100 - minX),
     y: clamp(item.y, minY, 100 - minY),
   };
-}
-
-/** Mantiene todos los tiradores de 48 dp dentro del plano, con separación para cada giro. */
-function knobsFor(item: Furniture, stage: Size) {
-  const size = sizeFor(item, stage);
-  const angle = (item.rotation * Math.PI) / 180;
-  const cos = Math.cos(angle);
-  const sin = Math.sin(angle);
-  // 80 px entre esquinas también conserva más de 8 dp de hueco con un giro de 45°.
-  const halfWidth = Math.max(size.width / 2 + 8, 40);
-  const halfHeight = Math.max(size.height / 2 + 8, 40);
-  const extentX = Math.abs(cos) * halfWidth + Math.abs(sin) * halfHeight;
-  const extentY = Math.abs(sin) * halfWidth + Math.abs(cos) * halfHeight;
-  const centerX = clamp(
-    (item.x / 100) * stage.width,
-    24 + extentX,
-    stage.width - 24 - extentX,
-  );
-  const centerY = clamp(
-    (item.y / 100) * stage.height,
-    24 + extentY,
-    stage.height - 24 - extentY,
-  );
-  function positions(handles: ResizeHandle[]) {
-    return handles.map((handle) => {
-      const [horizontal, vertical] = directions[handle];
-      const localX = horizontal * halfWidth;
-      const localY = vertical * halfHeight;
-      return {
-        handle,
-        x: centerX + localX * cos - localY * sin,
-        y: centerY + localX * sin + localY * cos,
-      };
-    });
-  }
-  if (stage.width >= 700) {
-    const eight = positions(["nw", "n", "ne", "e", "se", "s", "sw", "w"]);
-    const separated = eight.every((point, index) =>
-      eight
-        .slice(index + 1)
-        .every(
-          (other) =>
-            Math.max(
-              Math.abs(point.x - other.x),
-              Math.abs(point.y - other.y),
-            ) >= 56,
-        ),
-    );
-    if (separated) return eight;
-  }
-  return positions(["nw", "ne", "se", "sw"]);
 }
 
 function MoveableItem({
@@ -239,6 +184,7 @@ function MoveableItem({
   return (
     <View
       {...responder.panHandlers}
+      testID={`furniture-${item.id}`}
       style={[
         styles.furniturePosition,
         {
@@ -257,7 +203,7 @@ function MoveableItem({
         accessibilityState={{ selected }}
         accessibilityHint={
           editing
-            ? "Arrastrá para mover. Los tiradores cambian el tamaño de una mesa."
+            ? "Arrastrá para mover. Los controles de la pieza permiten girar y cambiar su tamaño."
             : "Muestra los detalles del elemento."
         }
         onPress={onSelect}
@@ -434,7 +380,8 @@ function ResizeKnob({
           ),
         );
       }}
-      style={[styles.knobTouch, { left: x - 24, top: y - 24 }]}
+      testID={`resize-knob-${handle}`}
+      style={[styles.knobTouch, { left: x - 12, top: y - 12 }]}
     >
       <View
         style={[
@@ -469,24 +416,48 @@ export default function NativeFloorplan({
   const [containerWidth, setContainerWidth] = useState<number | null>(null);
   const stage = useMemo(
     () =>
-      floorplanSize(containerWidth ?? 320, {
-        width: viewport.width,
-        height: viewport.height,
-      }),
-    [containerWidth, viewport.width, viewport.height],
+      floorplanSize(
+        containerWidth ?? 320,
+        {
+          width: viewport.width,
+          height: viewport.height,
+        },
+        editing,
+      ),
+    [containerWidth, viewport.width, viewport.height, editing],
   );
   const [moving, setMoving] = useState(false);
   const [resizePreview, setResizePreview] = useState<Geometry | null>(null);
-  const selectedTable = editing
-    ? space.furniture.find(
-        (item) => item.id === selected && item.type === "table",
-      )
+  const selectedFurniture = editing
+    ? space.furniture.find((item) => item.id === selected)
     : undefined;
+  const selectedIndex = space.furniture.findIndex(
+    (item) => item.id === selected,
+  );
+  function selectNearby(direction: number) {
+    const count = space.furniture.length;
+    if (!count) return;
+    const index =
+      selectedIndex < 0
+        ? direction > 0
+          ? 0
+          : count - 1
+        : (selectedIndex + direction + count) % count;
+    onSelect(space.furniture[index].id);
+  }
   const displayed =
-    selectedTable && resizePreview
-      ? { ...selectedTable, ...resizePreview }
-      : selectedTable;
-  const knobs = displayed && !moving ? knobsFor(displayed, stage) : [];
+    selectedFurniture && resizePreview
+      ? { ...selectedFurniture, ...resizePreview }
+      : selectedFurniture;
+  const selectionItem = displayed
+    ? { ...displayed, ...fitItem(displayed, stage) }
+    : undefined;
+  const outline =
+    selectionItem && !moving ? furnitureSelection(selectionItem, stage) : [];
+  const knobs =
+    selectionItem?.type === "table" && viewport.width >= 900 && !moving
+      ? furnitureSelection(selectionItem, stage)
+      : [];
   useEffect(() => {
     if (!editing || containerWidth === null) return;
     const changes = space.furniture.flatMap((item) => {
@@ -523,8 +494,55 @@ export default function NativeFloorplan({
             : "Tocá una mesa para ver su proyecto o disponibilidad."}
         </Text>
       )}
+      {editing && viewport.width < 900 && (
+        <View
+          testID="furniture-selection-controls"
+          style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+        >
+          <Button
+            title=""
+            icon="arrowLeft"
+            accessibilityLabel="Seleccionar pieza anterior"
+            variant="secondary"
+            style={{ width: 44, minWidth: 0, paddingHorizontal: 6, gap: 0 }}
+            disabled={!space.furniture.length}
+            onPress={() => selectNearby(-1)}
+          />
+          <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
+            <Text
+              numberOfLines={1}
+              accessibilityLiveRegion="polite"
+              style={{ color: colors.text, fontWeight: "600", fontSize: 13 }}
+            >
+              {selectedFurniture
+                ? `${{ table: "Mesa", bench: "Banco", power: "Toma", label: "Zona" }[selectedFurniture.type]} · ${selectedIndex + 1} de ${space.furniture.length}`
+                : space.furniture.length
+                  ? "Elegí una pieza"
+                  : "El plano está vacío"}
+            </Text>
+            {!!space.furniture.length && (
+              <Text
+                numberOfLines={1}
+                style={{ color: colors.muted, fontSize: 11 }}
+              >
+                {selectedFurniture?.id ?? "Usá las flechas o tocá el plano."}
+              </Text>
+            )}
+          </View>
+          <Button
+            title=""
+            icon="arrowRight"
+            accessibilityLabel="Seleccionar pieza siguiente"
+            variant="secondary"
+            style={{ width: 44, minWidth: 0, paddingHorizontal: 6, gap: 0 }}
+            disabled={!space.furniture.length}
+            onPress={() => selectNearby(1)}
+          />
+        </View>
+      )}
       <View
         ref={canvasRef}
+        testID="floorplan-stage"
         collapsable={false}
         style={[
           styles.stage,
@@ -610,7 +628,7 @@ export default function NativeFloorplan({
             />
           );
         })}
-        {knobs.length > 0 && (
+        {outline.length > 0 && (
           <Svg
             pointerEvents="none"
             width={stage.width}
@@ -618,11 +636,10 @@ export default function NativeFloorplan({
             style={[StyleSheet.absoluteFill, { zIndex: 30 }]}
           >
             <Polygon
-              points={knobs.map(({ x, y }) => `${x},${y}`).join(" ")}
+              points={outline.map(({ x, y }) => `${x},${y}`).join(" ")}
               fill="none"
               stroke={colors.primary}
-              strokeWidth={1}
-              strokeDasharray="4 4"
+              strokeWidth={2}
             />
           </Svg>
         )}
@@ -759,8 +776,8 @@ const styles = StyleSheet.create({
   knobTouch: {
     position: "absolute",
     zIndex: 40,
-    width: 48,
-    height: 48,
+    width: 24,
+    height: 24,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -133,82 +133,88 @@ export default function MapPage({
   const paragraph = { color: colors.muted, lineHeight: 22 };
   return (
     <Screen scrollEnabled={!gestureActive}>
-      <View style={[styles.header, width >= 700 && styles.headerWide]}>
-        <View style={width >= 700 ? styles.headingWide : undefined}>
-          <PageHeading
-            icon="map"
-            title="Todo en su lugar."
-            subtitle="Organizá los espacios y dale lugar a cada proyecto."
+      {!draft && (
+        <View style={[styles.header, width >= 700 && styles.headerWide]}>
+          <View style={width >= 700 ? styles.headingWide : undefined}>
+            <PageHeading
+              icon="map"
+              title="Todo en su lugar."
+              subtitle="Organizá los espacios y dale lugar a cada proyecto."
+            />
+          </View>
+          {role === "admin" ? (
+            <Button
+              title={adding ? "Cerrar nuevo espacio" : "Nuevo espacio"}
+              icon={adding ? "close" : "plus"}
+              onPress={() => setAdding(!adding)}
+            />
+          ) : role === "student" ? (
+            <Button
+              title="Cargar mi proyecto"
+              icon="plus"
+              onPress={onNewProject}
+            />
+          ) : (
+            <Button
+              title="Ver proyectos"
+              endIcon="arrowRight"
+              variant="secondary"
+              onPress={onProjects}
+            />
+          )}
+        </View>
+      )}
+      {!draft && (
+        <View style={styles.overview}>
+          <View style={styles.stats}>
+            <Chip label={`${approved.length} confirmados`} />
+            <Chip
+              label={`${allTables - approved.length} puestos disponibles`}
+            />
+            <Chip label={`${state.spaces.length} espacios`} />
+          </View>
+          {adding && (
+            <Card>
+              <Field
+                label="Nombre del nuevo espacio"
+                value={spaceName}
+                onChangeText={setSpaceName}
+                maxLength={80}
+                error={
+                  spaceName && spaceName.trim().length < 2
+                    ? "Escribí al menos 2 caracteres."
+                    : ""
+                }
+              />
+              <Button
+                title="Crear espacio"
+                icon="check"
+                disabled={spaceName.trim().length < 2}
+                onPress={createSpace}
+              />
+              <Button
+                title="Cancelar"
+                icon="close"
+                variant="quiet"
+                onPress={() => {
+                  setAdding(false);
+                  setError("");
+                }}
+              />
+            </Card>
+          )}
+          <Choice
+            label="Elegir espacio"
+            value={space?.id ?? ""}
+            disabled={!!draft}
+            options={state.spaces.map((item) => ({
+              value: item.id,
+              label: `${item.name} · ${state.projects.filter((project) => project.spaceId === item.id && project.status === "approved").length}/${item.furniture.filter((entry) => entry.type === "table").length}`,
+            }))}
+            onChange={changeSpace}
           />
         </View>
-        {role === "admin" ? (
-          <Button
-            title={adding ? "Cerrar nuevo espacio" : "Nuevo espacio"}
-            icon={adding ? "close" : "plus"}
-            onPress={() => setAdding(!adding)}
-          />
-        ) : role === "student" ? (
-          <Button
-            title="Cargar mi proyecto"
-            icon="plus"
-            onPress={onNewProject}
-          />
-        ) : (
-          <Button
-            title="Ver proyectos"
-            endIcon="arrowRight"
-            variant="secondary"
-            onPress={onProjects}
-          />
-        )}
-      </View>
-      <View style={styles.overview}>
-        <View style={styles.stats}>
-          <Chip label={`${approved.length} confirmados`} />
-          <Chip label={`${allTables - approved.length} puestos disponibles`} />
-          <Chip label={`${state.spaces.length} espacios`} />
-        </View>
-        {adding && (
-          <Card>
-            <Field
-              label="Nombre del nuevo espacio"
-              value={spaceName}
-              onChangeText={setSpaceName}
-              maxLength={80}
-              error={
-                spaceName && spaceName.trim().length < 2
-                  ? "Escribí al menos 2 caracteres."
-                  : ""
-              }
-            />
-            <Button
-              title="Crear espacio"
-              icon="check"
-              disabled={spaceName.trim().length < 2}
-              onPress={createSpace}
-            />
-            <Button
-              title="Cancelar"
-              icon="close"
-              variant="quiet"
-              onPress={() => {
-                setAdding(false);
-                setError("");
-              }}
-            />
-          </Card>
-        )}
-        <Choice
-          label="Elegir espacio"
-          value={space?.id ?? ""}
-          disabled={!!draft}
-          options={state.spaces.map((item) => ({
-            value: item.id,
-            label: `${item.name} · ${state.projects.filter((project) => project.spaceId === item.id && project.status === "approved").length}/${item.furniture.filter((entry) => entry.type === "table").length}`,
-          }))}
-          onChange={changeSpace}
-        />
-      </View>
+      )}
       {!!error && (
         <Card>
           <Text accessibilityRole="alert" style={{ color: colors.error }}>
@@ -224,13 +230,15 @@ export default function MapPage({
             >
               {space.name}
             </Text>
-            <Text style={paragraph}>{space.description}</Text>
+            {!draft && <Text style={paragraph}>{space.description}</Text>}
             {role === "admin" &&
               (draft ? (
                 <View style={styles.actions}>
                   <Button
-                    title="Guardar plano"
+                    title="Guardar"
+                    accessibilityLabel="Guardar plano"
                     icon="save"
+                    style={{ flex: 1, minWidth: 0, paddingHorizontal: 8 }}
                     disabled={
                       draft.name.trim().length < 2 ||
                       draft.furniture.some(
@@ -245,6 +253,7 @@ export default function MapPage({
                     title="Cancelar"
                     icon="close"
                     variant="quiet"
+                    style={{ flex: 1, minWidth: 0, paddingHorizontal: 8 }}
                     onPress={() => {
                       setDraft(null);
                       setSelected(null);

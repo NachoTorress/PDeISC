@@ -19,7 +19,10 @@ export function createAuthRequest(base: string, browser: boolean): AuthRequest {
   }
   return async <T>(path: string, body: object, token?: string): Promise<T> => {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 15000);
+    const timer = setTimeout(
+      () => controller.abort(),
+      path === "/api/uploads/complete" ? 60000 : 15000,
+    );
     try {
       const response = await fetch(`${base.replace(/\/$/, "")}${path}`, {
         method: "POST",
