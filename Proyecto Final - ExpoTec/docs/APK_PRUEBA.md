@@ -1,10 +1,16 @@
 # APK de prueba de ExpoTec
 
+APK actual: **0.3.1, Android versionCode 4**. [Descargar APK](https://expo.dev/artifacts/eas/bJIiQlxWxtQSKQHvnVZ2YncllrZLonNJD8OPLKUgr8E.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/e7eb2283-76e9-45ab-9df6-51594f1c7a19), terminada el 23/10/2026 a las 00:29, hora de Argentina, desde el frontend de `82a8beb4`.
+
+Corrige el error «función undefined» de fotos en Android, prepara un JPEG nativo y mejora giro, tamaño y selección de mesas en móvil. También retira el margen superior duplicado sobre los títulos. [Causas, cambios y pruebas](CORRECCIONES_ANDROID_031.md).
+
+Archivo local excluido de Git: `artifacts/android/ExpoTec-0.3.1-4.apk`, 109.951.795 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.3.1`, código `4`, sin modo depuración. Integridad ZIP, digest y firma APK v2 correctos; certificado idéntico al de la APK anterior, para actualizarla. SHA-256: `2e5ed36d1ae41ac7da2fd1f323b1ba2b574f479164140e16520bc2ca81ef935a`. Informe: `artifacts/android/verification-0.3.1.json`. La instalación, el selector de fotos y los gestos en un teléfono físico siguen pendientes de prueba.
+
 Versión inicial: 0.2.0, Android versionCode 1. Proyecto Expo: [nachot/expotec-organizacion](https://expo.dev/accounts/nachot/projects/expotec-organizacion).
 
 Segunda APK de prueba: 0.2.0, Android versionCode 2. Compilación EAS `0d0b28a2-ba16-4f7c-83a0-659c5c540415`, terminada el 22/10/2026, desde el código de `46ce1920`. Incluye el ícono propio, acceso nativo de Google, formulario que acompaña al teclado y barra inferior del sistema oculta con recuperación por deslizamiento. La confirmación de uso en un teléfono físico sigue pendiente.
 
-APK actual: **0.3.0, Android versionCode 3**. [Descargar APK](https://expo.dev/artifacts/eas/CZZjemTc8DIDqac40PhPcTZ-y9-yp_lsdycotgPCCQY.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/f27a7a2c-cfa6-45a7-b654-60165947a1f8), terminada el 22/10/2026 a las 23:40, hora de Argentina, con el frontend de `fca3dbcf`. El archivo local se conserva en `artifacts/android/ExpoTec-0.3.0-3.apk`, excluido de Git.
+Tercera APK de prueba: **0.3.0, Android versionCode 3**. [Descargar APK](https://expo.dev/artifacts/eas/CZZjemTc8DIDqac40PhPcTZ-y9-yp_lsdycotgPCCQY.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/f27a7a2c-cfa6-45a7-b654-60165947a1f8), terminada el 22/10/2026 a las 23:40, hora de Argentina, con el frontend de `fca3dbcf`. El archivo local se conserva en `artifacts/android/ExpoTec-0.3.0-3.apk`, excluido de Git.
 
 Incluye modo oscuro carbón y grafito, usuarios en filas compactas, grillas que aprovechan el ancho incluso con zoom, proyectos sin foto con icono pequeño y botones alineados en las pantallas compartidas y la demostración. Conserva la paleta clara azul/naranja y los selectores en filas completas. Se mantiene el perfil `preview`, el proyecto de Expo y su firma para permitir la actualización de la APK anterior.
 

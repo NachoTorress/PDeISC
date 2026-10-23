@@ -23,5 +23,7 @@ La cabecera global ya ocupaba el margen superior seguro, pero el navegador inter
 - La integración real de fotos pasó con TiDB de pruebas y Blob privado: JPEG sintético, transporte del cliente Android, procesamiento, propiedad, vista previa, aprobación, retiro y limpieza.
 - `scripts/check-mobile-fixes.cjs` pasó 70 comprobaciones y generó 16 capturas, sin errores de JavaScript. Cubre editor compartido y demostración a 320, 390, 768 y 1440 puntos: selección, contorno, giro exacto y rápido, tamaño, arrastre, guardar y descartar conservando metadatos y puestos. No escribe en producción.
 - Evidencia local excluida de Git: `artifacts/mobile-fixes/evidence.json` y `artifacts/android/photo-validation-0.3.1.json`.
+- Producción: despliegue `dpl_431J5B7Bv8XGcJaw8D3p6q7AHtcX`, desde `82a8beb4`, publicado correctamente. La consulta de un proyecto público y la selección/giro del editor de demostración pasaron en 390 puntos y modo oscuro, sin errores de JavaScript ni escrituras externas. Evidencia en `artifacts/mobile-fixes/production-evidence.json`.
+- APK 0.3.1/4 terminada y descargada: manifiesto, integridad ZIP, digest y firma v2 verificados. El certificado coincide con la APK 0.3.0 anterior. [Descarga e identificación](APK_PRUEBA.md).
 
 Las pruebas del navegador, la integración y la inspección del SDK no sustituyen la selección de una foto y los gestos desde una APK instalada. No se ejecutó un dispositivo ni un emulador Android en este entorno. La identificación y descarga del archivo final se registran en [APK de prueba](APK_PRUEBA.md).
