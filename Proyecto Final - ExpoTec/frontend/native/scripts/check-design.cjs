@@ -17,7 +17,10 @@ const targetViewports = [
   "390x844",
   "768x1024",
   "1024x900",
+  "1365x1000",
   "1440x1000",
+  "1536x1000",
+  "1691x1000",
 ];
 const user = {
   id: "design-test",
@@ -28,6 +31,14 @@ const user = {
   active: true,
   createdAt: "2026-10-13",
 };
+const users = [
+  user,
+  { ...user, id: "design-teacher", firstName: "Docente", lastName: "de prueba", email: "docente.expotec@example.invalid", roles: ["teacher"] },
+  { ...user, id: "design-student", firstName: "Estudiante", lastName: "de prueba", email: "estudiante.expotec@example.invalid", roles: ["student"] },
+  { ...user, id: "design-team", firstName: "María Alejandra", lastName: "Fernández de los Santos", email: "maria.alejandra.fernandez.equipo@example.invalid", roles: ["student", "teacher"] },
+  { ...user, id: "design-admin", firstName: "Coordinación", lastName: "ExpoTec", email: "coordinacion.expotec@example.invalid", roles: ["admin", "student", "teacher"] },
+  { ...user, id: "design-volunteer", firstName: "Ayudante", lastName: "de exposición", email: "ayudante.exposicion@example.invalid", roles: [] },
+];
 const spaces = seed.spaces.map((space) => ({
   ...space,
   version: 1,
@@ -36,41 +47,51 @@ const spaces = seed.spaces.map((space) => ({
     .filter((item) => item.type === "table")
     .map((item) => ({ id: item.id, furnitureId: item.id })),
 }));
-const projects = seed.projects.map((project, index) => ({
-  ...project,
-  name:
-    index === 1
-      ? "Huerta inteligente con monitoreo de humedad y riego automático"
-      : project.name,
-  imageUrl: `https://design-fixture.invalid/${index % 2 ? "electronics" : "robot"}.jpg`,
-  videoUrl: "",
-  isSoftwareProject: false,
-  githubUrl: "",
-  websiteUrl: "",
-  spaceName: seed.spaces.find((space) => space.id === project.spaceId).name,
-  members: [{ id: user.id, firstName: "Equipo", lastName: "de prueba" }],
-  teachers: [{ firstName: "Docente", lastName: "de prueba" }],
-  booth: {
-    id: project.furnitureId,
-    spaceId: project.spaceId,
-    spaceName: spaces[0].name,
-    furnitureId: project.furnitureId,
-  },
-}));
-const resources = seed.resources.map((resource) => ({
-  ...resource,
-  description: "Recurso de demostración para revisar la interfaz.",
-  reserved: 1,
-  available: resource.total - 1,
-  unavailable: 0,
-  outstanding: 1,
-  availableToLend: resource.total - 1,
-  shortage: 0,
-  version: 1,
-  updatedAt: resource.createdAt,
-  archivedAt: null,
-  events: [],
-}));
+const approvedProjects = seed.projects.filter((project) => project.status === "approved");
+const projects = Array.from({ length: 6 }, (_, index) => {
+  const project = approvedProjects[index % approvedProjects.length];
+  return {
+    ...project,
+    id: index < approvedProjects.length ? project.id : `${project.id}-fixture-${index}`,
+    name:
+      index === 1
+        ? "Huerta inteligente con monitoreo de humedad y riego automático"
+        : index < approvedProjects.length ? project.name : `${project.name} · equipo ${index + 1}`,
+    imageUrl: `https://design-fixture.invalid/${index % 2 ? "electronics" : "robot"}.jpg`,
+    videoUrl: "",
+    isSoftwareProject: false,
+    githubUrl: "",
+    websiteUrl: "",
+    spaceName: seed.spaces.find((space) => space.id === project.spaceId).name,
+    members: [{ id: user.id, firstName: "Equipo", lastName: "de prueba" }],
+    teachers: [{ firstName: "Docente", lastName: "de prueba" }],
+    booth: {
+      id: project.furnitureId,
+      spaceId: project.spaceId,
+      spaceName: spaces[0].name,
+      furnitureId: project.furnitureId,
+    },
+  };
+});
+const resources = Array.from({ length: 6 }, (_, index) => {
+  const resource = seed.resources[index % seed.resources.length];
+  return {
+    ...resource,
+    id: index < seed.resources.length ? resource.id : `${resource.id}-fixture-${index}`,
+    name: index < seed.resources.length ? resource.name : `${resource.name} del taller ${index + 1}`,
+    description: "Recurso de demostración para revisar la interfaz.",
+    reserved: 1,
+    available: resource.total - 1,
+    unavailable: 0,
+    outstanding: 1,
+    availableToLend: resource.total - 1,
+    shortage: 0,
+    version: 1,
+    updatedAt: resource.createdAt,
+    archivedAt: null,
+    events: [],
+  };
+});
 const loans = projects.slice(0, 3).map((project, index) => ({
   id: `loan-${index}`,
   projectId: project.id,
@@ -110,6 +131,7 @@ async function main() {
   const unexpected = [];
   const captures = [];
   const checks = [];
+  const gridEvidence = [];
   const luminance = (hex) => {
     const channel = hex
       .slice(1)
@@ -158,6 +180,14 @@ async function main() {
       };
     }),
   );
+  const neutralSurfaces = ["page", "surface", "surfaceVariant", "navigation", "canvas", "table"].map((token) => {
+    const rgb = dark[token].slice(1).match(/../g).map((channel) => parseInt(channel, 16));
+    const spread = Math.max(...rgb) - Math.min(...rgb);
+    assert.ok(spread <= 14, `Modo oscuro: ${token} tiene un tinte dominante (${dark[token]})`);
+    assert.ok(rgb[2] - Math.min(rgb[0], rgb[1]) <= 10, `Modo oscuro: ${token} es demasiado azul`);
+    return { token, color: dark[token], spread };
+  });
+  checks.push("Fondos y superficies oscuras neutros, sin predominio azul");
   let mode = "normal",
     signedIn = true,
     delayRelease;
@@ -228,7 +258,7 @@ async function main() {
             ? []
             : body.offset
               ? []
-              : projects.filter((project) => project.status === "approved"),
+              : projects.map((project) => ({ ...project, imageUrl: mode === "no-images" ? "" : project.imageUrl })),
       });
     }
     if (/^\/api\/projects\/(public\/)?[^/]+\/query$/.test(endpoint))
@@ -266,7 +296,7 @@ async function main() {
       return reply({
         loan: loans.find((loan) => endpoint.includes(loan.id)) || loans[0],
       });
-    if (endpoint === "/api/admin/users/query") return reply({ users: [user] });
+    if (endpoint === "/api/admin/users/query") return reply({ users: body.offset ? [] : users });
     if (endpoint === "/api/inventory/create")
       return reply({
         resource: { ...resources[0], id: "created-local-fixture" },
@@ -359,6 +389,96 @@ async function main() {
       observation,
     });
   }
+  async function gridLayout({ id, cardPrefix, count, minColumns = 1, maxCardHeight, actionName, label }) {
+    const grid = page.locator(`[data-testid="${id}"]:visible`);
+    await grid.waitFor();
+    await page.waitForFunction(({ id, cardPrefix, count }) => {
+      const grid = [...document.querySelectorAll(`[data-testid="${id}"]`)].find((element) => element.getBoundingClientRect().width > 0);
+      return grid && [...grid.querySelectorAll(`[data-testid^="${cardPrefix}"]`)].filter((card) => card.getBoundingClientRect().width > 0).length === count;
+    }, { id, cardPrefix, count });
+    await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    const result = await grid.evaluate((element, { cardPrefix, actionName }) => {
+      const box = (node) => {
+        const { x, y, width, height, right, bottom } = node.getBoundingClientRect();
+        return { x, y, width, height, right, bottom };
+      };
+      const cards = [...element.querySelectorAll(`[data-testid^="${cardPrefix}"]`)].map((card) => {
+        const action = actionName && [...card.querySelectorAll('[role="button"]')].find((button) => (button.getAttribute("aria-label") || button.textContent).startsWith(actionName));
+        return {
+          ...box(card),
+          id: card.dataset.testid,
+          scale: card.offsetWidth ? card.getBoundingClientRect().width / card.offsetWidth : 1,
+          action: action ? box(action) : null,
+          actionGroups: [...card.querySelectorAll('[data-testid="compact-actions"]')].map((group) => [...group.querySelectorAll('[role="button"]')].map((button) => ({ ...box(button), label: button.getAttribute("aria-label") || button.textContent }))),
+        };
+      });
+      const rows = [];
+      cards.forEach((card) => {
+        const row = rows.find((row) => Math.abs(row[0].y - card.y) < 1.5);
+        if (row) row.push(card);
+        else rows.push([card]);
+      });
+      const parent = element.parentElement;
+      const parentBox = box(parent), style = getComputedStyle(parent);
+      const scale = parent.offsetWidth ? parentBox.width / parent.offsetWidth : 1;
+      const contentBounds = {
+        left: parentBox.x + (parseFloat(style.paddingLeft) + parseFloat(style.borderLeftWidth)) * scale,
+        right: parentBox.right - (parseFloat(style.paddingRight) + parseFloat(style.borderRightWidth)) * scale,
+      };
+      return { grid: box(element), contentBounds, rows, cards };
+    }, { cardPrefix, actionName });
+    assert.equal(result.cards.length, count, `${label}: fixtures faltantes`);
+    assert.ok(Math.abs(result.grid.x - result.contentBounds.left) <= 1.5 && Math.abs(result.grid.right - result.contentBounds.right) <= 1.5, `${label}: la lista no aprovecha el ancho útil de la pantalla`);
+    const columns = Math.max(...result.rows.map((row) => row.length));
+    assert.ok(columns >= minColumns, `${label}: sólo ${columns} columnas, se esperaban al menos ${minColumns}`);
+    for (const [index, row] of result.rows.entries()) {
+      row.sort((a, b) => a.x - b.x);
+      assert.ok(Math.abs(row[0].x - result.grid.x) <= 1.5, `${label}: fila ${index + 1} desplazada del borde izquierdo`);
+      assert.ok(row.every((card) => Math.abs(card.width - result.cards[0].width) <= 1.5), `${label}: anchos de tarjeta inconsistentes`);
+      assert.ok(row.every((card) => Math.abs(card.height - row[0].height) <= 1.5), `${label}: alturas distintas en una fila`);
+      assert.ok(row.every((card) => card.right <= result.grid.right + 1.5), `${label}: tarjeta fuera del área útil`);
+      if (index < result.rows.length - 1) assert.equal(row.length, columns, `${label}: fila incompleta antes del final`);
+      if (row.length === columns) {
+        assert.ok(Math.abs(row.at(-1).right - result.grid.right) <= 1.5, `${label}: fila completa deja ${Math.round(result.grid.right - row.at(-1).right)} px sin usar a la derecha`);
+      }
+      if (actionName) {
+        const actions = row.map((card) => card.action);
+        assert.ok(actions.every(Boolean), `${label}: acción de tarjeta ausente`);
+        assert.ok(actions.every((action) => action.height >= 44), `${label}: área táctil menor a 44 px`);
+        assert.ok(actions.every((action) => Math.abs(action.bottom - actions[0].bottom) <= 1.5), `${label}: botones fuera de alineación`);
+      }
+    }
+    if (maxCardHeight) assert.ok(result.cards.every((card) => card.height <= maxCardHeight), `${label}: tarjetas demasiado altas (${Math.round(Math.max(...result.cards.map((card) => card.height)))} px)`);
+    if (cardPrefix !== "user-card-") {
+      for (const card of result.cards) {
+        assert.ok(card.actionGroups.length, `${label}: falta el grupo compacto de acciones en ${card.id}`);
+        for (const actions of card.actionGroups) {
+          assert.ok(actions.every((action) => Math.abs(action.width - actions[0].width) <= 1.5), `${label}: acciones con títulos distintos usan anchos diferentes en ${card.id}`);
+          assert.ok(actions.every((action) => action.width <= 144 * card.scale + 1.5), `${label}: una acción ocupa más de 144 px CSS en ${card.id}`);
+        }
+      }
+    }
+    gridEvidence.push({ label, columns, ...result });
+    checks.push(`${label}: ${columns} columnas, filas completas ocupan todo el ancho y acciones alineadas${maxCardHeight ? ", densidad compacta" : ""}`);
+    return result;
+  }
+  async function wideLayouts({ id, cardPrefix, count, actionName, maxCardHeight, label, minColumns = 3, capturePrefix = id }) {
+    for (const width of [1365, 1536, 1691]) {
+      await page.setViewportSize({ width, height: 1000 });
+      await overflow(`${label} ${width}`);
+      await gridLayout({ id, cardPrefix, count, minColumns, actionName, maxCardHeight, label: `${label} ${width}` });
+      await capture(`${capturePrefix}-wide`, "Filas completas ocupan el ancho útil; contenido y acciones compactos.");
+    }
+    await page.setViewportSize({ width: 1691, height: 1000 });
+    await page.evaluate(() => { document.documentElement.style.zoom = "1.25"; });
+    try {
+      await gridLayout({ id, cardPrefix, count, minColumns: Math.min(minColumns, 2), actionName, maxCardHeight: maxCardHeight ? maxCardHeight * 1.25 : undefined, label: `${label} zoom 125%` });
+      await capture(`${capturePrefix}-zoom125`, "Escenario adicional con zoom CSS al 125%; no quedan columnas perdidas por anchos fraccionales.");
+    } finally {
+      await page.evaluate(() => { document.documentElement.style.zoom = ""; });
+    }
+    await page.setViewportSize({ width: 1440, height: 1000 });
+  }
   try {
     await page.goto(base, { waitUntil: "domcontentloaded" });
     await page.getByText("Patio central", { exact: true }).first().waitFor();
@@ -380,43 +500,22 @@ async function main() {
     await page
       .getByRole("button", { name: "Ver proyecto Brazo robótico", exact: true })
       .waitFor();
-    const sizes = await page
-      .getByRole("button", { name: /^Ver proyecto / })
-      .evaluateAll((buttons) =>
-        buttons.map((button) => {
-          const card =
-            button.parentElement.parentElement.getBoundingClientRect();
-          const action = button.getBoundingClientRect();
-          return {
-            x: card.x,
-            y: card.y,
-            width: card.width,
-            height: card.height,
-            actionY: action.y,
-            actionHeight: action.height,
-          };
-        }),
-      );
-    assert.equal(sizes.length, 3);
-    assert.ok(
-      sizes.every((size) => Math.abs(size.height - sizes[0].height) < 1),
-      "Alturas de tarjetas diferentes",
-    );
-    assert.ok(
-      sizes.every((size) => Math.abs(size.actionY - sizes[0].actionY) < 1),
-      "Acciones sin alinear al pie",
-    );
-    assert.ok(
-      sizes.every((size) => size.actionHeight >= 48),
-      "Acción menor a 48 puntos",
-    );
-    checks.push(
-      "Tarjetas con nombres largos: alturas iguales y acciones alineadas al pie, mínimo 48 puntos",
-    );
-    await capture(
-      "projects",
-      "Tres tarjetas de igual altura y marco de imagen uniforme; título largo y acciones alineadas.",
-    );
+    await wideLayouts({ id: "projects-grid", cardPrefix: "project-card-", count: projects.length, actionName: "Ver proyecto", maxCardHeight: 500, label: "Proyectos con fotos", capturePrefix: "projects-with-images" });
+    mode = "no-images";
+    await page.getByRole("button", { name: "Actualizar proyectos", exact: true }).click();
+    await page.getByTestId(`project-icon-${projects[0].id}`).waitFor();
+    await wideLayouts({ id: "projects-grid", cardPrefix: "project-card-", count: projects.length, actionName: "Ver proyecto", maxCardHeight: 300, label: "Proyectos sin fotos", capturePrefix: "projects-no-images" });
+    const icons = await page.locator('[data-testid^="project-icon-"]').evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().height));
+    assert.equal(icons.length, projects.length);
+    assert.ok(icons.every((height) => height <= 64), "Los proyectos sin foto reservan un bloque de imagen vacío");
+    checks.push("Seis proyectos sin foto usan iconos compactos en lugar de bloques vacíos");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await overflow("Proyectos sin fotos 390");
+    await gridLayout({ id: "projects-grid", cardPrefix: "project-card-", count: projects.length, actionName: "Ver proyecto", maxCardHeight: 360, label: "Proyectos sin fotos móvil" });
+    await capture("projects-no-images-mobile", "Proyectos sin foto conservan densidad y acción visible en móvil.");
+    mode = "normal";
+    await page.getByRole("button", { name: "Actualizar proyectos", exact: true }).click();
+    await page.getByTestId(`project-image-${projects[0].id}`).waitFor();
     for (const viewport of targetViewports) {
       const [width, height] = viewport.split("x").map(Number);
       await page.setViewportSize({ width, height });
@@ -454,6 +553,21 @@ async function main() {
     await page
       .getByRole("button", { name: "Activar modo oscuro", exact: true })
       .click();
+    const renderedDark = await page.getByTestId(`project-card-${projects[0].id}`).evaluate((card) => {
+      const samples = [];
+      for (let node = card; node; node = node.parentElement) {
+        const color = getComputedStyle(node).backgroundColor;
+        if (color !== "rgba(0, 0, 0, 0)" && color !== "transparent") samples.push(color);
+      }
+      return samples;
+    });
+    assert.ok(renderedDark.length >= 2, "Modo oscuro: faltan superficies renderizadas para revisar");
+    assert.ok(renderedDark.every((color) => {
+      const channels = color.match(/[\d.]+/g).slice(0, 3).map(Number);
+      return Math.max(...channels) - Math.min(...channels) <= 14;
+    }), `Modo oscuro: superficie renderizada con tinte dominante (${renderedDark.join(", ")})`);
+    assert.ok(Math.max(...renderedDark[0].match(/[\d.]+/g).slice(0, 3).map(Number)) < 70, "Modo oscuro: las tarjetas siguen claras");
+    checks.push("Las superficies renderizadas en modo oscuro también son neutras y oscuras");
     await capture(
       "dark-mobile",
       "Tema oscuro conserva cabeceras, fotos y controles legibles.",
@@ -469,6 +583,12 @@ async function main() {
         exact: true,
       })
       .waitFor();
+    await wideLayouts({ id: "inventory-grid", cardPrefix: "inventory-card-", count: resources.length, actionName: "Editar", maxCardHeight: 370, label: "Inventario" });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await overflow("Inventario móvil 390");
+    await gridLayout({ id: "inventory-grid", cardPrefix: "inventory-card-", count: resources.length, actionName: "Editar", maxCardHeight: 420, label: "Inventario móvil" });
+    await capture("inventory-mobile", "Inventario sin desbordes y acciones alineadas en móvil.");
+    await page.setViewportSize({ width: 1440, height: 1000 });
     await capture(
       "inventory",
       "Inventario con controles de edición y baja de ancho compartido.",
@@ -627,12 +747,24 @@ async function main() {
     );
     await navigate("Usuarios y permisos");
     await page
-      .getByRole("button", { name: "Editar permisos", exact: true })
+      .getByRole("button", { name: /^Editar permisos de / }).first()
       .waitFor();
+    await wideLayouts({ id: "users-grid", cardPrefix: "user-card-", count: users.length, actionName: "Editar permisos", maxCardHeight: 180, label: "Usuarios", minColumns: 1 });
+    const userActions = await page.getByRole("button", { name: /^Editar permisos de / }).evaluateAll((elements) => elements.map((element) => {
+      const { width, right } = element.getBoundingClientRect();
+      return { width, right };
+    }));
+    assert.equal(userActions.length, users.length);
+    assert.ok(userActions.every((action) => action.width <= 220), "Usuarios: botones innecesariamente anchos");
+    assert.ok(userActions.every((action) => Math.abs(action.right - userActions[0].right) <= 1.5), "Usuarios: acciones desalineadas a la derecha");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await overflow("Usuarios móvil 390");
+    await gridLayout({ id: "users-grid", cardPrefix: "user-card-", count: users.length, actionName: "Editar permisos", maxCardHeight: 290, label: "Usuarios móvil" });
     await capture(
       "users",
-      "La tarjeta de una sola cuenta conserva ancho de columna y acción al pie.",
+      "Seis cuentas, nombres y correos largos: filas compactas y botones alineados.",
     );
+    await page.setViewportSize({ width: 1440, height: 1000 });
     mode = "empty";
     await navigate("Proyectos");
     await page
@@ -745,16 +877,27 @@ async function main() {
       "demo-projects",
       "Tarjetas de la demostración con ilustraciones de categorías y controles compartidos.",
     );
+    const switchDemoToLight = page.getByRole("button", { name: "Activar modo claro", exact: true });
+    if (await switchDemoToLight.count()) await switchDemoToLight.click();
+    await page.setViewportSize({ width: 1536, height: 1000 });
+    await gridLayout({ id: "projects-grid", cardPrefix: "project-card-", count: seed.projects.length, minColumns: 3, actionName: "Ver proyecto", maxCardHeight: 420, label: "Proyectos demostración 1536" });
+    await capture("demo-projects-compact", "Proyectos de demostración con equipos, sin fotos: densidad compacta y acciones de distintos títulos de ancho común.");
+    await page.getByRole("tab", { name: "Inventario", exact: true }).click();
+    await page.getByRole("textbox", { name: "Buscar elemento", exact: true }).waitFor();
+    await overflow("Inventario demostración 1536");
+    await gridLayout({ id: "inventory-grid", cardPrefix: "inventory-card-", count: seed.resources.length, minColumns: 3, actionName: "Editar", maxCardHeight: 330, label: "Inventario demostración 1536" });
+    await capture("demo-inventory-compact", "Inventario de demostración: columnas completas y acciones de distintos títulos de ancho común.");
     assert.deepEqual(errors, [], "Errores de React o JavaScript");
     assert.deepEqual(unexpected, [], "Peticiones fuera de las rutas de prueba");
     const report = {
+      status: "PASS",
       contract:
         "docs/DISENO_INTERFAZ.md; revisión de Expo Web con fixtures derivados de seed.ts, sin tráfico a TiDB.",
       targetViewports,
       accessibility: {
         status: "pass",
         evidence:
-          "Controles de 48 puntos, foco visible de 3 px y activación con Enter; menú móvil cierra con Escape. Contraste semántico revisado por separado.",
+          "Controles de al menos 44 puntos, foco visible de 3 px y activación con Enter; menú móvil cierra con Escape. Contraste semántico revisado por separado.",
       },
       responsive: { status: "pass", evidence: checks.join(". ") },
       contentStates: {
@@ -792,6 +935,9 @@ async function main() {
       renderedEvidence: captures,
       checks,
       contrast,
+      neutralSurfaces,
+      renderedDark,
+      gridEvidence,
       runtimeErrors: errors,
     };
     await fs.writeFile(
@@ -815,6 +961,14 @@ async function main() {
     await page
       .screenshot({ path: path.join(output, "failure.png") })
       .catch(() => {});
+    await fs.writeFile(path.join(output, "evidence.json"), JSON.stringify({
+      status: "FAIL",
+      error: error.message,
+      checks,
+      renderedEvidence: captures,
+      gridEvidence,
+      runtimeErrors: errors,
+    }, null, 2));
     throw error;
   } finally {
     await browser.close();

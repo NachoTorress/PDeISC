@@ -1,10 +1,10 @@
 # ExpoTec
 
-Rediseño del 22/10/2026: navegación azul profundo, acentos naranja, filtros en filas completas, tarjetas alineadas e imágenes contenidas en marcos uniformes. [Decisiones y referencias de la interfaz](docs/DISENO_INTERFAZ.md).
+Rediseño del 22/10/2026: modo oscuro carbón y grafito, acentos de color, filtros alineados, usuarios en filas compactas y grillas que aprovechan el ancho disponible incluso con zoom. Los proyectos sin foto usan un icono pequeño. [Decisiones y referencias de la interfaz](docs/DISENO_INTERFAZ.md).
 
 Actualización del 22/10/2026: [carga directa de fotos](docs/CARGA_FOTOS.md) en proyectos y galería mediante Vercel Blob privado, con optimización y aprobación antes del acceso público. Préstamos aprovecha el ancho disponible con fichas en columnas; la navegación mantiene estable la posición de sus títulos.
 
-Prototipo de organización escolar migrado a **React Native con Expo SDK 57**. El código activo está en `frontend/native`; la versión anterior de Vite queda en `frontend/web` como referencia. La generación del APK quedó para una etapa posterior, como indicó el usuario.
+Prototipo de organización escolar migrado a **React Native con Expo SDK 57**. El código activo está en `frontend/native`; la versión anterior de Vite queda en `frontend/web` como referencia. Las compilaciones Android y su alcance están documentados en [APK de prueba](docs/APK_PRUEBA.md).
 
 La aplicación abre **Espacios compartidos**, con planos y puestos guardados en TiDB y consulta pública. **Ver proyectos** permite presentar propuestas, vincular equipos con cuentas reales y revisarlas; los proyectos confirmados aparecen en el puesto y en la muestra pública. Solo los administradores reales pueden crear espacios, guardar su distribución y darlos de baja. **Mi cuenta** permite registrarse como alumno, ingresar, consultar los permisos del servidor y cerrar sesión. La demostración conserva aparte sus proyectos, espacios, inventario y préstamos ficticios, locales a cada dispositivo.
 
@@ -49,7 +49,7 @@ $env:PORT = "5173"
 npm run preview
 ```
 
-La configuración de `eas.json` incluye el perfil `preview` para un APK futuro. Su generación e instalación se realizarán después; requieren preparar EAS y probar en Android.
+La configuración de `eas.json` incluye el perfil `preview` para generar una APK instalable mediante EAS. Las compilaciones disponibles y los pasos pendientes de prueba en teléfono se registran en [APK de prueba](docs/APK_PRUEBA.md).
 
 ## Presentación TV compartida
 
@@ -134,7 +134,7 @@ No ingresar información privada ni usar la demostración para organizar la expo
 frontend/native/
   index.ts             Entrada Expo
   app.json             Configuración SDK y permisos
-  eas.json             Perfiles para compilaciones futuras
+  eas.json             Perfiles de compilación Android
   src/
     main.tsx           Registro de la aplicación
     app.tsx            Navegación y composición

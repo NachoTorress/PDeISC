@@ -7,7 +7,6 @@ import {
   Card,
   Chip,
   Choice,
-  Heading,
   Screen,
   RefreshButton,
   ActionRow,
@@ -159,29 +158,64 @@ export default function SharedProjectsPage({
           </Text>
         </Card>
       ) : null}
-      <ContentGrid>
+      <ContentGrid testID="projects-grid" minItemWidth={300} maxColumns={4}>
         {visible.map((project) => (
-          <Card key={project.id} style={{ flex: 1 }}>
-            {project.imageUrl ? (
-              <GalleryImage
-                uri={project.imageUrl}
-                caption={`Imagen de ${project.name}`}
-                height={176}
-                bounded
-              />
-            ) : (
-              <View
-                style={{
-                  height: 176,
-                  backgroundColor: colors.infoContainer,
-                  borderRadius: 12,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Icon name="projects" color={colors.info} size={44} />
+          <Card
+            key={project.id}
+            testID={`project-card-${project.id}`}
+            style={{ flex: 1, padding: 16, gap: 10 }}
+          >
+            {project.imageUrl && (
+              <View testID={`project-image-${project.id}`}>
+                <GalleryImage
+                  uri={project.imageUrl}
+                  caption={`Imagen de ${project.name}`}
+                  height={132}
+                  bounded
+                />
               </View>
             )}
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "flex-start",
+                gap: 10,
+              }}
+            >
+              {!project.imageUrl && (
+                <View
+                  testID={`project-icon-${project.id}`}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    flexShrink: 0,
+                    borderRadius: 10,
+                    backgroundColor: colors.infoContainer,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon name="projects" color={colors.info} size={22} />
+                </View>
+              )}
+              <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
+                <Text
+                  style={{
+                    color: colors.text,
+                    fontSize: 18,
+                    lineHeight: 24,
+                    fontWeight: "600",
+                  }}
+                >
+                  {project.name}
+                </Text>
+                <Text
+                  style={{ color: colors.muted, fontSize: 13, lineHeight: 19 }}
+                >
+                  {project.course}
+                </Text>
+              </View>
+            </View>
             <Chip
               label={sharedStatusLabel[project.status]}
               tone={
@@ -192,12 +226,11 @@ export default function SharedProjectsPage({
                     : "neutral"
               }
             />
-            <Heading title={project.name} subtitle={project.course} />
-            <Text style={{ color: colors.muted }}>
+            <Text style={{ color: colors.muted, fontSize: 13, lineHeight: 19 }}>
               {project.spaceName} · {project.furnitureId} ·{" "}
               {formatDate(project.createdAt)}
             </Text>
-            <ActionRow footer>
+            <ActionRow compact footer>
               <Button
                 title="Ver proyecto"
                 accessibilityLabel={`Ver proyecto ${project.name}`}

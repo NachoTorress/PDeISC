@@ -134,7 +134,9 @@ export default function SharedInventoryPage({
   if (!canRead)
     return (
       <Screen>
-        <PageHeading icon="inventory" tone="info"
+        <PageHeading
+          icon="inventory"
+          tone="info"
           title="Inventario de ExpoTec"
           subtitle="Ingresá con una cuenta de administración o préstamos para consultar el inventario."
         />
@@ -143,7 +145,9 @@ export default function SharedInventoryPage({
     );
   return (
     <Screen>
-      <PageHeading icon="inventory" tone="info"
+      <PageHeading
+        icon="inventory"
+        tone="info"
         title="Inventario de ExpoTec"
         subtitle="Existencias y reservas compartidas de elementos para los proyectos."
       />
@@ -272,7 +276,7 @@ export default function SharedInventoryPage({
             No hay coincidencias entre los elementos cargados.
           </Text>
         )}
-      <ContentGrid>
+      <ContentGrid testID="inventory-grid" minItemWidth={280} maxColumns={4}>
         {visible
           .filter((item) =>
             item.name
@@ -280,19 +284,70 @@ export default function SharedInventoryPage({
               .includes(search.trim().toLocaleLowerCase("es")),
           )
           .map((resource) => (
-            <Card key={resource.id} style={{ flex: 1 }}>
-              <Heading
-                title={resource.name}
-                subtitle={resource.description || undefined}
-              />
-              <Text style={{ color: colors.text, lineHeight: 24 }}>
-                Total: {resource.total} · Fuera de servicio:{" "}
-                {resource.unavailable} · Reservadas: {resource.reserved} ·
-                Disponibles para reservar: {resource.available}
+            <Card
+              key={resource.id}
+              testID={`inventory-card-${resource.id}`}
+              style={{ flex: 1, padding: 16, gap: 10 }}
+            >
+              <Text
+                style={{
+                  color: colors.text,
+                  fontSize: 18,
+                  lineHeight: 24,
+                  fontWeight: "600",
+                }}
+              >
+                {resource.name}
               </Text>
-              <Text style={paragraph}>
-                Sin devolver: {resource.outstanding} · Disponibles para
-                entregar: {resource.availableToLend}
+              {!!resource.description && (
+                <Text style={{ ...paragraph, fontSize: 14, lineHeight: 20 }}>
+                  {resource.description}
+                </Text>
+              )}
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+                {[
+                  { label: "Total", value: resource.total, ink: colors.text },
+                  {
+                    label: "Reservadas",
+                    value: resource.reserved,
+                    ink: colors.text,
+                  },
+                  {
+                    label: "Para reservar",
+                    value: resource.available,
+                    ink: colors.success,
+                  },
+                ].map((stat) => (
+                  <View
+                    key={stat.label}
+                    style={{ flex: 1, minWidth: 64, gap: 2 }}
+                  >
+                    <Text
+                      style={{
+                        color: stat.ink,
+                        fontSize: 20,
+                        lineHeight: 25,
+                        fontWeight: "600",
+                      }}
+                    >
+                      {stat.value}
+                    </Text>
+                    <Text
+                      style={{
+                        color: colors.muted,
+                        fontSize: 12,
+                        lineHeight: 17,
+                      }}
+                    >
+                      {stat.label}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+              <Text style={{ ...paragraph, fontSize: 13, lineHeight: 19 }}>
+                Sin devolver: {resource.outstanding} · Para entregar:{" "}
+                {resource.availableToLend} · Fuera de servicio:{" "}
+                {resource.unavailable}
               </Text>
               {resource.shortage > 0 && (
                 <Text style={{ color: colors.error, lineHeight: 22 }}>
@@ -300,17 +355,18 @@ export default function SharedInventoryPage({
                   las reservas. Revisá el estado o las existencias.
                 </Text>
               )}
-              <Text style={paragraph}>
+              <Text style={{ ...paragraph, fontSize: 13, lineHeight: 19 }}>
                 Creado el {formatDate(resource.createdAt)}
                 {resource.archivedAt
                   ? ` · Baja el ${formatDate(resource.archivedAt)}`
                   : ""}
               </Text>
-              <ActionRow footer>
+              <ActionRow compact footer>
                 {canManage && !resource.archivedAt && (
                   <>
                     <Button
                       title="Editar"
+                      style={{ minWidth: 100 }}
                       accessibilityLabel={`Editar ${resource.name}`}
                       icon="edit"
                       variant="secondary"

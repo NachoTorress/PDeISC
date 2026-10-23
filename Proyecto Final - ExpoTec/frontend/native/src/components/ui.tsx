@@ -1,4 +1,12 @@
-import { createContext, useContext, useRef, useState } from "react";
+import {
+  Children,
+  Fragment,
+  createContext,
+  isValidElement,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import type { ReactNode } from "react";
 import {
   ActivityIndicator,
@@ -26,26 +34,54 @@ import { layout } from "../theme/tokens";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 import { choiceLayout } from "../lib/choiceLayout";
 
-const ActionRowContext = createContext(false);
+const ActionRowContext = createContext<boolean | number>(false);
+
+function actionCount(children: ReactNode): number {
+  return Children.toArray(children).reduce<number>(
+    (total, child) =>
+      total +
+      (isValidElement<{ children?: ReactNode }>(child) &&
+      child.type === Fragment
+        ? actionCount(child.props.children)
+        : 1),
+    0,
+  );
+}
 
 /** Acciones equivalentes comparten ancho y se apilan cuando falta espacio. */
 export function ActionRow({
   children,
   footer = false,
+  compact = false,
 }: {
   children: ReactNode;
   footer?: boolean;
+  compact?: boolean;
 }) {
   const { colors } = useTheme();
+  const [width, setWidth] = useState(0);
+  const columns = Math.max(
+    1,
+    Math.min(actionCount(children), Math.floor((width + 8) / 108)),
+  );
+  const compactWidth = width
+    ? Math.floor(Math.min(144, (width - (columns - 1) * 8) / columns))
+    : 144;
   return (
-    <ActionRowContext.Provider value>
+    <ActionRowContext.Provider value={compact ? compactWidth : true}>
       <View
+        testID={compact ? "compact-actions" : undefined}
+        onLayout={
+          compact
+            ? (event) => setWidth(event.nativeEvent.layout.width)
+            : undefined
+        }
         style={[
           styles.wrap,
           { alignItems: "stretch" },
           footer && {
             marginTop: "auto",
-            paddingTop: 16,
+            paddingTop: compact ? 8 : 12,
             borderTopWidth: 1,
             borderColor: colors.outline,
           },
@@ -108,6 +144,7 @@ export function Button({
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
+      hitSlop={Platform.OS === "android" ? 2 : undefined}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       onHoverIn={() => setHovered(true)}
@@ -115,7 +152,18 @@ export function Button({
       android_ripple={{ color: `${ink}20` }}
       style={({ pressed }) => [
         styles.button,
-        grouped && { flexGrow: 1, flexBasis: 144, alignSelf: "stretch" },
+        grouped === true && {
+          flexGrow: 1,
+          flexBasis: 144,
+          alignSelf: "stretch",
+        },
+        typeof grouped === "number" && {
+          width: grouped,
+          minWidth: 0,
+          paddingHorizontal: 8,
+          gap: 6,
+          alignSelf: "stretch",
+        },
         {
           backgroundColor:
             (pressed || hovered) && !disabled
@@ -183,6 +231,7 @@ export function RefreshButton({
       accessibilityState={{ disabled: unavailable, busy: loading }}
       disabled={unavailable}
       onPress={onPress}
+      hitSlop={Platform.OS === "android" ? 2 : undefined}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       onHoverIn={() => setHovered(true)}
@@ -321,13 +370,16 @@ export function Field({
 export function Card({
   children,
   style,
+  testID,
 }: {
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 }) {
   const { colors } = useTheme();
   return (
     <View
+      testID={testID}
       style={[
         styles.card,
         { backgroundColor: colors.surface, borderColor: colors.outline },
@@ -378,8 +430,8 @@ export function Heading({
         selectable={false}
         style={{
           color: colors.text,
-          fontSize: 21,
-          lineHeight: 28,
+          fontSize: 19,
+          lineHeight: 25,
           flexShrink: 1,
           fontWeight: "700",
           letterSpacing: -0.6,
@@ -424,18 +476,18 @@ export function PageHeading({
   return (
     <View
       style={{
-        backgroundColor: fill,
-        padding: width < 600 ? 16 : 24,
+        backgroundColor: colors.dark ? colors.surface : fill,
+        padding: 16,
         borderRadius: layout.cardRadius,
         flexDirection: "row",
         alignItems: "center",
-        gap: 16,
+        gap: 12,
       }}
     >
       <View
         style={{
-          width: 48,
-          height: 48,
+          width: 40,
+          height: 40,
           borderRadius: 12,
           backgroundColor: colors.surface,
           alignItems: "center",
@@ -449,8 +501,8 @@ export function PageHeading({
           accessibilityRole="header"
           style={{
             color: colors.text,
-            fontSize: width < 600 ? 24 : 30,
-            lineHeight: width < 600 ? 30 : 38,
+            fontSize: width < 600 ? 22 : 26,
+            lineHeight: width < 600 ? 28 : 32,
             fontWeight: "700",
             letterSpacing: -0.7,
           }}
@@ -704,7 +756,7 @@ export function Screen({
             width >= 1200 ? layout.pagePadding : width > 700 ? 24 : 16,
           paddingTop: width > 700 ? 24 : 16,
           paddingBottom: 24 + insets.bottom,
-          gap: 20,
+          gap: 16,
           flexGrow: 1,
         }}
       >
@@ -754,7 +806,7 @@ const styles = StyleSheet.create({
   label: { fontSize: 14, fontWeight: "600" },
   card: {
     padding: layout.cardPadding,
-    gap: 16,
+    gap: 10,
     borderWidth: 1,
     borderRadius: layout.cardRadius,
     minWidth: 0,

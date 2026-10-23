@@ -1,6 +1,6 @@
 ---
 name: ExpoTec — interfaz nativa
-description: Interfaz operativa de Expo SDK 57; navegación azul profundo, acciones azules y acentos naranja con controles compartidos.
+description: Interfaz operativa de Expo SDK 57; listas compactas, grillas flexibles y modo oscuro carbón con acentos de color.
 colors:
   page: "#f3f1ed"
   surface: "#faf9f6"
@@ -143,6 +143,8 @@ components:
 # Design System: ExpoTec — prototipo
 
 La dirección activa de Expo se actualizó el 22/10/2026: [contrato y referencias](docs/DISENO_INTERFAZ.md). Los valores de `frontend/native/src/theme/light.ts`, `dark.ts` y `tokens.ts` son la fuente actual para la aplicación. El frontmatter y las especificaciones web siguientes documentan el prototipo anterior.
+
+La revisión activa usa superficies oscuras carbón y grafito, tarjetas con 16 puntos de margen interior, controles de 44 y filas de usuarios a todo el ancho. Las grillas dividen filas explícitas para evitar saltos de columna por redondeo; los proyectos sin foto usan un icono de categoría compacto.
 
 ## Overview
 

@@ -65,7 +65,9 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
   };
   return (
     <Screen>
-      <PageHeading icon="projects" tone="info"
+      <PageHeading
+        icon="projects"
+        tone="info"
         title={role === "guest" ? "Proyectos de la ExpoTec" : "Proyectos"}
         subtitle={
           role === "teacher"
@@ -95,7 +97,7 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
       <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}>
         {filtered.length} {filtered.length === 1 ? "proyecto" : "proyectos"}
       </Text>
-      <ContentGrid>
+      <ContentGrid testID="projects-grid" minItemWidth={300} maxColumns={4}>
         {filtered.map((project) => {
           const members = projectMembers(project);
           const space = state.spaces.find(
@@ -105,28 +107,68 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
             (loan) => loan.projectId === project.id,
           );
           return (
-            <Card key={project.id} style={{ width: "100%", flex: 1 }}>
+            <Card
+              key={project.id}
+              testID={`project-card-${project.id}`}
+              style={{ width: "100%", flex: 1, padding: 16, gap: 10 }}
+            >
+              {project.image && (
+                <View
+                  testID={`project-image-${project.id}`}
+                  style={{ width: "100%" }}
+                >
+                  <ProjectArt project={project} height={132} bounded />
+                </View>
+              )}
               <View
                 style={{
-                  flexDirection: "column",
-                  gap: 20,
+                  flexDirection: "row",
                   alignItems: "flex-start",
+                  gap: 10,
                 }}
               >
-                <View style={{ width: "100%" }}>
-                  <ProjectArt
-                    project={project}
-                    height={176}
-                    bounded
-                  />
-                </View>
-                <View
-                  style={{
-                    width: "100%",
-                    minWidth: 0,
-                    gap: 12,
-                  }}
-                >
+                {!project.image && (
+                  <View
+                    testID={`project-icon-${project.id}`}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      flexShrink: 0,
+                      borderRadius: 10,
+                      backgroundColor:
+                        project.category === "plant"
+                          ? colors.selectedContainer
+                          : project.category === "energy"
+                            ? colors.accentContainer
+                            : colors.infoContainer,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Icon
+                      name={project.category}
+                      color={
+                        project.category === "plant"
+                          ? colors.onSelectedContainer
+                          : project.category === "energy"
+                            ? colors.accent
+                            : colors.info
+                      }
+                      size={22}
+                    />
+                  </View>
+                )}
+                <View style={{ flex: 1, minWidth: 0, gap: 5 }}>
+                  <Text
+                    style={{
+                      color: colors.text,
+                      fontSize: 18,
+                      lineHeight: 24,
+                      fontWeight: "600",
+                    }}
+                  >
+                    {project.name}
+                  </Text>
                   <Chip
                     label={statusLabel[project.status]}
                     tone={
@@ -137,77 +179,69 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
                           : "error"
                     }
                   />
-                  <Text
-                    style={{
-                      color: colors.text,
-                      fontSize: 20,
-                      fontWeight: "600",
-                    }}
-                  >
-                    {project.name}
-                  </Text>
-                  <Text
-                    style={{ color: colors.text, fontSize: 15, lineHeight: 23 }}
-                  >
-                    {project.description}
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "flex-start",
-                      gap: 8,
-                    }}
-                  >
-                    <Icon name="users" size={18} color={colors.muted} />
-                    <Text
-                      style={{
-                        color: colors.muted,
-                        fontSize: 14,
-                        lineHeight: 20,
-                        flex: 1,
-                      }}
-                    >
-                      {members.length}{" "}
-                      {members.length === 1 ? "integrante" : "integrantes"} ·{" "}
-                      {project.course}
-                    </Text>
-                  </View>
-                  <Text
-                    style={{ color: colors.text, fontSize: 15, lineHeight: 22 }}
-                  >
-                    {members.join(" · ")}
-                  </Text>
-                  <Text
-                    style={{
-                      color: colors.muted,
-                      fontSize: 14,
-                      lineHeight: 20,
-                    }}
-                  >
-                    {space?.name ?? "Espacio no disponible"} · Mesa{" "}
-                    {project.furnitureId}
-                  </Text>
-                  <Text
-                    style={{
-                      color: colors.muted,
-                      fontSize: 14,
-                      lineHeight: 20,
-                    }}
-                  >
-                    Creado {formatDate(project.createdAt)}
-                  </Text>
                 </View>
               </View>
-              <ActionRow footer>
+              <Text
+                numberOfLines={3}
+                style={{ color: colors.text, fontSize: 14, lineHeight: 20 }}
+              >
+                {project.description}
+              </Text>
+              <View style={{ gap: 4 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                    gap: 6,
+                  }}
+                >
+                  <Icon name="users" size={16} color={colors.muted} />
+                  <Text
+                    style={{
+                      color: colors.muted,
+                      fontSize: 13,
+                      lineHeight: 19,
+                      flex: 1,
+                    }}
+                  >
+                    {members.length}{" "}
+                    {members.length === 1 ? "integrante" : "integrantes"} ·{" "}
+                    {project.course}
+                  </Text>
+                </View>
+                <Text
+                  style={{ color: colors.text, fontSize: 13, lineHeight: 19 }}
+                >
+                  {members.join(" · ")}
+                </Text>
+                <Text
+                  style={{ color: colors.muted, fontSize: 13, lineHeight: 19 }}
+                >
+                  {space?.name ?? "Espacio no disponible"} · Mesa{" "}
+                  {project.furnitureId} · {formatDate(project.createdAt)}
+                </Text>
+              </View>
+              {(canEdit(project) || role === "admin") && hasLoanHistory && (
+                <Text
+                  style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}
+                >
+                  Se conserva este proyecto porque tiene historial de préstamos.
+                </Text>
+              )}
+              <ActionRow compact footer>
                 <Button
                   title="Ver proyecto"
+                  style={{ minWidth: 100 }}
+                  accessibilityLabel={`Ver proyecto ${project.name}`}
                   icon="arrowRight"
                   variant="secondary"
                   onPress={() => onSelect(project.id)}
                 />
                 {canEdit(project) && (
                   <Button
-                    title="Editar proyecto"
+                    title="Editar"
+                    style={{ minWidth: 100 }}
+                    accessibilityLabel={`Editar proyecto ${project.name}`}
                     icon="edit"
                     variant="quiet"
                     onPress={() => onEdit(project.id)}
@@ -217,7 +251,9 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
                   !hasLoanHistory &&
                   deleting !== project.id && (
                     <Button
-                      title="Eliminar proyecto"
+                      title="Eliminar"
+                      style={{ minWidth: 100 }}
+                      accessibilityLabel={`Eliminar proyecto ${project.name}`}
                       icon="trash"
                       variant="danger"
                       onPress={() => {
@@ -240,13 +276,6 @@ export default function ProjectsPage({ onSelect, onCreate, onEdit }: Props) {
                     }}
                   />
                 )}
-              {(canEdit(project) || role === "admin") && hasLoanHistory && (
-                <Text
-                  style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}
-                >
-                  Se conserva este proyecto porque tiene historial de préstamos.
-                </Text>
-              )}
               {deleting === project.id && !!deleteError && (
                 <Text
                   accessibilityRole="alert"

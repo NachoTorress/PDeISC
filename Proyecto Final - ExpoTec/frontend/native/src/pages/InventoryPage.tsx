@@ -48,7 +48,9 @@ export default function InventoryPage() {
 
   return (
     <Screen>
-      <PageHeading icon="inventory" tone="info"
+      <PageHeading
+        icon="inventory"
+        tone="info"
         title="Inventario"
         subtitle="Organizá los elementos antes de la muestra y seguí su disponibilidad."
       />
@@ -106,7 +108,11 @@ export default function InventoryPage() {
             )}
           </Card>
         ) : (
-          <ContentGrid>
+          <ContentGrid
+            testID="inventory-grid"
+            minItemWidth={280}
+            maxColumns={4}
+          >
             {resources.map((resource) => {
               const assigned = resourceUsed(state, resource.id);
               const out = state.loans
@@ -120,7 +126,11 @@ export default function InventoryPage() {
               );
               const canDelete = !hasHistory && !requested;
               return (
-                <Card key={resource.id} style={{ flex: 1 }}>
+                <Card
+                  key={resource.id}
+                  testID={`inventory-card-${resource.id}`}
+                  style={{ flex: 1, padding: 16, gap: 10 }}
+                >
                   <Text
                     style={{
                       color: colors.text,
@@ -131,61 +141,72 @@ export default function InventoryPage() {
                     {resource.name}
                   </Text>
                   <View
-                    style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}
+                    style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}
                   >
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontSize: 15,
-                        lineHeight: 22,
-                      }}
-                    >
-                      Total: {resource.total}
-                    </Text>
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontSize: 15,
-                        lineHeight: 22,
-                      }}
-                    >
-                      Asignado: {assigned}
-                    </Text>
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontSize: 15,
-                        lineHeight: 22,
-                      }}
-                    >
-                      Disponible para asignar:{" "}
-                      {Math.max(0, resource.total - assigned)}
-                    </Text>
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontSize: 15,
-                        lineHeight: 22,
-                      }}
-                    >
-                      Sin devolver: {out}
-                    </Text>
+                    {[
+                      {
+                        label: "Total",
+                        value: resource.total,
+                        ink: colors.text,
+                      },
+                      { label: "Asignadas", value: assigned, ink: colors.text },
+                      {
+                        label: "Disponibles",
+                        value: Math.max(0, resource.total - assigned),
+                        ink: colors.success,
+                      },
+                      {
+                        label: "Sin devolver",
+                        value: out,
+                        ink: out ? colors.onWarning : colors.text,
+                      },
+                    ].map((stat) => (
+                      <View
+                        key={stat.label}
+                        style={{ flex: 1, minWidth: 54, gap: 2 }}
+                      >
+                        <Text
+                          style={{
+                            color: stat.ink,
+                            fontSize: 20,
+                            lineHeight: 25,
+                            fontWeight: "600",
+                          }}
+                        >
+                          {stat.value}
+                        </Text>
+                        <Text
+                          style={{
+                            color: colors.muted,
+                            fontSize: 12,
+                            lineHeight: 17,
+                          }}
+                        >
+                          {stat.label}
+                        </Text>
+                      </View>
+                    ))}
                   </View>
                   <Text
                     style={{
                       color: colors.muted,
-                      fontSize: 14,
-                      lineHeight: 20,
+                      fontSize: 13,
+                      lineHeight: 19,
                     }}
                   >
                     Creado: {formatDate(resource.createdAt)}
+                    {canManage && !canDelete
+                      ? ` · ${hasHistory ? "Con historial de préstamos" : "Solicitado por un proyecto"}`
+                      : ""}
                   </Text>
                   {canManage && (
                     <>
-                      <ActionRow footer>
+                      <ActionRow compact footer>
                         {editingId !== resource.id && (
                           <Button
                             title="Editar"
+                            accessibilityLabel={`Editar ${resource.name}`}
+                            style={{ minWidth: 100 }}
                             icon="edit"
                             variant="secondary"
                             onPress={() => {
@@ -198,6 +219,8 @@ export default function InventoryPage() {
                         {canDelete && deleteId !== resource.id && (
                           <Button
                             title="Eliminar"
+                            accessibilityLabel={`Eliminar ${resource.name}`}
+                            style={{ minWidth: 100 }}
                             icon="trash"
                             variant="danger"
                             onPress={() => {
@@ -209,19 +232,6 @@ export default function InventoryPage() {
                           />
                         )}
                       </ActionRow>
-                      {!canDelete && (
-                        <Text
-                          style={{
-                            color: colors.muted,
-                            fontSize: 14,
-                            lineHeight: 20,
-                          }}
-                        >
-                          {hasHistory
-                            ? "Con historial de préstamos"
-                            : "Solicitado por un proyecto"}
-                        </Text>
-                      )}
                       {editingId === resource.id && (
                         <ResourceForm
                           key={resource.id}

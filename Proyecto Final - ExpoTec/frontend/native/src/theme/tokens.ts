@@ -1,8 +1,8 @@
 export const layout = {
-  controlHeight: 48,
+  controlHeight: 44,
   controlRadius: 10,
-  cardRadius: 16,
-  cardPadding: 20,
+  cardRadius: 12,
+  cardPadding: 16,
   gap: 16,
-  pagePadding: 28,
+  pagePadding: 24,
 } as const;
