@@ -1,10 +1,18 @@
 # APK de prueba de ExpoTec
 
+## Confirmación de uso del 25 de octubre de 2026
+
+El usuario informó que la APK funciona bastante bien y confirmó explícitamente que funciona el inicio de sesión con Google nativo. Esto registra uso real en teléfono y complementa las comprobaciones de compilación. No se proporcionaron modelo, versión de Android ni resultados individuales de todos los recorridos; por eso no se afirma una prueba exhaustiva. Las referencias a pruebas físicas pendientes en las entradas de compilaciones siguientes describen el estado de esas fechas. La lista final queda como guía para ampliar la cobertura.
+
+Los pasos de uso, instalación y exposición están en el [índice de documentación](README.md).
+
+## Compilación actual
+
 APK actual: **0.4.0, Android versionCode 5**. [Descargar APK](https://expo.dev/artifacts/eas/2PBiG--Pnz0L_bkfG5PCBe9A0grheNB3PZSQsYw94F0.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/53774cc9-9297-4fcf-ae97-27a21a2d602f), terminada el 23/10/2026 a las 10:30:46, hora de Argentina, desde el frontend de `b8213d23bd31eb531f4f454829ee3b21d2a575e6`.
 
 La carga y edición de propuestas ahora se organiza en cuatro pasos: proyecto, equipo, puesto y revisión. Alumnos y profesores se buscan por correo, se revisa la cuenta encontrada y se agregan de forma explícita. Las materias tienen sugerencias y entrada personalizada. El recorrido conserva los datos al volver atrás, detecta texto pendiente de agregar y lleva cada error al paso correspondiente. [Cambios y validación del recorrido](REVISION_CARGA_PROYECTOS.md). También conserva las correcciones de fotos y del editor móvil de la versión 0.3.1.
 
-Archivo local excluido de Git: `artifacts/android/ExpoTec-0.4.0-5.apk`, 109.979.231 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.4.0`, código `5`, sin modo depuración. Integridad ZIP, digest y firma APK v2 correctos; certificado idéntico al de la APK 0.3.1, para actualizarla. SHA-256: `c7d0acfbf10d53896d265f4509f56244e2de835dab91ea47e2988f2c1d291c49`. Informe: `artifacts/android/verification-0.4.0.json`. El archivo EAS inspeccionado contiene únicamente 151 archivos de fuentes, recursos y configuración del frontend; sus hashes coincidieron con la fuente final antes de subirlo. La exportación Android terminó correctamente. La instalación y el uso del recorrido en un teléfono físico siguen pendientes de prueba.
+Archivo local excluido de Git: `artifacts/android/ExpoTec-0.4.0-5.apk`, 109.979.231 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.4.0`, código `5`, sin modo depuración. Integridad ZIP, digest y firma APK v2 correctos; certificado idéntico al de la APK 0.3.1, para actualizarla. SHA-256: `c7d0acfbf10d53896d265f4509f56244e2de835dab91ea47e2988f2c1d291c49`. Informe: `artifacts/android/verification-0.4.0.json`. El archivo EAS inspeccionado contiene únicamente 151 archivos de fuentes, recursos y configuración del frontend; sus hashes coincidieron con la fuente final antes de subirlo. La exportación Android terminó correctamente. La confirmación posterior de uso y Google nativo está registrada al inicio de este documento; la comprobación individual del formulario de cuatro pasos no fue detallada por el usuario.
 
 ## APK anteriores
 

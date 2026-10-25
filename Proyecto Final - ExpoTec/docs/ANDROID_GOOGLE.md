@@ -2,6 +2,8 @@
 
 La app usa Android Credential Manager, sin abrir el navegador para Google. Discord y GitHub conservan el flujo de navegador.
 
+Confirmación del 25/10/2026: el usuario probó la APK y confirmó que funciona el inicio con Google nativo. Se registra esa confirmación sin inferir modelo ni versión de Android. Ver [estado de APK](APK_PRUEBA.md).
+
 ## Cliente Android de Google Cloud
 
 Registrar en el mismo proyecto que el cliente web del backend:

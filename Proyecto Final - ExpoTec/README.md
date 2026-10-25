@@ -1,5 +1,7 @@
 # ExpoTec
 
+Documentación de entrega de la versión 0.4.0: [manual de usuario](docs/MANUAL_USUARIO.md), [guía de instalación](docs/GUIA_INSTALACION.md) y [guía de demostración con los cinco perfiles](docs/GUIA_DEMOSTRACION.md). Los [PDF y el índice de documentación](docs/README.md) están disponibles en el repositorio. El 25/10/2026 el usuario confirmó buen funcionamiento de la APK y del acceso nativo con Google; el alcance de esa confirmación se registra en [APK de prueba](docs/APK_PRUEBA.md).
+
 Correcciones de Android 0.3.1: carga de fotos compatible con React Native, giro y tamaño de mesas con botones, selección de piezas en móvil y cabeceras sin margen superior duplicado. [Cambios y verificación](docs/CORRECCIONES_ANDROID_031.md).
 
 Rediseño del 22/10/2026: modo oscuro carbón y grafito, acentos de color, filtros alineados, usuarios en filas compactas y grillas que aprovechan el ancho disponible incluso con zoom. Los proyectos sin foto usan un icono pequeño. [Decisiones y referencias de la interfaz](docs/DISENO_INTERFAZ.md).
@@ -24,7 +26,7 @@ npx expo start
 
 `npm start` ejecuta el mismo comando, porque el script `start` de `package.json` es `expo start`.
 
-Escanear el QR con Expo Go compatible con SDK 57 en Android. El teléfono y la computadora deben poder comunicarse por la misma red. Para un emulador ya configurado, usar `npm run android`.
+Para Android, usar la APK disponible o una compilación compatible con los módulos nativos del proyecto, incluido el acceso de Google. Expo Go no sustituye esa compilación. Para un emulador ya configurado, `npm run android` inicia Expo e intenta abrir el entorno Android. La [guía de instalación](docs/GUIA_INSTALACION.md) explica cómo elegir la API y preparar el entorno.
 
 Para revisar las mismas pantallas en el navegador:
 
@@ -51,7 +53,7 @@ $env:PORT = "5173"
 npm run preview
 ```
 
-La configuración de `eas.json` incluye el perfil `preview` para generar una APK instalable mediante EAS. Las compilaciones disponibles y los pasos pendientes de prueba en teléfono se registran en [APK de prueba](docs/APK_PRUEBA.md).
+La configuración de `eas.json` incluye el perfil `preview` para generar una APK instalable mediante EAS. Las compilaciones disponibles, las verificaciones y la confirmación de uso en teléfono se registran en [APK de prueba](docs/APK_PRUEBA.md).
 
 ## Presentación TV compartida
 
@@ -86,7 +88,7 @@ La interfaz usa tarjetas y controles compactos. En el editor, seleccioná una pi
 
 Si otro administrador guardó cambios, se avisa del conflicto y se conserva el borrador en pantalla. **Descartar borrador y recargar** pide confirmación antes de reemplazarlo por la versión del servidor. **Dar de baja espacio** también requiere confirmación, lo retira de la consulta pública y conserva sus registros. Los tamaños y posiciones del plano son relativos, sin dimensiones físicas certificadas. Las cuentas nuevas no pueden concederse permisos de administración; la escuela los asigna mediante el procedimiento del backend.
 
-**Proyectos de ExpoTec** ofrece la muestra pública y **Mis proyectos y revisiones** (o **Gestionar proyectos** para administración). Para presentar, ingresar como alumno, completar nombre, descripción, curso, foto subida o enlace HTTPS de imagen, materias y puesto, y agregar integrantes y profesores mediante el correo exacto de sus cuentas registradas. El creador y quien edita permanecen incluidos. El equipo admite hasta 12 alumnos y 5 profesores responsables. Video directo MP4/WebM y enlaces de GitHub y web para proyectos informáticos son opcionales. Todavía no hay carga de archivos: se guardan enlaces a contenido ya alojado.
+**Proyectos de ExpoTec** ofrece la muestra pública y **Mis proyectos y revisiones** (o **Gestionar proyectos** para administración). Para presentar, ingresar como alumno y completar los cuatro pasos: Proyecto, Equipo, Puesto y Revisar. Se solicitan nombre, descripción, curso, foto subida o enlace HTTPS de imagen, materias y puesto. Integrantes y profesores se buscan por el correo exacto de sus cuentas y se agregan tras revisar el resultado. El creador y quien edita permanecen incluidos. El equipo admite hasta 12 alumnos y 5 profesores responsables. Las fotos se pueden subir desde el dispositivo; videos directos MP4/WebM y enlaces de GitHub y web para proyectos informáticos siguen siendo opcionales y se alojan externamente.
 
 Un profesor asignado puede pedir cambios con un motivo o confirmar la propuesta. El equipo corrige y reenvía; el historial se conserva. Solicitar no reserva: pueden existir varias propuestas para un puesto, pero una sola confirmación lo ocupa. El plano distingue puestos disponibles y confirmados y permite abrir su ficha pública. Las fichas públicas muestran nombres del equipo y profesores, sin correos ni identificadores de cuentas. Administración puede reabrir una confirmación o cancelar conservando el historial. El plano protege puestos con proyectos vigentes frente a su retiro o baja del espacio.
 
@@ -104,7 +106,7 @@ La vista inicial reúne **Pendientes de todas las jornadas**. También se pueden
 
 Los elementos son cantidades de unidades equivalentes, separadas del mobiliario del plano. La disponibilidad para reservar descuenta reservas y unidades fuera de servicio; la disponibilidad física para entregar descuenta unidades fuera de servicio y préstamos abiertos de todas las jornadas. Un daño puede dejar reservas sin cobertura: se informa el faltante y se protege el stock restante. Las devoluciones completas conservan la reserva para el próximo día. No se calcula ni certifica capacidad eléctrica.
 
-**Mi cuenta** abre el acceso real. El registro pide nombre, apellido, correo y contraseña de 12–128 caracteres, con repetición para comprobarla. El registro permite elegir alumno o invitado; la cuenta recibe únicamente el permiso elegido. Si un cliente anterior no indica el tipo, se registra como alumno. La ficha muestra los permisos actuales y permite actualizarlos o cerrar sesión con confirmación. Si falla la conexión, se puede reintentar sin eliminar la sesión guardada. La recuperación de contraseña y los proveedores sociales siguen pendientes.
+El acceso real se abre desde **Ingresar** en la barra superior. El registro pide nombre, apellido, correo y contraseña de 12–128 caracteres, con repetición para comprobarla. Permite elegir alumno o invitado y recibe únicamente ese permiso; un cliente anterior que no indica tipo registra como alumno. El menú de cuenta muestra los permisos actuales y permite reintentar la conexión o cerrar sesión con confirmación. La recuperación por correo y Google, Discord y GitHub están implementados. Google usa el selector nativo en Android; Discord y GitHub abren el navegador y regresan a la aplicación. La configuración de una instalación propia determina su disponibilidad.
 
 La sesión se conserva con Expo SecureStore en Android y con una cookie HttpOnly, Secure y SameSite=Strict en la web de producción. El token de acceso vive en memoria. La web utiliza `/api` a través de Vercel para mantener la cookie en su propio origen; no guarda tokens en AsyncStorage ni localStorage.
 

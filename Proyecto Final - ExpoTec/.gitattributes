@@ -1,0 +1,2 @@
+# PDF manuals must retain their exact bytes across Windows and other platforms.
+*.pdf binary

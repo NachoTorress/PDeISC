@@ -1,5 +1,7 @@
 # Google, Discord y GitHub — preparación del hito 7J
 
+Actualización del 25/10/2026: la [revisión funcional del 22/10](PRUEBAS_FINALES.md) registra los tres proveedores habilitados en producción y la confirmación previa del usuario de acceso real en web. Android ya tiene Google nativo y retorno por navegador para Discord y GitHub; el usuario confirmó expresamente Google nativo el 25/10. Consultar [Google Android](ANDROID_GOOGLE.md), [APK](APK_PRUEBA.md) y los [manuales actuales](README.md). Los párrafos de preparación fechados el 21/10 que siguen conservan el estado histórico del hito y no indican que hoy falte su implementación.
+
 Estado al 21/10/2026: integración web implementada y comprobada con respuestas controladas de los proveedores. El usuario confirmó que todavía no creó las aplicaciones OAuth. **La activación y las pruebas con cuentas reales siguen pendientes.** Cada botón aparece únicamente cuando su proveedor está configurado en el backend. El correo y la contraseña de ExpoTec siguen disponibles.
 
 ## Crear las aplicaciones
@@ -75,4 +77,4 @@ Cada flujo vence a los diez minutos y solo permite una sesión final. El código
 
 Antes de declarar terminado 7J, comprobar con **cada proveedor real**: consentimiento, cancelación, correo no verificado/no disponible, registro nuevo con contraseña, ingreso posterior por correo, vínculo con cuenta existente, rechazo de contraseña incorrecta, ingreso posterior con proveedor, recarga, cierre, vencimiento y segunda pestaña. Comprobar qué usuarios pueden entrar según el estado de publicación de la aplicación externa. Las pruebas simuladas no sustituyen estos pasos.
 
-Esta implementación cubre **web**. El retorno nativo, la configuración de aplicaciones Android y su verificación en teléfono se retoman al final junto con el APK, según lo acordado. La recuperación de contraseña por correo personal y el alojamiento de archivos siguen postergados.
+Al preparar este hito el 21/10, el alcance era **web** y Android, recuperación y carga de archivos quedaban para después. Esas funciones ya se incorporaron; sus detalles y verificaciones posteriores están enlazados en la actualización al inicio de este documento.

@@ -2,6 +2,58 @@
 
 Backend Node.js 24 + Express 5 con módulos import/export. Implementa cuentas, sesiones, permisos, espacios, proyectos, inventario, reservas, préstamos y devoluciones compartidas; usa mysql2 y SQL relacional compatible con MySQL/TiDB. Las pantallas compartidas utilizan esta API. La presentación TV compartida usa una secuencia pública de proyectos confirmados; su demostración conserva datos locales.
 
+Actualización documental del 25/10/2026: [instalación completa](../docs/GUIA_INSTALACION.md), [manual de usuario](../docs/MANUAL_USUARIO.md) y [guion de demostración](../docs/GUIA_DEMOSTRACION.md), con [PDF](../docs/README.md). El contrato HTTP existente usa principalmente POST para operaciones JSON; las secciones por dominio indican los métodos reales. Las menciones de pendientes en hitos históricos se interpretan según su fecha. Recuperación, carga privada de fotos y acceso social nativo se documentan a continuación.
+
+## Recuperación de contraseña
+
+Las tres rutas reciben JSON y no requieren sesión. La configuración SMTP y `PASSWORD_RESET_WEB_ORIGIN` se describen en [recuperación](../docs/RECUPERACION_CONTRASENA.md). Se requiere la migración `010_password_recovery.sql`.
+
+| Método y ruta | Cuerpo | Respuesta correcta |
+| --- | --- | --- |
+| POST `/api/auth/recovery/query` | `{}` | 200 `{ enabled: boolean }` |
+| POST `/api/auth/recovery/request` | `{ email }` | 202 `{ message }`, mensaje común exista o no una cuenta activa |
+| POST `/api/auth/recovery/complete` | `{ token, password, confirmation }` | 200 `{ message }`, solicita ingresar de nuevo |
+
+`email` debe tener formato válido y hasta 254 caracteres. `token` contiene 43 caracteres base64url, vence a los 20 minutos y es de un uso. La contraseña admite 12–128 caracteres; `confirmation` debe coincidir. Completar actualiza la contraseña y revoca las sesiones en una transacción; no inicia sesión automáticamente. La respuesta elimina la cookie de renovación web. Pedir otro enlace invalida los anteriores.
+
+Errores: 400 `VALIDATION_ERROR` o `RESET_INVALID` (también enlace vencido o usado); 429 `RATE_LIMITED`; 503 `RECOVERY_UNAVAILABLE` si no hay servicio configurado. Límites: 15 solicitudes por IP/hora, 3 por correo/hora y 10 intentos de completar por IP/15 minutos. El enlace no se devuelve en la respuesta de solicitud. Disponibilidad configurada no acredita recepción del correo.
+
+## Carga de fotos y acceso a imágenes
+
+Las escrituras y vistas previas requieren Bearer y cuenta activa. `prepare` con propósito `project` requiere además permiso `student`; el propósito `gallery` admite cualquier cuenta activa. Se necesita la migración `009_uploads.sql` y `BLOB_READ_WRITE_TOKEN` privado del backend.
+
+| Método y ruta | Cuerpo o parámetros | Respuesta correcta |
+| --- | --- | --- |
+| POST `/api/uploads/prepare` | `{ purpose, contentType, size }` | 201 `{ id, pathname, clientToken }` |
+| POST `/api/uploads/complete` | `{ id }` | 200 `{ imageUrl }` |
+| POST `/api/uploads/preview` | `{ imageUrl }` | 200 `{ image }`, data URL JPEG autorizada |
+| GET `/api/uploads/:id/image` | UUID de imagen; sin cuerpo | 200, bytes `image/jpeg` si corresponde acceso público |
+
+`purpose` es `project` o `gallery`; `contentType` es `image/jpeg`, `image/png` o `image/webp`; `size` es un entero entre 1 y 10 × 1024 × 1024 bytes. `prepare` entrega un permiso de carga limitado a ruta, tipo, tamaño y diez minutos. El cliente envía el archivo directamente a Blob privado y después llama a `complete`; no envía base64 al cuerpo JSON de ese endpoint. El SDK web y el transporte Android están explicados en [carga de fotos](../docs/CARGA_FOTOS.md).
+
+`complete` comprueba titularidad y estado, valida el contenido real, optimiza la imagen a JPEG y retira el archivo de entrada. Repetir una carga ya lista devuelve su URL. Guardar el archivo no publica una galería ni confirma un proyecto: sus reglas de publicación determinan el acceso público. `preview` exige autorización; el GET público devuelve 404 si la imagen no está publicada. Las respuestas de imagen usan `Cache-Control: no-store`.
+
+Errores: 400 por cuerpo o UUID inválido; 401 sin sesión; 403 por permiso de proyecto; 404 `IMAGE_NOT_FOUND`; 409 `UPLOAD_CHANGED`; 422 `IMAGE_INVALID`; 429 por límite; 503 `UPLOADS_UNAVAILABLE` o `UPLOAD_FAILED`. Límites por cuenta: 20 preparaciones/hora, 40 finalizaciones/hora y 200 vistas previas/15 minutos.
+
+## Google nativo y finalización social móvil
+
+Estas rutas complementan las de navegador documentadas al final. Reciben JSON y utilizan una prueba de posesión del flujo; todavía no hay sesión al llamarlas. La prueba es un valor aleatorio de 32 bytes codificado en base64url de 43 caracteres, guardado por el cliente; `challenge` es su hash SHA-256 hexadecimal de 64 caracteres.
+
+| Método y ruta | Cuerpo | Respuesta correcta |
+| --- | --- | --- |
+| POST `/api/auth/social/google/native/start` | `{ challenge }` | 200 `{ id, nonce, webClientId }` |
+| POST `/api/auth/social/google/native/verify` | `{ id, proof, idToken }` | 200 `{ id }` después de verificar Google |
+| POST `/api/auth/social/status` | `{ id, proof }` | 200 `{ provider, email, mode }` |
+| POST `/api/auth/social/complete` | `{ id, proof, mode, ...datos }` | 200 `{ user, accessToken, refreshToken, tokenType, expiresIn }` |
+
+`id` es UUID v4. El cliente nativo obtiene el ID token usando el `webClientId` y el nonce emitidos. `idToken` admite hasta 8192 caracteres; el servidor comprueba firma RS256, emisor, audiencia, vigencia, correo verificado y nonce. Cada verificación reclama el flujo una sola vez; los flujos vencen a los diez minutos. No alcanza con decodificar un token ni con enviar un correo.
+
+`mode` es el resultado actual de `status`: `signup`, `link` o `login`. Para `signup`, agregar `firstName`, `lastName`, `password` y opcional `accountType` (`student` o `guest`). Para `link`, agregar `password` de ExpoTec; para `login` no se necesita otra contraseña. La repetición de contraseña del registro social es una validación del frontend, no un campo adicional de este contrato. La cuenta y los permisos se conservan al vincular identidades.
+
+Discord y GitHub inician el acceso en el navegador mediante la página puente `mobile-auth.html`, que usa `/api/auth/browser/social/start` y su cookie temporal. El regreso `expotec://auth` lleva identificadores de flujo; la app conserva la prueba privada y finaliza con las rutas móviles. No hay un endpoint `/api/auth/social/start` genérico. El retorno no contiene tokens de sesión ni contraseñas.
+
+Errores: 400 `SOCIAL_FAILED` o validación; 401 `INVALID_CREDENTIALS` en una vinculación; 404 `SOCIAL_DISABLED` al iniciar un proveedor no habilitado; 409 `SOCIAL_CHANGED` o `SOCIAL_CONFLICT`; 429 por límites. Las rutas usan el límite de autenticación por IP de 40 solicitudes/15 minutos; la vinculación con contraseña agrega 10 intentos por correo/15 minutos. Ver [Google Android](../docs/ANDROID_GOOGLE.md) para paquete y firma.
+
 ## Presentación TV compartida — hito 7G
 
 **POST `/api/projects/presentation/query`**, público, JSON y sin Bearer. Cuerpo: `limit` opcional, entero de 1–100 (100 por defecto), y `after` opcional, UUID del último proyecto de la página anterior. Rechaza campos adicionales, null, strings como cantidad y cursores inválidos. Devuelve 200 `{ projects, nextCursor }`; cursor null indica el final. Sin confirmados devuelve `{ projects: [], nextCursor: null }`. Errores: 400 `VALIDATION_ERROR`, 413 sobre el límite de proyectos (64 KB), 503 por base no disponible, además del formato común `{ error: { code, message, fields? }, requestId }`. No modifica datos y no agrega migraciones.

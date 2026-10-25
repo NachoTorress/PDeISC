@@ -2,6 +2,8 @@
 
 Fecha de registro: 13/10/2026.
 
+Actualización documental del 25/10/2026: disponibles el [manual de usuario](MANUAL_USUARIO.md), la [guía de instalación](GUIA_INSTALACION.md), la [guía de demostración](GUIA_DEMOSTRACION.md) y sus [PDF](README.md). Ya se generó la APK 0.4.0 y el usuario confirmó su uso y Google nativo. Los accesos sociales, la recuperación y las fotos tienen implementaciones posteriores documentadas; las decisiones y pendientes fechados que siguen se conservan como historial, no como estado actual de todas las funciones. El contrato HTTP actual se documenta en el README del backend y utiliza principalmente POST; no se lo da por migrado a una convención de métodos REST.
+
 Este documento registra la consigna. No afirma que las funciones ya estén implementadas. El desarrollo se realizará por etapas, revisando cada una con el usuario.
 
 ## Propósito
