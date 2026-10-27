@@ -1,6 +1,8 @@
+/** Validación de la recuperación de contraseña. */
 import { objectBody } from './auth.mjs';
 import { HttpError } from '../lib/errors.mjs';
 
+/** Correo para enviar el enlace. */
 export function recoveryEmail(body) {
   objectBody(body, ['email']);
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
@@ -8,6 +10,7 @@ export function recoveryEmail(body) {
     throw new HttpError(400, 'VALIDATION_ERROR', 'Revisá el correo.', { email: 'Ingresá un correo válido.' });
   return email;
 }
+/** Token del enlace y contraseña nueva repetida. */
 export function recoveryPassword(body) {
   objectBody(body, ['token', 'password', 'confirmation']);
   const fields = {};

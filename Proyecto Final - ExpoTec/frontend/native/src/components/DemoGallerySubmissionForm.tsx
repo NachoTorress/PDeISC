@@ -1,3 +1,4 @@
+/** Formulario para enviar una foto en la demostración (datos locales). */
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -8,6 +9,7 @@ import { projectImageFromBase64 } from "./projectImage";
 import DemoGalleryImage from "./DemoGalleryImage";
 import { Button, Card, Field, Heading, InlineConfirm } from "./ui";
 
+/** Permite elegir una imagen o la de ejemplo y escribir la descripción. */
 export default function DemoGallerySubmissionForm({
   onClose,
   onSubmitted,
@@ -24,6 +26,7 @@ export default function DemoGallerySubmissionForm({
   const [error, setError] = useState("");
   const [cancel, setCancel] = useState(false);
   const selecting = useRef(false);
+  /** Abre el selector de imágenes del dispositivo. */
   async function choose() {
     if (selecting.current) return;
     selecting.current = true;
@@ -47,6 +50,7 @@ export default function DemoGallerySubmissionForm({
       setBusy(false);
     }
   }
+  /** Valida y guarda la foto en el estado local de la demo. */
   function submit() {
     setAttempted(true);
     if (busy || demoGalleryImageError(image, true) || demoCaptionError(caption))

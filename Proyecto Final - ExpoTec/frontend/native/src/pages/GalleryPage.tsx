@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Muestra de proyectos confirmados.
+ */
 import { useState } from "react";
 import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { useDemo } from "../hooks/useDemo";
@@ -9,6 +12,7 @@ import { projectMembers } from "../lib/team";
 import { formatDate } from "../lib/format";
 import ContentGrid from "../components/ContentGrid";
 
+/** Tarjetas de proyectos confirmados de la demo. */
 export default function GalleryPage({
   onSelect,
   onPresentation,

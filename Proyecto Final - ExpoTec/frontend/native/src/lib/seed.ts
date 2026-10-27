@@ -1,3 +1,4 @@
+/** Datos de ejemplo de la demostración (espacios, proyectos, inventario y préstamos ficticios). */
 import type { DemoState, Furniture } from "./types";
 
 const tables = (prefix: string): Furniture[] =>
@@ -9,6 +10,7 @@ const tables = (prefix: string): Furniture[] =>
     rotation: 0,
   }));
 
+/** Estado inicial de la demo. */
 export const seed: DemoState = {
   spaces: [
     {

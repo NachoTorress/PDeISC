@@ -1,3 +1,4 @@
+/** Editor de integrantes en la demostración (nombres ficticios). */
 import { useState } from "react";
 import { Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";

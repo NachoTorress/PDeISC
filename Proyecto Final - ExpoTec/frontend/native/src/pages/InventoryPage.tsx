@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Inventario de elementos con alta, edición y baja.
+ */
 import { useState } from "react";
 import { Text, View } from "react-native";
 import {
@@ -18,6 +21,7 @@ import type { Resource } from "../lib/types";
 import ResourceForm from "./ResourceForm";
 import ContentGrid from "../components/ContentGrid";
 
+/** Lista de elementos con disponibilidad por jornada. */
 export default function InventoryPage() {
   const { state, role, mutate, notify } = useDemo();
   const { colors } = useTheme();
@@ -36,6 +40,7 @@ export default function InventoryPage() {
     0,
   );
 
+  /** Da de baja un elemento tras confirmar. */
   function remove(resource: Resource) {
     const result = mutate({ type: "deleteResource", id: resource.id });
     if (result) {

@@ -1,3 +1,4 @@
+/** Formulario de moderación de una foto: aprobar, rechazar o retirar con motivo. */
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
@@ -9,6 +10,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import { AuthError } from "../lib/authTypes";
 import type { GalleryPhoto } from "../lib/gallery";
 
+/** Envía la decisión con `PATCH /api/gallery/:id`. */
 export default function GalleryReviewForm({ photo, onClose, onReviewed }: { photo: GalleryPhoto; onClose: () => void; onReviewed: () => void }) {
   const { client } = useAuth();
   const { colors } = useTheme();
@@ -25,11 +27,13 @@ export default function GalleryReviewForm({ photo, onClose, onReviewed }: { phot
   const dirty = !!note || decision !== (photo.status === "approved" ? "rejected" : "approved");
   const noteError = decision === "rejected" && note.trim().length < 10 ? "Indicá un motivo de al menos 10 caracteres." : "";
   usePreventRemove((dirty || busy) && !saved, ({ data }) => setLeave(data.action));
+  /** Cierra el formulario si no hay un envío en curso. */
   function close() {
     if (working.current) return;
     setSaved(true);
     if (leave) navigation.dispatch(leave); else onClose();
   }
+  /** Valida el motivo y envía la decisión. */
   async function review() {
     if (working.current || noteError || !photo.version) return;
     working.current = true;
@@ -37,7 +41,7 @@ export default function GalleryReviewForm({ photo, onClose, onReviewed }: { phot
     setConfirm(null);
     setError("");
     try {
-      await client.send(`/api/gallery/${photo.id}/review`, { version: photo.version, decision, note: note.trim() });
+      await client.send(`/api/gallery/${photo.id}`, { version: photo.version, decision, note: note.trim() }, "PATCH");
       setSaved(true);
       onReviewed();
     } catch (cause) {

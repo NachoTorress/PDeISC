@@ -1,3 +1,4 @@
+/** Evita que un gesto de arrastre se interprete también como desplazamiento o selección. */
 import { useCallback, useEffect, useRef } from "react";
 import { lockGestureSelection } from "../lib/gestureSelection";
 

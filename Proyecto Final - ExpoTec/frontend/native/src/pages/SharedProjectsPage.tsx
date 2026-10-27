@@ -1,3 +1,6 @@
+/**
+ * Pantalla del sistema compartido (datos de la API REST). Lista de proyectos: muestra pública o proyectos propios y a revisar.
+ */
 import { useCallback, useRef, useState } from "react";
 import ContentGrid from "../components/ContentGrid";
 import { ActivityIndicator, Text, View } from "react-native";
@@ -20,6 +23,7 @@ import { formatDate } from "../lib/format";
 import { sharedStatusLabel } from "../lib/sharedProjects";
 import type { ProjectSummary } from "../lib/sharedProjects";
 
+/** Lista paginada con acceso a la ficha y a la propuesta. */
 export default function SharedProjectsPage({
   onSelect,
   onCreate,
@@ -40,6 +44,7 @@ export default function SharedProjectsPage({
   const [error, setError] = useState("");
   const [more, setMore] = useState(false);
   const revision = useRef(0);
+  /** Carga `GET /api/projects` (privada) o `/public`. */
   const load = useCallback(
     async (offset = 0) => {
       const request = ++revision.current;
@@ -49,12 +54,14 @@ export default function SharedProjectsPage({
         const body = { limit: 25, offset };
         const result = privateView
           ? await client.send<{ projects: ProjectSummary[] }>(
-              "/api/projects/query",
+              "/api/projects",
               body,
+        "GET",
             )
           : await client.query<{ projects: ProjectSummary[] }>(
-              "/api/projects/public/query",
+              "/api/projects/public",
               body,
+        "GET",
             );
         if (request !== revision.current) return;
         setProjects((current) =>

@@ -1,3 +1,4 @@
+/** Persistencia de la demostración en el navegador (localStorage). */
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const STORAGE_KEY = "expotec-design-v1";

@@ -1,3 +1,4 @@
+/** Validación de propuestas, revisiones y búsqueda de participantes. */
 import { HttpError } from '../lib/errors.mjs';
 import { objectBody, userId } from './auth.mjs';
 import { spaceVersion } from './spaces.mjs';
@@ -6,6 +7,7 @@ import { resourceRequests } from './inventory.mjs';
 function invalid(fields) {
   if (Object.keys(fields).length) throw new HttpError(400, 'VALIDATION_ERROR', 'Revisá los datos del proyecto.', fields);
 }
+/** Devuelve el error de un enlace que no sea HTTPS válido (o vacío si está bien). */
 export function httpsLinkError(value, required = false, kind = '') {
   if (typeof value !== 'string' || value.length > 2048) return 'Usá un enlace de hasta 2048 caracteres.';
   if (!value) return required ? 'Ingresá un enlace HTTPS.' : '';
@@ -18,6 +20,7 @@ export function httpsLinkError(value, required = false, kind = '') {
     return '';
   } catch { return 'Usá una URL HTTPS completa, sin credenciales ni espacios.'; }
 }
+/** Datos completos de una propuesta de proyecto. */
 export function proposalBody(body, editing = false) {
   objectBody(body, ['name', 'description', 'course', 'imageUrl', 'videoUrl', 'isSoftwareProject', 'githubUrl', 'websiteUrl', 'memberIds', 'teacherIds', 'subjects', 'boothId', 'resources', ...(editing ? ['version'] : [])]);
   const fields = {}, result = {};
@@ -55,6 +58,7 @@ export function proposalBody(body, editing = false) {
   if (editing) result.version = spaceVersion(body.version);
   return result;
 }
+/** Revisión: aprobar, pedir cambios o reabrir con motivo. */
 export function reviewBody(body) {
   objectBody(body, ['version', 'action', 'note']);
   const version = spaceVersion(body.version);
@@ -63,6 +67,7 @@ export function reviewBody(body) {
     throw new HttpError(400, 'VALIDATION_ERROR', 'Elegí una revisión válida. Para solicitar cambios o reabrir, indicá un motivo de 10 a 2000 caracteres.');
   return { version, action: body.action, note };
 }
+/** Correo exacto y tipo de participante buscado. */
 export function personBody(body) {
   objectBody(body, ['email', 'role']);
   if (typeof body.email !== 'string' || body.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email.trim()) || !['student', 'teacher'].includes(body.role))

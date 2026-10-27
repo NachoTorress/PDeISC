@@ -2,9 +2,13 @@
 
 Recorrido para la exposición del proyecto
 
-Versión de referencia 0.4.0
+Proyecto ExpoTec
 
-25 de octubre de 2026
+E.E.S.T. N° 5 Amancio Williams
+
+Versión de referencia 0.5.0
+
+26 de octubre de 2026
 
 ## Propósito del recorrido
 
@@ -96,6 +100,8 @@ Volvé a **Ver espacios compartidos** o elegí **Espacios** desde la navegación
 Elegí previamente una cuenta que puedas mostrar y evitá proyectar contraseñas, enlaces de recuperación o configuración privada. El recorrido de demostración prueba las reglas locales y las pantallas; la evidencia del backend se completa con el sistema compartido, la documentación y las pruebas registradas.
 
 ## Relacionar el recorrido con la consigna
+
+Tabla: Puntos de la consigna y qué mostrar de la aplicación para cada uno
 
 | Punto de la consigna | Qué mostrar |
 | --- | --- |

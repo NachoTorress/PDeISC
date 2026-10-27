@@ -1,3 +1,4 @@
+/** Acceso social en la web: redirige al proveedor y recupera el flujo al volver. */
 import { browserMobileReturn } from "./mobileSocial";
 const key = "expotec-social-flow";
 type Pending = {
@@ -6,6 +7,7 @@ type Pending = {
   expiresAt: number;
   returned?: boolean;
 };
+/** Lee el flujo pendiente de sessionStorage. */
 function read(): Pending | null {
   try {
     const raw = window.sessionStorage.getItem(key);
@@ -57,6 +59,7 @@ function captureReturn() {
   return true;
 }
 export let hasSocialReturn = captureReturn();
+/** Operaciones del acceso social en el navegador. */
 export const socialBridge = {
   async restore() {},
   async start(

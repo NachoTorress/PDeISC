@@ -1,3 +1,6 @@
+/**
+ * Prueba de integración contra una base MySQL/TiDB exclusiva (TEST_DB_NAME): presentación TV con proyectos confirmados.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -52,7 +55,7 @@ test('TiDB: secuencia pública paginada, privacidad y retiro al reabrir o cancel
   }
   let after; const feed = [];
   do {
-    const result = await api.request('/api/projects/presentation/query', { limit: 1, ...(after ? { after } : {}) });
+    const result = await api.get('/api/projects/presentation', { limit: 1, ...(after ? { after } : {}) });
     assert.equal(result.status, 200); assert.ok(result.body.projects.length <= 1);
     if (after && result.body.projects.length) assert.ok(result.body.projects[0].id > after);
     feed.push(...result.body.projects); after = result.body.nextCursor;
@@ -65,9 +68,9 @@ test('TiDB: secuencia pública paginada, privacidad y retiro al reabrir o cancel
   assert.deepEqual(published.subjects, [subject]); assert.equal(published.spaceName, space.name);
   assert.deepEqual(Object.keys(published).sort(), ['id', 'name', 'description', 'course', 'imageUrl', 'videoUrl', 'furnitureId', 'spaceName', 'members', 'teachers', 'subjects'].sort());
   assert.ok(!JSON.stringify(published).includes(student.user.email)); assert.ok(!JSON.stringify(published).includes(student.user.id));
-  assert.equal((await api.request('/api/projects/presentation/query', { status: 'pending' })).status, 400);
+  assert.equal((await api.get('/api/projects/presentation', { status: 'pending' })).status, 400);
   await repository.review(projects[0], { version: 2, action: 'reopen', note: 'Reabrir proyecto y retirar de la muestra pública.' }, admin.user.id);
   await repository.cancel(projects[1], 2, admin.user.id);
-  const refreshed = await api.request('/api/projects/presentation/query');
+  const refreshed = await api.get('/api/projects/presentation');
   assert.ok(refreshed.body.projects.every(item => !projects.includes(item.id)));
 });

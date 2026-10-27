@@ -1,3 +1,4 @@
+/** Prepara la foto en el navegador (archivo elegido como Blob). */
 import type { ImagePickerAsset } from "expo-image-picker";
 import { selectedPhoto } from "./photoUpload";
 

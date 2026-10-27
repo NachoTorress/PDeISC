@@ -1,8 +1,10 @@
+/** Modelo del formulario de proyectos de la demostración: borrador, mesas libres y validaciones. */
 import { projectLinkError } from "../lib/projectLinks";
 import { projectMembers, teamErrors } from "../lib/team";
 import type { DemoState, Project } from "../lib/types";
 
 export const STUDENT = "Lucía Fernández";
+/** Borrador del formulario de la demo. */
 export type ProjectDraft = Omit<
   Project,
   | "id"
@@ -77,6 +79,7 @@ export function makeProjectDraft(
   };
 }
 
+/** Valida el enlace directo del video (MP4 o WebM por HTTPS). */
 export function projectVideoError(value: string) {
   if (!value.trim()) return "";
   try {

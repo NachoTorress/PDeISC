@@ -2,9 +2,13 @@
 
 Frontend React Native y backend Express
 
-Versión de referencia 0.4.0
+Proyecto ExpoTec
 
-25 de octubre de 2026
+E.E.S.T. N° 5 Amancio Williams
+
+Versión de referencia 0.5.0
+
+26 de octubre de 2026
 
 ## Alcance
 
@@ -65,6 +69,8 @@ Si esos archivos ya existen, revisalos sin sobrescribir las credenciales guardad
 
 ### Variables esenciales
 
+Tabla: Variables de entorno esenciales del backend
+
 | Variable | Uso |
 | --- | --- |
 | NODE_ENV y PORT | Entorno local y puerto de la API; para desarrollo, development y 3001. |
@@ -112,12 +118,8 @@ npm run dev
 Para una ejecución sin recarga automática, usá `npm start`. La API local escucha en el puerto 3001 salvo configuración distinta. Comprobá salud y conexión a la base:
 
 ```powershell
-Invoke-RestMethod -Method Post `
-  -Uri 'http://127.0.0.1:3001/api/health' `
-  -ContentType 'application/json' -Body '{}'
-Invoke-RestMethod -Method Post `
-  -Uri 'http://127.0.0.1:3001/api/health/ready' `
-  -ContentType 'application/json' -Body '{}'
+Invoke-RestMethod -Uri 'http://127.0.0.1:3001/api/health'
+Invoke-RestMethod -Uri 'http://127.0.0.1:3001/api/health/ready'
 ```
 
 La segunda consulta debe responder correctamente e indicar `database: connected`. Una respuesta saludable no prueba por sí sola un recorrido de registro o préstamo; esos casos se verifican desde la aplicación o con las integraciones de pruebas.
@@ -157,7 +159,7 @@ El administrador puede gestionar usuarios, crear espacios, habilitar mesas como 
 
 Descargá [ExpoTec 0.4.0 para Android](https://expo.dev/artifacts/eas/2PBiG--Pnz0L_bkfG5PCBe9A0grheNB3PZSQsYw94F0.apk) desde el teléfono, abrí el archivo e instalalo. El paquete es `ar.edu.expotec.organizacion`, con versionCode 5. La APK se conecta a la API publicada y funciona sin un servidor de desarrollo local.
 
-El usuario confirmó el 25 de octubre de 2026 que la APK funciona bien en su uso y que el ingreso nativo con Google funciona. Esa confirmación no se extiende automáticamente a todos los teléfonos ni a recorridos no mencionados.
+La APK 0.4.0 usa las rutas anteriores de la API; el backend 0.5.0 las sigue aceptando mediante una capa de compatibilidad. Para distribuir la versión 0.5.0, generá una APK nueva como se indica más abajo.
 
 ### Trabajar con el código nativo
 
@@ -180,7 +182,7 @@ El perfil preview genera APK; el perfil production no debe confundirse con él, 
 
 ## Configurar funciones externas
 
-### Google Discord y GitHub
+### Google, Discord y GitHub
 
 Configurá en el backend el par SOCIAL_GOOGLE_CLIENT_ID y SOCIAL_GOOGLE_CLIENT_SECRET; repetí el esquema para Discord y GitHub. SOCIAL_WEB_ORIGIN debe ser el origen autorizado del frontend y pertenecer a CORS_ORIGINS. Un proveedor sin credenciales no se ofrece; un par incompleto se rechaza.
 
@@ -192,7 +194,7 @@ Conectá un almacén privado de Vercel Blob al backend y configurá BLOB_READ_WR
 
 ### Recuperación de contraseña
 
-Completá SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD y PASSWORD_RESET_WEB_ORIGIN. Para Gmail se utiliza una contraseña de aplicación. El origen de recuperación debe estar autorizado en CORS_ORIGINS. La disponibilidad se consulta en POST `/api/auth/recovery/query`; para acreditar el envío hay que recibir y usar un correo real de una cuenta propia. Los detalles están en `docs/RECUPERACION_CONTRASENA.md`.
+Completá SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD y PASSWORD_RESET_WEB_ORIGIN. Para Gmail se utiliza una contraseña de aplicación. El origen de recuperación debe estar autorizado en CORS_ORIGINS. La disponibilidad se consulta con GET `/api/auth/recovery`; para acreditar el envío hay que recibir y usar un correo real de una cuenta propia. Los detalles están en `docs/RECUPERACION_CONTRASENA.md`.
 
 ## Verificar la instalación
 
@@ -218,6 +220,8 @@ Para una instalación con dominios diferentes, actualizá las reescrituras del f
 
 ## Resolver problemas de configuración
 
+Tabla: Problemas de configuración frecuentes y puntos a revisar
+
 | Problema | Revisión |
 | --- | --- |
 | La API no inicia | Variables obligatorias, secreto JWT, pares OAuth completos y conexión a TiDB. |
@@ -231,6 +235,6 @@ Para una instalación con dominios diferentes, actualizá las reescrituras del f
 
 ## Documentación técnica de consulta
 
-El contrato de la API se mantiene en `backend/README.md`, con rutas, métodos, cuerpos, respuestas y códigos de error. La API actual utiliza principalmente POST para sus operaciones JSON y tiene excepciones GET y PATCH documentadas. Esta guía describe ese contrato existente; no implica una migración a otros métodos HTTP.
+El contrato de la API se mantiene en `backend/README.md`, con rutas, métodos, cuerpos, respuestas y códigos de error. La API es REST: GET para consultar, POST para crear, PUT para modificar, PATCH para cambios parciales y DELETE para dar de baja. El README del backend incluye la tabla de equivalencias con las rutas anteriores de la versión 0.4.0.
 
 Para profundizar: `docs/DESPLIEGUE.md`, `docs/APK_PRUEBA.md`, `docs/ACCESOS_SOCIALES.md`, `docs/ANDROID_GOOGLE.md`, `docs/CARGA_FOTOS.md` y `docs/RECUPERACION_CONTRASENA.md`. El manual de usuario explica las tareas y la guía de demostración organiza la presentación de los perfiles.

@@ -2,6 +2,7 @@
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
+const { legacyRequest } = require("./legacy-endpoint.cjs");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
 require("tsx/cjs");
 const { seed } = require("../src/lib/seed.ts");
@@ -202,8 +203,7 @@ async function main() {
     });
   });
   await context.route("**/api/**", async (route) => {
-    const endpoint = new URL(route.request().url()).pathname;
-    const body = route.request().postDataJSON() || {};
+    const { endpoint, body } = legacyRequest(route.request());
     const reply = (json, status = 200) =>
       route.fulfill({
         status,

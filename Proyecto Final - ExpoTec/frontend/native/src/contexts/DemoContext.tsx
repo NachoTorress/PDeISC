@@ -1,3 +1,4 @@
+/** Estado global de la demostración: perfil ficticio, datos locales y avisos. */
 import { createContext, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
@@ -18,6 +19,7 @@ interface DemoValue {
   notify: (message: string) => void;
   notice: string;
 }
+/** Contexto de la demostración. */
 export const DemoContext = createContext<DemoValue | null>(null);
 
 /** Conserva el esquema del prototipo y serializa escrituras locales; la API real reemplazará este proveedor. */
@@ -58,6 +60,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     const timer = setTimeout(() => notify(""), 6500);
     return () => clearTimeout(timer);
   }, [notice]);
+  /** Aplica una acción de la demo, valida el perfil y guarda el resultado. */
   function mutate(action: Mutation) {
     try {
       const next = applyMutation(current.current, action, role, newId);

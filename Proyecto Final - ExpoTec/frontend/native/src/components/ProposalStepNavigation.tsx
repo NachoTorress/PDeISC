@@ -1,3 +1,4 @@
+/** Indicador y navegación de los cuatro pasos de la propuesta. */
 import { Pressable, Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { proposalSteps } from "../lib/proposalSteps";

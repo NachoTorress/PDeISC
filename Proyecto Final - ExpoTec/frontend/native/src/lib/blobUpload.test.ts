@@ -1,3 +1,4 @@
+/** Pruebas unitarias de `blobUpload.ts` (se ejecutan con `npm test` usando node:test y tsx). */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { photoUploadRequest, putPhoto } from "./blobUpload";
@@ -102,7 +103,7 @@ test("Android: envía el archivo nativo por URI y completa la carga sólo despu�
     };
     const result = await uploadPhoto(photo, "gallery", async <T>(endpoint: string, input: object) => {
       actions.push(endpoint);
-      if (endpoint.endsWith("/prepare")) {
+      if (endpoint === "/api/uploads") {
         assert.deepEqual(input, { purpose: "gallery", contentType: "image/jpeg", size: 1234 });
         return { id: "image-id", pathname: pathname.replace(".png", ".jpg"), clientToken: token } as T;
       }
@@ -112,7 +113,7 @@ test("Android: envía el archivo nativo por URI y completa la carga sólo despu�
     assert.deepEqual(sentBody, { uri: photo.uri });
     assert.equal(headers["Content-Type"], "image/jpeg");
     assert.equal(headers["x-content-length"], "1234");
-    assert.deepEqual(actions, ["/api/uploads/prepare", "put", "/api/uploads/complete"]);
+    assert.deepEqual(actions, ["/api/uploads", "put", "/api/uploads/image-id/complete"]);
     assert.equal(result, "https://expotec.example/api/uploads/image-id/image");
     assert.equal(disposed, true);
   } finally {
@@ -135,7 +136,7 @@ test("Android: un archivo ilegible no confirma ni filtra la foto temporal", asyn
       uri: "file:///cache/photo.jpg", type: "image/jpeg", size: 1234,
       dispose: () => { disposed = true; },
     }, "gallery", async <T>(endpoint: string) => {
-      assert.equal(endpoint, "/api/uploads/prepare");
+      assert.equal(endpoint, "/api/uploads");
       return { id: "image-id", pathname, clientToken: token } as T;
     }, () => {}, new AbortController().signal), /leer la foto/);
     assert.equal(disposed, true);
@@ -177,7 +178,7 @@ test("Android: el AbortController nativo cancela el PUT activo y no confirma la 
       actions.push(endpoint);
       return { id: "image-id", pathname, clientToken: token } as T;
     }, () => {}, controller.signal as unknown as AbortSignal), /cancelada/);
-    assert.deepEqual(actions, ["/api/uploads/prepare", "put", "abort"]);
+    assert.deepEqual(actions, ["/api/uploads", "put", "abort"]);
     assert.equal(disposed, true);
   } finally {
     globalThis.XMLHttpRequest = previous;

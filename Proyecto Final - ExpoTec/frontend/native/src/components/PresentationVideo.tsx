@@ -1,3 +1,4 @@
+/** Video de la presentación de la demostración (expo-video). */
 import { useEffect } from "react";
 import { VideoView, useVideoPlayer } from "expo-video";
 

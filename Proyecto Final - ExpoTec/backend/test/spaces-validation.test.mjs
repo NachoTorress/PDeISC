@@ -1,3 +1,4 @@
+/** Prueba unitaria (sin base de datos real): validación del plano de mobiliario. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createSpaceBody, saveSpaceBody } from '../src/validators/spaces.mjs';

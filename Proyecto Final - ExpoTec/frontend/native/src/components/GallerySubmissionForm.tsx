@@ -1,3 +1,4 @@
+/** Formulario para enviar una foto a la galería compartida. */
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
@@ -9,6 +10,7 @@ import { AuthError } from "../lib/authTypes";
 import { galleryPhotoErrors } from "../lib/gallery";
 import PhotoUploadField from "./PhotoUploadField";
 
+/** Sube la foto o usa un enlace HTTPS y la envía con `POST /api/gallery`. */
 export default function GallerySubmissionForm({
   onClose,
   onSubmitted,
@@ -34,12 +36,14 @@ export default function GallerySubmissionForm({
   usePreventRemove((dirty || busy || uploading) && !saved, ({ data }) =>
     setLeave(data.action),
   );
+  /** Actualiza un campo y limpia su error. */
   function update(key: keyof typeof input, value: string) {
     setInput((current) => ({ ...current, [key]: value }));
     setTouched((current) => ({ ...current, [key]: true }));
     setFields((current) => ({ ...current, [key]: "" }));
     setError("");
   }
+  /** Valida y envía la foto; queda pendiente de moderación. */
   async function submit() {
     setTouched({ imageUrl: true, caption: true });
     if (working.current || uploading || Object.keys(validation).length) return;
@@ -47,10 +51,10 @@ export default function GallerySubmissionForm({
     setBusy(true);
     setError("");
     try {
-      await client.send("/api/gallery/submit", {
+      await client.send("/api/gallery", {
         imageUrl: input.imageUrl.trim(),
         caption: input.caption.trim().normalize("NFC"),
-      });
+      }, "POST");
       setSaved(true);
       onSubmitted();
     } catch (cause) {

@@ -1,3 +1,4 @@
+/** Edición de permisos de una cuenta con confirmación y recarga ante cambios simultáneos. */
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
@@ -10,6 +11,7 @@ import { accountRoles, rolesChangeBody, sameRoles } from "../lib/adminUsers";
 import type { ManagedUser } from "../lib/adminUsers";
 import type { AccountRole } from "../lib/authTypes";
 
+/** Guarda con `PUT /api/admin/users/:id/roles` enviando los roles esperados. */
 export default function UserPermissionsForm({ account, onClose, onSaved }: {
   account: ManagedUser;
   onClose: () => void;
@@ -30,6 +32,7 @@ export default function UserPermissionsForm({ account, onClose, onSaved }: {
   const dirty = !sameRoles(source.roles, roles);
   usePreventRemove((dirty || busy) && !saved, ({ data }) => setLeave(data.action));
   const paragraph = { color: colors.muted, fontSize: 15, lineHeight: 22 };
+  /** Ejecuta una acción con estado de carga y errores. */
   async function run(action: () => Promise<void>) {
     if (working.current) return;
     working.current = true;
@@ -45,6 +48,7 @@ export default function UserPermissionsForm({ account, onClose, onSaved }: {
       }
     } finally { working.current = false; setBusy(false); }
   }
+  /** Cierra el formulario si no hay un envío en curso. */
   function close() {
     if (working.current) return;
     setSaved(true);
@@ -74,7 +78,7 @@ export default function UserPermissionsForm({ account, onClose, onSaved }: {
           confirmLabel="Sí, guardar permisos"
           onCancel={() => setConfirm(null)}
           onConfirm={() => void run(async () => {
-            const result = await client.send<{ user: ManagedUser }>(`/api/admin/users/${source.id}/roles/save`, rolesChangeBody(source, roles));
+            const result = await client.send<{ user: ManagedUser }>(`/api/admin/users/${source.id}/roles`, rolesChangeBody(source, roles), "PUT");
             setSaved(true);
             onSaved({ ...source, ...result.user });
             if (source.id === user?.id) void client.verify().catch(() => {});
@@ -83,7 +87,7 @@ export default function UserPermissionsForm({ account, onClose, onSaved }: {
       ) : confirm === "reload" ? (
         <InlineConfirm text="¿Descartar tu selección y cargar los permisos actuales del servidor?" confirmLabel="Descartar y recargar"
           onCancel={() => setConfirm(null)} onConfirm={() => void run(async () => {
-            const result = await client.send<{ user: ManagedUser }>(`/api/admin/users/${source.id}/query`, {});
+            const result = await client.send<{ user: ManagedUser }>(`/api/admin/users/${source.id}`, {}, "GET");
             setSource(result.user);
             setRoles([...result.user.roles]);
             setConflict(false);

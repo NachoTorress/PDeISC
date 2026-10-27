@@ -1,3 +1,4 @@
+/** Prueba unitaria (sin base de datos real): galería pública, envíos de invitados y moderación. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -37,9 +38,9 @@ test('galería: visitante consulta, invitado aporta, solo administración modera
   };
   const api = await listen(createApp(auth, testConfig, console, undefined, undefined, undefined, undefined, undefined, repository));
   t.after(api.close);
-  assert.equal((await api.request('/api/gallery/public/query')).status, 200);
-  for (const route of ['mine/query', 'submit', 'moderation/query', `${id}/review`])
-    assert.equal((await api.request(`/api/gallery/${route}`)).status, 401);
+  assert.equal((await api.get('/api/gallery')).status, 200);
+  for (const [method, route] of [['GET', 'mine'], ['POST', ''], ['GET', 'moderation'], ['PATCH', id]])
+    assert.equal((await api.request(`/api/gallery/${route}`, {}, undefined, { method })).status, 401);
   const account = { firstName: 'Ana', lastName: 'García', email: 'guest@example.com', password: 'Una contraseña larga 2026', accountType: 'guest' };
   for (const type of ['admin', 'teacher', 'loans', '', null])
     assert.equal((await api.request('/api/auth/register', { ...account, accountType: type })).status, 400);
@@ -48,25 +49,25 @@ test('galería: visitante consulta, invitado aporta, solo administración modera
   const { user, accessToken } = registration.body;
   assert.deepEqual(user.roles, ['guest']);
   assert.equal(user.passwordHash, undefined);
-  assert.equal((await api.request('/api/admin/users/query', {}, accessToken)).status, 403);
-  assert.equal((await api.request('/api/gallery/mine/query', {}, accessToken)).status, 200);
+  assert.equal((await api.get('/api/admin/users', {}, accessToken)).status, 403);
+  assert.equal((await api.get('/api/gallery/mine', {}, accessToken)).status, 200);
   assert.deepEqual(calls.at(-1), ['mine', { limit: 25, offset: 0 }, user.id]);
-  assert.equal((await api.request('/api/gallery/mine/query', { authorId: randomUUID() }, accessToken)).status, 400);
-  const submitted = await api.request('/api/gallery/submit', photo, accessToken);
+  assert.equal((await api.get('/api/gallery/mine', { authorId: randomUUID() }, accessToken)).status, 400);
+  const submitted = await api.request('/api/gallery', photo, accessToken);
   assert.equal(submitted.status, 201);
   assert.equal(submitted.body.photo.status, 'pending');
   assert.deepEqual(calls.at(-1), ['submit', photo, user.id]);
-  assert.equal((await api.request('/api/gallery/submit', { ...photo, status: 'approved' }, accessToken)).status, 400);
-  assert.equal((await api.request('/api/gallery/moderation/query', {}, accessToken)).status, 403);
-  assert.equal((await api.request(`/api/gallery/${id}/review`, { version: 1, decision: 'approved' }, accessToken)).status, 403);
+  assert.equal((await api.request('/api/gallery', { ...photo, status: 'approved' }, accessToken)).status, 400);
+  assert.equal((await api.get('/api/gallery/moderation', {}, accessToken)).status, 403);
+  assert.equal((await api.patch(`/api/gallery/${id}`, { version: 1, decision: 'approved' }, accessToken)).status, 403);
   auth.users.get(user.id).roles.push('admin');
-  assert.equal((await api.request('/api/gallery/moderation/query', {}, accessToken)).status, 200);
-  assert.equal((await api.request(`/api/gallery/${id}/review`, { version: 1, decision: 'approved' }, accessToken)).status, 200);
+  assert.equal((await api.get('/api/gallery/moderation', {}, accessToken)).status, 200);
+  assert.equal((await api.patch(`/api/gallery/${id}`, { version: 1, decision: 'approved' }, accessToken)).status, 200);
   assert.deepEqual(calls.at(-1), ['review', id, { version: 1, decision: 'approved', note: '' }, user.id]);
   auth.users.get(user.id).roles = ['guest'];
-  assert.equal((await api.request(`/api/gallery/${id}/review`, { version: 2, decision: 'rejected', note: 'Retirada para revisar' }, accessToken)).status, 403);
+  assert.equal((await api.patch(`/api/gallery/${id}`, { version: 2, decision: 'rejected', note: 'Retirada para revisar' }, accessToken)).status, 403);
   auth.consumeRate = async () => 60;
-  const limited = await api.request('/api/gallery/submit', photo, accessToken);
+  const limited = await api.request('/api/gallery', photo, accessToken);
   assert.equal(limited.status, 429);
   assert.equal(limited.headers.get('retry-after'), '60');
 });

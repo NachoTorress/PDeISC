@@ -1,3 +1,4 @@
+/** Ingreso nativo con Google en Android (selector de cuentas del sistema). */
 import { AuthError } from "./authTypes";
 import { socialFlowId } from "./mobileSocial";
 
@@ -8,6 +9,10 @@ type Google = {
   presentExplicitSignIn: () => Promise<{ type: string; data: { idToken: string } | null }>;
 };
 
+/**
+ * Inicia el flujo en la API, abre el selector de Google y verifica el ID token.
+ * Devuelve el id del flujo, o null si la persona canceló.
+ */
 export async function nativeGoogleAccess(query: Query, challenge: string, proof: string, load: () => Promise<Google>) {
   const start = await query<{ id: string; nonce: string; webClientId: string }>("/api/auth/social/google/native/start", { challenge });
   if (!socialFlowId.test(start.id) || !/^[a-f0-9]{64}$/.test(start.nonce) ||

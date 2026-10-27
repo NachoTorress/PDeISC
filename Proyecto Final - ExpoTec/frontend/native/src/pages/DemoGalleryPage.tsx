@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Galería de fotos de ejemplo con envío y moderación locales.
+ */
 import { useState } from "react";
 import { Text, View } from "react-native";
 import {
@@ -22,6 +25,7 @@ import { galleryStatusLabel } from "../lib/gallery";
 import { formatDate } from "../lib/format";
 import type { Role } from "../lib/types";
 
+/** Galería de la demo según el perfil elegido. */
 export default function DemoGalleryPage() {
   const { state, role, mutate, notify } = useDemo();
   const { colors } = useTheme();
@@ -53,6 +57,7 @@ export default function DemoGalleryPage() {
     decision === "rejected" && note.trim().length < 10
       ? "Indicá un motivo de al menos 10 caracteres."
       : "";
+  /** Aplica la decisión de moderación en la demo. */
   function review() {
     if (!reviewing || noteError) return;
     const failure = mutate({

@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Formulario de propuesta de proyecto.
+ */
 import { useState } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
@@ -27,6 +30,7 @@ export default function ProjectFormPage(props: Props) {
   return <ProjectForm key={props.projectId ?? "new"} {...props} />;
 }
 
+/** Formulario con validación por campo. */
 function ProjectForm({ projectId, onDone }: Props) {
   const { state, role, mutate, notify } = useDemo();
   const { colors } = useTheme();

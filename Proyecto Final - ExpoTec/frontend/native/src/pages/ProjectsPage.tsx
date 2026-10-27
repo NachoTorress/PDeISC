@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Lista de proyectos según el perfil.
+ */
 import { useState } from "react";
 import { Text, View } from "react-native";
 import ContentGrid from "../components/ContentGrid";

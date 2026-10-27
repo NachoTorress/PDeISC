@@ -1,3 +1,4 @@
+/** Aplica las migraciones SQL pendientes (`npm run db:migrate`). */
 import { createDatabase } from '../src/config/database.mjs';
 import { migrate } from './migrations.mjs';
 

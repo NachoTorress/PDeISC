@@ -1,3 +1,8 @@
+/**
+ * Servicio de accesos sociales. Coordina el flujo OAuth del navegador, el
+ * ingreso nativo de Google en Android y el alta o vinculación de cuentas.
+ * El cliente guarda una prueba secreta; el servidor solo guarda su hash.
+ */
 import { randomBytes, randomUUID } from 'node:crypto';
 import { HttpError } from '../lib/errors.mjs';
 import { objectBody, credentials, userId } from '../validators/auth.mjs';
@@ -5,17 +10,22 @@ import { tokenHash, rateKey, hashPassword, verifyPassword, dummyPasswordHash, ne
 import { authorizationUrl, providerNames, createProviderExchange, socialFailure } from './social-providers.mjs';
 import { createNativeGoogleVerifier } from './google-native.mjs';
 
+/** Valida un valor aleatorio de 32 bytes en base64url. */
 function opaque(value) { return typeof value === 'string' && /^[A-Za-z0-9_-]{43}$/.test(value); }
+/** Valida id y prueba del flujo y devuelve el hash de la prueba. */
 function proof(body, allowed = []) {
   objectBody(body, ['id', 'proof', ...allowed]);
   userId(body.id);
   if (!opaque(body.proof)) throw socialFailure();
   return { id: body.id, proofHash: tokenHash(body.proof) };
 }
+/** Crea el servicio de accesos sociales. */
 export function createSocialService(repository, authRepository, config, exchange = createProviderExchange(config), verifyGoogle = createNativeGoogleVerifier(config)) {
   const enabled = provider => Object.hasOwn(config.social?.providers ?? {}, provider);
   return {
+    /** Proveedores configurados en el servidor. */
     providers() { return { providers: Object.keys(providerNames).filter(enabled).map(id => ({ id, name: providerNames[id] })) }; },
+    /** Inicia el ingreso nativo de Google y entrega el nonce a firmar. */
     async startNativeGoogle(body) {
       objectBody(body, ['challenge']);
       if (!enabled('google')) throw new HttpError(404, 'SOCIAL_DISABLED', 'Google todavía no está disponible.');
@@ -25,6 +35,7 @@ export function createSocialService(repository, authRepository, config, exchange
         bindingHash: body.challenge, verifier: nonce, expiresAt: new Date(Date.now() + 10 * 60 * 1000) });
       return { id, nonce, webClientId: config.social.providers.google.clientId };
     },
+    /** Verifica el ID token de Google nativo. */
     async verifyNativeGoogle(body) {
       const input = proof(body, ['idToken']);
       if (!enabled('google')) throw socialFailure();
@@ -38,6 +49,7 @@ export function createSocialService(repository, authRepository, config, exchange
       }
       return { id: current.id };
     },
+    /** Inicia el flujo OAuth del navegador y devuelve la URL del proveedor. */
     async start(body, binding) {
       objectBody(body, ['provider', 'challenge']);
       if (typeof body.provider !== 'string' || !enabled(body.provider)) throw new HttpError(404, 'SOCIAL_DISABLED', 'Este proveedor todavía no está disponible.');
@@ -46,6 +58,7 @@ export function createSocialService(repository, authRepository, config, exchange
       await repository.start({ id, provider: body.provider, stateHash: tokenHash(state), proofHash: body.challenge, bindingHash: tokenHash(binding), verifier, expiresAt: new Date(Date.now() + 10 * 60 * 1000) });
       return { id, url: authorizationUrl(config, body.provider, state, verifier) };
     },
+    /** Procesa el retorno del proveedor y redirige a la web con el id del flujo. */
     async callback(provider, query, binding) {
       if (!enabled(provider) || !opaque(query.state) || !opaque(binding)) throw socialFailure();
       const current = await repository.claim(provider, tokenHash(query.state), tokenHash(binding));
@@ -57,11 +70,13 @@ export function createSocialService(repository, authRepository, config, exchange
       }
       return `${config.social.webOrigin}/#social=${current.id}`;
     },
+    /** Indica el modo del flujo verificado: ingreso, vinculación o alta. */
     async status(body) {
       const input = proof(body), current = await repository.inspect(input.id, input.proofHash);
       if (!enabled(current.provider)) throw socialFailure();
       return { provider: current.provider, email: current.email, mode: await repository.mode(current) };
     },
+    /** Completa el flujo y entrega la sesión de ExpoTec. */
     async complete(body) {
       const input = proof(body, ['mode', 'password', 'firstName', 'lastName', 'accountType']);
       const current = await repository.inspect(input.id, input.proofHash);

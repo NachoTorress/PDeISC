@@ -1,3 +1,7 @@
+/**
+ * Servicio de carga de imágenes: autoriza la subida directa a Vercel Blob,
+ * valida el contenido real, lo optimiza a JPEG y controla quién puede verlo.
+ */
 import { randomUUID } from 'node:crypto';
 import { get, put, del } from '@vercel/blob';
 import { generateClientTokenFromReadWriteToken } from '@vercel/blob/client';
@@ -6,10 +10,12 @@ import { HttpError } from '../lib/errors.mjs';
 import { objectBody, userId } from '../validators/auth.mjs';
 import { managedImageId } from '../repositories/uploads.mjs';
 
+/** Tamaño máximo aceptado: 10 MB. */
 export const maximumImageBytes = 10 * 1024 * 1024;
 export const imageTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const unavailable = () => new HttpError(404, 'IMAGE_NOT_FOUND', 'No encontramos esa imagen o no tenés acceso.');
 const invalid = () => new HttpError(422, 'IMAGE_INVALID', 'Elegí una foto JPG, PNG o WebP válida de hasta 10 MB.');
+/** Valida el formato real y reduce la imagen a JPEG de hasta 1600 px. */
 export async function optimizeImage(bytes) {
   if (!bytes.length || bytes.length > maximumImageBytes) throw invalid();
   try {
@@ -22,6 +28,7 @@ export async function optimizeImage(bytes) {
   } catch { throw invalid(); }
 }
 
+/** Acceso al almacenamiento privado de Vercel Blob. */
 export const blobStorage = {
   enabled: () => Boolean(process.env.BLOB_READ_WRITE_TOKEN),
   token: options => generateClientTokenFromReadWriteToken(options),
@@ -41,9 +48,11 @@ export const blobStorage = {
   remove: paths => del(paths),
 };
 
+/** Crea el servicio de cargas. */
 export function createUploadsService(repository, config, storage = blobStorage) {
   const origin = config.social?.webOrigin ?? config.origins[0];
   return {
+    /** Autoriza una carga y entrega un token temporal de 10 minutos. */
     async prepare(body, user) {
       objectBody(body, ['purpose', 'contentType', 'size']);
       if (!['gallery', 'project'].includes(body.purpose) || !imageTypes.includes(body.contentType) ||
@@ -58,6 +67,7 @@ export function createUploadsService(repository, config, storage = blobStorage) 
       await repository.create(image);
       return { id, pathname: image.rawPath, clientToken };
     },
+    /** Procesa la carga y devuelve la URL definitiva de la imagen. */
     async complete(body, user) {
       objectBody(body, ['id']);
       const image = await repository.get(userId(body.id));
@@ -77,6 +87,7 @@ export function createUploadsService(repository, config, storage = blobStorage) 
         throw new HttpError(503, 'UPLOAD_FAILED', 'No pudimos guardar la foto. Volvé a elegirla e intentá de nuevo.');
       }
     },
+    /** Vista previa privada en base64 para el autor o administración. */
     async preview(body, user) {
       objectBody(body, ['imageUrl']);
       const id = managedImageId(body.imageUrl);
@@ -85,6 +96,7 @@ export function createUploadsService(repository, config, storage = blobStorage) 
       if (!image || image.status !== 'ready' || image.imageUrl !== body.imageUrl || !(await repository.mayRead(image, user))) throw unavailable();
       return { image: `data:image/jpeg;base64,${(await storage.read(image.imagePath, 2 * 1024 * 1024)).toString('base64')}` };
     },
+    /** Bytes de una imagen publicada. */
     async publicImage(id) {
       const image = await repository.publicImage(userId(id));
       if (!image) throw unavailable();

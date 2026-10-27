@@ -1,7 +1,9 @@
+/** Geometría de la selección de piezas del plano (esquinas y tiradores). */
 import type { Furniture } from "./types";
 import type { ResizeHandle } from "./resizeTable";
 import { furnitureSize } from "./furnitureDrop";
 
+/** Dirección de cada tirador de tamaño. */
 export const resizeDirections: Record<ResizeHandle, [number, number]> = {
   nw: [-1, -1],
   n: [0, -1],

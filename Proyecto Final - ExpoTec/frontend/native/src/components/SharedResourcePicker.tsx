@@ -1,3 +1,4 @@
+/** Selector de elementos del catálogo para pedir en una propuesta. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import {
@@ -16,6 +17,7 @@ import type {
   ResourceRequestDraft,
 } from "../lib/sharedInventory";
 
+/** Carga `GET /api/inventory/catalog` y permite indicar cantidades. */
 export default function SharedResourcePicker({
   requests,
   disabled,
@@ -43,8 +45,9 @@ export default function SharedResourcePicker({
     setLoadError("");
     try {
       const result = await client.send<{ resources: InventoryResource[] }>(
-        "/api/inventory/catalog/query",
+        "/api/inventory/catalog",
         {},
+        "GET",
       );
       if (request === revision.current) {
         setCatalog(result.resources);

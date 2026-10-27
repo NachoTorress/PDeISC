@@ -1,3 +1,6 @@
+/**
+ * Video de la presentación TV en Android. Variante por plataforma: Metro elige `.native.tsx` en Android y `.web.tsx` en el navegador; `.d.ts` declara la interfaz común.
+ */
 import { useEffect } from "react";
 import { VideoView, useVideoPlayer } from "expo-video";
 

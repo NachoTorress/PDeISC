@@ -1,3 +1,4 @@
+/** Mantenimiento (`npm run db:prune`): borra sesiones, flujos y cargas vencidos. */
 import { createDatabase, transaction } from '../src/config/database.mjs';
 import { createUploadsRepository } from '../src/repositories/uploads.mjs';
 import { blobStorage } from '../src/services/uploads.mjs';

@@ -1,3 +1,8 @@
+/**
+ * Acceso social en Android: Google usa el selector nativo; Discord y GitHub
+ * abren el navegador y vuelven con `expotec://auth`. La prueba secreta del
+ * flujo se guarda en SecureStore.
+ */
 import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
@@ -15,6 +20,7 @@ const key = "expotec.social.v1";
 let flow: Flow | null = null;
 let cleanup = Promise.resolve();
 export let hasSocialReturn = false;
+/** Procesa el enlace de retorno y guarda el flujo pendiente. */
 async function capture(value: string) {
   if (!flow || flow.expiresAt <= Date.now())
     throw new Error("Este acceso venció. Volvé a iniciarlo.");
@@ -25,6 +31,7 @@ async function capture(value: string) {
   await SecureStore.setItemAsync(key, JSON.stringify(flow));
   hasSocialReturn = true;
 }
+/** Operaciones del acceso social en Android. */
 export const socialBridge = {
   async restore() {
     try {

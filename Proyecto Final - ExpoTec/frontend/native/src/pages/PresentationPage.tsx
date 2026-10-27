@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Presentación TV con los proyectos de ejemplo.
+ */
 import { useCallback, useEffect, useState } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
@@ -8,6 +11,7 @@ import { PresentationVideo } from "../components/PresentationVideo";
 import ProjectArt from "../components/ProjectArt";
 import { projectMembers } from "../lib/team";
 
+/** Secuencia de fichas y videos con controles. */
 export default function PresentationPage({ onBack }: { onBack: () => void }) {
   const { state, notify } = useDemo();
   const { colors } = useTheme();

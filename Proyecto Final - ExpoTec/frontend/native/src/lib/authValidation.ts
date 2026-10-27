@@ -1,5 +1,7 @@
+/** Validación en el cliente de los formularios de ingreso y registro (se repite en el servidor). */
 import type { Credentials } from "./authTypes";
 
+/** Devuelve los errores por campo de correo, contraseña y nombre; objeto vacío si es válido. */
 export function validateCredentials(input: Credentials, register: boolean) {
   const fields: Record<string, string> = {};
   const email = input.email.trim();

@@ -1,3 +1,6 @@
+/**
+ * Prueba unitaria (sin base de datos real): listado de cuentas y cambio de permisos solo para administración.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -27,24 +30,24 @@ test('usuarios: solo administración consulta y guarda, con identidad y comparac
   repository.setRoles = async (...args) => { calls.push(args); return { ...managed, roles: args[1] }; };
   const api = await listen(createApp(repository, testConfig));
   t.after(api.close);
-  assert.equal((await api.request('/api/admin/users/query')).status, 401);
+  assert.equal((await api.get('/api/admin/users')).status, 401);
   const result = await api.request('/api/auth/register', { firstName: 'Laura', lastName: 'Pérez', email: 'admin-test@example.com', password: 'Contraseña larga 2026' });
   const { user, accessToken } = result.body;
   const input = { roles: ['student', 'teacher'], expectedRoles: ['student'] };
-  for (const path of ['/api/admin/users/query', `/api/admin/users/${target}/query`, `/api/admin/users/${target}/roles/save`])
-    assert.equal((await api.request(path, path.endsWith('/save') ? input : {}, accessToken)).status, 403);
+  for (const [method, path] of [['GET', '/api/admin/users'], ['GET', `/api/admin/users/${target}`], ['PUT', `/api/admin/users/${target}/roles`]])
+    assert.equal((await api.request(path, method === 'PUT' ? input : {}, accessToken, { method })).status, 403);
   assert.equal(calls.length, 0);
   repository.users.get(user.id).roles.push('admin');
-  const listed = await api.request('/api/admin/users/query', { search: '  Ana ', limit: 20, offset: 0 }, accessToken);
+  const listed = await api.get('/api/admin/users', { search: '  Ana ', limit: 20, offset: 0 }, accessToken);
   assert.equal(listed.status, 200);
   assert.equal(listed.body.users[0].passwordHash, undefined);
   assert.deepEqual(calls[0], { search: 'Ana', limit: 20, offset: 0 });
-  assert.equal((await api.request(`/api/admin/users/${target}/query`, {}, accessToken)).status, 200);
-  assert.equal((await api.request(`/api/admin/users/not-uuid/query`, {}, accessToken)).status, 400);
-  assert.equal((await api.request(`/api/admin/users/${target}/roles/save`, input, accessToken)).status, 200);
+  assert.equal((await api.get(`/api/admin/users/${target}`, {}, accessToken)).status, 200);
+  assert.equal((await api.get(`/api/admin/users/not-uuid`, {}, accessToken)).status, 400);
+  assert.equal((await api.put(`/api/admin/users/${target}/roles`, input, accessToken)).status, 200);
   assert.deepEqual(calls[1], [target, input.roles, user.id, input.expectedRoles]);
-  assert.equal((await api.request(`/api/admin/users/${target}/roles/save`, { roles: ['admin'] }, accessToken)).status, 400);
+  assert.equal((await api.put(`/api/admin/users/${target}/roles`, { roles: ['admin'] }, accessToken)).status, 400);
   assert.equal(calls.length, 2);
   repository.users.get(user.id).roles = ['teacher'];
-  assert.equal((await api.request(`/api/admin/users/${target}/roles/save`, input, accessToken)).status, 403);
+  assert.equal((await api.put(`/api/admin/users/${target}/roles`, input, accessToken)).status, 403);
 });

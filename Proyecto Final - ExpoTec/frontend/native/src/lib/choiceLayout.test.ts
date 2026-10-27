@@ -1,3 +1,4 @@
+/** Pruebas unitarias de `choiceLayout.ts` (se ejecutan con `npm test` usando node:test y tsx). */
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { choiceLayout } from "./choiceLayout";

@@ -1,3 +1,6 @@
+/**
+ * Persistencia de la demostración en Android: archivo JSON con copia de respaldo para no perder datos si la app se cierra al guardar.
+ */
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { File, Paths } from "expo-file-system";
 import { parseSavedState } from "./persistence";

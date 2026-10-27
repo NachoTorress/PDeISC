@@ -1,3 +1,6 @@
+/**
+ * Prueba de integración contra una base MySQL/TiDB exclusiva (TEST_DB_NAME): galería con moderación y versiones.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -42,29 +45,29 @@ test('TiDB: invitados, privacidad de fotos, moderación atómica, retiro y lími
   assert.deepEqual(guest.user.roles, ['guest']);
   assert.deepEqual(admin.user.roles, ['student']);
   await pool.execute("INSERT INTO user_roles (user_id, role_code) VALUES (?, 'admin')", [admin.user.id]);
-  assert.equal((await api.request('/api/admin/users/query', {}, guest.accessToken)).status, 403);
+  assert.equal((await api.get('/api/admin/users', {}, guest.accessToken)).status, 403);
   const input = { imageUrl: 'https://example.com/expo.jpg', caption: 'Un recuerdo de la ExpoTec' };
-  const submitted = await api.request('/api/gallery/submit', input, guest.accessToken);
+  const submitted = await api.request('/api/gallery', input, guest.accessToken);
   assert.equal(submitted.status, 201, JSON.stringify(submitted.body));
   const id = submitted.body.photo.id;
-  const publicPhotos = async () => (await api.request('/api/gallery/public/query', { limit: 100 })).body.photos;
+  const publicPhotos = async () => (await api.get('/api/gallery', { limit: 100 })).body.photos;
   assert.equal((await publicPhotos()).some(photo => photo.id === id), false);
-  assert.equal((await api.request('/api/gallery/mine/query', {}, other.accessToken)).body.photos.some(photo => photo.id === id), false);
-  const own = (await api.request('/api/gallery/mine/query', {}, guest.accessToken)).body.photos.find(photo => photo.id === id);
+  assert.equal((await api.get('/api/gallery/mine', {}, other.accessToken)).body.photos.some(photo => photo.id === id), false);
+  const own = (await api.get('/api/gallery/mine', {}, guest.accessToken)).body.photos.find(photo => photo.id === id);
   assert.equal(own.status, 'pending');
   assert.equal(own.version, 1);
-  assert.equal((await api.request('/api/gallery/moderation/query', {}, guest.accessToken)).status, 403);
-  assert.equal((await api.request(`/api/gallery/${id}/review`, { version: 1, decision: 'approved' }, guest.accessToken)).status, 403);
+  assert.equal((await api.get('/api/gallery/moderation', {}, guest.accessToken)).status, 403);
+  assert.equal((await api.patch(`/api/gallery/${id}`, { version: 1, decision: 'approved' }, guest.accessToken)).status, 403);
   const concurrent = await Promise.all([
-    api.request(`/api/gallery/${id}/review`, { version: 1, decision: 'approved' }, admin.accessToken),
-    api.request(`/api/gallery/${id}/review`, { version: 1, decision: 'rejected', note: 'Revisar esta imagen antes de publicar' }, admin.accessToken),
+    api.patch(`/api/gallery/${id}`, { version: 1, decision: 'approved' }, admin.accessToken),
+    api.patch(`/api/gallery/${id}`, { version: 1, decision: 'rejected', note: 'Revisar esta imagen antes de publicar' }, admin.accessToken),
   ]);
   assert.deepEqual(concurrent.map(result => result.status).sort(), [200, 409]);
   let [[current]] = await pool.execute('SELECT status, version FROM gallery_photos WHERE id = ?', [id]);
   const [[count]] = await pool.execute('SELECT COUNT(*) AS count FROM gallery_reviews WHERE photo_id = ?', [id]);
   assert.equal(count.count, 1);
   if (current.status !== 'approved') {
-    const approval = await api.request(`/api/gallery/${id}/review`, { version: current.version, decision: 'approved' }, admin.accessToken);
+    const approval = await api.patch(`/api/gallery/${id}`, { version: current.version, decision: 'approved' }, admin.accessToken);
     assert.equal(approval.status, 200);
     current = approval.body.photo;
   }
@@ -72,13 +75,13 @@ test('TiDB: invitados, privacidad de fotos, moderación atómica, retiro y lími
   assert.ok(published);
   assert.deepEqual(Object.keys(published).sort(), ['id', 'imageUrl', 'caption', 'authorName', 'createdAt'].sort());
   assert.equal(JSON.stringify(published).includes(guest.user.email), false);
-  assert.equal((await api.request('/api/gallery/public/query', { status: 'pending' })).status, 400);
+  assert.equal((await api.get('/api/gallery', { status: 'pending' })).status, 400);
   const note = 'Retirada para revisar la foto enviada';
-  const removed = await api.request(`/api/gallery/${id}/review`, { version: current.version, decision: 'rejected', note }, admin.accessToken);
+  const removed = await api.patch(`/api/gallery/${id}`, { version: current.version, decision: 'rejected', note }, admin.accessToken);
   assert.equal(removed.status, 200);
   assert.equal((await publicPhotos()).some(photo => photo.id === id), false);
-  assert.equal((await api.request('/api/gallery/mine/query', {}, guest.accessToken)).body.photos.find(photo => photo.id === id).reviewNote, note);
-  const stale = await api.request(`/api/gallery/${id}/review`, { version: 1, decision: 'approved' }, admin.accessToken);
+  assert.equal((await api.get('/api/gallery/mine', {}, guest.accessToken)).body.photos.find(photo => photo.id === id).reviewNote, note);
+  const stale = await api.patch(`/api/gallery/${id}`, { version: 1, decision: 'approved' }, admin.accessToken);
   assert.equal(stale.status, 409);
   await pool.execute("DELETE FROM user_roles WHERE user_id = ? AND role_code = 'admin'", [admin.user.id]);
   await assert.rejects(gallery.review(id, { version: removed.body.photo.version, decision: 'approved', note: '' }, admin.user.id), error => error.status === 403);
@@ -90,7 +93,7 @@ test('TiDB: invitados, privacidad de fotos, moderación atómica, retiro y lími
   assert.equal(finalSlot.find(result => result.status === 'rejected').reason.code, 'GALLERY_PENDING_LIMIT');
   const [[pending]] = await pool.execute("SELECT COUNT(*) AS count FROM gallery_photos WHERE author_id = ? AND status = 'pending'", [other.user.id]);
   assert.equal(pending.count, 20);
-  const page1 = await api.request('/api/gallery/mine/query', { limit: 10, offset: 0 }, other.accessToken);
-  const page2 = await api.request('/api/gallery/mine/query', { limit: 10, offset: 10 }, other.accessToken);
+  const page1 = await api.get('/api/gallery/mine', { limit: 10, offset: 0 }, other.accessToken);
+  const page2 = await api.get('/api/gallery/mine', { limit: 10, offset: 10 }, other.accessToken);
   assert.equal(new Set([...page1.body.photos, ...page2.body.photos].map(photo => photo.id)).size, 20);
 });

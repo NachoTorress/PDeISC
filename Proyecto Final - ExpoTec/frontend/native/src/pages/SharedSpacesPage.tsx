@@ -1,3 +1,6 @@
+/**
+ * Pantalla del sistema compartido (datos de la API REST). Espacios y plano compartido: consulta pública y edición de mobiliario y puestos (administración).
+ */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
@@ -36,6 +39,7 @@ import type {
 import type { Furniture } from "../lib/types";
 import { formatDate } from "../lib/format";
 
+/** Resumen de un espacio para la lista. */
 function summary(space: SharedSpace): SpaceSummary {
   const { furniture, booths, ...details } = space;
   return {
@@ -45,6 +49,7 @@ function summary(space: SharedSpace): SpaceSummary {
   };
 }
 
+/** Plano del espacio elegido con su editor. */
 export default function SharedSpacesPage({
   onSelectProject,
 }: {
@@ -90,11 +95,13 @@ export default function SharedSpacesPage({
         name: booth.projectName ?? "Proyecto confirmado",
       })) ?? [];
 
+  /** Recarga la lista de espacios. */
   const reload = useCallback(async () => {
     setLoading(true);
     try {
       const result = await client.query<{ spaces: SpaceSummary[] }>(
-        "/api/spaces/query",
+        "/api/spaces",
+        {}, "GET",
       );
       setSpaces(result.spaces);
       setSpaceId((current) =>
@@ -128,7 +135,7 @@ export default function SharedSpacesPage({
     setDetailLoading(!!spaceId);
     if (!spaceId) return;
     client
-      .query<{ space: SharedSpace }>(`/api/spaces/${spaceId}/query`)
+      .query<{ space: SharedSpace }>(`/api/spaces/${spaceId}`, {}, "GET")
       .then((result) => {
         if (active) setSource(result.space);
       })
@@ -154,6 +161,7 @@ export default function SharedSpacesPage({
       setConfirm(null);
     }
   }, [ready, canEdit, editorId, user?.id]);
+  /** Ajusta piezas que quedarían fuera del plano. */
   const fit = useCallback(
     (positions: { id: string; x: number; y: number }[]) => {
       setDraft((current) =>
@@ -177,6 +185,7 @@ export default function SharedSpacesPage({
     },
     [],
   );
+  /** Modifica una pieza del borrador. */
   function updateFurniture(id: string, changes: Partial<Furniture>) {
     setDraft((current) =>
       current
@@ -189,6 +198,7 @@ export default function SharedSpacesPage({
         : null,
     );
   }
+  /** Toma la versión guardada como base del editor. */
   function accept(next: SharedSpace) {
     setSource(next);
     setSpaces((current) => {
@@ -198,6 +208,7 @@ export default function SharedSpacesPage({
         : [...items, summary(next)];
     });
   }
+  /** Ejecuta una acción con estado de carga y errores. */
   async function perform(action: () => Promise<void>) {
     if (working.current) return;
     working.current = true;
@@ -219,10 +230,12 @@ export default function SharedSpacesPage({
       setBusy(false);
     }
   }
+  /** Descarta el borrador y recarga la versión guardada. */
   async function discard() {
     if (!spaceId) return;
     const result = await client.query<{ space: SharedSpace }>(
-      `/api/spaces/${spaceId}/query`,
+      `/api/spaces/${spaceId}`,
+        {}, "GET",
     );
     accept(result.space);
     setDraft(null);
@@ -308,8 +321,9 @@ export default function SharedSpacesPage({
             onPress={() => {
               void perform(async () => {
                 const result = await client.send<{ space: SharedSpace }>(
-                  "/api/spaces/create",
+                  "/api/spaces",
                   { name: name.trim(), description: description.trim() },
+        "POST",
                 );
                 accept(result.space);
                 setSpaceId(result.space.id);
@@ -396,8 +410,9 @@ export default function SharedSpacesPage({
                         const result = await client.send<{
                           space: SharedSpace;
                         }>(
-                          `/api/spaces/${space.id}/save`,
+                          `/api/spaces/${space.id}`,
                           sharedSpaceBody(editing),
+        "PUT",
                         );
                         accept(result.space);
                         setDraft(null);
@@ -590,8 +605,9 @@ export default function SharedSpacesPage({
                       : async () => {
                           if (!source) return;
                           await client.send(
-                            `/api/spaces/${source.id}/archive`,
+                            `/api/spaces/${source.id}`,
                             { version: source.version },
+        "DELETE",
                           );
                           setSource(null);
                           setSpaceId(null);

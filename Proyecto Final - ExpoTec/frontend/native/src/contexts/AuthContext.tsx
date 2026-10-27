@@ -1,3 +1,9 @@
+/**
+ * Estado global de autenticación con Context API.
+ * Expone la cuenta actual, si la sesión ya se restauró, el último error y el
+ * cliente de API. Restaura la sesión guardada al abrir la app (sesión
+ * persistente) y la vuelve a verificar al regresar a primer plano.
+ */
 import {
   createContext,
   useCallback,
@@ -21,8 +27,10 @@ interface AuthValue {
   client: Client;
   retry: () => Promise<void>;
 }
+/** Contexto con la sesión; null fuera del proveedor. */
 const AuthContext = createContext<AuthValue | null>(null);
 
+/** Proveedor que crea el cliente de API una sola vez y mantiene la sesión. */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AccountUser | null>(null);
   const [ready, setReady] = useState(false);
@@ -87,6 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     </AuthContext.Provider>
   );
 }
+/** Acceso a la sesión desde cualquier componente. */
 export function useAuth() {
   const value = useContext(AuthContext);
   if (!value) throw new Error("Falta AuthProvider.");

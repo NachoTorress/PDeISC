@@ -1,6 +1,8 @@
+/** Ajustes de giro y tamaño de mesas desde los controles accesibles. */
 import { TABLE_LIMITS, TABLE_SIZE } from "./layout";
 import type { Furniture } from "./types";
 
+/** Suma grados al giro y lo normaliza entre 0 y 359. */
 export function rotatedFurniture(rotation: number, delta: number) {
   return (((rotation + delta) % 360) + 360) % 360;
 }

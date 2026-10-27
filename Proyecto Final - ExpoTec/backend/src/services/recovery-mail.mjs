@@ -1,5 +1,7 @@
+/** Envío de correos de recuperación por SMTP (Gmail con contraseña de aplicación). */
 import nodemailer from 'nodemailer';
 
+/** Crea el remitente con TLS obligatorio y tiempos de espera acotados. */
 export function createRecoveryMailer(config) {
   const { smtp } = config;
   const transport = nodemailer.createTransport({

@@ -1,3 +1,7 @@
+/**
+ * Acceso a datos de los flujos OAuth (Google, Discord, GitHub) y de las
+ * identidades sociales vinculadas a cada cuenta.
+ */
 import { randomUUID } from 'node:crypto';
 import { transaction } from '../config/database.mjs';
 import { HttpError, unauthorized } from '../lib/errors.mjs';
@@ -5,17 +9,21 @@ import { publicUser, addSession } from './auth.mjs';
 import { socialFailure } from '../services/social-providers.mjs';
 
 const columns = 'id, provider, status, subject, email';
+/** Crea el repositorio de accesos sociales. */
 export function createSocialRepository(pool) {
+  /** Lee un flujo verificado y vigente que corresponda a la prueba secreta del cliente. */
   async function flow(db, id, proofHash, lock = false) {
     const [rows] = await db.execute(`SELECT ${columns} FROM social_flows WHERE id = ? AND proof_hash = ? AND expires_at > UTC_TIMESTAMP(3)${lock ? ' FOR UPDATE' : ''}`, [id, proofHash]);
     if (!rows[0] || rows[0].status !== 'verified') throw socialFailure();
     return rows[0];
   }
   return {
+    /** Registra el inicio de un flujo con su estado y prueba (solo hashes). */
     async start(input) {
       await pool.execute(`INSERT INTO social_flows (id, provider, state_hash, proof_hash, binding_hash, verifier, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [input.id, input.provider, input.stateHash, input.proofHash, input.bindingHash, input.verifier, input.expiresAt]);
     },
+    /** Toma el flujo al volver del proveedor; un mismo estado no se puede usar dos veces. */
     async claim(provider, stateHash, bindingHash) {
       return transaction(pool, async db => {
         const [rows] = await db.execute(`SELECT id, verifier FROM social_flows WHERE provider = ? AND state_hash = ? AND binding_hash = ? AND status = 'started' AND expires_at > UTC_TIMESTAMP(3) FOR UPDATE`, [provider, stateHash, bindingHash]);
@@ -24,20 +32,24 @@ export function createSocialRepository(pool) {
         return rows[0];
       });
     },
+    /** Marca el flujo como verificado con la identidad del proveedor. */
     async verified(id, identity) {
       const [result] = await pool.execute(`UPDATE social_flows SET status = 'verified', subject = ?, email = ? WHERE id = ? AND status = 'processing' AND expires_at > UTC_TIMESTAMP(3)`, [identity.subject, identity.email, id]);
       if (result.affectedRows !== 1) throw socialFailure();
     },
+    /** Marca el flujo como fallido y borra los datos recibidos. */
     async failed(id) {
       await pool.execute("UPDATE social_flows SET status = 'failed', subject = NULL, email = NULL, verifier = NULL WHERE id = ? AND status = 'processing'", [id]);
     },
     inspect: (id, proofHash) => flow(pool, id, proofHash),
+    /** Decide si corresponde ingresar, vincular a una cuenta existente o crear una nueva. */
     async mode(identity) {
       const [linked] = await pool.execute('SELECT user_id FROM social_identities WHERE provider = ? AND subject = ?', [identity.provider, identity.subject]);
       if (linked.length) return 'login';
       const [users] = await pool.execute('SELECT id FROM users WHERE email = ?', [identity.email]);
       return users.length ? 'link' : 'signup';
     },
+    /** Completa el ingreso, vinculación o alta y abre la sesión. */
     async complete(input, hash, expiresAt) {
       try {
         return await transaction(pool, async db => {

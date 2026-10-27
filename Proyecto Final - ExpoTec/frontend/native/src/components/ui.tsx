@@ -1,3 +1,9 @@
+/**
+ * Componentes de interfaz reutilizables con los temas claro y oscuro:
+ * botones, campos con validación y mensajes, tarjetas, secciones, encabezados,
+ * opciones, confirmaciones en línea (en lugar de alert/confirm) y pantalla con
+ * botón para volver arriba. Todos respetan áreas táctiles mínimas de 44-48 px.
+ */
 import {
   Children,
   Fragment,
@@ -34,8 +40,10 @@ import { layout } from "../theme/tokens";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 import { choiceLayout } from "../lib/choiceLayout";
 
+/** Indica a los botones si están dentro de una fila de acciones. */
 const ActionRowContext = createContext<boolean | number>(false);
 
+/** Cuenta las acciones visibles de una fila. */
 function actionCount(children: ReactNode): number {
   return Children.toArray(children).reduce<number>(
     (total, child) =>
@@ -209,6 +217,7 @@ export function Button({
   );
 }
 
+/** Botón para volver a consultar datos. */
 export function RefreshButton({
   label,
   onPress,
@@ -259,6 +268,7 @@ export function RefreshButton({
   );
 }
 
+/** Campo de texto con etiqueta, ayuda y mensaje de error asociado. */
 export function Field({
   label,
   value,
@@ -371,6 +381,7 @@ export function Field({
   );
 }
 
+/** Tarjeta contenedora. */
 export function Card({
   children,
   style,
@@ -394,6 +405,7 @@ export function Card({
     </View>
   );
 }
+/** Sección con título. */
 export function Section({
   title,
   children,
@@ -419,6 +431,7 @@ export function Section({
     </View>
   );
 }
+/** Título de nivel intermedio. */
 export function Heading({
   title,
   subtitle,
@@ -452,6 +465,7 @@ export function Heading({
   );
 }
 
+/** Encabezado de página con descripción y acciones. */
 export function PageHeading({
   title,
   subtitle,
@@ -529,6 +543,7 @@ export function PageHeading({
     </View>
   );
 }
+/** Etiqueta de estado (con texto, no solo color). */
 export function Chip({
   label,
   tone = "neutral",
@@ -568,6 +583,7 @@ export function Chip({
     </View>
   );
 }
+/** Grupo de opciones excluyentes. */
 export function Choice({
   label,
   value,
@@ -645,6 +661,7 @@ export function Choice({
     </View>
   );
 }
+/** Casilla de verificación con texto. */
 export function CheckRow({
   label,
   checked,
@@ -687,6 +704,7 @@ export function CheckRow({
     </Pressable>
   );
 }
+/** Confirmación dentro de la pantalla para acciones destructivas. */
 export function InlineConfirm({
   text,
   onConfirm,
@@ -733,6 +751,7 @@ export function InlineConfirm({
     </View>
   );
 }
+/** Pantalla desplazable con márgenes responsivos y botón para volver arriba. */
 export function Screen({
   children,
   scrollEnabled = true,

@@ -1,3 +1,6 @@
+/** Presentación TV: carga paginada de proyectos confirmados y navegación entre fichas. */
+import type { ApiCall } from "./authTypes";
+/** Proyecto mostrado en la presentación. */
 export interface PresentationProject {
   id: string;
   name: string;
@@ -15,8 +18,9 @@ export interface PresentationPage {
   projects: PresentationProject[];
   nextCursor: string | null;
 }
-type PublicQuery = <T>(path: string, body: object) => Promise<T>;
+type PublicQuery = ApiCall;
 
+/** Recorre todas las páginas de `GET /api/projects/presentation`. */
 export async function loadPresentation(
   query: PublicQuery,
   current = () => true,
@@ -26,8 +30,9 @@ export async function loadPresentation(
   let after: string | undefined;
   do {
     const page = await query<PresentationPage>(
-      "/api/projects/presentation/query",
+      "/api/projects/presentation",
       { limit: 100, ...(after ? { after } : {}) },
+        "GET",
     );
     if (!current()) return null;
     if (
@@ -48,6 +53,7 @@ export async function loadPresentation(
   return [...projects.values()];
 }
 
+/** Proyecto siguiente o anterior (circular). */
 export function presentationSelection(
   projects: PresentationProject[],
   currentId: string,
@@ -62,5 +68,6 @@ export function presentationSelection(
     (index + (direction % projects.length) + projects.length) % projects.length
   ].id;
 }
+/** Clave para reiniciar el video al cambiar de proyecto. */
 export const presentationMediaKey = (project: PresentationProject) =>
   `${project.id}:${project.videoUrl}`;

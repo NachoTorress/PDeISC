@@ -1,3 +1,4 @@
+/** Paleta del tema claro. Los contrastes cumplen WCAG AA. */
 export const light = {
   dark: false,
   page: "#f5f6fa",
@@ -34,4 +35,5 @@ export const light = {
   tableOccupied: "#dbe4fc",
   tableEdge: "#7688b1",
 };
+/** Forma común de las paletas clara y oscura. */
 export type Palette = typeof light;

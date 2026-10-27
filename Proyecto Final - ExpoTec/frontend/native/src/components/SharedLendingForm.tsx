@@ -1,3 +1,4 @@
+/** Formulario de entrega de elementos (préstamo) a un proyecto confirmado. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
@@ -20,6 +21,7 @@ import type {
   SharedLoan,
 } from "../lib/sharedLoans";
 
+/** Elige jornada, proyecto, elemento, alumno que retira y cantidad. */
 export default function SharedLendingForm({
   day,
   onSaved,
@@ -61,8 +63,9 @@ export default function SharedLendingForm({
       setConfirm(null);
       try {
         const result = await client.send<{ projects: LendingProject[] }>(
-          "/api/loans/projects/query",
+          "/api/loans/projects",
           { day, limit: 25, offset },
+        "GET",
         );
         if (request === revision.current) {
           setProjects((current) =>
@@ -102,12 +105,14 @@ export default function SharedLendingForm({
       (item) => item.resourceId === input.resourceId,
     );
   const validation = lendingErrors(input, project);
+  /** Actualiza un campo del borrador. */
   function change(key: keyof LendingDraft, value: string) {
     setInput((current) => ({ ...current, [key]: value }));
     setSubmitted(true);
     setConfirm(null);
     setError("");
   }
+  /** Registra la entrega con `POST /api/loans`. */
   async function deliver() {
     if (
       !project ||
@@ -121,7 +126,7 @@ export default function SharedLendingForm({
     setError("");
     try {
       const result = await client.send<{ loan: SharedLoan }>(
-        "/api/loans/deliver",
+        "/api/loans",
         {
           projectId: project.id,
           projectVersion: project.version,
@@ -131,6 +136,7 @@ export default function SharedLendingForm({
           quantity: Number(input.quantity),
           note: input.note.trim(),
         },
+        "POST",
       );
       setSaved(true);
       onSaved(result.loan);

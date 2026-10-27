@@ -1,9 +1,11 @@
+/** Lectura segura del estado guardado de la demostración: valida cada campo antes de usarlo. */
 import { LABEL_TEXT_LIMITS, TABLE_LIMITS } from "./layout";
 import { projectLinkError } from "./projectLinks";
 import { migrateProjectTeams, teamErrors } from "./team";
 import type { DemoState } from "./types";
 import { demoGalleryImageError, demoCaptionError } from "./demoGallery";
 
+/** Error con la ruta del dato inválido. */
 function invalid(path: string): never {
   throw new Error(`Los datos guardados no son válidos: ${path}.`);
 }

@@ -1,3 +1,6 @@
+/**
+ * Paleta del editor de planos: arrastrar mesas, bancos, puntos eléctricos y rótulos al plano, o ubicarlos con botones accesibles.
+ */
 import { useCallback, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
 import { PanResponder, Platform, StyleSheet, Text, View } from "react-native";
@@ -34,6 +37,7 @@ type ToolProps = {
   onActive: (active: boolean) => void;
 };
 
+/** Pieza arrastrable de la paleta. */
 function PaletteTool({
   type,
   label,
@@ -143,6 +147,7 @@ function PaletteTool({
   );
 }
 
+/** Mide la posición del plano en la ventana para calcular dónde se soltó la pieza. */
 function measure(ref: RefObject<View | null>): Promise<WindowRect | null> {
   return new Promise((resolve) => {
     const node = ref.current;
@@ -185,6 +190,7 @@ export default function FurniturePalette({
     setActive(null);
     setPreview(null);
   }, []);
+  /** Actualiza la vista previa mientras se arrastra. */
   async function updatePreview() {
     const drag = session.current;
     if (!drag) return;
@@ -195,6 +201,7 @@ export default function FurniturePalette({
     if (session.current !== drag || !canvas || !hostRect) return;
     setPreview({ point: drag.end, canvas, host: hostRect, type: drag.type });
   }
+  /** Termina el arrastre y agrega la pieza si se soltó dentro del plano. */
   async function end(point: Point) {
     const drag = session.current;
     if (!drag) return;
@@ -213,6 +220,7 @@ export default function FurniturePalette({
     if (furniture) current.current.onAdd(furniture);
     cancel();
   }
+  /** Alternativa sin arrastre: agrega la pieza en un lugar libre. */
   async function placeAccessible(type: Furniture["type"]) {
     const canvas = await measure(canvasRef);
     if (!canvas) return;

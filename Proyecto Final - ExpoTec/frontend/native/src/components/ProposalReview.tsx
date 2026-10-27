@@ -1,3 +1,4 @@
+/** Paso 4 de la propuesta: resumen de todos los datos antes de enviar. */
 import { Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import type { ProposalDraft } from "../lib/sharedProjects";

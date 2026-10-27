@@ -1,3 +1,4 @@
+/** Pruebas unitarias de `proposalSteps.ts` (se ejecutan con `npm test` usando node:test y tsx). */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { proposalDraft, proposalErrors } from "./sharedProjects";

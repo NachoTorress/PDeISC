@@ -1,3 +1,4 @@
+/** Panel de edición de la pieza seleccionada del plano (posición, giro, tamaño y texto). */
 import { useState } from "react";
 import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
@@ -30,6 +31,7 @@ export default function NativeSpaceEditor({
     current?.type === "label" && (current.text?.trim().length ?? 0) < 2
       ? "Escribí al menos 2 caracteres para identificar la zona."
       : "";
+  /** Aplica un cambio parcial a la pieza. */
   function update(changes: Partial<Furniture>) {
     if (!current) return;
     onChange({

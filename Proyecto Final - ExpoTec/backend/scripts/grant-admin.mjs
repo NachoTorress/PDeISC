@@ -1,3 +1,4 @@
+/** Asigna el rol de administrador a una cuenta registrada (`npm run admin:grant -- correo`). */
 import { createDatabase, transaction } from '../src/config/database.mjs';
 import { credentials } from '../src/validators/auth.mjs';
 

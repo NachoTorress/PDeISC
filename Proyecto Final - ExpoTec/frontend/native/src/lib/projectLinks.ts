@@ -1,3 +1,4 @@
+/** Validación de los enlaces opcionales de GitHub y página web de un proyecto. */
 export type ProjectLinkKind = "github" | "website";
 
 /** Recibe un enlace opcional del formulario y devuelve el error para UI y modelo. */

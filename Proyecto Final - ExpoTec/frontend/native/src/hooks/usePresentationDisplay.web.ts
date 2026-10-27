@@ -1,6 +1,8 @@
+/** Pantalla completa de la presentación TV en el navegador (Fullscreen API). */
 import { useEffect, useRef, useState } from "react";
 import type { View } from "react-native";
 
+/** Estado, entrada y salida de pantalla completa. */
 export function usePresentationDisplay() {
   const ref = useRef<View>(null);
   const [fullscreen, setFullscreen] = useState(false);

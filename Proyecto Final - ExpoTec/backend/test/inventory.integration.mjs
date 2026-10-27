@@ -1,3 +1,6 @@
+/**
+ * Prueba de integración contra una base MySQL/TiDB exclusiva (TEST_DB_NAME): inventario, reservas y confirmaciones simultáneas.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -52,28 +55,28 @@ test('TiDB: inventario, reservas atómicas, concurrencia y liberación con histo
   }
   const owner = await account('Lucía'), teacher = await account('Martín', 'teacher'), loans = await account('Paula', 'loans'), admin = await account('Ana', 'admin');
   const input = { name: `Alargue ${randomUUID()}`, description: 'Unidades equivalentes para pruebas', total: 5 };
-  assert.equal((await api.request('/api/inventory/query')).status, 401);
-  assert.equal((await api.request('/api/inventory/query', {}, owner.accessToken)).status, 403);
-  assert.equal((await api.request('/api/inventory/query', {}, loans.accessToken)).status, 200);
-  assert.equal((await api.request('/api/inventory/create', input, loans.accessToken)).status, 403);
-  const created = await api.request('/api/inventory/create', input, admin.accessToken);
+  assert.equal((await api.get('/api/inventory')).status, 401);
+  assert.equal((await api.get('/api/inventory', {}, owner.accessToken)).status, 403);
+  assert.equal((await api.get('/api/inventory', {}, loans.accessToken)).status, 200);
+  assert.equal((await api.request('/api/inventory', input, loans.accessToken)).status, 403);
+  const created = await api.request('/api/inventory', input, admin.accessToken);
   assert.equal(created.status, 201, JSON.stringify(created.body));
   const resource = created.body.resource; resources.push(resource.id);
   assert.equal(resource.available, 5); assert.equal(resource.events.length, 1);
-  assert.equal((await api.request('/api/inventory/create', input, admin.accessToken)).status, 409);
-  assert.ok((await api.request('/api/inventory/catalog/query', {}, owner.accessToken)).body.resources.some(item => item.id === resource.id));
-  const updates = await Promise.all([6, 7].map(total => api.request(`/api/inventory/${resource.id}/save`, { ...input, total, version: 1 }, admin.accessToken)));
+  assert.equal((await api.request('/api/inventory', input, admin.accessToken)).status, 409);
+  assert.ok((await api.get('/api/inventory/catalog', {}, owner.accessToken)).body.resources.some(item => item.id === resource.id));
+  const updates = await Promise.all([6, 7].map(total => api.put(`/api/inventory/${resource.id}`, { ...input, total, version: 1 }, admin.accessToken)));
   assert.deepEqual(updates.map(result => result.status).sort(), [200, 409]);
   const changed = updates.find(result => result.status === 200).body.resource;
   assert.equal(changed.version, 2); assert.equal(changed.events.length, 2);
   await pool.execute("DELETE FROM user_roles WHERE user_id = ? AND role_code = 'admin'", [admin.user.id]);
-  assert.equal((await api.request(`/api/inventory/${resource.id}/save`, { ...input, version: 2 }, admin.accessToken)).status, 403);
+  assert.equal((await api.put(`/api/inventory/${resource.id}`, { ...input, version: 2 }, admin.accessToken)).status, 403);
   await pool.execute("INSERT INTO user_roles (user_id, role_code) VALUES (?, 'admin')", [admin.user.id]);
-  assert.equal((await api.request(`/api/inventory/${resource.id}/archive`, { version: 2 }, admin.accessToken)).status, 204);
+  assert.equal((await api.del(`/api/inventory/${resource.id}`, { version: 2 }, admin.accessToken)).status, 204);
   const archived = await inventory.get(resource.id, admin.user.id);
   assert.ok(archived.archivedAt); assert.equal(archived.events.length, 3);
-  assert.equal((await api.request('/api/inventory/catalog/query', {}, teacher.accessToken)).body.resources.some(item => item.id === resource.id), false);
-  assert.ok((await api.request('/api/inventory/query', { archived: true }, loans.accessToken)).body.resources.some(item => item.id === resource.id));
+  assert.equal((await api.get('/api/inventory/catalog', {}, teacher.accessToken)).body.resources.some(item => item.id === resource.id), false);
+  assert.ok((await api.get('/api/inventory', { archived: true }, loans.accessToken)).body.resources.some(item => item.id === resource.id));
 
   const firstResource = await inventory.create({ name: `Cable ${randomUUID()}`, description: '', total: 2 }, admin.user.id);
   resources.push(firstResource.id);
@@ -86,49 +89,49 @@ test('TiDB: inventario, reservas atómicas, concurrencia y liberación con histo
   const proposal = { name: 'Proyecto de reservas', description: 'Prueba temporal de reservas de elementos compartidos.', course: '6° 1°', imageUrl: 'https://example.com/image.png', videoUrl: '', githubUrl: '', websiteUrl: '', isSoftwareProject: false, memberIds: [owner.user.id], teacherIds: [teacher.user.id], subjects: [subject], boothId: savedSpace.booths[0].id,
     resources: [{ resourceId: firstResource.id, quantity: 2 }, { resourceId: secondResource.id, quantity: 2 }] };
   async function create(body) {
-    const result = await api.request('/api/projects/create', body, owner.accessToken);
+    const result = await api.request('/api/projects', body, owner.accessToken);
     assert.equal(result.status, 201, JSON.stringify(result.body)); projects.push(result.body.project.id); return result.body.project;
   }
   const first = await create(proposal);
   assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 0);
-  assert.equal((await api.request(`/api/inventory/${firstResource.id}/archive`, { version: 1 }, admin.accessToken)).status, 409);
-  const failed = await api.request(`/api/projects/${first.id}/review`, { version: 1, action: 'approve' }, teacher.accessToken);
+  assert.equal((await api.del(`/api/inventory/${firstResource.id}`, { version: 1 }, admin.accessToken)).status, 409);
+  const failed = await api.request(`/api/projects/${first.id}/reviews`, { version: 1, action: 'approve' }, teacher.accessToken);
   assert.equal(failed.status, 409); assert.equal(failed.body.error.code, 'RESOURCE_STOCK');
   assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 0);
   assert.ok((await layouts.get(space.id)).booths.every(booth => !booth.projectId));
   const corrected = { ...proposal, resources: [{ resourceId: firstResource.id, quantity: 2 }, { resourceId: secondResource.id, quantity: 1 }] };
-  assert.equal((await api.request(`/api/projects/${first.id}/save`, { ...corrected, version: 1 }, owner.accessToken)).status, 200);
+  assert.equal((await api.put(`/api/projects/${first.id}`, { ...corrected, version: 1 }, owner.accessToken)).status, 200);
   const { resources: omitted, ...legacy } = corrected;
-  const preserved = await api.request(`/api/projects/${first.id}/save`, { ...legacy, version: 2 }, owner.accessToken);
+  const preserved = await api.put(`/api/projects/${first.id}`, { ...legacy, version: 2 }, owner.accessToken);
   assert.equal(preserved.status, 200); assert.equal(preserved.body.project.resources.length, 2);
   const second = await create({ ...corrected, boothId: savedSpace.booths[1].id });
   const confirmations = await Promise.all([
-    api.request(`/api/projects/${first.id}/review`, { version: 3, action: 'approve' }, teacher.accessToken),
-    api.request(`/api/projects/${second.id}/review`, { version: 1, action: 'approve' }, teacher.accessToken),
+    api.request(`/api/projects/${first.id}/reviews`, { version: 3, action: 'approve' }, teacher.accessToken),
+    api.request(`/api/projects/${second.id}/reviews`, { version: 1, action: 'approve' }, teacher.accessToken),
   ]);
   assert.deepEqual(confirmations.map(result => result.status).sort(), [200, 409]);
   const winner = confirmations.find(result => result.status === 200).body.project;
   assert.equal(winner.resources[0].reservedQuantity > 0, true);
-  const published = await api.request(`/api/projects/public/${winner.id}/query`);
+  const published = await api.get(`/api/projects/public/${winner.id}`);
   assert.equal(published.body.project.resources, undefined);
   assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 2);
   assert.equal((await layouts.get(space.id)).booths.filter(booth => booth.projectId).length, 1);
-  const tooLow = await api.request(`/api/inventory/${firstResource.id}/save`, { name: firstResource.name, description: '', total: 1, version: 1 }, admin.accessToken);
+  const tooLow = await api.put(`/api/inventory/${firstResource.id}`, { name: firstResource.name, description: '', total: 1, version: 1 }, admin.accessToken);
   assert.equal(tooLow.status, 409); assert.equal(tooLow.body.error.code, 'RESOURCE_RESERVED');
-  const reopened = await api.request(`/api/projects/${winner.id}/review`, { version: winner.version, action: 'reopen', note: 'Revisar los elementos y la ubicación del proyecto.' }, admin.accessToken);
+  const reopened = await api.request(`/api/projects/${winner.id}/reviews`, { version: winner.version, action: 'reopen', note: 'Revisar los elementos y la ubicación del proyecto.' }, admin.accessToken);
   assert.equal(reopened.status, 200); assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 0);
   const stockRace = await Promise.all([
-    api.request(`/api/projects/${winner.id}/review`, { version: reopened.body.project.version, action: 'approve' }, teacher.accessToken),
-    api.request(`/api/inventory/${firstResource.id}/save`, { name: firstResource.name, description: '', total: 1, version: 1 }, admin.accessToken),
+    api.request(`/api/projects/${winner.id}/reviews`, { version: reopened.body.project.version, action: 'approve' }, teacher.accessToken),
+    api.put(`/api/inventory/${firstResource.id}`, { name: firstResource.name, description: '', total: 1, version: 1 }, admin.accessToken),
   ]);
   assert.deepEqual(stockRace.map(result => result.status).sort(), [200, 409]);
   const remaining = await inventory.get(firstResource.id, admin.user.id);
   assert.ok(remaining.reserved <= remaining.total);
   for (const id of projects) {
     const current = await proposals.get(id, admin.user.id);
-    assert.equal((await api.request(`/api/projects/${id}/cancel`, { version: current.version }, admin.accessToken)).status, 200);
+    assert.equal((await api.del(`/api/projects/${id}`, { version: current.version }, admin.accessToken)).status, 200);
   }
   assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 0);
-  assert.equal((await api.request(`/api/inventory/${firstResource.id}/archive`, { version: remaining.version }, admin.accessToken)).status, 204);
+  assert.equal((await api.del(`/api/inventory/${firstResource.id}`, { version: remaining.version }, admin.accessToken)).status, 204);
   assert.equal((await proposals.get(first.id, admin.user.id)).resources.length, 2);
 });

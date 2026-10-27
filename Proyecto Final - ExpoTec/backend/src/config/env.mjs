@@ -1,3 +1,9 @@
+/**
+ * Lectura y validación de las variables de entorno del backend.
+ * Si falta un dato obligatorio o tiene un formato inseguro, el servidor no
+ * arranca y muestra un mensaje claro (sin revelar los valores secretos).
+ */
+/** Lee un entero dentro de un rango o lanza un error descriptivo. */
 function integer(env, name, fallback, min, max) {
   const value = Number(env[name] ?? fallback);
   if (!Number.isInteger(value) || value < min || value > max)
@@ -5,6 +11,12 @@ function integer(env, name, fallback, min, max) {
   return value;
 }
 
+/**
+ * Configuración principal: secreto JWT, orígenes CORS, puerto, duración de los
+ * tokens (acceso 15 min, renovación 30 días) y servicios opcionales.
+ * @param {NodeJS.ProcessEnv} [env] Variables de entorno.
+ * @returns {object} Configuración validada.
+ */
 export function readConfig(env = process.env) {
   const production = env.NODE_ENV === 'production' || env.VERCEL === '1';
   const secret = env.JWT_SECRET ?? '';
@@ -29,6 +41,7 @@ export function readConfig(env = process.env) {
   };
 }
 
+/** Configuración SMTP de recuperación de contraseña; devuelve null si no está completa. */
 export function readRecoveryConfig(env, origins, production) {
   const user = env.SMTP_USER?.trim(), password = env.SMTP_PASSWORD?.replace(/\s/g, '');
   if (!user || !password) return null;
@@ -44,6 +57,7 @@ export function readRecoveryConfig(env, origins, production) {
   return { webOrigin, smtp: { host, port, user, password } };
 }
 
+/** Credenciales OAuth de Google, Discord y GitHub; cada proveedor exige su par ID/secreto. */
 export function readSocialConfig(env, origins, production) {
   const providers = {};
   for (const name of ['google', 'discord', 'github']) {
@@ -65,6 +79,7 @@ export function readSocialConfig(env, origins, production) {
   return { providers, webOrigin };
 }
 
+/** Parámetros del pool MySQL; en producción exige TLS. */
 export function readDatabaseConfig(env = process.env) {
   for (const name of ['DB_HOST', 'DB_USER', 'DB_NAME'])
     if (!env[name]?.trim()) throw new Error(`Configurá ${name} en el backend.`);

@@ -1,3 +1,8 @@
+/**
+ * Acceso a datos de préstamos por jornada (1, 2 o 3) y sus devoluciones.
+ * La asignación al proyecto (reserva) y la entrega física son operaciones
+ * distintas: devolver al final del día no cancela la reserva del día siguiente.
+ */
 import { randomUUID } from 'node:crypto';
 import { transaction } from '../config/database.mjs';
 import { HttpError, unauthorized } from '../lib/errors.mjs';
@@ -11,7 +16,9 @@ const columns = `l.id, l.project_id AS projectId, l.resource_id AS resourceId, l
 const joins = `FROM loans l JOIN projects p ON p.id = l.project_id JOIN resources r ON r.id = l.resource_id
   JOIN users recipient ON recipient.id = l.recipient_id JOIN users operator ON operator.id = l.delivered_by`;
 
+/** Crea el repositorio de préstamos. */
 export function createLoansRepository(pool) {
+  /** Exige rol de préstamos o administración. */
   async function actor(db, id, writing = false) {
     if (writing) await db.execute("SELECT code FROM roles WHERE code = 'admin' FOR UPDATE");
     const [rows] = await db.execute(`SELECT ur.role_code AS role FROM users u LEFT JOIN user_roles ur ON ur.user_id = u.id
@@ -19,11 +26,13 @@ export function createLoansRepository(pool) {
     if (!rows.length) throw unauthorized();
     if (!rows.some(row => ['admin', 'loans'].includes(row.role))) throw new HttpError(403, 'FORBIDDEN', 'Necesitás permiso de préstamos o administración.');
   }
+  /** Lee un préstamo con nombres de proyecto, elemento y personas. */
   async function row(db, id, locking = false) {
     const [rows] = await db.execute(`SELECT ${columns} ${joins} WHERE l.id = ?${locking ? ' FOR UPDATE' : ''}`, [id]);
     if (!rows.length) throw new HttpError(404, 'LOAN_NOT_FOUND', 'No encontramos ese préstamo.');
     return rows[0];
   }
+  /** Préstamo con el historial de devoluciones. */
   async function detail(db, id, locking = false) {
     const loan = await row(db, id, locking);
     const [returns] = await db.execute(`SELECT r.id, r.quantity, r.damaged_quantity AS damagedQuantity, r.note, r.created_at AS createdAt,
@@ -32,6 +41,7 @@ export function createLoansRepository(pool) {
     return { ...loan, returns };
   }
   return {
+    /** Movimientos filtrados por jornada o pendientes, con el resumen de saldos. */
     list: (input, viewerId) => transaction(pool, async db => {
       await actor(db, viewerId);
       const filters = [], parameters = [];
@@ -43,6 +53,7 @@ export function createLoansRepository(pool) {
       return { loans, summary: { pendingCount: Number(summary[0].pendingCount), pendingQuantity: Number(summary[0].pendingQuantity) } };
     }),
     get: (id, viewerId) => transaction(pool, async db => { await actor(db, viewerId); return detail(db, id); }),
+    /** Proyectos confirmados con lo que pueden retirar en la jornada indicada. */
     projects: (input, viewerId) => transaction(pool, async db => {
       await actor(db, viewerId);
       const [projects] = await db.query(`SELECT p.id, p.name, p.course, p.version, s.name AS spaceName, b.furniture_code AS furnitureId
@@ -68,6 +79,10 @@ export function createLoansRepository(pool) {
             deliverable: existing || item.archivedAt ? 0 : Math.max(0, Math.min(item.reservedQuantity - own, physical)) };
         }) }));
     }),
+    /**
+     * Registra una entrega. Valida proyecto confirmado, reserva vigente, alumno
+     * integrante que retira, una sola entrega por proyecto/elemento/jornada y stock.
+     */
     deliver: (input, actorId) => transaction(pool, async db => {
       await actor(db, actorId, true);
       const [projects] = await db.execute('SELECT id, status, version FROM projects WHERE id = ? FOR UPDATE', [input.projectId]);
@@ -91,6 +106,9 @@ export function createLoansRepository(pool) {
       await db.execute('INSERT INTO loans (id, project_id, resource_id, day, quantity, recipient_id, delivered_by, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [id, input.projectId, input.resourceId, input.day, input.quantity, input.recipientId, actorId, input.note]);
       return detail(db, id, true);
     }),
+    /**
+     * Registra una devolución total, parcial o una novedad; las unidades dañadas quedan fuera de servicio.
+     */
     receive: (id, input, actorId) => transaction(pool, async db => {
       await actor(db, actorId, true);
       const loan = await row(db, id, true);

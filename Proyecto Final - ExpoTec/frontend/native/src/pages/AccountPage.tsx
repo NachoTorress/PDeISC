@@ -1,3 +1,6 @@
+/**
+ * Pantalla del sistema compartido (datos de la API REST). Mi cuenta: ingreso, registro (alumno o invitado), accesos sociales, recuperación de contraseña y datos de la sesión.
+ */
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -30,6 +33,7 @@ const empty: Credentials = {
   lastName: "",
 };
 
+/** Formulario de ingreso/registro o resumen de la cuenta si ya hay sesión. */
 export default function AccountPage({
   onSignedIn,
 }: {
@@ -45,7 +49,7 @@ export default function AccountPage({
   useEffect(() => {
     let active = true;
     void client
-      .query<{ enabled: boolean }>("/api/auth/recovery/query", {})
+      .query<{ enabled: boolean }>("/api/auth/recovery", {}, "GET")
       .then((result) => {
         if (active) setRecoveryEnabled(result.enabled);
       })
@@ -79,6 +83,7 @@ export default function AccountPage({
     validation.confirmation = "Las contraseñas deben coincidir.";
   const fieldError = (key: string) =>
     serverFields[key] || (touched[key] ? validation[key] : undefined);
+  /** Actualiza un campo y borra su error. */
   function update(key: keyof Credentials, value: string) {
     setInput((current) => ({ ...current, [key]: value }));
     setTouched((current) => ({ ...current, [key]: true }));
@@ -86,6 +91,7 @@ export default function AccountPage({
     setError("");
     setMessage("");
   }
+  /** Ejecuta una acción mostrando carga, éxito o error. */
   async function run(action: () => Promise<void>, success: string) {
     if (working.current) return;
     working.current = true;
@@ -107,6 +113,7 @@ export default function AccountPage({
       setBusy(false);
     }
   }
+  /** Valida en el cliente y envía el ingreso o registro. */
   function submit() {
     setTouched({
       email: true,

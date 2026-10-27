@@ -1,3 +1,8 @@
+/**
+ * Pantalla del sistema compartido (datos de la API REST). Propuesta de proyecto en cuatro pasos (proyecto, equipo, puesto y revisión).
+ * Conserva el borrador al volver a un paso anterior y avisa si otra persona
+ * modificó el proyecto o tomó el puesto mientras se completaba.
+ */
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import type { ScrollView } from "react-native";
@@ -45,6 +50,7 @@ const noPending: ProposalPending = {
   subjects: false,
 };
 
+/** Formulario guiado de alta o edición de una propuesta. */
 export default function SharedProposalPage({
   projectId,
   onSaved,
@@ -108,11 +114,12 @@ export default function SharedProposalPage({
     let active = true;
     setLoading(true);
     Promise.all([
-      client.query<{ spaces: SpaceSummary[] }>("/api/spaces/query"),
+      client.query<{ spaces: SpaceSummary[] }>("/api/spaces", {}, "GET"),
       projectId
         ? client.send<{ project: SharedProject }>(
-            `/api/projects/${projectId}/query`,
+            `/api/projects/${projectId}`,
             {},
+        "GET",
           )
         : Promise.resolve(undefined),
     ])
@@ -172,7 +179,7 @@ export default function SharedProposalPage({
     setSpaceLoading(!!spaceId);
     if (!spaceId) return;
     client
-      .query<{ space: SharedSpace }>(`/api/spaces/${spaceId}/query`)
+      .query<{ space: SharedSpace }>(`/api/spaces/${spaceId}`, {}, "GET")
       .then((result) => {
         if (active) setSpace(result.space);
       })
@@ -222,16 +229,19 @@ export default function SharedProposalPage({
     (index) => proposalIssuesForStep(issues, index).length === 0,
   );
 
+  /** Vuelve al inicio del formulario. */
   function top() {
     requestAnimationFrame(() =>
       scroll.current?.scrollTo({ y: 0, animated: false }),
     );
   }
+  /** Marca texto escrito sin agregar en personas o materias. */
   function pendingChange(key: keyof ProposalPending, value: boolean) {
     setPending((current) =>
       current[key] === value ? current : { ...current, [key]: value },
     );
   }
+  /** Actualiza un campo del borrador. */
   function change<K extends keyof ProposalDraft>(
     key: K,
     value: ProposalDraft[K],
@@ -244,6 +254,7 @@ export default function SharedProposalPage({
     setServerFields((current) => ({ ...current, [field]: "" }));
     setError("");
   }
+  /** Cambia de paso; para avanzar exige que el paso actual sea válido. */
   function goToStep(target: number) {
     if (busy) return;
     if (target > step) {
@@ -268,17 +279,20 @@ export default function SharedProposalPage({
     setError("");
     top();
   }
+  /** Reintenta la carga inicial. */
   function retryLoad() {
     loaded.current = "";
     setError("");
     setDraft(null);
     setLoadRevision((value) => value + 1);
   }
+  /** Actualiza la lista de espacios y puestos sin perder el borrador. */
   async function refreshPlaces() {
     setSpaceLoading(true);
     try {
       const result = await client.query<{ spaces: SpaceSummary[] }>(
-        "/api/spaces/query",
+        "/api/spaces",
+        {}, "GET",
       );
       setSpaces(result.spaces);
       setSpaceId((current) =>
@@ -298,6 +312,7 @@ export default function SharedProposalPage({
       setSpaceLoading(false);
     }
   }
+  /** Envía la propuesta (`POST /api/projects` o `PUT /api/projects/:id`). */
   async function submit() {
     setSubmitted(true);
     setAttempted([0, 1, 2]);
@@ -323,8 +338,9 @@ export default function SharedProposalPage({
     setConflict(false);
     try {
       const result = await client.send<{ project: SharedProject }>(
-        projectId ? `/api/projects/${projectId}/save` : "/api/projects/create",
+        projectId ? `/api/projects/${projectId}` : "/api/projects",
         proposalRequest(draft),
+        projectId ? "PUT" : "POST",
       );
       setSavedId(result.project.id);
     } catch (cause) {

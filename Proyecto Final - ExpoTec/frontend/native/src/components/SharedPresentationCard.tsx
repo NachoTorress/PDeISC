@@ -1,3 +1,4 @@
+/** Ficha de un proyecto en la presentación TV. */
 import { useState } from "react";
 import { Image, Text, View, useWindowDimensions } from "react-native";
 import type { ReactNode } from "react";

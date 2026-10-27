@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Plano de espacios con editor de mobiliario.
+ */
 import { useCallback, useState } from "react";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useDemo } from "../hooks/useDemo";
@@ -71,6 +74,7 @@ export default function MapPage({
   const allTables = state.spaces
     .flatMap((item) => item.furniture)
     .filter((item) => item.type === "table").length;
+  /** Reubica piezas que quedarían fuera del plano. */
   const fitPositions = useCallback(
     (positions: { id: string; x: number; y: number }[]) => {
       setDraft((current) =>
@@ -91,6 +95,7 @@ export default function MapPage({
     },
     [],
   );
+  /** Cambia el espacio visible. */
   function changeSpace(id: string) {
     setSpaceId(id);
     setSelected(null);
@@ -98,6 +103,7 @@ export default function MapPage({
     setConfirmDelete(false);
     setError("");
   }
+  /** Guarda el plano editado. */
   function save() {
     if (!draft) return;
     const result = mutate({ type: "saveSpace", space: draft });
@@ -109,6 +115,7 @@ export default function MapPage({
     setError("");
     notify("La distribución quedó guardada en este dispositivo.");
   }
+  /** Crea un espacio nuevo en la demo. */
   function createSpace() {
     const next: Space = {
       id: newId(),

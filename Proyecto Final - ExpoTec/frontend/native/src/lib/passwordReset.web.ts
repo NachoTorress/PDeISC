@@ -1,3 +1,4 @@
+/** Lee y limpia el token `#reset=...` del enlace de recuperación en la web. */
 let token: string | null = null;
 if (typeof window !== "undefined") {
   const hash = new URLSearchParams(window.location.hash.slice(1));

@@ -1,3 +1,4 @@
+/** Detalle de un proyecto compartido: equipo, profesores, materias, ubicación, enlaces y elementos. */
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import type { ProposalDraft } from "../lib/sharedProjects";

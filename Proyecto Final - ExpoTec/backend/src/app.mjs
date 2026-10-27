@@ -1,3 +1,9 @@
+/**
+ * Punto de armado de la API para producción.
+ * Lee la configuración, crea el pool de conexiones MySQL/TiDB y construye la
+ * aplicación con los repositorios reales de cada dominio. Vercel importa este
+ * módulo como función serverless; `server.mjs` lo usa para ejecutar localmente.
+ */
 import express from 'express';
 import { createApp } from './create-app.mjs';
 import { readConfig } from './config/env.mjs';

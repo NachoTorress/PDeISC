@@ -1,3 +1,6 @@
+/**
+ * Pantalla del sistema compartido (datos de la API REST). Presentación TV pública con los proyectos confirmados del servidor.
+ */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
@@ -21,6 +24,7 @@ import {
 } from "../lib/sharedPresentation";
 import type { PresentationProject } from "../lib/sharedPresentation";
 
+/** Secuencia automática con pausa, avance, retroceso y pantalla completa. */
 export default function SharedPresentationPage({
   onBack,
   onProject,
@@ -51,6 +55,7 @@ export default function SharedPresentationPage({
   const videoFailed = failed.includes(mediaKey),
     hasVideo = !!project?.videoUrl && !videoFailed;
   const active = playing && focused && display.visible && !error;
+  /** Carga todos los proyectos confirmados. */
   const load = useCallback(async () => {
     if (pending.current) return;
     const request = ++generation.current;
@@ -110,6 +115,7 @@ export default function SharedPresentationPage({
   useEffect(() => {
     if (!focused || !display.visible) setPlaying(false);
   }, [focused, display.visible]);
+  /** Pasa a la ficha siguiente o anterior. */
   const advance = useCallback(
     (direction = 1) => {
       setSelected((current) =>

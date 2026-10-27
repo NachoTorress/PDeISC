@@ -1,4 +1,6 @@
+/** Tipos y validaciones de préstamos compartidos. */
 import { integerQuantity } from "./sharedInventory";
+/** Préstamo de la lista. */
 export interface LoanSummary {
   id: string;
   projectId: string;
@@ -17,6 +19,7 @@ export interface LoanSummary {
   deliveredFirstName: string;
   deliveredLastName: string;
 }
+/** Préstamo con sus devoluciones. */
 export interface SharedLoan extends LoanSummary {
   returns: {
     id: string;
@@ -28,6 +31,7 @@ export interface SharedLoan extends LoanSummary {
     lastName: string;
   }[];
 }
+/** Elemento que un proyecto puede retirar. */
 export interface LendingResource {
   resourceId: string;
   name: string;
@@ -40,6 +44,7 @@ export interface LendingResource {
   loanId: string | null;
   archivedAt: string | null;
 }
+/** Proyecto confirmado con sus integrantes y elementos. */
 export interface LendingProject {
   id: string;
   name: string;
@@ -50,6 +55,7 @@ export interface LendingProject {
   members: { id: string; firstName: string; lastName: string }[];
   resources: LendingResource[];
 }
+/** Formulario de entrega. */
 export interface LendingDraft {
   projectId: string;
   resourceId: string;
@@ -57,6 +63,7 @@ export interface LendingDraft {
   quantity: string;
   note: string;
 }
+/** Errores del formulario de entrega. */
 export function lendingErrors(input: LendingDraft, project?: LendingProject) {
   const fields: Record<string, string> = {};
   const resource = project?.resources.find(
@@ -75,6 +82,7 @@ export function lendingErrors(input: LendingDraft, project?: LendingProject) {
     fields.note = "Usá hasta 1000 caracteres.";
   return fields;
 }
+/** Errores del formulario de devolución. */
 export function receivingErrors(
   input: { quantity: string; damagedQuantity: string; note: string },
   loan: LoanSummary,

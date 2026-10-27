@@ -1,3 +1,4 @@
+/** Controles accesibles para girar y redimensionar la pieza seleccionada sin usar gestos. */
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
@@ -6,6 +7,7 @@ import { TABLE_LIMITS, TABLE_SIZE } from "../lib/layout";
 import type { Furniture } from "../lib/types";
 import { Button, Field } from "./ui";
 
+/** Botones de giro, ancho, fondo y campo de ángulo exacto. */
 export default function FurnitureTransformControls({
   item,
   onChange,

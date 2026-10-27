@@ -1,3 +1,4 @@
+/** Formulario de devolución: total, parcial, con daños o solo una novedad. */
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
@@ -9,6 +10,7 @@ import { AuthError } from "../lib/authTypes";
 import { receivingErrors } from "../lib/sharedLoans";
 import type { SharedLoan } from "../lib/sharedLoans";
 
+/** Registra la devolución con `POST /api/loans/:id/returns`. */
 export default function SharedReturnForm({
   loan,
   noteOnly,
@@ -46,6 +48,7 @@ export default function SharedReturnForm({
     input.quantity !== String(loan.quantity - loan.returned);
   usePreventRemove(dirty && !saved, ({ data }) => setLeaveAction(data.action));
   const validation = receivingErrors(input, loan, noteOnly);
+  /** Actualiza un campo del borrador. */
   function change(key: keyof typeof input, value: string) {
     setInput((current) => ({ ...current, [key]: value }));
     setFields((current) => ({ ...current, [key]: "" }));
@@ -53,6 +56,7 @@ export default function SharedReturnForm({
     setConfirm(null);
     setError("");
   }
+  /** Valida y envía la devolución. */
   async function receive() {
     if (working.current || Object.keys(validation).length) return;
     working.current = true;
@@ -61,13 +65,14 @@ export default function SharedReturnForm({
     setFields({});
     try {
       const result = await client.send<{ loan: SharedLoan }>(
-        `/api/loans/${loan.id}/return`,
+        `/api/loans/${loan.id}/returns`,
         {
           version: loan.version,
           quantity: noteOnly ? 0 : Number(input.quantity),
           damagedQuantity: noteOnly ? 0 : Number(input.damagedQuantity),
           note: input.note.trim(),
         },
+        "POST",
       );
       setSaved(true);
       onSaved(result.loan);

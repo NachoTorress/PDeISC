@@ -1,8 +1,10 @@
+/** Web: ajusta el alto visible cuando el teclado virtual del teléfono se abre. */
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { ScrollView, View } from "react-native";
 import type { ScrollViewProps } from "react-native";
 
+/** Escucha el viewport visual del navegador. */
 export function KeyboardRoot({ children }: { children: ReactNode }) {
   const [height, setHeight] = useState<number>();
   useEffect(() => {
@@ -29,6 +31,7 @@ export function KeyboardRoot({ children }: { children: ReactNode }) {
   return <View style={{ flex: 1, minHeight: 0, height, maxHeight: height }}>{children}</View>;
 }
 
+/** ScrollView común con referencia para desplazar. */
 export const FormScrollView = forwardRef<Pick<ScrollView, "scrollTo">, ScrollViewProps>(
   function FormScrollView(props, ref) {
     const scroll = useRef<ScrollView>(null);

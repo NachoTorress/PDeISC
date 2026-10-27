@@ -3,9 +3,11 @@ export function formatDate(value: string) {
   const [year, month, day] = value.slice(0, 10).split("-");
   return `${day}/${month}/${year.slice(-2)}`;
 }
+/** Texto visible de cada estado de proyecto. */
 export const statusLabel = {
   pending: "En revisión",
   approved: "Confirmado",
   changes: "Requiere cambios",
 };
+/** Profesores ficticios de la demostración. */
 export const teacherNames = ["Martín García", "Paula Torres"];

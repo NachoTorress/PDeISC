@@ -1,9 +1,14 @@
+/**
+ * Verificación del ingreso nativo con Google en Android: valida el ID token
+ * contra las claves públicas de Google, la audiencia y el nonce del flujo.
+ */
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { credentials } from '../validators/auth.mjs';
 import { socialFailure } from './social-providers.mjs';
 
 const googleKeys = createRemoteJWKSet(new URL('https://www.googleapis.com/oauth2/v3/certs'), { timeoutDuration: 10000 });
 
+/** Crea la función que verifica un ID token de Google y devuelve `{ subject, email }`. */
 export function createNativeGoogleVerifier(config, keys = googleKeys) {
   return async (idToken, nonce) => {
     try {

@@ -1,3 +1,4 @@
+/** Selector de imagen (subida o enlace) y video opcional de un proyecto. */
 import { useState } from "react";
 import { Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";

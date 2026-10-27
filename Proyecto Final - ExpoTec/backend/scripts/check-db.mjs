@@ -1,3 +1,4 @@
+/** Comprueba la conexión con la base (`npm run db:check`). */
 import { createDatabase } from '../src/config/database.mjs';
 
 const pool = createDatabase();

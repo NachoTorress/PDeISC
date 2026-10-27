@@ -1,3 +1,4 @@
+/** Pruebas unitarias de `authClient.ts` (se ejecutan con `npm test` usando node:test y tsx). */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createAuthClient } from "./authClient";
@@ -60,7 +61,7 @@ test("el acceso social web adopta la sesión en memoria sin guardar tokens en el
   assert.equal(app.saved(), "previous");
 });
 function setup(
-  handler: (path: string, body: object, token?: string) => Promise<unknown>,
+  handler: (path: string, body: object, token?: string, method?: string) => Promise<unknown>,
   browser = false,
 ) {
   let saved: string | null = "previous";
@@ -195,9 +196,9 @@ test("una sesión revocada no se informa como verificada", async () => {
 
 test("las consultas públicas no envían acceso y un conflicto de guardado no se reintenta", async () => {
   let writes = 0;
-  const app = setup(async (path, body, token) => {
+  const app = setup(async (path, body, token, method) => {
     if (path.endsWith("/refresh")) return session;
-    if (path.endsWith("/query")) {
+    if (method === "GET") {
       assert.equal(token, undefined);
       return { spaces: [] };
     }
@@ -207,9 +208,9 @@ test("las consultas públicas no envían acceso y un conflicto de guardado no se
     throw new AuthError("Otra persona modificó el espacio", 409);
   });
   await app.client.restore();
-  await app.client.query("/api/spaces/query");
+  await app.client.query("/api/spaces", {}, "GET");
   await assert.rejects(
-    app.client.send("/api/spaces/space/save", { version: 4 }),
+    app.client.send("/api/spaces/space", { version: 4 }, "PUT"),
     (error) => error instanceof AuthError && error.status === 409,
   );
   assert.equal(writes, 1);
@@ -222,7 +223,7 @@ test("una escritura sin sesión no llega al endpoint protegido", async () => {
   });
   await app.storage.clear();
   await assert.rejects(
-    app.client.send("/api/spaces/create", {}),
+    app.client.send("/api/spaces", {}, "POST"),
     (error) => error instanceof AuthError && error.status === 401,
   );
 });

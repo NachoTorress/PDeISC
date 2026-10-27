@@ -1,3 +1,9 @@
+/**
+ * Plano interactivo de un espacio: muestra mesas, bancos, puntos eléctricos y
+ * rótulos; en modo edición permite moverlos, girarlos y cambiar su tamaño con
+ * gestos o con controles accesibles. Los puestos muestran su estado con texto
+ * e íconos, no solo con color.
+ */
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   PanResponder,
@@ -72,6 +78,7 @@ function fitItem(item: Furniture, stage: Size): { x: number; y: number } {
   };
 }
 
+/** Pieza del plano que se puede seleccionar y mover con gestos. */
 function MoveableItem({
   item,
   stage,
@@ -434,6 +441,7 @@ export default function NativeFloorplan({
   const selectedIndex = space.furniture.findIndex(
     (item) => item.id === selected,
   );
+  /** Selecciona la pieza anterior o siguiente (alternativa accesible). */
   function selectNearby(direction: number) {
     const count = space.furniture.length;
     if (!count) return;

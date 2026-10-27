@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Formulario de elemento del inventario.
+ */
 import { useState } from "react";
 import { Text, View } from "react-native";
 import { Button, Field, Section } from "../components/ui";
@@ -49,6 +52,7 @@ export default function ResourceForm({
         ? `El total no puede ser menor que ${minimum}: hay elementos asignados o sin devolver.`
         : "";
 
+  /** Valida y guarda el elemento en la demo. */
   function submit() {
     setNameTouched(true);
     if (invalidName || invalidTotal) return;

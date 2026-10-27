@@ -1,3 +1,4 @@
+/** Reproductor del video opcional de un proyecto. */
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { VideoView, useVideoPlayer } from "expo-video";

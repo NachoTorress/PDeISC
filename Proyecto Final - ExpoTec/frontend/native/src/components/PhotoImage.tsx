@@ -1,3 +1,4 @@
+/** Imagen con estado de carga y mensaje de error recuperable. */
 import { useRef, useState } from "react";
 import { Image } from "react-native";
 import type { ImageProps } from "react-native";

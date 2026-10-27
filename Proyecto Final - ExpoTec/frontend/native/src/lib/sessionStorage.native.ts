@@ -1,3 +1,6 @@
+/**
+ * Android: el token de renovación se guarda cifrado en SecureStore para mantener la sesión al reabrir la app.
+ */
 import * as SecureStore from "expo-secure-store";
 import type { SessionStorage } from "./authTypes";
 

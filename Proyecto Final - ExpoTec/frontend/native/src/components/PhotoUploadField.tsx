@@ -1,3 +1,6 @@
+/**
+ * Campo para elegir y subir una foto (proyecto o galería), con progreso, cancelación y alternativa por enlace.
+ */
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -9,6 +12,7 @@ import { managedPhoto, uploadPhoto } from "../lib/photoUpload";
 import type { PhotoPurpose } from "../lib/photoUpload";
 import { preparePhoto } from "../lib/preparePhoto";
 
+/** Selector de foto conectado a la carga de la API. */
 export default function PhotoUploadField({
   value,
   onChange,
@@ -46,6 +50,7 @@ export default function PhotoUploadField({
       busyCallback.current(false);
     };
   }, []);
+  /** Prepara y sube la foto mostrando el progreso. */
   async function upload(asset: ImagePicker.ImagePickerAsset) {
     if (disabled || controller.current || !mounted.current) return;
     const abort = new AbortController();
@@ -92,6 +97,7 @@ export default function PhotoUploadField({
       }
     }
   }
+  /** Pide permiso y abre la galería del dispositivo. */
   async function choose() {
     if (selecting.current || disabled || busy) return;
     selecting.current = true;

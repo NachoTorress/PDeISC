@@ -1,216 +1,129 @@
 # ExpoTec
 
-Documentación de entrega de la versión 0.4.0: [manual de usuario](docs/MANUAL_USUARIO.md), [guía de instalación](docs/GUIA_INSTALACION.md) y [guía de demostración con los cinco perfiles](docs/GUIA_DEMOSTRACION.md). Los [PDF y el índice de documentación](docs/README.md) están disponibles en el repositorio. El 25/10/2026 el usuario confirmó buen funcionamiento de la APK y del acceso nativo con Google; el alcance de esa confirmación se registra en [APK de prueba](docs/APK_PRUEBA.md).
+Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Amancio Williams: los alumnos presentan sus proyectos y piden un puesto y elementos, los profesores los revisan, el encargado de préstamos registra las entregas y devoluciones de cada jornada, y la organización administra espacios, inventario y usuarios. También ofrece una muestra pública, una galería de fotos y una presentación para televisores.
 
-Correcciones de Android 0.3.1: carga de fotos compatible con React Native, giro y tamaño de mesas con botones, selección de piezas en móvil y cabeceras sin margen superior duplicado. [Cambios y verificación](docs/CORRECCIONES_ANDROID_031.md).
+| | |
+| --- | --- |
+| Web | [expotec-web-gn19.vercel.app](https://expotec-web-gn19.vercel.app) |
+| API | `https://expotec-api-gn19.vercel.app` |
+| APK Android | [Descargar ExpoTec 0.4.0](https://expo.dev/artifacts/eas/2PBiG--Pnz0L_bkfG5PCBe9A0grheNB3PZSQsYw94F0.apk) (ver [APK de prueba](docs/APK_PRUEBA.md)) |
+| Versión del código | 0.5.0 |
 
-Rediseño del 22/10/2026: modo oscuro carbón y grafito, acentos de color, filtros alineados, usuarios en filas compactas y grillas que aprovechan el ancho disponible incluso con zoom. Los proyectos sin foto usan un icono pequeño. [Decisiones y referencias de la interfaz](docs/DISENO_INTERFAZ.md).
+## Documentación
 
-Actualización del 22/10/2026: [carga directa de fotos](docs/CARGA_FOTOS.md) en proyectos y galería mediante Vercel Blob privado, con optimización y aprobación antes del acceso público. Préstamos aprovecha el ancho disponible con fichas en columnas; la navegación mantiene estable la posición de sus títulos.
+| Documento | Markdown | PDF |
+| --- | --- | --- |
+| Manual de usuario | [docs/MANUAL_USUARIO.md](docs/MANUAL_USUARIO.md) | [PDF](output/pdf/ExpoTec_MANUAL_USUARIO.pdf) |
+| Guía de instalación y configuración | [docs/GUIA_INSTALACION.md](docs/GUIA_INSTALACION.md) | [PDF](output/pdf/ExpoTec_GUIA_INSTALACION.pdf) |
+| Guía de demostración | [docs/GUIA_DEMOSTRACION.md](docs/GUIA_DEMOSTRACION.md) | [PDF](output/pdf/ExpoTec_GUIA_DEMOSTRACION.pdf) |
+| Documentación de la API (endpoints, métodos, parámetros, respuestas y errores) | [backend/README.md](backend/README.md) | — |
 
-Prototipo de organización escolar migrado a **React Native con Expo SDK 57**. El código activo está en `frontend/native`; la versión anterior de Vite queda en `frontend/web` como referencia. Las compilaciones Android y su alcance están documentados en [APK de prueba](docs/APK_PRUEBA.md).
+Documentación técnica complementaria: [despliegue](docs/DESPLIEGUE.md), [accesos sociales](docs/ACCESOS_SOCIALES.md), [Google en Android](docs/ANDROID_GOOGLE.md), [carga de fotos](docs/CARGA_FOTOS.md), [recuperación de contraseña](docs/RECUPERACION_CONTRASENA.md), [diagramas](docs/diagramas/README.md) y [requisitos](docs/REQUISITOS.md).
 
-La aplicación abre **Espacios compartidos**, con planos y puestos guardados en TiDB y consulta pública. **Ver proyectos** permite presentar propuestas, vincular equipos con cuentas reales y revisarlas; los proyectos confirmados aparecen en el puesto y en la muestra pública. Solo los administradores reales pueden crear espacios, guardar su distribución y darlos de baja. **Mi cuenta** permite registrarse como alumno, ingresar, consultar los permisos del servidor y cerrar sesión. La demostración conserva aparte sus proyectos, espacios, inventario y préstamos ficticios, locales a cada dispositivo.
+## Cumplimiento de la consigna
 
-La [web pública](https://expotec-web-gn19.vercel.app) ya está en Vercel. La API está publicada por separado en `https://expotec-api-gn19.vercel.app` y conectada a TiDB. Los pasos para probarla y actualizar los despliegues están en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
+| Requisito | Cómo se resuelve | Dónde |
+| --- | --- | --- |
+| Registro e inicio de sesión | Registro como alumno o invitado, ingreso con correo y contraseña, recuperación por correo. | `backend/src/routes/auth.mjs`, `frontend/native/src/pages/AccountPage.tsx` |
+| Autenticación con 3 redes sociales | Google (selector nativo en Android), Discord y GitHub con OAuth 2.0. | `backend/src/services/social*.mjs`, `frontend/native/src/components/SocialAccess.tsx` |
+| Mínimo 3 roles con permisos distintos | Alumno, profesor, encargado de préstamos, administrador e invitado; menús y endpoints según el rol. | `backend/src/middleware/auth.mjs`, repositorios |
+| Interfaz amigable y adaptable | Componentes responsivos para teléfono, tablet y escritorio, tema claro y oscuro, modo horizontal y vertical. | `frontend/native/src/components/ui.tsx` |
+| Navegación entre pantallas | React Navigation: pila de pantallas y pestañas. | `frontend/native/src/app.tsx` |
+| API RESTful con CRUD | GET, POST, PUT, PATCH y DELETE sobre espacios, proyectos, inventario, préstamos, galería y usuarios. | `backend/src/routes/` |
+| Manejo de errores | Errores JSON con código y mensaje en español; validación por campo en los formularios. | `backend/src/create-app.mjs`, `frontend/native/src/lib/authRequest.ts` |
+| Estado global | Context API para sesión, tema y demostración. | `frontend/native/src/contexts/` |
+| Sesión persistente | Token de renovación en SecureStore (Android) o cookie HttpOnly (web). | `frontend/native/src/lib/sessionStorage.*.ts` |
+| JWT de acceso y renovación | Acceso de 15 minutos y renovación rotativa de hasta 30 días. | `backend/src/services/crypto.mjs` |
+| Base MySQL estructurada | 10 migraciones relacionales en TiDB (compatible con MySQL). | `backend/sql/` |
+| Documentación de la API en README | Endpoints, métodos, parámetros, respuestas y códigos de error. | [backend/README.md](backend/README.md) |
+| Manual de usuario y guía de instalación | Markdown y PDF. | `docs/`, `output/pdf/` |
+| APK | Compilación EAS con perfil `preview`. | `frontend/native/eas.json` |
 
-## Instalar y abrir
+## Tecnologías
 
-Requisitos: Node.js 24.3 o posterior y npm.
+- **Frontend:** React Native 0.86 con Expo SDK 57 y TypeScript; React Navigation; React Native Web para la versión de navegador.
+- **Backend:** Node.js 24, Express 5, jose (JWT), mysql2, Helmet y CORS.
+- **Base de datos:** TiDB Cloud (MySQL).
+- **Servicios:** Vercel (web y API), Vercel Blob (fotos), Gmail SMTP (recuperación), EAS (APK).
 
-```powershell
-cd "frontend/native"
-npm install
-npx expo start
-```
-
-`npm start` ejecuta el mismo comando, porque el script `start` de `package.json` es `expo start`.
-
-Para Android, usar la APK disponible o una compilación compatible con los módulos nativos del proyecto, incluido el acceso de Google. Expo Go no sustituye esa compilación. Para un emulador ya configurado, `npm run android` inicia Expo e intenta abrir el entorno Android. La [guía de instalación](docs/GUIA_INSTALACION.md) explica cómo elegir la API y preparar el entorno.
-
-Para revisar las mismas pantallas en el navegador:
-
-```powershell
-npm run web
-```
-
-La dirección y el QR aparecen en la terminal. No abrir `index.html` directamente. El puerto puede indicarse con `npm start -- --port 8082`.
-
-## Comprobar
-
-```powershell
-npm run typecheck
-npm run lint
-npm test
-npm run export:android
-npm run export:web
-```
-
-La exportación Android comprueba el empaquetado JavaScript y los recursos; no genera ni prueba un APK. Para abrir la exportación web:
-
-```powershell
-$env:PORT = "5173"
-npm run preview
-```
-
-La configuración de `eas.json` incluye el perfil `preview` para generar una APK instalable mediante EAS. Las compilaciones disponibles, las verificaciones y la confirmación de uso en teléfono se registran en [APK de prueba](docs/APK_PRUEBA.md).
-
-## Presentación TV compartida
-
-**Presentación TV** se abre desde los espacios o proyectos compartidos, sin iniciar sesión. Carga los proyectos confirmados y muestra su descripción, equipo, profesores, materias y ubicación. **Iniciar presentación** comienza la secuencia; **Pausar**, **Anterior** y **Siguiente** permiten manejarla. Las fichas duran 8 segundos por defecto, con opciones de 15 y 30; los videos avanzan al terminar. La secuencia vuelve al primer proyecto al completarse.
-
-Los videos empiezan sin sonido; **Activar sonido** lo habilita. Si el navegador bloquea la reproducción, la pantalla permite continuar sin sonido. Un video con error o 30 segundos sin avanzar se reemplaza por su ficha y ofrece **Reintentar video**. Una imagen no disponible conserva los textos del proyecto. Al ocultar la página o salir, la reproducción se pausa.
-
-**Pantalla completa** está disponible cuando el navegador la admite, requiere pulsar el botón y permite salir también con Escape. **Ver ficha completa del proyecto** abre la consulta pública y pausa la presentación. En pantallas anchas se resume visualmente la descripción larga; la ficha completa conserva todo el texto.
-
-La muestra se consulta cada minuto y al volver a la pantalla. Los proyectos reabiertos o cancelados salen en la siguiente actualización correcta. **Actualizar muestra** permite comprobarlos en el momento. Se cargan todas las páginas antes de reemplazar la secuencia, conservando el proyecto actual si sigue publicado. Ante un fallo se pausa y oculta la secuencia; al recuperar los datos hay que volver a iniciarla. No se usan proyectos ficticios de la demostración.
-
-El [diagrama editable del sistema](docs/diagramas/sistema-expotec.drawio) tiene cuatro páginas: arquitectura, aprobación de proyectos, préstamos y presentación. Sus [imágenes y guía](docs/diagramas/README.md) permiten consultarlo sin un editor.
-
-## Demostración local
-
-- Mapa de aulas y patio, con consulta del proyecto que ocupa cada mesa.
-- Organización: crear, modificar y eliminar espacios sin referencias; agregar mesas, bancos, puntos eléctricos y etiquetas; arrastrar, girar y cambiar el tamaño de las mesas con tiradores. Guardar o cancelar la edición.
-- Estudiante de ejemplo: presentar y editar propuestas con varios integrantes, imagen, profesores, materias, mesa y recursos. Video opcional.
-- Proyectos informáticos: enlaces opcionales al repositorio de GitHub y a la página del proyecto, validados mientras se escriben.
-- Profesor asignado: confirmar o solicitar cambios. La confirmación comprueba mesa y stock y ocupa el lugar automáticamente.
-- Inventario: alta, modificación y eliminación con protección de reservas, préstamos e historial.
-- Préstamos: entrega y devolución parcial o completa en cada una de las tres jornadas. Un elemento no devuelto continúa prestado al cambiar de día.
-- Invitado: muestra pública de los proyectos confirmados, sin edición.
-- Presentación en TV: avance automático de fichas, reproducción de videos y paso al siguiente cuando terminan.
-- Temas claro y oscuro separados, navegación adaptable, retroceso nativo, validación inmediata y confirmaciones dentro de la interfaz.
-
-La interfaz usa tarjetas y controles compactos. En el editor, seleccioná una pieza y usá **−15°**, **+15°** o **+90°**; para otro giro, abrí **Ángulo exacto** y pulsá **Aplicar giro**. En móvil podés recorrer las piezas con las flechas sin apuntar a una mesa pequeña, y ajustar **Ancho** y **Fondo** con botones. En escritorio también se conservan los tiradores. Después pulsá **Guardar plano**. El giro se guarda grado a grado; 360° equivale a 0°.
-
-## Guía breve de uso
-
-**Espacios compartidos** es la entrada de la aplicación. Al principio puede estar vacío: la organización debe cargar la distribución real. **Actualizar espacios** consulta el servidor. Los invitados y alumnos pueden ver los planos sin editarlos. Un administrador puede crear un espacio, abrir **Acomodar espacio**, agregar y mover mobiliario y guardar el plano para todos los dispositivos. Cada mesa se agrega como mobiliario; seleccionarla y marcar **Habilitar esta mesa como puesto para proyectos** la convierte en un puesto inscribible. Los alumnos pueden solicitar esos puestos desde **Ver proyectos → Presentar proyecto**; el puesto se ocupa cuando un profesor responsable confirma la propuesta.
-
-Si otro administrador guardó cambios, se avisa del conflicto y se conserva el borrador en pantalla. **Descartar borrador y recargar** pide confirmación antes de reemplazarlo por la versión del servidor. **Dar de baja espacio** también requiere confirmación, lo retira de la consulta pública y conserva sus registros. Los tamaños y posiciones del plano son relativos, sin dimensiones físicas certificadas. Las cuentas nuevas no pueden concederse permisos de administración; la escuela los asigna mediante el procedimiento del backend.
-
-**Proyectos de ExpoTec** ofrece la muestra pública y **Mis proyectos y revisiones** (o **Gestionar proyectos** para administración). Para presentar, ingresar como alumno y completar los cuatro pasos: Proyecto, Equipo, Puesto y Revisar. Se solicitan nombre, descripción, curso, foto subida o enlace HTTPS de imagen, materias y puesto. Integrantes y profesores se buscan por el correo exacto de sus cuentas y se agregan tras revisar el resultado. El creador y quien edita permanecen incluidos. El equipo admite hasta 12 alumnos y 5 profesores responsables. Las fotos se pueden subir desde el dispositivo; videos directos MP4/WebM y enlaces de GitHub y web para proyectos informáticos siguen siendo opcionales y se alojan externamente.
-
-Un profesor asignado puede pedir cambios con un motivo o confirmar la propuesta. El equipo corrige y reenvía; el historial se conserva. Solicitar no reserva: pueden existir varias propuestas para un puesto, pero una sola confirmación lo ocupa. El plano distingue puestos disponibles y confirmados y permite abrir su ficha pública. Las fichas públicas muestran nombres del equipo y profesores, sin correos ni identificadores de cuentas. Administración puede reabrir una confirmación o cancelar conservando el historial. El plano protege puestos con proyectos vigentes frente a su retiro o baja del espacio.
-
-Si otra persona modificó el proyecto o confirmó el puesto, se informa el conflicto y se conserva el borrador en pantalla. **Actualizar puestos** consulta la disponibilidad sin borrar los datos escritos. El borrador no persiste al cerrar la aplicación y salir sin enviarlo pide confirmación. Los pedidos de recursos se eligen del catálogo compartido. La confirmación reserva todos los elementos y el puesto en una transacción; un faltante conserva la propuesta pendiente y no guarda reservas parciales.
-
-**Inventario compartido** se abre desde **Mi cuenta** o **Ver proyectos** con permisos de administración o préstamos. Administración crea elementos, modifica nombre, descripción y unidades totales, y da de baja con confirmación. **Ver historial** muestra las modificaciones de existencias y su autor. **Dados de baja** conserva la consulta histórica. Un cambio simultáneo conserva el borrador y ofrece **Descartar y recargar elemento**. El encargado de préstamos tiene consulta sin edición.
-
-En la propuesta, **Elementos solicitados** permite buscar elementos, agregarlos, indicar cantidades de 1 a 10000 y quitarlos con confirmación. Es opcional y admite hasta 50 tipos distintos. **Actualizar elementos** vuelve a consultar la disponibilidad sin borrar el pedido. Mientras el proyecto esté pendiente no se reserva stock. Un profesor confirma elementos y mesa juntos; si faltan unidades no se asigna nada. Los ajustes protegen las reservas y los préstamos abiertos; las unidades fuera de servicio se actualizan con motivo. No se puede dar de baja un elemento solicitado por un proyecto vigente. Reabrir o cancelar libera reservas conservando pedidos e historial, una vez devueltos todos los elementos.
-
-**Préstamos y devoluciones** se abre desde **Mi cuenta**, proyectos o inventario con permisos reales de préstamos o administración. **Nueva entrega** permite elegir jornada 1–3, proyecto confirmado, elemento reservado, integrante activo que retira y cantidad. **Revisar entrega** muestra una confirmación antes de guardar. Se admite una entrega por proyecto, elemento y jornada; las unidades pendientes de cualquier día limitan las nuevas entregas. No se inventan fechas de exposición: cada movimiento guarda la fecha y hora reales.
-
-**Devolver** admite devoluciones parciales o completas, con el detalle de las unidades dañadas. **Registrar novedad** conserva una observación sin devolver unidades. Novedades y daños requieren al menos 10 caracteres de explicación. Los daños apartan unidades del stock y quedan en ambos historiales; administración puede habilitarlas nuevamente después de revisarlas, indicando el motivo. Un conflicto conserva el borrador y permite **Descartar y actualizar préstamo** con confirmación. No se editan ni borran entregas o devoluciones históricas.
-
-La vista inicial reúne **Pendientes de todas las jornadas**. También se pueden consultar las entregas de la jornada elegida o todo el historial, buscar entre los registros cargados y cargar más. Cada préstamo muestra quién entrega, quién retira, cantidades y fecha; sus movimientos muestran quién recibe y las últimas 100 devoluciones y novedades. Cambiar de jornada conserva los pendientes. Un proyecto con unidades sin devolver no se puede editar, reabrir ni cancelar.
-
-Los elementos son cantidades de unidades equivalentes, separadas del mobiliario del plano. La disponibilidad para reservar descuenta reservas y unidades fuera de servicio; la disponibilidad física para entregar descuenta unidades fuera de servicio y préstamos abiertos de todas las jornadas. Un daño puede dejar reservas sin cobertura: se informa el faltante y se protege el stock restante. Las devoluciones completas conservan la reserva para el próximo día. No se calcula ni certifica capacidad eléctrica.
-
-El acceso real se abre desde **Ingresar** en la barra superior. El registro pide nombre, apellido, correo y contraseña de 12–128 caracteres, con repetición para comprobarla. Permite elegir alumno o invitado y recibe únicamente ese permiso; un cliente anterior que no indica tipo registra como alumno. El menú de cuenta muestra los permisos actuales y permite reintentar la conexión o cerrar sesión con confirmación. La recuperación por correo y Google, Discord y GitHub están implementados. Google usa el selector nativo en Android; Discord y GitHub abren el navegador y regresan a la aplicación. La configuración de una instalación propia determina su disponibilidad.
-
-La sesión se conserva con Expo SecureStore en Android y con una cookie HttpOnly, Secure y SameSite=Strict en la web de producción. El token de acceso vive en memoria. La web utiliza `/api` a través de Vercel para mantener la cookie en su propio origen; no guarda tokens en AsyncStorage ni localStorage.
-
-**Cambiar vista → Probar vista como** permite cambiar entre perfiles ficticios. Es una herramienta de demostración independiente de la cuenta real. El estudiante de ejemplo es Lucía Fernández; el profesor es Martín García. Los cambios en proyectos, espacios, inventario y préstamos continúan guardándose solo en este dispositivo.
-
-**Demostración → Galería** permite recorrer fotos de ejemplo y probar el circuito completo. Como Estudiante, elegir una foto del dispositivo (PNG, JPG o WebP, hasta 2 MB) o usar la imagen de ejemplo, describirla y enviarla. **Mis fotos** muestra el aporte pendiente. Cambiar al perfil **Organización → Galería → Moderar fotos** permite publicarlo, rechazarlo o retirarlo con un motivo. Al volver al perfil autor se puede consultar la decisión; solo las fotos aprobadas aparecen en **Fotos publicadas**. Los aportes y las revisiones se conservan localmente al recargar. **Muestra** sigue mostrando los proyectos confirmados.
-
-El perfil **Invitado** también puede enviar fotos y consultar **Mis fotos**. Sus aportes quedan pendientes hasta que Organización los aprueba, igual que los de los demás perfiles.
-
-Las siguientes instrucciones corresponden a la **demostración con datos de ejemplo**. En **Espacios → Acomodar espacio**, mantener una pieza de la paleta (Mesa, Banco, Toma o Zona) y arrastrarla al plano. Se crea únicamente al soltarla dentro; tocarla o soltarla fuera no agrega elementos. Seleccionar un objeto existente y arrastrarlo lo mueve; los tiradores achican o agrandan las mesas. **Girar** cambia su orientación. Arrastrar **Zona** agrega una etiqueta cuyo texto se edita en el inspector. **Guardar plano** conserva los cambios; **Cancelar** descarta el borrador. La eliminación requiere confirmación dentro del editor. Con teclado, Enter o Espacio sobre una pieza de la paleta la coloca en el centro; los lectores de pantalla ofrecen la misma acción. Escape cancela un gesto activo. Los campos de texto continúan editables y seleccionables.
-
-En **Proyectos → Presentar proyecto**, completar los campos rotulados. **Agregar integrante** añade compañeros; quitar uno pide confirmación. El creador y el alumno que edita permanecen incluidos. Al marcar **Proyecto informático**, aparecen GitHub y página; son opcionales. Desmarcar con enlaces cargados solicita confirmación antes de quitarlos.
-
-El profesor revisa su propuesta desde **Ver proyecto**. Una confirmación reserva mesa y elementos; una devolución indica qué debe corregir el equipo. Organización puede reabrir una propuesta cuando no hay préstamos pendientes.
-
-En **Préstamos**, elegir la jornada y entregar elementos a los proyectos confirmados. Registrar devoluciones en la tarjeta de cada entrega, indicando la cantidad; se conserva el saldo pendiente.
-
-## Datos y migración
-
-El esquema local conserva equipos, mesas, tamaños, etiquetas, recursos, revisiones y préstamos del prototipo anterior. Los proyectos antiguos sin equipo se convierten en equipos de un integrante. El almacenamiento utiliza la misma clave `expotec-design-v1`. En la vista web, los datos anteriores se conservan al abrir desde el mismo origen (por ejemplo `http://127.0.0.1:5173`). Otra dirección o puerto tiene almacenamiento independiente.
-
-Cada teléfono guarda sus propios datos en un archivo local con respaldo, para que las fotos no excedan el límite por registro de AsyncStorage. AsyncStorage conserva la preferencia del tema y los datos de la vista web. Los datos de una computadora no se transfieren automáticamente al teléfono. Si la lectura de datos guardados falla, la app muestra un aviso y evita sobrescribirlos. Esta persistencia corresponde únicamente a la demostración; los espacios y proyectos compartidos ya utilizan la API y TiDB.
-
-No ingresar información privada ni usar la demostración para organizar la exposición real. Los puntos eléctricos son referencias de ejemplo: no calculan cargas ni certifican la seguridad de la instalación.
-
-## Estructura
+## Estructura del repositorio
 
 ```text
-frontend/native/
-  index.ts             Entrada Expo
-  app.json             Configuración SDK y permisos
-  eas.json             Perfiles de compilación Android
-  src/
-    main.tsx           Registro de la aplicación
-    app.tsx            Navegación y composición
-    components/        Controles, plano y formularios modulares
-    pages/             Espacios, proyectos, inventario, préstamos y muestra
-    contexts/          Datos locales y tema
-    hooks/             Acceso al estado compartido
-    lib/               Tipos, reglas, validaciones y pruebas
-    theme/             Paletas claras y oscuras independientes
-frontend/web/          Prototipo anterior, conservado como referencia
-backend/               API Express, cuentas, sesiones, permisos y SQL para TiDB
+Proyecto Final - ExpoTec/
+├── backend/                API REST (Express + MySQL). Ver backend/README.md
+│   ├── src/                config, middleware, routes, services, repositories, validators
+│   ├── sql/                migraciones 001–010
+│   ├── scripts/            migrar, comprobar, crear administrador, limpieza
+│   └── test/               pruebas unitarias y de integración
+├── frontend/
+│   ├── native/             App React Native (Android y web)
+│   │   ├── src/app.tsx     navegación y estructura general
+│   │   ├── src/pages/      pantallas (Shared* = conectadas a la API; el resto, demostración)
+│   │   ├── src/components/ componentes reutilizables
+│   │   ├── src/contexts/   estado global (sesión, tema, demostración)
+│   │   ├── src/lib/        cliente de API, validaciones y reglas
+│   │   └── scripts/        vista previa, ensayos visuales y capturas del manual
+│   └── web/                prototipo anterior (Vite), solo como referencia
+├── docs/                   manuales, guías, capturas, diagramas y exportador de PDF
+└── output/pdf/             manuales en PDF
 ```
 
-## Backend y despliegue — hito 7A
+## Instalación rápida
 
-Por decisión del 14/10/2026, la base se aloja en **TiDB** y hay **dos proyectos en Vercel**: `expotec-web` para `frontend/native` (exportación web de Expo) y `expotec-api` para `backend` (Express). Android utilizará la misma API. TiDB tiene `expotec`, sus migraciones y un usuario limitado de aplicación. Ambos proyectos están publicados; la API confirma su conexión a la base y acepta el origen de la web.
-
-El backend incluye registro como alumno, ingreso con correo y contraseña, JWT de acceso, renovación rotativa, revocación y cierre de sesión. Comprueba los permisos en la base y permite a un administrador asignar responsabilidades sin que una cuenta nueva pueda concedérselas. El SQL normaliza usuarios, roles y sesiones, y las migraciones tienen un registro de aplicación.
-
-Para preparar el backend:
+Requisitos: Node.js 24, npm, Git y una base MySQL/TiDB. Los pasos completos, con variables de entorno y migraciones, están en la [guía de instalación](docs/GUIA_INSTALACION.md).
 
 ```powershell
+# Backend
 cd backend
 npm ci
-Copy-Item .env.example .env
+Copy-Item .env.example .env      # completar JWT_SECRET, CORS_ORIGINS y DB_*
+npm run db:migrate
+npm run dev                      # http://localhost:3001
+
+# Frontend (otra terminal)
+cd frontend/native
+npm ci
+npm run web                      # versión navegador
+npm run android                  # emulador o dispositivo
 ```
 
-Esos pasos corresponden a una instalación nueva: no reemplazar el `.env` existente de esta computadora. Para crear otra base, seguir la guía de `.env.setup` y `db:setup` en backend/README.md. `npm test` comprueba la API localmente con almacenamiento controlado; las 18 pruebas pasaron. `npm run test:database` requiere una base vacía exclusiva de pruebas y comprueba SQL y concurrencia reales; pasó contra TiDB el 14/10/2026 en `expotec_test_01`. También se comprobaron los endpoints públicos de salud, conexión, sesión sin token y CORS desde Vercel.
+Comprobaciones:
 
-La [documentación de la API](backend/README.md) detalla todos los métodos, rutas, permisos, cuerpos, respuestas y errores. Las consultas usan POST mientras se confirma la restricción sobre GET de la consigna. La [guía de TiDB y Vercel](docs/DESPLIEGUE.md) explica raíces de los dos proyectos, variables y orden de configuración. Las credenciales de base y `JWT_SECRET` se guardan exclusivamente en el backend.
+```powershell
+cd backend;          npm test
+cd frontend/native;  npm run typecheck; npm run lint; npm test
+```
 
-El hito **7B: acceso desde la aplicación**, implementado el 19/10/2026, incorpora las pantallas y la persistencia de sesión. El hito **7C: espacios compartidos** añade las tablas relacionales de espacios, mobiliario y puestos, con edición atómica, control de versiones y baja sin borrado. Los perfiles ficticios se mantienen exclusivamente para la demostración local. El hito **7D: proyectos compartidos** conecta equipos, materias, profesores, revisiones, confirmación transaccional y consulta pública. El hito **7E: inventario y reservas** incorpora existencias, pedidos y reservas transaccionales. El hito **7F: préstamos y devoluciones** conecta entregas por jornada, devoluciones parciales, novedades y unidades fuera de servicio. El hito **7G: presentación TV compartida** reproduce los proyectos confirmados del servidor, con fichas, videos, controles y pantalla completa.
+### Generar la APK
 
-En desarrollo web, copiar `frontend/native/.env.example` a `.env.local` únicamente si no existe y configurar `EXPO_PUBLIC_API_URL=http://localhost:3001`. Abrir Expo Web con `localhost` y autorizar su origen y puerto exactos en `CORS_ORIGINS` del backend. Reiniciar Expo tras modificar variables. En Android sin variable se usa la API pública; para el emulador con API local usar `http://10.0.2.2:3001`. Nunca colocar credenciales de base ni secretos en variables `EXPO_PUBLIC_`.
+```powershell
+cd frontend/native
+npx eas-cli build --platform android --profile preview
+```
 
-Para probar una exportación local, iniciar el backend y ejecutar `npm run preview`: su servidor reenvía `/api` al puerto 3001. `API_PROXY_URL` permite cambiar ese destino. La vista previa y la API deben usar un origen incluido en `CORS_ORIGINS`.
+La APK 0.4.0 publicada sigue funcionando con la API 0.5.0 gracias a una capa de compatibilidad (ver [backend/README.md](backend/README.md#compatibilidad-con-la-apk-040)). Para entregar la versión 0.5.0 conviene generar una APK nueva con el comando anterior y adjuntarla también como *Release* en GitHub, porque los enlaces de descarga de Expo pueden vencer.
 
-## Usuarios y permisos — hito 7H
+## Roles
 
-Desde **Mi cuenta → Usuarios y permisos**, administración busca cuentas por nombre o correo y carga más resultados. **Editar permisos** permite combinar alumno, profesor, préstamos y administrador. **Revisar cambios** muestra la cuenta y los permisos elegidos antes de confirmar. El servidor protege al último administrador y rechaza una edición si cambiaron los permisos mientras se preparaba. Ante conflicto, se conserva la selección y se puede **Descartar selección y recargar cuenta**, con confirmación. Los cambios rigen en la próxima operación de la cuenta con el servidor. Invitados y cuentas sin administración no pueden consultar este listado.
+| Rol | Qué puede hacer |
+| --- | --- |
+| Visitante sin cuenta | Ver espacios, proyectos confirmados, galería y presentación TV. |
+| Invitado | Enviar fotos a la galería y ver el estado de sus aportes. |
+| Alumno | Presentar y corregir propuestas de proyecto, sumar equipo, pedir puesto y elementos. |
+| Profesor | Confirmar o pedir cambios en los proyectos que tiene asignados. |
+| Encargado de préstamos | Consultar inventario y registrar entregas y devoluciones. |
+| Administrador | Usuarios y permisos, espacios y planos, inventario, moderación de fotos. |
 
-Este hito no necesita nuevas variables ni migraciones. `npm run test:users`, en backend, comprueba la integración sobre una base exclusiva de pruebas. Recuperación, archivos y accesos sociales continúan pendientes de sus servicios externos.
+La aplicación incluye además una **demostración** con datos ficticios locales, donde se puede cambiar de perfil sin crear cuentas. Sus cambios no se envían al servidor.
 
-## Galería de la experiencia — hito 7I
+## Control de versiones
 
-**Galería de la ExpoTec** se abre desde espacios, proyectos o Mi cuenta. Cualquier visitante puede recorrer las fotos aprobadas. Para participar, crear una cuenta de **Invitado** o ingresar con una cuenta existente y pulsar **¡Subí tu foto de la ExpoTec!**. El aporte pide un enlace HTTPS directo a una imagen ya alojada y una descripción de 5–400 caracteres. **Ver vista previa** comprueba cómo se ve; un enlace no accesible conserva la descripción y muestra un aviso. Desde el 22/10/2026 se puede elegir una foto del dispositivo; la carga usa Vercel Blob privado y conserva la moderación.
+El repositorio Git es la carpeta superior `PDelSC` (rama `main`). Los archivos `.env`, contraseñas, tokens, APK y compilaciones están excluidos por `.gitignore`. Frontend y backend se despliegan por separado en Vercel desde `main`.
 
-**Enviar para aprobación** deja la foto pendiente. **Mis fotos** muestra los aportes propios y los mensajes de organización; ninguna foto pendiente o rechazada se publica. La galería pública muestra nombre del autor, fecha y descripción, sin correo ni datos de moderación. Se admiten hasta 20 fotos pendientes por persona y 10 intentos de envío por hora. Los aportes enviados no se editan silenciosamente.
+Mensajes de commit sugeridos para estos cambios:
 
-Administración dispone de **Moderar fotos**, con filtros de pendientes, publicadas y no publicadas. **Revisar foto → Revisar decisión → Confirmar decisión** permite publicar o rechazar. Rechazar o retirar una publicada exige un motivo de 10–1000 caracteres, visible para el autor. Cada decisión queda registrada; las revisiones simultáneas se rechazan conservando el borrador. Salir con un aporte o mensaje sin guardar pide confirmación.
-
-**Actualizar galería**, cambiar de vista o volver a abrir la pantalla consulta el estado del servidor. Una foto retirada deja de aparecer en la siguiente consulta; no hay actualización en tiempo real. Una consulta fallida oculta la lista y permite reintentar. La demostración y su muestra de proyectos permanecen independientes.
-
-Aplicar `backend/sql/006_gallery.sql` mediante `npm run db:migrate` antes de publicar esta versión. `npm run test:gallery` verifica el circuito en una base exclusiva de pruebas. No requiere nuevas credenciales ni servicios externos.
-
-## Navegación
-
-El botón de cuenta de la barra superior muestra nombre, correo, permisos disponibles y cierre de sesión con confirmación. Sin una sesión iniciada muestra **Ingresar**, con acceso al registro, proveedores y recuperación de contraseña. Al completar el ingreso se abren los espacios compartidos. Las fotos de proyectos y galerías ajustan su altura a su proporción original, sin franjas añadidas ni recortes.
-
-Las secciones compartidas se abren desde el panel lateral en ventanas de al menos 1200 px. En móvil y ventanas menores, el botón hamburguesa abre el mismo menú, con accesos alineados y sección actual marcada. Se cierra al elegir una sección, tocar afuera, pulsar la cruz o Escape en web. Inventario, préstamos y usuarios aparecen según los permisos de la cuenta real. Los accesos generales repetidos se retiraron de las pantallas; sus acciones de trabajo permanecen dentro de cada sección. La demostración conserva sus perfiles ficticios independientes.
-
-## Entrega final pendiente
-
-La recuperación de contraseña cuenta con SMTP, enlace temporal de uso único, actualización transaccional y revocación de sesiones. Quedó habilitada en producción y el usuario confirmó la recepción real desde Gmail el 22/10/2026. La configuración para otras instalaciones está en [docs/RECUPERACION_CONTRASENA.md](docs/RECUPERACION_CONTRASENA.md). Sin configuración completa no se muestra la acción en el acceso.
-
-El hito **7J** prepara el acceso web con Google, Discord y GitHub: alta con contraseña propia, vinculación a cuentas existentes mediante su contraseña y sesión de un solo uso. La implementación está comprobada con proveedores simulados y TiDB de pruebas; **todavía falta crear las aplicaciones externas, configurar sus credenciales y verificar cada proveedor real**. Los botones se muestran solo al configurar el proveedor. Las instrucciones y retornos exactos están en [docs/ACCESOS_SOCIALES.md](docs/ACCESOS_SOCIALES.md). Aplicar las migraciones 007 y 008 antes de publicar; `npm run test:social` comprueba el circuito en la base exclusiva de pruebas. Android sigue al final.
-
-Quedan las pruebas finales con los tres proveedores sociales reales, completar el manual final en APA y entregar un APK probado. Por decisión del 22/10/2026, las fotos se pueden subir a Vercel Blob privado y los videos y otros documentos siguen por enlace. La recuperación está implementada y configurada con Gmail SMTP, con recepción real confirmada. El hito 7I incorpora la galería pública de fotos, con cuentas de invitados y aprobación de administración antes de publicar. Por indicación del usuario, Android se retoma al final. El alcance está en [docs/REQUISITOS.md](docs/REQUISITOS.md).
-
-Las fechas, el plano real, el relevamiento eléctrico, los proveedores externos y el almacenamiento de videos requieren definición antes de reemplazar los ejemplos. El prototipo usa enlaces directos MP4/WebM; su reproducción final depende del formato compatible con cada dispositivo.
-
-[PRODUCT.md](PRODUCT.md) documenta el producto y [DESIGN.md](DESIGN.md) sus decisiones visuales. El repositorio Git está en la carpeta superior `PDelSC`; las credenciales se excluyen mediante el `.gitignore` de ExpoTec.
-
-La conservación de datos y las comprobaciones de esta migración están en [docs/MIGRACION_EXPO.md](docs/MIGRACION_EXPO.md).
-
+```text
+feat(api): migrar la API a métodos REST con compatibilidad para la APK 0.4.0
+docs(code): documentar backend y frontend
+docs: limpiar README, documentación de la API y manuales con capturas
+```

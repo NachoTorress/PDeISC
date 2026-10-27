@@ -1,3 +1,4 @@
+/** Pruebas unitarias de `gestureSelection.ts` (se ejecutan con `npm test` usando node:test y tsx). */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { lockGestureSelection } from "./gestureSelection.web";

@@ -1,3 +1,5 @@
+/** Tamaño del plano según el ancho del contenedor y la pantalla (responsivo). */
+/** Ancho y alto en píxeles. */
 export type FloorplanSize = { width: number; height: number };
 
 /** El contenedor determina el plano; su altura medida nunca se reutiliza para dimensionarlo. */

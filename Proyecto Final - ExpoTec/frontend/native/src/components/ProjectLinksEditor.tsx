@@ -1,3 +1,6 @@
+/**
+ * Campos opcionales de proyecto informático: enlaces de GitHub y página web validados mientras se escriben.
+ */
 import { useState } from "react";
 import { Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
@@ -5,6 +8,7 @@ import { projectLinkError } from "../lib/projectLinks";
 import { CheckRow, Field, InlineConfirm, Section } from "./ui";
 import { Icon } from "./Icon";
 
+/** Valores del editor de enlaces. */
 export type ProjectLinksValue = {
   isSoftwareProject: boolean;
   githubUrl: string;

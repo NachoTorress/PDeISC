@@ -1,3 +1,4 @@
+/** Formulario de alta o edición de un elemento del inventario. */
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
@@ -9,6 +10,7 @@ import { AuthError } from "../lib/authTypes";
 import { inventoryErrors } from "../lib/sharedInventory";
 import type { InventoryResource } from "../lib/sharedInventory";
 
+/** Crea (`POST /api/inventory`) o modifica (`PUT /api/inventory/:id`). */
 export default function SharedResourceForm({
   resource,
   onSaved,
@@ -49,12 +51,14 @@ export default function SharedResourceForm({
     ...input,
     previousUnavailable: resource?.unavailable ?? 0,
   });
+  /** Actualiza un campo y limpia su error. */
   function change(key: keyof typeof input, value: string) {
     setInput((current) => ({ ...current, [key]: value }));
     setTouched((current) => ({ ...current, [key]: true }));
     setFields((current) => ({ ...current, [key]: "" }));
     setError("");
   }
+  /** Valida y guarda el elemento. */
   async function save() {
     setTouched({
       name: true,
@@ -71,8 +75,8 @@ export default function SharedResourceForm({
     try {
       const result = await client.send<{ resource: InventoryResource }>(
         resource
-          ? `/api/inventory/${resource.id}/save`
-          : "/api/inventory/create",
+          ? `/api/inventory/${resource.id}`
+          : "/api/inventory",
         {
           name: input.name.trim(),
           description: input.description.trim(),
@@ -81,6 +85,7 @@ export default function SharedResourceForm({
           note: input.note.trim(),
           ...(resource ? { version: resource.version } : {}),
         },
+        resource ? "PUT" : "POST",
       );
       setSaved(true);
       onSaved(result.resource);

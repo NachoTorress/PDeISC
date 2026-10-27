@@ -1,6 +1,8 @@
+/** Íconos vectoriales propios de la app (SVG), sin dependencias externas. */
 import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { Platform } from "react-native";
 
+/** Trazos SVG de cada ícono. */
 const paths = {
   map: "M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2V5M9 3v16M15 5v16",
   projects: "M4 6h16v14H4V6M8 6V3h8v3M4 11h16M9 11v3h6v-3",
@@ -60,6 +62,7 @@ const paths = {
   zoomOut: "M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0M6 10h8",
 } as const;
 
+/** Nombres de íconos disponibles. */
 export type IconName = keyof typeof paths;
 
 /** Una biblioteca vectorial compartida: todos los símbolos usan la misma cuadrícula y trazo. */

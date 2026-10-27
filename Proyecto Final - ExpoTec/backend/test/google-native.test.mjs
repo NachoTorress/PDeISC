@@ -1,3 +1,4 @@
+/** Prueba unitaria (sin base de datos real): verificación del ID token de Google nativo. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPair, SignJWT } from 'jose';

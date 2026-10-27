@@ -1,3 +1,6 @@
+/**
+ * Preparación de la foto antes de subirla. Variante por plataforma: Metro elige `.native.ts` en Android y `.web.ts` en el navegador; `.d.ts` declara la interfaz común.
+ */
 import type { ImagePickerAsset } from "expo-image-picker";
 import { selectedPhoto } from "./photoUpload";
 import type { PhotoBody } from "./photoUploadBody";

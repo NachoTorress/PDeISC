@@ -1,8 +1,10 @@
+/** Validación de consultas, envíos y moderación de la galería. */
 import { HttpError } from '../lib/errors.mjs';
 import { objectBody, pagination } from './auth.mjs';
 import { httpsLinkError } from './projects.mjs';
 import { spaceVersion } from './spaces.mjs';
 
+/** Paginación y, en moderación, filtro por estado. */
 export function galleryQuery(body, admin = false) {
   objectBody(body, ['limit', 'offset', ...(admin ? ['status'] : [])]);
   const { status, ...page } = body;
@@ -15,6 +17,7 @@ export function galleryQuery(body, admin = false) {
   return result;
 }
 
+/** Foto enviada: enlace HTTPS o imagen propia y descripción de 5 a 400 caracteres. */
 export function galleryPhoto(body) {
   objectBody(body, ['imageUrl', 'caption']);
   const imageUrl = typeof body.imageUrl === 'string' ? body.imageUrl.trim() : body.imageUrl;
@@ -28,6 +31,7 @@ export function galleryPhoto(body) {
   return { imageUrl, caption };
 }
 
+/** Decisión de moderación; rechazar exige un motivo. */
 export function galleryReview(body) {
   objectBody(body, ['version', 'decision', 'note']);
   const version = spaceVersion(body.version);

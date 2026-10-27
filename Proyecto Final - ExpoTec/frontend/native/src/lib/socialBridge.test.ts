@@ -1,3 +1,4 @@
+/** Pruebas unitarias de `socialBridge.ts` (se ejecutan con `npm test` usando node:test y tsx). */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash, webcrypto } from "node:crypto";

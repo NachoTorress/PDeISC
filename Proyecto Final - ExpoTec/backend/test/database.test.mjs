@@ -1,3 +1,4 @@
+/** Prueba unitaria (sin base de datos real): configuración de la base y del entorno. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { transaction, createDatabase } from '../src/config/database.mjs';

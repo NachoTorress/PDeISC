@@ -1,3 +1,4 @@
+/** Acceso a datos de la galería de fotos: aportes, estados y moderación. */
 import { randomUUID } from 'node:crypto';
 import { transaction } from '../config/database.mjs';
 import { HttpError } from '../lib/errors.mjs';
@@ -7,7 +8,9 @@ const columns = `p.id, p.image_url AS imageUrl, p.caption,
   CONCAT(u.first_name, ' ', u.last_name) AS authorName, p.created_at AS createdAt`;
 const privateColumns = `p.status, p.version, p.updated_at AS updatedAt, COALESCE(r.note, '') AS reviewNote`;
 
+/** Crea el repositorio de la galería. */
 export function createGalleryRepository(pool) {
+  /** Verifica cuenta activa y, si corresponde, permiso de administrador. */
   async function member(db, actorId, admin = false) {
     if (admin) await db.execute("SELECT code FROM roles WHERE code = 'admin' FOR UPDATE");
     const [rows] = await db.execute(`SELECT id FROM users WHERE id = ? AND active = TRUE FOR UPDATE`, [actorId]);
@@ -17,6 +20,7 @@ export function createGalleryRepository(pool) {
       if (!assigned.length) throw new HttpError(403, 'FORBIDDEN', 'Necesitás permiso de administrador.');
     }
   }
+  /** Consulta paginada: pública (aprobadas), propia o de moderación. */
   async function list({ limit, offset, status }, authorId, publicView = false) {
     const conditions = [], values = [];
     if (publicView) conditions.push("p.status = 'approved'");
@@ -33,6 +37,7 @@ export function createGalleryRepository(pool) {
     publicList: page => list(page, null, true),
     mine: (page, actorId) => list(page, actorId),
     moderation: page => list(page),
+    /** Registra una foto pendiente (máximo 20 pendientes por autor). */
     async submit(input, actorId) {
       return transaction(pool, async db => {
         await member(db, actorId);
@@ -44,6 +49,7 @@ export function createGalleryRepository(pool) {
         return { id, status: 'pending', version: 1 };
       });
     },
+    /** Aprueba, rechaza o retira una foto comprobando su versión. */
     async review(id, input, actorId) {
       return transaction(pool, async db => {
         await member(db, actorId, true);

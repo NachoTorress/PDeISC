@@ -1,3 +1,6 @@
+/**
+ * Prueba de integración contra una base MySQL/TiDB exclusiva (TEST_DB_NAME): equipos, revisiones y dos confirmaciones para un único puesto.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -56,33 +59,33 @@ test('TiDB: equipos reales, privacidad, revisiones y dos confirmaciones para un 
   subjects.push(`Materia ${randomUUID()}`);
   const input = { name: 'Robot 2026', description: 'Propuesta temporal para comprobar la revisión de proyectos.', course: '6° 1°', imageUrl: 'https://example.com/image.png', videoUrl: '', isSoftwareProject: false, githubUrl: '', websiteUrl: '', memberIds: [owner.user.id, teammate.user.id], teacherIds: [teacher.user.id], subjects, boothId };
   async function create(body, who) {
-    const result = await api.request('/api/projects/create', body, who.accessToken);
+    const result = await api.request('/api/projects', body, who.accessToken);
     assert.equal(result.status, 201, JSON.stringify(result.body));
     projects.push(result.body.project.id);
     return result.body.project;
   }
   const first = await create(input, owner);
-  assert.equal((await api.request(`/api/projects/public/${first.id}/query`)).status, 404);
-  assert.equal((await api.request(`/api/projects/${first.id}/query`, {}, outsider.accessToken)).status, 404);
-  assert.equal((await api.request(`/api/projects/${first.id}/query`, {}, teammate.accessToken)).status, 200);
-  assert.equal((await api.request(`/api/projects/${first.id}/save`, { ...input, version: 1, memberIds: [...input.memberIds, outsider.user.id] }, outsider.accessToken)).status, 404);
-  assert.equal((await api.request(`/api/projects/${first.id}/save`, { ...input, version: 1, memberIds: [teammate.user.id] }, teammate.accessToken)).status, 400);
-  assert.equal((await api.request('/api/projects/people/find', { email: teacher.user.email, role: 'teacher' }, owner.accessToken)).body.person.email, undefined);
-  assert.equal((await api.request(`/api/projects/${first.id}/review`, { version: 1, action: 'approve', note: '' }, otherTeacher.accessToken)).status, 403);
-  const changes = await api.request(`/api/projects/${first.id}/review`, { version: 1, action: 'changes', note: 'Ampliar la descripción del circuito de control.' }, teacher.accessToken);
+  assert.equal((await api.get(`/api/projects/public/${first.id}`)).status, 404);
+  assert.equal((await api.get(`/api/projects/${first.id}`, {}, outsider.accessToken)).status, 404);
+  assert.equal((await api.get(`/api/projects/${first.id}`, {}, teammate.accessToken)).status, 200);
+  assert.equal((await api.put(`/api/projects/${first.id}`, { ...input, version: 1, memberIds: [...input.memberIds, outsider.user.id] }, outsider.accessToken)).status, 404);
+  assert.equal((await api.put(`/api/projects/${first.id}`, { ...input, version: 1, memberIds: [teammate.user.id] }, teammate.accessToken)).status, 400);
+  assert.equal((await api.get('/api/projects/people', { email: teacher.user.email, role: 'teacher' }, owner.accessToken)).body.person.email, undefined);
+  assert.equal((await api.request(`/api/projects/${first.id}/reviews`, { version: 1, action: 'approve', note: '' }, otherTeacher.accessToken)).status, 403);
+  const changes = await api.request(`/api/projects/${first.id}/reviews`, { version: 1, action: 'changes', note: 'Ampliar la descripción del circuito de control.' }, teacher.accessToken);
   assert.equal(changes.body.project.status, 'changes');
   assert.equal(changes.body.project.version, 2);
-  const resubmitted = await api.request(`/api/projects/${first.id}/save`, { ...input, version: 2 }, teammate.accessToken);
+  const resubmitted = await api.put(`/api/projects/${first.id}`, { ...input, version: 2 }, teammate.accessToken);
   assert.equal(resubmitted.status, 200);
   assert.equal(resubmitted.body.project.status, 'pending');
   const second = await create({ ...input, memberIds: [outsider.user.id] }, outsider);
   const confirms = await Promise.all([
-    api.request(`/api/projects/${first.id}/review`, { version: 3, action: 'approve', note: '' }, teacher.accessToken),
-    api.request(`/api/projects/${second.id}/review`, { version: 1, action: 'approve', note: '' }, teacher.accessToken),
+    api.request(`/api/projects/${first.id}/reviews`, { version: 3, action: 'approve', note: '' }, teacher.accessToken),
+    api.request(`/api/projects/${second.id}/reviews`, { version: 1, action: 'approve', note: '' }, teacher.accessToken),
   ]);
   assert.deepEqual(confirms.map(result => result.status).sort(), [200, 409]);
   const approved = confirms.find(result => result.status === 200).body.project;
-  const published = await api.request(`/api/projects/public/${approved.id}/query`);
+  const published = await api.get(`/api/projects/public/${approved.id}`);
   assert.equal(published.status, 200);
   for (const field of ['creatorId', 'feedback', 'version', 'reviews']) assert.equal(published.body.project[field], undefined);
   assert.ok(published.body.project.members.every(member => member.id === undefined && member.email === undefined));
@@ -90,17 +93,17 @@ test('TiDB: equipos reales, privacidad, revisiones y dos confirmaciones para un 
   assert.equal((await spaceRepository.get(space.id)).booths[0].projectId, approved.id);
   await assert.rejects(spaceRepository.archive(space.id, 2, admin.user.id), error => error.code === 'SPACE_IN_USE');
   await assert.rejects(spaceRepository.save(space.id, { ...savedSpace, version: 2, furniture: [], boothFurnitureIds: [] }, admin.user.id), error => error.code === 'SPACE_IN_USE');
-  assert.equal((await api.request(`/api/projects/${approved.id}/save`, { ...input, version: approved.version }, owner.accessToken)).status === 200, false);
-  const reopened = await api.request(`/api/projects/${approved.id}/review`, { version: approved.version, action: 'reopen', note: 'Reabrir para revisar la ubicación del proyecto.' }, admin.accessToken);
+  assert.equal((await api.put(`/api/projects/${approved.id}`, { ...input, version: approved.version }, owner.accessToken)).status === 200, false);
+  const reopened = await api.request(`/api/projects/${approved.id}/reviews`, { version: approved.version, action: 'reopen', note: 'Reabrir para revisar la ubicación del proyecto.' }, admin.accessToken);
   assert.equal(reopened.status, 200);
   assert.equal((await pool.execute('SELECT COUNT(*) AS count FROM booth_allocations WHERE booth_id = ?', [boothId]))[0][0].count, 0);
-  const stale = await api.request(`/api/projects/${first.id}/save`, { ...input, version: 1 }, owner.accessToken);
+  const stale = await api.put(`/api/projects/${first.id}`, { ...input, version: 1 }, owner.accessToken);
   assert.equal(stale.status, 409);
   await pool.execute("DELETE FROM user_roles WHERE user_id = ? AND role_code = 'teacher'", [teacher.user.id]);
-  assert.equal((await api.request(`/api/projects/${second.id}/review`, { version: 1, action: 'approve', note: '' }, teacher.accessToken)).status, 403);
+  assert.equal((await api.request(`/api/projects/${second.id}/reviews`, { version: 1, action: 'approve', note: '' }, teacher.accessToken)).status, 403);
   for (const id of projects) {
     const current = await repository.get(id, admin.user.id);
-    assert.equal((await api.request(`/api/projects/${id}/cancel`, { version: current.version }, admin.accessToken)).body.project.status, 'cancelled');
+    assert.equal((await api.del(`/api/projects/${id}`, { version: current.version }, admin.accessToken)).body.project.status, 'cancelled');
   }
   await spaceRepository.archive(space.id, 2, admin.user.id);
   assert.equal((await pool.execute('SELECT COUNT(*) AS count FROM project_reviews WHERE project_id = ?', [first.id]))[0][0].count >= 3, true);

@@ -1,6 +1,8 @@
+/** Tipos, borrador y validaciones de proyectos compartidos. */
 import type { AccountUser } from "./authTypes";
 import { requestsError } from "./sharedInventory";
 import type { ProjectResource, ResourceRequestDraft } from "./sharedInventory";
+/** Integrante o profesor de un proyecto. */
 export interface ProjectPerson {
   id?: string;
   firstName: string;
@@ -11,6 +13,7 @@ export interface ProjectParticipant extends ProjectPerson {
 }
 export type SharedProjectStatus =
   "pending" | "changes" | "approved" | "cancelled";
+/** Proyecto de la lista. */
 export interface ProjectSummary {
   id: string;
   name: string;
@@ -21,6 +24,7 @@ export interface ProjectSummary {
   spaceName: string;
   furnitureId: string;
 }
+/** Ficha completa de un proyecto. */
 export interface SharedProject extends Omit<
   ProjectSummary,
   "spaceName" | "furnitureId"
@@ -53,6 +57,7 @@ export interface SharedProject extends Omit<
     lastName: string;
   }[];
 }
+/** Borrador del formulario de propuesta. */
 export interface ProposalDraft {
   name: string;
   description: string;
@@ -70,12 +75,14 @@ export interface ProposalDraft {
   version?: number;
   resources: ResourceRequestDraft[];
 }
+/** Texto visible de cada estado. */
 export const sharedStatusLabel: Record<SharedProjectStatus, string> = {
   pending: "Pendiente de revisión",
   changes: "Requiere cambios",
   approved: "Confirmado",
   cancelled: "Cancelado",
 };
+/** Crea el borrador vacío o a partir de un proyecto existente. */
 export function proposalDraft(
   user: AccountUser,
   source?: SharedProject,
@@ -125,6 +132,7 @@ export function proposalDraft(
     })),
   };
 }
+/** Convierte el borrador en el cuerpo de `POST/PUT /api/projects`. */
 export function proposalRequest(draft: ProposalDraft) {
   return {
     name: draft.name.trim(),
@@ -146,6 +154,7 @@ export function proposalRequest(draft: ProposalDraft) {
     ...(draft.version === undefined ? {} : { version: draft.version }),
   };
 }
+/** Valida un enlace HTTPS. */
 export function sharedLinkError(value: string, required = false, kind = "") {
   const link = value.trim();
   if (!link) return required ? "Ingresá un enlace HTTPS." : "";
@@ -173,6 +182,7 @@ export function sharedLinkError(value: string, required = false, kind = "") {
     return "Usá una URL HTTPS completa, sin credenciales ni espacios.";
   }
 }
+/** Errores por campo de toda la propuesta. */
 export function proposalErrors(draft: ProposalDraft, actorId: string) {
   const fields: Record<string, string> = {};
   const resources = requestsError(draft.resources);

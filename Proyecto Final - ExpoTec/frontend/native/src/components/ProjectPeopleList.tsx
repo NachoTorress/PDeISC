@@ -1,3 +1,4 @@
+/** Lista de integrantes o profesores agregados, con opción de quitar y confirmación. */
 import { useState } from "react";
 import { Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";

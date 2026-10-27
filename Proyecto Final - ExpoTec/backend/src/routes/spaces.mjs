@@ -1,29 +1,54 @@
+/**
+ * Rutas REST de espacios (aulas, patio, sectores) y su plano de mobiliario.
+ *
+ * | Método | Ruta              | Acceso         | Descripción                         |
+ * | ------ | ----------------- | -------------- | ----------------------------------- |
+ * | GET    | /api/spaces       | público        | Lista los espacios activos.         |
+ * | GET    | /api/spaces/:id   | público        | Devuelve un espacio con su plano.   |
+ * | POST   | /api/spaces       | administrador  | Crea un espacio vacío.              |
+ * | PUT    | /api/spaces/:id   | administrador  | Guarda datos, mobiliario y puestos. |
+ * | DELETE | /api/spaces/:id   | administrador  | Da de baja el espacio (?version=N). |
+ */
 import { Router } from 'express';
 import { requireAdmin, requireSession, rateLimit } from '../middleware/auth.mjs';
-import { objectBody, userId } from '../validators/auth.mjs';
+import { userId } from '../validators/auth.mjs';
 import { createSpaceBody, saveSpaceBody, spaceVersion } from '../validators/spaces.mjs';
+import { versionQuery, noQuery } from '../validators/query.mjs';
 
+/**
+ * Crea el enrutador de espacios.
+ *
+ * @param {object} repository Repositorio de espacios (consultas SQL).
+ * @param {object} authRepository Repositorio de cuentas, usado por el límite de solicitudes.
+ * @param {object} service Servicio de autenticación que valida el token de acceso.
+ * @param {object} config Configuración del servidor.
+ * @returns {import('express').Router}
+ */
 export function spacesRoutes(repository, authRepository, service, config) {
   const router = Router();
-  router.post('/query', async (req, res) => {
-    objectBody(req.body, []);
+
+  // Lecturas públicas: los visitantes sin cuenta también consultan el plano.
+  router.get('/', async (req, res) => {
+    noQuery(req.query);
     res.json({ spaces: await repository.list() });
   });
-  router.post('/:id/query', async (req, res) => {
-    objectBody(req.body, []);
+  router.get('/:id', async (req, res) => {
+    noQuery(req.query);
     res.json({ space: await repository.get(userId(req.params.id)) });
   });
+
+  // Desde aquí, solo administración con sesión válida y con límite de escrituras.
   router.use(requireSession(service), requireAdmin,
     rateLimit(authRepository, config, { scope: 'spaces-write', limit: 120, seconds: 900 }));
-  router.post('/create', async (req, res) => {
+  router.post('/', async (req, res) => {
     res.status(201).json({ space: await repository.create(createSpaceBody(req.body), req.auth.user.id) });
   });
-  router.post('/:id/save', async (req, res) => {
+  router.put('/:id', async (req, res) => {
     res.json({ space: await repository.save(userId(req.params.id), saveSpaceBody(req.body), req.auth.user.id) });
   });
-  router.post('/:id/archive', async (req, res) => {
-    objectBody(req.body, ['version']);
-    await repository.archive(userId(req.params.id), spaceVersion(req.body.version), req.auth.user.id);
+  router.delete('/:id', async (req, res) => {
+    const { version } = versionQuery(req.query);
+    await repository.archive(userId(req.params.id), spaceVersion(version), req.auth.user.id);
     res.sendStatus(204);
   });
   return router;

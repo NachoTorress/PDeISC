@@ -1,3 +1,8 @@
+/**
+ * Acceso con Google, Discord y GitHub. Muestra solo los proveedores
+ * configurados en el servidor y, al volver del proveedor, permite ingresar,
+ * vincular una cuenta existente (con su contraseña de ExpoTec) o completar el alta.
+ */
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -25,6 +30,7 @@ const names: Record<string, string> = {
   discord: "Discord",
   github: "GitHub",
 };
+/** Botones de proveedores y formulario para completar el acceso. */
 export function SocialAccess({
   onPendingChange,
   onAvailableChange,
@@ -67,7 +73,7 @@ export function SocialAccess({
   useEffect(() => {
     let active = true;
     void client
-      .query<{ providers: Provider[] }>("/api/auth/social/providers/query")
+      .query<{ providers: Provider[] }>("/api/auth/social/providers", {}, "GET")
       .then((result) => {
         if (active) setProviders(result.providers);
       })
@@ -76,6 +82,7 @@ export function SocialAccess({
       active = false;
     };
   }, [client]);
+  /** Ejecuta una acción mostrando carga y errores. */
   async function run(action: () => Promise<void>) {
     if (working.current) return;
     working.current = true;
@@ -120,6 +127,7 @@ export function SocialAccess({
       active = false;
     };
   }, [client, pending]);
+  /** Completa el acceso según el modo indicado por la API. */
   async function complete(access: Status) {
     if (!pending) return;
     await client.completeSocial({
@@ -139,6 +147,7 @@ export function SocialAccess({
     setStatus(null);
     setInput({ firstName: "", lastName: "", password: "", confirmation: "" });
   }
+  /** Actualiza un campo del formulario de alta o vinculación. */
   function update(key: keyof typeof input, value: string) {
     const next = { ...input, [key]: value };
     setInput(next);
@@ -152,6 +161,7 @@ export function SocialAccess({
       setFields((current) => ({ ...current, [key]: validation[key] ?? "" }));
     }
   }
+  /** Limpia el flujo pendiente y cierra el formulario. */
   function finish() {
     if (!status || !pending) return;
     const validation =
@@ -379,6 +389,7 @@ export function SocialAccess({
   );
 }
 
+/** Botón de un proveedor social con su ícono. */
 function ProviderButton({
   provider,
   disabled,

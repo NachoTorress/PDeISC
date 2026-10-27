@@ -1,11 +1,15 @@
+/** Reglas para sumar alumnos y profesores a una propuesta. */
 export type ProjectPeopleRole = "student" | "teacher";
 
+/** Máximo de integrantes y de profesores. */
 export const projectPeopleLimit = { student: 12, teacher: 5 } as const;
 
+/** Normaliza el correo buscado. */
 export function projectPeopleEmail(value: string) {
   return value.trim().toLowerCase();
 }
 
+/** Valida el correo antes de buscar. */
 export function projectPeopleEmailError(value: string) {
   const email = projectPeopleEmail(value);
   if (
@@ -18,6 +22,7 @@ export function projectPeopleEmailError(value: string) {
   return "";
 }
 
+/** Indica por qué no se puede sumar una persona (repetida, límite, rol). */
 export function projectPersonAdditionError({
   role,
   personId,

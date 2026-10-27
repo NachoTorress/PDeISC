@@ -1,3 +1,4 @@
+/** Campos de la propuesta en la demostración: datos del proyecto y elección del puesto. */
 import { Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { teacherNames } from "../lib/format";
@@ -6,6 +7,7 @@ import { CheckRow, Choice, Field, Section } from "./ui";
 import { freeProjectTables } from "./projectFormModel";
 import type { ProjectDraft } from "./projectFormModel";
 
+/** Función que actualiza un campo del borrador. */
 export type DraftUpdate = <K extends keyof ProjectDraft>(
   key: K,
   value: ProjectDraft[K],
@@ -16,6 +18,7 @@ type Props = {
   errorFor: (key: string) => string;
 };
 
+/** Nombre, descripción, curso, materias e imagen. */
 export function ProjectProposalFields({ draft, update, errorFor }: Props) {
   const { colors } = useTheme();
   return (
@@ -88,6 +91,7 @@ export function ProjectProposalFields({ draft, update, errorFor }: Props) {
   );
 }
 
+/** Espacio y mesa solicitados. */
 export function ProjectPlaceFields({
   draft,
   update,

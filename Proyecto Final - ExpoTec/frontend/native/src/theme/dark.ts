@@ -1,3 +1,4 @@
+/** Paleta del tema oscuro. */
 import type { Palette } from "./light";
 export const dark: Palette = {
   dark: true,

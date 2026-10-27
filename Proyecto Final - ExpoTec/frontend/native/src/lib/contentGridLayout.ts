@@ -1,3 +1,5 @@
+/** Cálculo de la grilla responsiva de tarjetas según el ancho disponible. */
+/** Devuelve cuántas columnas entran y el ancho máximo de cada fila. */
 export function contentGridLayout({
   width,
   itemCount,

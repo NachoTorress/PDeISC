@@ -1,8 +1,11 @@
+/** Acceso a datos de recuperación de contraseña: tokens de un solo uso guardados como hash. */
 import { transaction } from '../config/database.mjs';
 import { HttpError } from '../lib/errors.mjs';
 
+/** Crea el repositorio de recuperación. */
 export function createRecoveryRepository(pool) {
   return {
+    /** Emite un token nuevo e invalida los anteriores; devuelve false si el correo no existe. */
     async issue(email, hash, expiresAt) {
       return transaction(pool, async db => {
         const [users] = await db.execute('SELECT id FROM users WHERE email = ? AND active = TRUE FOR UPDATE', [email]);
@@ -12,9 +15,11 @@ export function createRecoveryRepository(pool) {
         return true;
       });
     },
+    /** Anula un token (por ejemplo, si falló el envío del correo). */
     async revoke(hash) {
       await pool.execute('UPDATE password_resets SET used_at = UTC_TIMESTAMP(3) WHERE token_hash = ? AND used_at IS NULL', [hash]);
     },
+    /** Usa el token: cambia la contraseña y revoca todas las sesiones de la cuenta. */
     async consume(hash, passwordHash) {
       return transaction(pool, async db => {
         const invalid = () => new HttpError(400, 'RESET_INVALID', 'El enlace venció o ya fue utilizado. Solicitá uno nuevo.');

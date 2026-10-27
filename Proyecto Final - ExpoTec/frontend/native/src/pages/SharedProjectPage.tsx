@@ -1,3 +1,6 @@
+/**
+ * Pantalla del sistema compartido (datos de la API REST). Ficha de un proyecto: vista pública o privada, revisión del profesor y cancelación.
+ */
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Linking, Text, View } from "react-native";
 import {
@@ -18,6 +21,7 @@ import { formatDate } from "../lib/format";
 import { sharedStatusLabel } from "../lib/sharedProjects";
 import type { SharedProject } from "../lib/sharedProjects";
 
+/** Muestra el proyecto y las acciones permitidas para la cuenta. */
 export default function SharedProjectPage({
   projectId,
   privateView,
@@ -60,11 +64,13 @@ export default function SharedProjectPage({
     setNote("");
     const query = privateView
       ? client.send<{ project: SharedProject }>(
-          `/api/projects/${projectId}/query`,
+          `/api/projects/${projectId}`,
           {},
+        "GET",
         )
       : client.query<{ project: SharedProject }>(
-          `/api/projects/public/${projectId}/query`,
+          `/api/projects/public/${projectId}`,
+        {}, "GET",
         );
     query
       .then((result) => {
@@ -105,6 +111,7 @@ export default function SharedProjectPage({
   const reopenable = privateView && admin && project?.status === "approved";
   const cancellable =
     privateView && project?.status !== "cancelled" && (admin || editable);
+  /** Envía la revisión (`POST /api/projects/:id/reviews`) o la cancelación (`DELETE`). */
   async function review() {
     if (!confirm || !project?.version || working.current) return;
     working.current = true;
@@ -113,10 +120,11 @@ export default function SharedProjectPage({
     setNotice("");
     try {
       const result = await client.send<{ project: SharedProject }>(
-        `/api/projects/${projectId}/${confirm === "cancel" ? "cancel" : "review"}`,
+        confirm === "cancel" ? `/api/projects/${projectId}` : `/api/projects/${projectId}/reviews`,
         confirm === "cancel"
           ? { version: project.version }
           : { version: project.version, action: confirm, note: note.trim() },
+        confirm === "cancel" ? "DELETE" : "POST",
       );
       setSource(result.project);
       setConfirm(null);
@@ -143,6 +151,7 @@ export default function SharedProjectPage({
       setBusy(false);
     }
   }
+  /** Abre un enlace externo seguro. */
   function open(url: string) {
     void Linking.openURL(url).catch(() =>
       setError("No pudimos abrir el enlace en este dispositivo."),

@@ -1,3 +1,6 @@
+/**
+ * Prueba de integración contra una base MySQL/TiDB exclusiva (TEST_DB_NAME): tokens de recuperación de un solo uso.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID, randomBytes } from 'node:crypto';

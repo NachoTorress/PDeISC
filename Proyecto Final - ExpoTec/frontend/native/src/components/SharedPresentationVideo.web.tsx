@@ -1,3 +1,4 @@
+/** Video de la presentación TV en el navegador (respeta las reglas de reproducción automática). */
 import { useEffect, useRef } from "react";
 
 export function SharedPresentationVideo({

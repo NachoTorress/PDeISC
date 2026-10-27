@@ -1,3 +1,4 @@
+/** Ícono de cada proveedor social. */
 import { Platform } from "react-native";
 import { SvgXml } from "react-native-svg";
 

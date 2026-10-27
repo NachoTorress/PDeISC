@@ -1,3 +1,4 @@
+/** Selector de materias con sugerencias y materias propias. */
 import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
@@ -9,6 +10,7 @@ import {
 } from "../lib/projectSubjects";
 import { Button, Card, Field, Heading, InlineConfirm } from "./ui";
 
+/** Busca, sugiere y agrega materias (hasta 10). */
 export default function ProjectSubjectsPicker({
   value,
   onChange,
@@ -43,6 +45,7 @@ export default function ProjectSubjectsPicker({
     attempted || duplicate ? projectSubjectInputError(input, value) : "";
   const suggestions = suggestedProjectSubjects(value, input);
 
+  /** Agrega una materia si es válida y no está repetida. */
   function add(candidate: string) {
     if (disabled) return;
     setAttempted(true);
@@ -54,6 +57,7 @@ export default function ProjectSubjectsPicker({
     setNotice(`Se agregó ${subject}.`);
   }
 
+  /** Limpia la búsqueda. */
   function clearInput() {
     setInput("");
     setAttempted(false);

@@ -1,3 +1,4 @@
+/** Web: la renovación vive en una cookie HttpOnly; solo se coordina entre pestañas. */
 import type { SessionStorage } from "./authTypes";
 
 export const sessionStorage: SessionStorage = {

@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Detalle de un proyecto con revisión del profesor.
+ */
 import { useState } from "react";
 import { Linking, Text, View, useWindowDimensions } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
@@ -30,6 +33,7 @@ export default function ProjectDetailPage(props: Props) {
   return <ProjectDetail key={props.projectId} {...props} />;
 }
 
+/** Ficha del proyecto y acciones según el perfil. */
 function ProjectDetail({ projectId, onBack, onEdit }: Props) {
   const { state, role, mutate, notify } = useDemo();
   const { colors } = useTheme();

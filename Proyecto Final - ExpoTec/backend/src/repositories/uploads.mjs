@@ -1,12 +1,15 @@
+/** Acceso a datos de imágenes subidas: dueño, estado y reglas de visibilidad. */
 import { HttpError } from '../lib/errors.mjs';
 import { transaction } from '../config/database.mjs';
 
+/** Extrae el id de una URL de imagen propia (`/api/uploads/:id/image`). */
 export function managedImageId(value) {
   if (typeof value !== 'string') return null;
   try { return /^\/api\/uploads\/([a-f0-9-]{36})\/image$/.exec(new URL(value).pathname)?.[1] ?? null; }
   catch { return null; }
 }
 
+/** Valida que una imagen propia usada en un formulario pertenezca a quien la envía. */
 export async function assertOwnedImage(db, imageUrl, ownerId, purpose, existingUrl) {
   const id = managedImageId(imageUrl);
   if (!id) return;
@@ -20,24 +23,29 @@ export async function assertOwnedImage(db, imageUrl, ownerId, purpose, existingU
 const columns = 'id, owner_id AS ownerId, purpose, raw_path AS rawPath, image_path AS imagePath, image_url AS imageUrl, status';
 const referenced = `EXISTS (SELECT 1 FROM gallery_photos g WHERE g.image_url = i.image_url)
   OR EXISTS (SELECT 1 FROM projects p WHERE p.image_url = i.image_url)`;
+/** Crea el repositorio de imágenes. */
 export function createUploadsRepository(pool) {
   return {
+    /** Registra una carga pendiente. */
     async create(image) {
       await pool.execute(`INSERT INTO image_uploads (id, owner_id, purpose, raw_path, image_path, image_url) VALUES (?, ?, ?, ?, ?, ?)`,
         [image.id, image.ownerId, image.purpose, image.rawPath, image.imagePath, image.imageUrl]);
     },
     async get(id) { const [rows] = await pool.execute(`SELECT ${columns} FROM image_uploads WHERE id = ?`, [id]); return rows[0]; },
+    /** Toma la carga para procesarla una sola vez. */
     async claim(id, ownerId) {
       const [result] = await pool.execute("UPDATE image_uploads SET status = 'processing', updated_at = UTC_TIMESTAMP(3) WHERE id = ? AND owner_id = ? AND status = 'started' AND created_at > UTC_TIMESTAMP(3) - INTERVAL 15 MINUTE", [id, ownerId]);
       return result.affectedRows === 1;
     },
     async finish(id, status) { await pool.execute('UPDATE image_uploads SET status = ?, updated_at = UTC_TIMESTAMP(3) WHERE id = ?', [status, id]); },
+    /** Imagen visible públicamente (proyecto confirmado o foto aprobada). */
     async publicImage(id) {
       const [rows] = await pool.execute(`SELECT ${columns} FROM image_uploads i WHERE id = ? AND status = 'ready' AND (
         EXISTS (SELECT 1 FROM gallery_photos g WHERE g.image_url = i.image_url AND g.status = 'approved') OR
         EXISTS (SELECT 1 FROM projects p WHERE p.image_url = i.image_url AND p.status = 'approved'))`, [id]);
       return rows[0];
     },
+    /** Indica si la cuenta puede ver la vista previa privada. */
     async mayRead(image, user) {
       if (image.ownerId === user.id || user.roles.includes('admin')) return true;
       const [rows] = await pool.execute(`SELECT p.id FROM projects p WHERE p.image_url = ? AND (
@@ -45,6 +53,7 @@ export function createUploadsRepository(pool) {
         EXISTS (SELECT 1 FROM project_teachers t WHERE t.project_id = p.id AND t.user_id = ?)) LIMIT 1`, [image.imageUrl, user.id, user.id]);
       return rows.length > 0;
     },
+    /** Limpia cargas vencidas o sin uso (mantenimiento). */
     async prune(remove) {
       const [rows] = await pool.query(`SELECT id FROM image_uploads i WHERE updated_at < UTC_TIMESTAMP(3) - INTERVAL 7 DAY AND NOT (${referenced}) LIMIT 100`);
       for (const { id } of rows) await transaction(pool, async db => {

@@ -1,3 +1,6 @@
+/**
+ * Pantalla del sistema compartido (datos de la API REST). Préstamos (préstamos y administración): entregas y devoluciones de las tres jornadas.
+ */
 import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -21,10 +24,12 @@ import { useTheme } from "../contexts/ThemeContext";
 import { formatDate } from "../lib/format";
 import type { LoanSummary, SharedLoan } from "../lib/sharedLoans";
 
+/** Fecha y hora local de un movimiento. */
 function moment(value: string) {
   return `${formatDate(value)} ${new Date(value).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}`;
 }
 
+/** Lista de movimientos por jornada, pendientes o historial. */
 export default function SharedLoansPage({
   onAccount,
 }: {
@@ -66,6 +71,7 @@ export default function SharedLoansPage({
   const lending = canManage && deliveryScope === scope,
     receiving = canManage && operation?.scope === scope ? operation : null;
   const editing = lending || !!receiving;
+  /** Carga una página de `GET /api/loans` con sus filtros. */
   const load = useCallback(
     async (offset = 0) => {
       if (!canManage) {
@@ -79,12 +85,12 @@ export default function SharedLoansPage({
         const result = await client.send<{
           loans: LoanSummary[];
           summary: typeof summary;
-        }>("/api/loans/query", {
+        }>("/api/loans", {
           limit: 25,
           offset,
           ...(view === "day" ? { day: Number(day) } : {}),
           openOnly: view === "open",
-        });
+        }, "GET");
         if (request !== revision.current) return;
         setLoans((current) =>
           offset
@@ -127,6 +133,7 @@ export default function SharedLoansPage({
       .toLocaleLowerCase("es")
       .includes(search.trim().toLocaleLowerCase("es")),
   );
+  /** Ejecuta una acción con estado de carga y aviso de resultado. */
   async function perform(action: () => Promise<void>) {
     if (working.current) return;
     working.current = true;
@@ -145,9 +152,10 @@ export default function SharedLoansPage({
       setBusy(false);
     }
   }
+  /** Consulta el detalle actualizado de un préstamo. */
   async function getLoan(id: string) {
     return (
-      await client.send<{ loan: SharedLoan }>(`/api/loans/${id}/query`, {})
+      await client.send<{ loan: SharedLoan }>(`/api/loans/${id}`, {}, "GET")
     ).loan;
   }
   const paragraph = { color: colors.muted, lineHeight: 22 };

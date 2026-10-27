@@ -1,3 +1,6 @@
+/**
+ * Prueba de integración contra una base MySQL/TiDB exclusiva (TEST_DB_NAME): carga real en Vercel Blob (requiere BLOB_READ_WRITE_TOKEN).
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -48,7 +51,7 @@ test('TiDB y Blob privado: carga real, validación, propiedad, moderación y lim
   await pool.execute("INSERT INTO user_roles (user_id, role_code) VALUES (?, 'admin')", [admin.user.id]);
   const bytes = await sharp({ create: { width: 1800, height: 300, channels: 3, background: '#316d4c' } }).png().toBuffer();
   const preparedBytes = await sharp(bytes).resize({ width: 1600 }).jpeg({ quality: 85 }).toBuffer();
-  const prepared = await api.request('/api/uploads/prepare', { purpose: 'gallery', contentType: 'image/jpeg', size: preparedBytes.length }, owner.accessToken);
+  const prepared = await api.request('/api/uploads', { purpose: 'gallery', contentType: 'image/jpeg', size: preparedBytes.length }, owner.accessToken);
   assert.equal(prepared.status, 201, JSON.stringify(prepared.body));
   const image = await uploads.get(prepared.body.id); paths.push(image.rawPath, image.imagePath);
   // El mismo destino y encabezados del cliente Android, con bytes JPEG reales.
@@ -57,32 +60,32 @@ test('TiDB y Blob privado: carga real, validación, propiedad, moderación y lim
   assert.ok(nativeResponse.ok, `Transporte Android: HTTP ${nativeResponse.status}`);
   const raw = await nativeResponse.json();
   assert([401,403,404].includes((await fetch(raw.url)).status), 'El objeto privado no se puede leer sin autorización');
-  assert.equal((await api.request('/api/uploads/complete', { id: image.id }, other.accessToken)).status, 404);
-  const completed = await api.request('/api/uploads/complete', { id: image.id }, owner.accessToken);
+  assert.equal((await api.request(`/api/uploads/${image.id}/complete`, {}, other.accessToken)).status, 404);
+  const completed = await api.request(`/api/uploads/${image.id}/complete`, {}, owner.accessToken);
   assert.equal(completed.status, 200, JSON.stringify(completed.body));
-  assert.equal((await api.request('/api/uploads/complete', { id: image.id }, owner.accessToken)).status, 200);
+  assert.equal((await api.request(`/api/uploads/${image.id}/complete`, {}, owner.accessToken)).status, 200);
   const body = { imageUrl: completed.body.imageUrl };
-  assert.equal((await api.request('/api/uploads/preview', body, owner.accessToken)).status, 200);
-  assert.equal((await api.request('/api/uploads/preview', body, admin.accessToken)).status, 200);
-  assert.equal((await api.request('/api/uploads/preview', body, other.accessToken)).status, 404);
+  assert.equal((await api.get('/api/uploads/preview', body, owner.accessToken)).status, 200);
+  assert.equal((await api.get('/api/uploads/preview', body, admin.accessToken)).status, 200);
+  assert.equal((await api.get('/api/uploads/preview', body, other.accessToken)).status, 404);
   assert.equal((await fetch(`${api.base}/api/uploads/${image.id}/image`)).status, 404);
   const payload = { ...body, caption: 'Foto controlada para probar la moderación.' };
-  assert.equal((await api.request('/api/gallery/submit', payload, other.accessToken)).status, 400);
-  const submitted = await api.request('/api/gallery/submit', payload, owner.accessToken);
+  assert.equal((await api.request('/api/gallery', payload, other.accessToken)).status, 400);
+  const submitted = await api.request('/api/gallery', payload, owner.accessToken);
   assert.equal(submitted.status, 201, JSON.stringify(submitted.body));
   const photoId = submitted.body.photo.id;
   assert.equal((await fetch(`${api.base}/api/uploads/${image.id}/image`)).status, 404);
-  assert.equal((await api.request(`/api/gallery/${photoId}/review`, { decision: 'approved', version: 1 }, admin.accessToken)).status, 200);
+  assert.equal((await api.patch(`/api/gallery/${photoId}`, { decision: 'approved', version: 1 }, admin.accessToken)).status, 200);
   const published = await fetch(`${api.base}/api/uploads/${image.id}/image`);
   assert.equal(published.status, 200); assert.equal(published.headers.get('content-type'), 'image/jpeg');
   const info = await sharp(Buffer.from(await published.arrayBuffer())).metadata();
   assert.equal(info.width, 1600); assert.equal(info.exif, undefined);
-  assert.equal((await api.request(`/api/gallery/${photoId}/review`, { decision: 'rejected', version: 2, note: 'Retirar esta imagen controlada de prueba.' }, admin.accessToken)).status, 200);
+  assert.equal((await api.patch(`/api/gallery/${photoId}`, { decision: 'rejected', version: 2, note: 'Retirar esta imagen controlada de prueba.' }, admin.accessToken)).status, 200);
   assert.equal((await fetch(`${api.base}/api/uploads/${image.id}/image`)).status, 404);
-  const fake = await api.request('/api/uploads/prepare', { purpose: 'gallery', contentType: 'image/png', size: 4 }, owner.accessToken);
+  const fake = await api.request('/api/uploads', { purpose: 'gallery', contentType: 'image/png', size: 4 }, owner.accessToken);
   const bad = await uploads.get(fake.body.id); paths.push(bad.rawPath, bad.imagePath);
   await clientPut(bad.rawPath, Buffer.from('fake'), { access: 'private', token: fake.body.clientToken, contentType: 'image/png' });
-  assert.equal((await api.request('/api/uploads/complete', { id: bad.id }, owner.accessToken)).status, 422);
+  assert.equal((await api.request(`/api/uploads/${bad.id}/complete`, {}, owner.accessToken)).status, 422);
   await pool.execute('UPDATE image_uploads SET updated_at = UTC_TIMESTAMP(3) - INTERVAL 8 DAY WHERE owner_id = ?', [owner.user.id]);
   const cleaned = [];
   await uploads.prune(async obsolete => { cleaned.push(...obsolete); await del(obsolete); });

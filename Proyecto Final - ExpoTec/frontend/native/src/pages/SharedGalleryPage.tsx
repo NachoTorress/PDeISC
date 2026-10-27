@@ -1,3 +1,6 @@
+/**
+ * Pantalla del sistema compartido (datos de la API REST). Galería de la ExpoTec: fotos aprobadas, mis aportes y moderación (administración).
+ */
 import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -25,6 +28,7 @@ import { formatDate } from "../lib/format";
 type Form =
   | { actorId: string; type: "submit" }
   | { actorId: string; type: "review"; photo: GalleryPhoto };
+/** Vista pública, propia o de moderación según la cuenta. */
 export default function SharedGalleryPage({
   onAccount,
 }: {
@@ -50,6 +54,7 @@ export default function SharedGalleryPage({
       ? "public"
       : `${user?.id}:${effectiveMode}:${status}`;
   const revision = useRef(0);
+  /** Carga `GET /api/gallery`, `/mine` o `/moderation` paginado. */
   const load = useCallback(
     async (offset = 0) => {
       const request = ++revision.current;
@@ -64,12 +69,14 @@ export default function SharedGalleryPage({
         const result =
           effectiveMode === "public"
             ? await client.query<{ photos: GalleryPhoto[] }>(
-                "/api/gallery/public/query",
+                "/api/gallery",
                 body,
+        "GET",
               )
             : await client.send<{ photos: GalleryPhoto[] }>(
-                `/api/gallery/${effectiveMode === "admin" ? "moderation" : "mine"}/query`,
+                `/api/gallery/${effectiveMode === "admin" ? "moderation" : "mine"}`,
                 body,
+        "GET",
               );
         if (request !== revision.current) return;
         setPhotos((current) =>

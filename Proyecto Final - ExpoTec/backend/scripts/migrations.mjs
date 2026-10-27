@@ -1,6 +1,8 @@
+/** Motor de migraciones: aplica en orden los archivos de `sql/` y guarda su suma de verificación. */
 import { readFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
+/** Aplica las migraciones nuevas; falla si una ya aplicada fue modificada. */
 export async function migrate(pool) {
   await pool.execute(`CREATE TABLE IF NOT EXISTS schema_migrations (
     name VARCHAR(128) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,

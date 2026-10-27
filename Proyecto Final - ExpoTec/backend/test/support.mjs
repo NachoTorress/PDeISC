@@ -1,3 +1,6 @@
+/**
+ * Utilidades de prueba: configuración, repositorio de cuentas en memoria y cliente HTTP con atajos REST (get, put, patch, del).
+ */
 import { randomUUID } from 'node:crypto';
 import { HttpError, unauthorized } from '../src/lib/errors.mjs';
 import { readConfig } from '../src/config/env.mjs';
@@ -59,14 +62,30 @@ export async function listen(app) {
   return {
     base,
     close: () => new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve())),
+    /**
+     * Envía una solicitud JSON a la API de prueba.
+     * En GET y DELETE el objeto `body` se convierte en query string, igual que el cliente real.
+     */
     async request(path, body = {}, accessToken, options = {}) {
-      const response = await fetch(`${base}${path}`, {
-        method: options.method ?? 'POST',
+      const method = options.method ?? 'POST';
+      const withoutBody = ['OPTIONS', 'GET', 'DELETE'].includes(method);
+      let url = `${base}${path}`;
+      if (withoutBody && body && Object.keys(body).length) {
+        const params = new URLSearchParams(Object.entries(body).map(([key, value]) => [key, String(value)]));
+        url += (url.includes('?') ? '&' : '?') + params;
+      }
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json', ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}), ...options.headers },
-        ...(options.method === 'OPTIONS' || options.method === 'GET' ? {} : { body: options.raw ?? JSON.stringify(body) }),
+        ...(withoutBody ? {} : { body: options.raw ?? JSON.stringify(body) }),
       });
       const text = await response.text();
       return { status: response.status, headers: response.headers, body: text ? JSON.parse(text) : null };
     },
+    /** Atajos REST: mismos parámetros que request(), con el método ya indicado. */
+    get(path, query, accessToken, options = {}) { return this.request(path, query, accessToken, { ...options, method: 'GET' }); },
+    put(path, body, accessToken, options = {}) { return this.request(path, body, accessToken, { ...options, method: 'PUT' }); },
+    patch(path, body, accessToken, options = {}) { return this.request(path, body, accessToken, { ...options, method: 'PATCH' }); },
+    del(path, query, accessToken, options = {}) { return this.request(path, query, accessToken, { ...options, method: 'DELETE' }); },
   };
 }

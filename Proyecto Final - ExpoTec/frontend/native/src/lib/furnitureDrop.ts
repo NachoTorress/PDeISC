@@ -1,6 +1,8 @@
+/** Arrastrar y soltar mobiliario desde la paleta al plano. */
 import type { Furniture, Space } from "./types";
 import { TABLE_SIZE } from "./layout";
 
+/** Coordenada en píxeles. */
 export type Point = { x: number; y: number };
 export type WindowRect = Point & { width: number; height: number };
 export type PaletteDrag = { type: Furniture["type"]; start: Point; end: Point };
@@ -29,6 +31,7 @@ export function furnitureSize(
   return { width: 32, height: 32 };
 }
 
+/** Pieza nueva con valores iniciales según su tipo. */
 export function paletteFurniture(type: Furniture["type"]): Furniture {
   return {
     id: "",

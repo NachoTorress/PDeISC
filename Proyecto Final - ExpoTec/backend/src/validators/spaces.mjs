@@ -1,3 +1,4 @@
+/** Validación de espacios y de su plano de mobiliario. */
 import { HttpError } from '../lib/errors.mjs';
 import { objectBody } from './auth.mjs';
 
@@ -5,6 +6,7 @@ function invalid(fields) {
   if (Object.keys(fields).length)
     throw new HttpError(400, 'VALIDATION_ERROR', 'Revisá los datos del espacio.', fields);
 }
+/** Nombre y descripción del espacio. */
 export function spaceDetails(body) {
   const fields = {};
   const name = typeof body.name === 'string' ? body.name.trim().normalize('NFC') : '';
@@ -14,15 +16,18 @@ export function spaceDetails(body) {
   invalid(fields);
   return { name, description };
 }
+/** Datos para crear un espacio. */
 export function createSpaceBody(body) {
   objectBody(body, ['name', 'description']);
   return spaceDetails(body);
 }
+/** Valida la versión (también se usa para proyectos y fotos). */
 export function spaceVersion(value) {
   if (!Number.isSafeInteger(value) || value < 1 || value > 2147483646)
     throw new HttpError(400, 'VALIDATION_ERROR', 'La versión del espacio no es válida.');
   return value;
 }
+/** Plano completo: hasta 150 piezas con posición, giro y tamaño, y los puestos habilitados. */
 export function saveSpaceBody(body) {
   objectBody(body, ['version', 'name', 'description', 'furniture', 'boothFurnitureIds']);
   const details = spaceDetails(body), version = spaceVersion(body.version);

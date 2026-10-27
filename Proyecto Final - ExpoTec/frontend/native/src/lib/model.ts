@@ -1,3 +1,8 @@
+/**
+ * Modelo de la demostración local: reglas de negocio de proyectos, espacios,
+ * inventario, préstamos y galería sin servidor. Cada acción valida el perfil
+ * elegido y devuelve un estado nuevo (inmutable).
+ */
 import type {
   DemoState,
   Mutation,
@@ -24,11 +29,13 @@ const nonempty = (value: unknown): value is string =>
 const positiveInteger = (value: number) =>
   Number.isSafeInteger(value) && value > 0;
 
+/** Lanza un error si el perfil actual no puede hacer la acción. */
 function requireRole(role: Role, ...allowed: Role[]) {
   if (!allowed.includes(role))
     throw new Error("Tu perfil no tiene permiso para realizar esta acción.");
 }
 
+/** Valida largo mínimo y máximo de un texto. */
 function requireText(value: string, label: string, min: number, max: number) {
   if (
     typeof value !== "string" ||
@@ -39,6 +46,7 @@ function requireText(value: string, label: string, min: number, max: number) {
   }
 }
 
+/** Valida una fecha AAAA-MM-DD. */
 function requireDate(value: string) {
   if (
     !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
@@ -63,6 +71,7 @@ export function resourceOut(state: DemoState, id: string, day: number): number {
     .reduce((total, loan) => total + loan.quantity - loan.returned, 0);
 }
 
+/** Unidades sin devolver de un elemento en todas las jornadas. */
 function physicallyOut(state: DemoState, id: string): number {
   // Un elemento no devuelto sigue ocupado aunque cambie la jornada.
   return state.loans
@@ -70,6 +79,7 @@ function physicallyOut(state: DemoState, id: string): number {
     .reduce((total, loan) => total + loan.quantity - loan.returned, 0);
 }
 
+/** Impide confirmar dos proyectos en el mismo puesto. */
 function requireFreePlace(state: DemoState, project: Project) {
   if (
     state.projects.some(
@@ -86,6 +96,7 @@ function requireFreePlace(state: DemoState, project: Project) {
   }
 }
 
+/** Valida los datos de una propuesta de la demo. */
 function validateProject(
   state: DemoState,
   project: Project,
@@ -250,6 +261,7 @@ function validateProject(
   }
 }
 
+/** Valida un espacio y su mobiliario. */
 function validateSpace(state: DemoState, space: Space) {
   if (!nonempty(space.id) || !nonempty(space.name))
     throw new Error("El espacio necesita un nombre y un identificador.");
@@ -315,6 +327,7 @@ function validateSpace(state: DemoState, space: Space) {
   }
 }
 
+/** Valida un elemento del inventario. */
 function validateResource(state: DemoState, resource: Resource) {
   if (!nonempty(resource.id))
     throw new Error("El elemento necesita un identificador.");

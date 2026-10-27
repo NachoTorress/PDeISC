@@ -1,3 +1,4 @@
+/** Imagen de una foto de la galería de la demostración. */
 import PhotoImage from "./PhotoImage";
 import robot from "../../assets/demo-gallery/robot.jpg";
 import electronics from "../../assets/demo-gallery/electronics.jpg";

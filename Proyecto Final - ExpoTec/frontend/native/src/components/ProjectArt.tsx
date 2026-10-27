@@ -1,3 +1,4 @@
+/** Imagen del proyecto o ilustración de reemplazo cuando no tiene imagen. */
 import { View } from "react-native";
 import type { Project } from "../lib/types";
 import { Icon } from "./Icon";

@@ -1,3 +1,6 @@
+/**
+ * Pantalla del sistema compartido (datos de la API REST). Inventario (préstamos y administración): elementos, historial, altas, ajustes y bajas.
+ */
 import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -20,6 +23,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import { formatDate } from "../lib/format";
 import type { InventoryResource } from "../lib/sharedInventory";
 
+/** Lista de elementos activos o dados de baja. */
 export default function SharedInventoryPage({
   onAccount,
 }: {
@@ -53,6 +57,7 @@ export default function SharedInventoryPage({
   const revision = useRef(0),
     working = useRef(false);
   const listScope = `${scope}:${mode}`;
+  /** Carga una página de `GET /api/inventory`. */
   const load = useCallback(
     async (offset = 0) => {
       if (!canRead) {
@@ -64,8 +69,9 @@ export default function SharedInventoryPage({
       setError("");
       try {
         const result = await client.send<{ resources: InventoryResource[] }>(
-          "/api/inventory/query",
+          "/api/inventory",
           { limit: 25, offset, archived: mode === "archived" },
+        "GET",
         );
         if (request !== revision.current) return;
         setResources((current) =>
@@ -105,6 +111,7 @@ export default function SharedInventoryPage({
   const visible = loadedFor === listScope ? resources : [];
   const editing = editor?.scope === scope && canManage ? editor : null;
   const shownHistory = history?.scope === listScope ? history.resource : null;
+  /** Ejecuta una acción con estado de carga y aviso de resultado. */
   async function perform(action: () => Promise<void>) {
     if (working.current) return;
     working.current = true;
@@ -217,8 +224,9 @@ export default function SharedInventoryPage({
           }}
           onReload={async () => {
             const result = await client.send<{ resource: InventoryResource }>(
-              `/api/inventory/${editing.resource!.id}/query`,
+              `/api/inventory/${editing.resource!.id}`,
               {},
+        "GET",
             );
             if (result.resource.archivedAt)
               throw new Error(
@@ -400,7 +408,7 @@ export default function SharedInventoryPage({
                     void perform(async () => {
                       const result = await client.send<{
                         resource: InventoryResource;
-                      }>(`/api/inventory/${resource.id}/query`, {});
+                      }>(`/api/inventory/${resource.id}`, {}, "GET");
                       setHistory({
                         scope: listScope,
                         resource: result.resource,
@@ -418,8 +426,9 @@ export default function SharedInventoryPage({
                     onConfirm={() => {
                       void perform(async () => {
                         await client.send(
-                          `/api/inventory/${resource.id}/archive`,
+                          `/api/inventory/${resource.id}`,
                           { version: resource.version },
+        "DELETE",
                         );
                         setArchive(null);
                         setNotice(

@@ -1,9 +1,14 @@
+/**
+ * Acceso a datos de cuentas, roles, sesiones y tokens de renovación.
+ * Las contraseñas llegan ya convertidas en hash; aquí nunca se manejan en texto.
+ */
 import { randomUUID } from 'node:crypto';
 import { transaction } from '../config/database.mjs';
 import { HttpError, unauthorized } from '../lib/errors.mjs';
 
 const userColumns = 'id, email, first_name AS firstName, last_name AS lastName, active, created_at AS createdAt';
 
+/** Devuelve los datos públicos de una cuenta activa con sus roles (sin hash de contraseña). */
 export async function publicUser(db, id) {
     const [rows] = await db.execute(`SELECT ${userColumns} FROM users WHERE id = ?`, [id]);
     if (!rows[0] || !rows[0].active) throw unauthorized();
@@ -12,6 +17,7 @@ export async function publicUser(db, id) {
     return { ...user, roles: assigned.map(row => row.code) };
   }
 
+/** Abre una sesión y guarda el hash de su primer token de renovación. */
 export async function addSession(db, userId, hash, expiresAt) {
     const id = randomUUID();
     await db.execute('INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, ?)', [id, userId, expiresAt]);
@@ -19,14 +25,18 @@ export async function addSession(db, userId, hash, expiresAt) {
     return id;
   }
 
+/** Crea el repositorio de cuentas sobre el pool de conexiones. */
 export function createAuthRepository(pool) {
   return {
+    /** Comprueba que la base responde (usado por /api/health/ready). */
     async ready() { await pool.execute('SELECT 1'); },
+    /** Detalle de una cuenta activa para administración. */
     async getUser(id) {
       const [rows] = await pool.execute('SELECT id FROM users WHERE id = ? AND active = TRUE', [id]);
       if (!rows.length) throw new HttpError(404, 'USER_NOT_FOUND', 'No encontramos ese usuario activo.');
       return { ...await publicUser(pool, id), active: true };
     },
+    /** Crea la cuenta con rol de alumno o invitado y abre su primera sesión. */
     async register(input, hash, expiresAt) {
       try {
         return await transaction(pool, async db => {
@@ -43,10 +53,12 @@ export function createAuthRepository(pool) {
         throw error;
       }
     },
+    /** Busca el hash de contraseña para comparar en el ingreso. */
     async findCredentials(email) {
       const [rows] = await pool.execute('SELECT id, password_hash AS passwordHash, active FROM users WHERE email = ?', [email]);
       return rows[0] ?? null;
     },
+    /** Abre una sesión nueva tras un ingreso correcto. */
     async openSession(userId, hash, expiresAt) {
       return transaction(pool, async db => {
         // Bloquear también al usuario evita abrir una sesión durante una baja futura.
@@ -55,6 +67,10 @@ export function createAuthRepository(pool) {
         return { user, sessionId: await addSession(db, userId, hash, expiresAt) };
       });
     },
+    /**
+     * Rota el token de renovación: invalida el usado y registra el nuevo.
+     * Si se reutiliza un token ya usado, se revoca toda la sesión (posible robo).
+     */
     async rotate(oldHash, nextHash) {
       const result = await transaction(pool, async db => {
         const [rows] = await db.execute(`SELECT s.id, s.user_id AS userId,
@@ -76,16 +92,19 @@ export function createAuthRepository(pool) {
       if (!result) throw unauthorized();
       return result;
     },
+    /** Valida que la sesión del token de acceso siga activa y devuelve la cuenta. */
     async session(userId, sessionId) {
       const [rows] = await pool.execute(`SELECT id FROM sessions WHERE id = ? AND user_id = ?
         AND revoked_at IS NULL AND expires_at > UTC_TIMESTAMP(3)`, [sessionId, userId]);
       if (!rows.length) throw unauthorized();
       return publicUser(pool, userId);
     },
+    /** Revoca la sesión asociada al token de renovación. */
     async logout(hash) {
       await pool.execute(`UPDATE sessions SET revoked_at = UTC_TIMESTAMP(3) WHERE id IN
         (SELECT session_id FROM refresh_tokens WHERE token_hash = ?) AND revoked_at IS NULL`, [hash]);
     },
+    /** Suma un intento al contador; devuelve los segundos de espera si se superó el límite. */
     async consumeRate(bucket, limit, windowSeconds) {
       return transaction(pool, async db => {
         // El upsert adquiere un bloqueo exclusivo incluso si la fila ya existe.
@@ -103,6 +122,7 @@ export function createAuthRepository(pool) {
         return 0;
       });
     },
+    /** Lista cuentas con búsqueda por nombre o correo (administración). */
     async listUsers({ limit, offset, search = '' }) {
       const [rows] = await pool.query(`SELECT ${userColumns} FROM users
         ${search ? "WHERE LOCATE(?, CONCAT(first_name, ' ', last_name, ' ', email)) > 0" : ''}
@@ -114,6 +134,10 @@ export function createAuthRepository(pool) {
       for (const role of assigned) grouped.get(role.userId).push(role.code);
       return rows.map(row => ({ ...row, active: Boolean(row.active), roles: grouped.get(row.id) }));
     },
+    /**
+     * Reemplaza los roles de una cuenta. Rechaza el cambio si los roles actuales no
+     * coinciden con `expectedRoles` (edición simultánea) o si quitaría el último administrador.
+     */
     async setRoles(id, roles, actorId, expectedRoles) {
       return transaction(pool, async db => {
         // Serializa cambios de permisos: no pueden quitarse dos últimos administradores a la vez.

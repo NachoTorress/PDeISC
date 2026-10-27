@@ -1,3 +1,5 @@
+/** Representación del archivo a subir en Android (URI local) y en la web (Blob). */
+/** Archivo temporal de Android con función para borrarlo. */
 export type LocalPhoto = {
   uri: string;
   type: "image/jpeg";
@@ -7,10 +9,12 @@ export type LocalPhoto = {
 
 export type PhotoBody = Blob | LocalPhoto;
 
+/** Indica si el archivo es un temporal de Android. */
 export function localPhoto(body: PhotoBody): body is LocalPhoto {
   return "uri" in body;
 }
 
+/** Corta la carga si fue cancelada. */
 export function assertPhotoActive(signal: Pick<AbortSignal, "aborted">) {
   if (!signal.aborted) return;
   const error = new Error("Carga cancelada.");
@@ -18,6 +22,7 @@ export function assertPhotoActive(signal: Pick<AbortSignal, "aborted">) {
   throw error;
 }
 
+/** Tamaño reducido conservando la proporción (máximo 1600 px). */
 export function photoResize(width: number, height: number) {
   if (width * height > 40_000_000)
     throw new Error(

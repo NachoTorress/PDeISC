@@ -1,3 +1,4 @@
+/** Pantalla de la demostración (datos locales del dispositivo, sin servidor). Préstamos por jornada. */
 import { useState } from "react";
 import { Text, View } from "react-native";
 import {
@@ -17,6 +18,7 @@ import { resourceOut } from "../lib/model";
 import { LendingForm, ReturnForm } from "./LoanForms";
 import ContentGrid from "../components/ContentGrid";
 
+/** Lista de préstamos con entrega y devolución. */
 export default function LoansPage() {
   const { state, role } = useDemo();
   const { colors } = useTheme();

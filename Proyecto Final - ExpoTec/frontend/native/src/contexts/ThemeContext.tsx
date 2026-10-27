@@ -1,3 +1,4 @@
+/** Tema claro u oscuro de la app (sigue al sistema y se puede alternar). */
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 import { useColorScheme } from "react-native";
@@ -7,6 +8,7 @@ const ThemeContext = createContext<{ colors: Palette; toggle: () => void }>({
   colors: light,
   toggle: () => {},
 });
+/** Proveedor de la paleta de colores actual. */
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const system = useColorScheme();
   const [choice, setChoice] = useState<"light" | "dark" | null>(null);
@@ -21,6 +23,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     </ThemeContext.Provider>
   );
 }
+/** Colores actuales y función para alternar el tema. */
 export function useTheme() {
   return useContext(ThemeContext);
 }

@@ -1,3 +1,7 @@
+/**
+ * Acceso a datos de espacios, mobiliario del plano y puestos inscribibles.
+ * Cada cambio comprueba la versión del espacio para evitar pisar ediciones simultáneas.
+ */
 import { randomUUID } from 'node:crypto';
 import { transaction } from '../config/database.mjs';
 import { HttpError } from '../lib/errors.mjs';
@@ -5,7 +9,9 @@ import { HttpError } from '../lib/errors.mjs';
 const columns = 'id, name, description, version, created_at AS createdAt, updated_at AS updatedAt';
 const conflict = () => new HttpError(409, 'SPACE_CHANGED', 'Otra persona modificó este espacio. Conservá tu borrador y recargá la versión guardada antes de editar nuevamente.');
 
+/** Crea el repositorio de espacios. */
 export function createSpacesRepository(pool) {
+  /** Verifica dentro de la transacción que quien escribe sigue siendo administrador. */
   async function admin(db, actorId) {
     // Comparte el bloqueo con la asignación de roles para comprobar el permiso al escribir.
     await db.execute("SELECT code FROM roles WHERE code = 'admin' FOR UPDATE");
@@ -13,12 +19,14 @@ export function createSpacesRepository(pool) {
       WHERE u.id = ? AND u.active = TRUE AND ur.role_code = 'admin' FOR UPDATE`, [actorId]);
     if (!rows.length) throw new HttpError(403, 'FORBIDDEN', 'Necesitás permiso de administrador.');
   }
+  /** Lee un espacio activo; con `version`, lo bloquea y verifica que no haya cambiado. */
   async function spaceRow(db, id, version) {
     const [rows] = await db.execute(`SELECT ${columns} FROM spaces WHERE id = ? AND archived_at IS NULL${version === undefined ? '' : ' FOR UPDATE'}`, [id]);
     if (!rows.length) throw new HttpError(404, 'SPACE_NOT_FOUND', 'No encontramos ese espacio.');
     if (version !== undefined && rows[0].version !== version) throw conflict();
     return rows[0];
   }
+  /** Arma el espacio completo: datos, mobiliario y puestos con su proyecto confirmado. */
   async function detail(db, id, locking = false) {
     const space = await spaceRow(db, id);
     const [items] = await db.execute(`SELECT code AS id, type, x, y, rotation, width, height, text
@@ -29,12 +37,14 @@ export function createSpacesRepository(pool) {
     return { ...space, furniture: items.map(({ width, height, text, ...item }) => ({ ...item,
       ...(item.type === 'table' ? { width, height } : {}), ...(item.type === 'label' ? { text } : {}) })), booths };
   }
+  /** Puestos del espacio usados por proyectos vigentes (no se pueden quitar). */
   async function referencedBooths(db, id) {
     const [rows] = await db.execute(`SELECT b.furniture_code AS code FROM booths b JOIN projects p ON p.requested_booth_id = b.id
       WHERE b.space_id = ? AND p.status <> 'cancelled' FOR UPDATE`, [id]);
     return rows;
   }
   return {
+    /** Lista los espacios activos con la cantidad de mobiliario y puestos. */
     async list() {
       const [rows] = await pool.execute(`SELECT ${columns},
         (SELECT COUNT(*) FROM furniture f WHERE f.space_id = spaces.id AND f.active = TRUE) AS furnitureCount,
@@ -43,6 +53,7 @@ export function createSpacesRepository(pool) {
       return rows;
     },
     get: id => transaction(pool, db => detail(db, id)),
+    /** Crea un espacio vacío (máximo 100 activos). */
     create: (input, actorId) => transaction(pool, async db => {
       await admin(db, actorId);
       const [rows] = await db.execute('SELECT COUNT(*) AS count FROM spaces WHERE archived_at IS NULL');
@@ -51,6 +62,7 @@ export function createSpacesRepository(pool) {
       await db.execute('INSERT INTO spaces (id, name, description) VALUES (?, ?, ?)', [id, input.name, input.description]);
       return detail(db, id, true);
     }),
+    /** Reemplaza el plano: mobiliario y puestos habilitados, protegiendo los puestos en uso. */
     save: (id, input, actorId) => transaction(pool, async db => {
       await admin(db, actorId);
       await spaceRow(db, id, input.version);
@@ -81,6 +93,7 @@ export function createSpacesRepository(pool) {
       await db.execute('UPDATE spaces SET name = ?, description = ?, version = version + 1, updated_at = UTC_TIMESTAMP(3) WHERE id = ?', [input.name, input.description, id]);
       return detail(db, id, true);
     }),
+    /** Baja lógica del espacio si no tiene proyectos vigentes. */
     archive: (id, version, actorId) => transaction(pool, async db => {
       await admin(db, actorId);
       await spaceRow(db, id, version);

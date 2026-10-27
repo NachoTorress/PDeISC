@@ -1,3 +1,4 @@
+/** Prepara la foto en Android: la reduce y comprime antes de subirla. */
 import type { ImagePickerAsset } from "expo-image-picker";
 import { File } from "expo-file-system";
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
@@ -6,6 +7,7 @@ import { maximumPhotoBytes, validatePhoto } from "./photoUpload";
 import { photoResize } from "./photoUploadBody";
 import type { LocalPhoto } from "./photoUploadBody";
 
+/** Borra un archivo temporal sin interrumpir si falla. */
 function discardPhoto(file?: File) {
   try {
     if (file?.exists) file.delete();
@@ -14,6 +16,7 @@ function discardPhoto(file?: File) {
   }
 }
 
+/** Devuelve un JPEG temporal listo para subir. */
 export async function preparePhoto(asset: ImagePickerAsset): Promise<LocalPhoto> {
   if (!/^(?:file|content):\/\//.test(asset.uri))
     throw new Error("No pudimos abrir esa foto. Volvé a elegirla de la galería.");

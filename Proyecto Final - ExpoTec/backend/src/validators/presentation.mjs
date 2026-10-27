@@ -1,6 +1,8 @@
+/** Validación de la consulta de la presentación TV. */
 import { objectBody, userId } from './auth.mjs';
 import { HttpError } from '../lib/errors.mjs';
 
+/** Tamaño de página (1-100) y cursor `after`. */
 export function presentationQuery(body) {
   objectBody(body, ['limit', 'after']);
   const limit = body.limit === undefined ? 100 : body.limit;

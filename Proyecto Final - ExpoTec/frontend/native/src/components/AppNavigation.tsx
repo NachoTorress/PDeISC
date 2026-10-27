@@ -1,3 +1,6 @@
+/**
+ * Menú de navegación principal: panel lateral fijo en escritorio y menú desplegable (hamburguesa) en móvil.
+ */
 import { useRef, useState } from "react";
 import {
   Modal,
@@ -12,6 +15,7 @@ import { Icon } from "./Icon";
 import type { IconName } from "./Icon";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 
+/** Opción del menú. */
 export type NavigationItem = {
   id: string;
   label: string;
@@ -19,6 +23,7 @@ export type NavigationItem = {
   onPress: () => void;
 };
 
+/** Dibuja el menú; en móvil se abre como modal y se cierra al tocar afuera. */
 export function AppNavigation({
   items,
   activeId,
@@ -36,6 +41,7 @@ export function AppNavigation({
   const reducedMotion = useReducedMotion();
   const closeButton = useRef<View>(null);
   const [focusedItem, setFocusedItem] = useState<string | null>(null);
+  /** Lista de opciones con la sección actual marcada. */
   function content(mobile: boolean) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.navigation }}>

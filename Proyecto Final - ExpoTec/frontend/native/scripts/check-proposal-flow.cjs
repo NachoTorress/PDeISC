@@ -2,6 +2,7 @@
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
+const { legacyRequest } = require("./legacy-endpoint.cjs");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
 
 const base = process.env.DESIGN_BASE_URL || "http://127.0.0.1:8097";
@@ -45,8 +46,7 @@ async function run() {
         return route.abort();
       });
       await context.route("**/api/**", async (route) => {
-        const endpoint = new URL(route.request().url()).pathname;
-        const body = route.request().postDataJSON() || {};
+        const { endpoint, body } = legacyRequest(route.request());
         const reply = (value, status = 200) => route.fulfill({ status, contentType: "application/json", headers: { "Access-Control-Allow-Origin": origin, "Access-Control-Allow-Credentials": "true", "Access-Control-Allow-Headers": "Content-Type, Authorization", "Access-Control-Allow-Methods": "POST, OPTIONS" }, body: JSON.stringify(value) });
         const error = (message, status, fields = {}) => reply({ error: { message, fields } }, status);
         if (route.request().method() === "OPTIONS") return reply({});
@@ -194,7 +194,7 @@ async function run() {
         await button("Cancelar").click();
         await button("Revisar puesto y elementos").click(); await step("place");
         const queries = state.boothQueries;
-        const refreshed = page.waitForResponse((response) => response.url().endsWith(`/api/spaces/${space.id}/query`));
+        const refreshed = page.waitForResponse((response) => legacyRequest(response.request()).endpoint === `/api/spaces/${space.id}/query`);
         await button("Actualizar puestos").click();
         await refreshed;
         assert.ok(state.boothQueries > queries);
@@ -229,7 +229,7 @@ async function run() {
         assert.equal(submissions.length, 0);
         await overflow("datos con errores");
         const chooser = page.waitForEvent("filechooser");
-        const preparing = page.waitForRequest((request) => request.url().endsWith("/api/uploads/prepare"));
+        const preparing = page.waitForRequest((request) => legacyRequest(request).endpoint === "/api/uploads/prepare");
         await button("Elegir foto").click();
         await (await chooser).setFiles(path.resolve(__dirname, "../assets/demo-gallery/robot.jpg"));
         await button("Cancelar carga").waitFor();
@@ -274,11 +274,11 @@ async function run() {
           assert.equal(await students.getByTestId("person-search-result-student").count(), 0);
           await button("Limpiar correo", students).click();
         }
-        const slowRequest = page.waitForRequest((request) => request.url().endsWith("/api/projects/people/find") && request.postDataJSON().email === "slow@example.invalid");
+        const slowRequest = page.waitForRequest((request) => legacyRequest(request).endpoint === "/api/projects/people/find" && legacyRequest(request).body.email === "slow@example.invalid");
         await find("student", "slow@example.invalid");
         await slowRequest;
         await button("Cancelar búsqueda", students).click();
-        const slowResponse = page.waitForResponse((response) => response.url().endsWith("/api/projects/people/find"));
+        const slowResponse = page.waitForResponse((response) => legacyRequest(response.request()).endpoint === "/api/projects/people/find");
         state.releases.people();
         await slowResponse;
         assert.equal(await input("Correo del alumno", students).inputValue(), "");

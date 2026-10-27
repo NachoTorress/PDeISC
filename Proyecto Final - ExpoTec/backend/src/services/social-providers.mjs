@@ -1,17 +1,27 @@
+/**
+ * Integración OAuth 2.0 con Google, Discord y GitHub: arma la URL de
+ * autorización (con PKCE cuando el proveedor lo admite) e intercambia el código
+ * por la identidad verificada del usuario.
+ */
 import { createHash } from 'node:crypto';
 import { HttpError } from '../lib/errors.mjs';
 import { credentials } from '../validators/auth.mjs';
 
+/** Nombres visibles de los tres proveedores sociales. */
 export const providerNames = { google: 'Google', discord: 'Discord', github: 'GitHub' };
+/** URLs y alcances de cada proveedor. */
 const definitions = {
   google: { authorize: 'https://accounts.google.com/o/oauth2/v2/auth', token: 'https://oauth2.googleapis.com/token', scope: 'openid email profile', pkce: true },
   discord: { authorize: 'https://discord.com/oauth2/authorize', token: 'https://discord.com/api/oauth2/token', scope: 'identify email', pkce: false },
   github: { authorize: 'https://github.com/login/oauth/authorize', token: 'https://github.com/login/oauth/access_token', scope: 'user:email', pkce: true },
 };
+/** Error genérico de acceso social (no revela el motivo exacto). */
 export const socialFailure = () => new HttpError(400, 'SOCIAL_FAILED', 'No pudimos verificar el acceso. Volvé a iniciarlo desde Mi cuenta.');
+/** URL de retorno registrada en cada proveedor. */
 export function socialCallback(config, provider) {
   return `${config.social.webOrigin}/api/auth/social/${provider}/callback`;
 }
+/** URL a la que se redirige al usuario para autorizar el acceso. */
 export function authorizationUrl(config, provider, state, verifier) {
   const definition = definitions[provider], app = config.social.providers[provider];
   const url = new URL(definition.authorize);
@@ -20,6 +30,7 @@ export function authorizationUrl(config, provider, state, verifier) {
   return url.href;
 }
 
+/** Crea la función que canjea el código OAuth por `{ subject, email }` verificado. */
 export function createProviderExchange(config, request = fetch) {
   async function json(url, options = {}) {
     const result = await request(url, { ...options, redirect: 'error', signal: AbortSignal.timeout(10000) });

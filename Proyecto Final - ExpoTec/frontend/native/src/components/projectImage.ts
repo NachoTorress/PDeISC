@@ -1,3 +1,4 @@
+/** Imagen de proyecto a partir de datos base64 (vista previa local). */
 const alphabet =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 

@@ -1,3 +1,6 @@
+/**
+ * Prueba unitaria (sin base de datos real): carga y optimización de fotos con almacenamiento simulado.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -71,7 +74,8 @@ test('fotos: el archivo falso falla cerrado y se retira; un enlace ajeno no perm
 test('fotos HTTP: ninguna operación de carga ni vista privada admite visitantes', async t => {
   const api = await listen(createApp(memoryRepository(), testConfig, console, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, uploads(), { enabled: () => true }));
   t.after(api.close);
-  for (const route of ['prepare', 'complete', 'preview']) assert.equal((await api.request(`/api/uploads/${route}`, {})).status, 401);
+  for (const [method, route] of [['POST', ''], ['POST', `${randomUUID()}/complete`], ['GET', 'preview']])
+    assert.equal((await api.request(`/api/uploads/${route}`, {}, undefined, { method })).status, 401);
   const result = await api.request(`/api/uploads/${randomUUID()}/image`, {}, undefined, { method: 'GET' });
   assert.equal(result.status, 404);
 });

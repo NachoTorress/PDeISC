@@ -1,3 +1,4 @@
+/** Prueba unitaria (sin base de datos real): validación de entregas y devoluciones. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';

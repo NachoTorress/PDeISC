@@ -1,12 +1,15 @@
+/** Galería de la demostración: fotos de ejemplo y validaciones locales. */
 import type { DemoState, Role } from "./types";
 import type { GalleryPhoto, GalleryStatus } from "./gallery";
 import { projectImageFromBase64 } from "../components/projectImage";
 
+/** Foto de la demo con su autor ficticio. */
 export interface DemoGalleryPhoto extends GalleryPhoto {
   authorRole: Role;
   status: GalleryStatus;
 }
 
+/** Autor ficticio de cada perfil de la demostración. */
 export const demoGalleryAuthors: Record<Role, string> = {
   student: "Lucía Fernández",
   teacher: "Martín García",
@@ -60,6 +63,7 @@ export function demoGalleryPhotos(state: DemoState): DemoGalleryPhoto[] {
   return state.galleryPhotos ?? examples;
 }
 
+/** Valida la imagen elegida en la demo (formato y hasta 2 MB). */
 export function demoGalleryImageError(
   image: string,
   allowExample = false,
@@ -72,6 +76,7 @@ export function demoGalleryImageError(
   return "";
 }
 
+/** Valida la descripción de la foto. */
 export function demoCaptionError(caption: string): string {
   return caption.trim().length < 5 ||
     caption.trim().length > 400 ||

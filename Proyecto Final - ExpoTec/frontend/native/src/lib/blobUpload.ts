@@ -1,6 +1,10 @@
+/**
+ * Subida directa de fotos al almacenamiento privado (Vercel Blob) desde Android, con progreso y cancelación.
+ */
 import { assertPhotoActive, localPhoto } from "./photoUploadBody";
 import type { PhotoBody } from "./photoUploadBody";
 
+/** Token temporal, señal de cancelación y aviso de progreso de una subida. */
 export type PhotoUploadOptions = {
   token: string;
   signal: AbortSignal;
@@ -34,6 +38,7 @@ export function photoUploadRequest(
   };
 }
 
+/** Sube el archivo y resuelve cuando termina; se puede cancelar con AbortSignal. */
 export async function putPhoto(
   pathname: string,
   body: PhotoBody,

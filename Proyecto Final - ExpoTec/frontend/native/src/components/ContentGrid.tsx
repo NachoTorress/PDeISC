@@ -1,3 +1,4 @@
+/** Grilla responsiva de tarjetas: calcula las columnas según el ancho medido. */
 import { Children, useState } from "react";
 import type { ReactNode } from "react";
 import { View } from "react-native";

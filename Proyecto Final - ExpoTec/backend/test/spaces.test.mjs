@@ -1,3 +1,6 @@
+/**
+ * Prueba unitaria (sin base de datos real): API REST de espacios: lectura pública y escritura de administración.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -18,37 +21,37 @@ test('API de espacios: lectura pública, escritura solo de administradores y val
   };
   const api = await listen(createApp(auth, testConfig, console, undefined, spaces));
   t.after(api.close);
-  assert.equal((await api.request('/api/spaces/query')).status, 200);
-  const publicSpace = await api.request(`/api/spaces/${id}/query`);
+  assert.equal((await api.get('/api/spaces')).status, 200);
+  const publicSpace = await api.get(`/api/spaces/${id}`);
   assert.equal(publicSpace.status, 200);
   assert.deepEqual(publicSpace.body.space, saved);
   assert.equal(publicSpace.body.space.createdBy, undefined);
-  assert.equal((await api.request('/api/spaces/not-an-id/query')).status, 400);
-  assert.equal((await api.request('/api/spaces/query', { email: 'extra' })).status, 400);
+  assert.equal((await api.get('/api/spaces/not-an-id')).status, 400);
+  assert.equal((await api.get('/api/spaces', { email: 'extra' })).status, 400);
   const input = { name: 'Aula', description: '' };
-  assert.equal((await api.request('/api/spaces/create', input)).status, 401);
+  assert.equal((await api.request('/api/spaces', input)).status, 401);
   const registration = await api.request('/api/auth/register', { firstName: 'Ana', lastName: 'García', email: 'space@example.com', password: 'Contraseña de prueba 2026' });
   const { user, accessToken } = registration.body;
-  assert.equal((await api.request('/api/spaces/create', input, accessToken)).status, 403);
+  assert.equal((await api.request('/api/spaces', input, accessToken)).status, 403);
   auth.users.get(user.id).roles.push('admin');
-  assert.equal((await api.request('/api/spaces/create', input, accessToken)).status, 201);
+  assert.equal((await api.request('/api/spaces', input, accessToken)).status, 201);
   assert.equal(calls[0].actor, user.id);
-  assert.equal((await api.request(`/api/spaces/${id}/save`, { ...input, version: 1, furniture: [], boothFurnitureIds: [] }, accessToken)).status, 200);
-  assert.equal((await api.request(`/api/spaces/${id}/archive`, { version: 2 }, accessToken)).status, 204);
-  assert.equal((await api.request(`/api/spaces/${id}/archive`, { version: 0 }, accessToken)).status, 400);
-  assert.equal((await api.request(`/api/spaces/${id}/save`, { ...input, version: 1, furniture: [], boothFurnitureIds: [], roles: ['admin'] }, accessToken)).status, 400);
+  assert.equal((await api.put(`/api/spaces/${id}`, { ...input, version: 1, furniture: [], boothFurnitureIds: [] }, accessToken)).status, 200);
+  assert.equal((await api.del(`/api/spaces/${id}`, { version: 2 }, accessToken)).status, 204);
+  assert.equal((await api.del(`/api/spaces/${id}`, { version: 0 }, accessToken)).status, 400);
+  assert.equal((await api.put(`/api/spaces/${id}`, { ...input, version: 1, furniture: [], boothFurnitureIds: [], roles: ['admin'] }, accessToken)).status, 400);
   const beforeInvalid = calls.length;
   for (const rotation of [-1, 360, 37.5, '37', null]) {
     const furniture = [{ id: 'B01', type: 'bench', x: 50, y: 50, rotation }];
-    assert.equal((await api.request(`/api/spaces/${id}/save`, { ...input, version: 1, furniture, boothFurnitureIds: [] }, accessToken)).status, 400);
+    assert.equal((await api.put(`/api/spaces/${id}`, { ...input, version: 1, furniture, boothFurnitureIds: [] }, accessToken)).status, 400);
   }
   assert.equal(calls.length, beforeInvalid);
   for (const rotation of [1, 37, 135, 271, 359]) {
     const furniture = [{ id: 'B01', type: 'bench', x: 50, y: 50, rotation }];
-    const result = await api.request(`/api/spaces/${id}/save`, { ...input, version: 1, furniture, boothFurnitureIds: [] }, accessToken);
+    const result = await api.put(`/api/spaces/${id}`, { ...input, version: 1, furniture, boothFurnitureIds: [] }, accessToken);
     assert.equal(result.status, 200);
     assert.equal(result.body.space.furniture[0].rotation, rotation);
   }
   auth.users.get(user.id).roles = ['student'];
-  assert.equal((await api.request(`/api/spaces/${id}/archive`, { version: 2 }, accessToken)).status, 403);
+  assert.equal((await api.del(`/api/spaces/${id}`, { version: 2 }, accessToken)).status, 403);
 });

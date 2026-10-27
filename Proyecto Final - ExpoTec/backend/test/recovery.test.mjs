@@ -1,3 +1,6 @@
+/**
+ * Prueba unitaria (sin base de datos real): recuperación de contraseña sin revelar cuentas existentes.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readRecoveryConfig } from '../src/config/env.mjs';
@@ -62,13 +65,13 @@ test('recuperación: un fallo de correo revoca el enlace y responde sin revelar 
 test('recuperación HTTP: consulta de disponibilidad, respuesta uniforme y límites', async t => {
   const auth = memoryRepository();
   const disabled = await listen(createApp(auth, testConfig)); t.after(disabled.close);
-  assert.deepEqual((await disabled.request('/api/auth/recovery/query')).body, { enabled: false });
+  assert.deepEqual((await disabled.get('/api/auth/recovery')).body, { enabled: false });
   assert.equal((await disabled.request('/api/auth/recovery/request', { email: 'any@example.com' })).status, 503);
   const config = { ...testConfig, recovery: { webOrigin: testConfig.origins[0] } };
   const repository = { async issue() { return false; } };
   const api = await listen(createApp(auth, config, console, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, repository, {}));
   t.after(api.close);
-  assert.deepEqual((await api.request('/api/auth/recovery/query')).body, { enabled: true });
+  assert.deepEqual((await api.get('/api/auth/recovery')).body, { enabled: true });
   assert.equal((await api.request('/api/auth/recovery/request', { email: 'unknown@example.com' })).status, 202);
   assert.equal((await api.request('/api/auth/recovery/complete', { token: 'short', password: 'long enough password', confirmation: 'long enough password' })).status, 400);
   auth.consumeRate = async () => 60;

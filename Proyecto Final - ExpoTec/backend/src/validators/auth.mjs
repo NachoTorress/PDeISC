@@ -1,6 +1,12 @@
+/**
+ * Validación de datos de cuentas y utilidades comunes de validación.
+ * Todas las validaciones del servidor se aplican aunque el formulario ya las haya hecho.
+ */
 import { HttpError } from '../lib/errors.mjs';
 
+/** Roles del sistema: alumno, profesor, préstamos, administrador e invitado. */
 export const roles = ['student', 'teacher', 'loans', 'admin', 'guest'];
+/** Exige un objeto JSON y rechaza campos no admitidos (400). */
 export function objectBody(body, allowed) {
   if (!body || typeof body !== 'object' || Array.isArray(body))
     throw new HttpError(400, 'VALIDATION_ERROR', 'Enviá un objeto JSON.');
@@ -8,11 +14,13 @@ export function objectBody(body, allowed) {
     throw new HttpError(400, 'VALIDATION_ERROR', 'Hay campos que esta operación no admite.');
 }
 
+/** Lanza 400 con los errores por campo, si los hay. */
 function invalid(fields) {
   if (Object.keys(fields).length)
     throw new HttpError(400, 'VALIDATION_ERROR', 'Revisá los campos indicados.', fields);
 }
 
+/** Valida correo y contraseña; en el registro también nombre, apellido y tipo de cuenta. */
 export function credentials(body, register = false) {
   objectBody(body, register ? ['email', 'password', 'firstName', 'lastName', 'accountType'] : ['email', 'password']);
   const fields = {};
@@ -37,6 +45,7 @@ export function credentials(body, register = false) {
   return { email, password, ...names };
 }
 
+/** Valida el formato del token de renovación. */
 export function refreshToken(body) {
   objectBody(body, ['refreshToken']);
   if (typeof body.refreshToken !== 'string' || body.refreshToken.length > 1024 ||
@@ -45,12 +54,14 @@ export function refreshToken(body) {
   return body.refreshToken;
 }
 
+/** Valida un identificador UUID v4. */
 export function userId(value) {
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value ?? ''))
     throw new HttpError(400, 'VALIDATION_ERROR', 'El identificador del usuario no es válido.');
   return value;
 }
 
+/** Valida una lista de roles sin repetir. */
 export function roleList(body) {
   objectBody(body, ['roles']);
   if (!Array.isArray(body.roles) || !body.roles.length || body.roles.length > roles.length ||
@@ -59,6 +70,7 @@ export function roleList(body) {
   return body.roles;
 }
 
+/** Valida limit (1-100) y offset (0-100000). */
 export function pagination(body) {
   objectBody(body, ['limit', 'offset']);
   const { limit = 25, offset = 0 } = body;
@@ -67,6 +79,7 @@ export function pagination(body) {
   return { limit, offset };
 }
 
+/** Valida la búsqueda de cuentas de administración. */
 export function usersQuery(body) {
   objectBody(body, ['limit', 'offset', 'search']);
   const { limit, offset } = pagination({
@@ -79,6 +92,7 @@ export function usersQuery(body) {
   return { limit, offset, search: search.trim().normalize('NFC') };
 }
 
+/** Valida el cambio de roles junto con los roles esperados. */
 export function rolesChange(body) {
   objectBody(body, ['roles', 'expectedRoles']);
   const next = roleList({ roles: body.roles });

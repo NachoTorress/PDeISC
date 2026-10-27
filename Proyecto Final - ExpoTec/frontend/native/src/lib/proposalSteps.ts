@@ -1,3 +1,5 @@
+/** Formulario de propuesta en cuatro pasos: qué campos pertenecen a cada paso y sus errores. */
+/** Pasos: proyecto, equipo, puesto y revisión. */
 export const proposalSteps = [
   { title: "Proyecto", subtitle: "Qué van a presentar" },
   { title: "Equipo", subtitle: "Alumnos, profesores y materias" },
@@ -5,6 +7,7 @@ export const proposalSteps = [
   { title: "Revisar", subtitle: "Comprobar y enviar la propuesta" },
 ] as const;
 
+/** Nombre visible de cada campo para los mensajes. */
 export const proposalFieldLabels: Record<string, string> = {
   name: "Nombre del proyecto",
   description: "Descripción",
@@ -40,10 +43,12 @@ const groups = [
   ["memberIds", "teacherIds", "subjects"],
   ["boothId", "resources"],
 ];
+/** Paso en el que se corrige un campo. */
 export function proposalStepForField(field: string) {
   const index = groups.findIndex((group) => group.includes(field));
   return index < 0 ? 0 : index;
 }
+/** Errores del borrador agrupados por paso. */
 export function proposalFlowErrors(
   errors: Record<string, string>,
   pending: ProposalPending,
@@ -70,6 +75,7 @@ export function proposalFlowErrors(
       : {}),
   };
 }
+/** Errores de un paso puntual. */
 export function proposalIssuesForStep(
   errors: Record<string, string>,
   step: number,
@@ -78,6 +84,7 @@ export function proposalIssuesForStep(
     ([field, message]) => message && proposalStepForField(field) === step,
   );
 }
+/** Primer paso con errores, para llevar a la persona ahí. */
 export function firstProposalIssueStep(
   errors: Record<string, string>,
   before = 3,

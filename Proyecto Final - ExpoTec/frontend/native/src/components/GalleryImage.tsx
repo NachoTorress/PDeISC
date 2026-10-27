@@ -1,3 +1,4 @@
+/** Imagen de la galería compartida; si es privada, pide la vista previa autorizada a la API. */
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
@@ -5,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { managedPhoto } from "../lib/photoUpload";
 import PhotoImage from "./PhotoImage";
 
+/** Muestra la imagen o su vista previa privada (`GET /api/uploads/preview`). */
 export default function GalleryImage({
   uri,
   caption,
@@ -27,7 +29,7 @@ export default function GalleryImage({
     if (!privateImage) return;
     let active = true;
     void client
-      .send<{ image: string }>("/api/uploads/preview", { imageUrl: uri })
+      .send<{ image: string }>("/api/uploads/preview", { imageUrl: uri }, "GET")
       .then((result) => {
         if (active) setResolved({ key, uri: result.image });
       })

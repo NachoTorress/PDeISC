@@ -1,3 +1,14 @@
+/**
+ * Componente raíz de ExpoTec.
+ *
+ * Arma los proveedores de contexto (tema, sesión y demostración) y la
+ * navegación con React Navigation:
+ * - Stack (pila) de pantallas: detalle, formularios, cuenta, usuarios y las
+ *   secciones compartidas conectadas a la API.
+ * - Pestañas (Tabs) de la demostración, filtradas según el perfil elegido.
+ * La barra superior y el menú lateral se adaptan al ancho de la pantalla
+ * (menú hamburguesa en teléfonos, panel fijo desde 1200 px).
+ */
 import { useEffect, useRef, useState } from "react";
 import { Image, Pressable, Text, View, useWindowDimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -54,6 +65,7 @@ import { KeyboardRoot } from "./components/KeyboardLayout";
 import { SystemNavigation } from "./components/SystemNavigation";
 import brandIcon from "../assets/brand/expotec-icon-v1.png";
 
+/** Pantallas de la pila principal y sus parámetros. */
 type RootRoutes = {
   Home: undefined;
   Detail: { projectId: string };
@@ -70,6 +82,7 @@ type RootRoutes = {
   SharedLoans: undefined;
   SharedPresentation: undefined;
 };
+/** Pestañas de la demostración. */
 type TabRoutes = {
   map: undefined;
   projects: undefined;
@@ -87,6 +100,7 @@ type Destination = {
   icon: IconName;
   roles: Role[];
 };
+/** Pestañas de la demo y perfiles que pueden verlas. */
 const destinations: Destination[] = [
   {
     id: "map",
@@ -121,6 +135,7 @@ const destinations: Destination[] = [
   },
   { id: "tv", label: "TV", icon: "tv", roles: ["guest"] },
 ];
+/** Perfiles ficticios de la demostración. */
 const profiles: { role: Role; label: string; identity: string }[] = [
   { role: "student", label: "Estudiante", identity: "Lucía Fernández" },
   { role: "teacher", label: "Profesor", identity: "Martín García" },
@@ -133,6 +148,7 @@ const profiles: { role: Role; label: string; identity: string }[] = [
   { role: "guest", label: "Invitado", identity: "Muestra pública" },
 ];
 
+/** Raíz: proveedores de área segura, tema, sesión, demostración y teclado. */
 export default function App() {
   return (
     <SafeAreaProvider>
@@ -146,6 +162,7 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+/** Estructura visible: barra superior, menú de navegación, aviso de sesión y pila de pantallas. */
 function AppShell() {
   const { colors, toggle } = useTheme();
   const { role, setRole, notice } = useDemo();
@@ -639,6 +656,7 @@ function AppShell() {
   );
 }
 
+/** Pestañas de la demostración: a la izquierda en pantallas anchas, abajo en teléfonos. */
 function HomeTabs() {
   const { role } = useDemo();
   const { colors } = useTheme();

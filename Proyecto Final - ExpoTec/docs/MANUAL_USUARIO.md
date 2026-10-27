@@ -2,9 +2,11 @@
 
 Proyecto ExpoTec
 
-Versión de referencia 0.4.0
+E.E.S.T. N° 5 Amancio Williams
 
-25 de octubre de 2026
+Versión de referencia 0.5.0
+
+26 de octubre de 2026
 
 ## Presentación
 
@@ -20,7 +22,11 @@ Desde una computadora o un teléfono también podés abrir [la web de ExpoTec](h
 
 Al abrir la aplicación se muestran los espacios compartidos. Las secciones disponibles cambian según los permisos. En pantallas pequeñas, abrí el menú de navegación para ver las opciones. El control de tema de la barra superior permite alternar entre claro y oscuro.
 
+![Menú de navegación en un teléfono, con las secciones disponibles según los permisos de la cuenta](capturas/03-menu.png)
+
 ## Perfiles y permisos
+
+Tabla: Acciones habilitadas para cada perfil en el sistema compartido
 
 | Perfil | Qué puede hacer en el sistema compartido |
 | --- | --- |
@@ -42,6 +48,8 @@ Una cuenta puede tener varios permisos. Registrarse como alumno o invitado no co
 3. Escribí una contraseña de entre 12 y 128 caracteres y repetila en el campo de confirmación.
 4. Revisá los mensajes de los campos y completá el registro.
 
+![Pantalla de ingreso con correo y contraseña, registro, recuperación y accesos con Google, Discord y GitHub](capturas/01-ingreso.png)
+
 Usá un correo al que tengas acceso. Para integrar un equipo o asignar un profesor, la cuenta correspondiente debe estar registrada y tener el permiso necesario.
 
 ### Ingresar y conservar la sesión
@@ -60,13 +68,19 @@ En el acceso, elegí **Olvidé mi contraseña** e ingresá tu correo. Revisá Re
 
 En **Espacios** podés abrir un plano, distinguir puestos disponibles y confirmados y consultar el proyecto que ocupa un puesto. Una propuesta pendiente no ocupa el lugar: la asignación se realiza al confirmarla.
 
+![Plano del Patio central con sus puestos, el banco y los puntos eléctricos](capturas/02-espacios.png)
+
 En **Proyectos**, la muestra pública presenta únicamente proyectos confirmados. Abrí una ficha para conocer descripción, integrantes, profesores, materias y ubicación. Algunos proyectos incluyen video, repositorio de GitHub o página web. Los enlaces son opcionales.
+
+![Muestra pública de proyectos confirmados](capturas/04-proyectos.png)
 
 En **Galería de la ExpoTec** se muestran las fotos aprobadas por la organización. Las propuestas y fotos pendientes no aparecen en las vistas públicas.
 
 ## Presentar un proyecto como alumno
 
 Ingresá con una cuenta de alumno y abrí **Proyectos**. Elegí **Presentar un proyecto**. En el sistema compartido, el formulario se organiza en cuatro pasos.
+
+![Paso 1 de la propuesta: datos del proyecto](capturas/05-propuesta.png)
 
 1. **Proyecto**. Completá nombre, descripción y curso; agregá una foto subida desde el dispositivo o un enlace de imagen HTTPS. El video es opcional. Si corresponde, marcá proyecto informático y agregá GitHub o página web.
 2. **Equipo**. Buscá alumnos y profesores por el correo exacto de sus cuentas. Revisá la persona encontrada y agregala explícitamente. Incorporá las materias desde las sugerencias o escribí una propia y agregala. El creador y quien edita permanecen dentro del equipo.
@@ -87,6 +101,8 @@ Si otra persona guardó cambios o tomó el puesto mientras completabas el formul
 
 Ingresá con una cuenta que tenga permiso de profesor y abrí las revisiones de proyectos. Se muestran las propuestas en las que estás asignado como responsable.
 
+![Ficha de una propuesta pendiente de revisión](capturas/06-revision.png)
+
 1. Abrí una propuesta pendiente y revisá equipo, materias, imagen, puesto y elementos.
 2. Si necesita correcciones, elegí **Pedir cambios**, explicá qué debe ajustar el equipo y enviá la devolución.
 3. Si está lista, elegí **Confirmar proyecto** y completá la confirmación que muestre la pantalla.
@@ -94,9 +110,13 @@ Ingresá con una cuenta que tenga permiso de profesor y abrí las revisiones de 
 
 Si el puesto fue ocupado o faltan unidades, revisá el mensaje y coordiná una corrección. La aplicación no permite confirmar dos proyectos para un mismo puesto.
 
+![Acciones del profesor: confirmar el proyecto o solicitar cambios con un motivo](capturas/06b-revision-acciones.png)
+
 ## Registrar préstamos y devoluciones
 
 Estas acciones requieren permiso de préstamos o administración. El inventario representa cantidades de elementos equivalentes; las piezas del plano se administran por separado.
+
+![Préstamos y devoluciones por jornada](capturas/07-prestamos.png)
 
 ### Entregar elementos
 
@@ -125,15 +145,21 @@ Para que una mesa pueda solicitarse en un proyecto, seleccionala y activá **Hab
 
 En **Inventario**, administración puede crear elementos, cambiar nombre, descripción y total, y consultar **Ver historial**. Las bajas conservan los registros. El sistema impide ajustes que dejen sin cobertura las reservas o los préstamos. Las unidades dañadas quedan fuera de servicio y pueden rehabilitarse con un ajuste administrativo justificado.
 
+![Inventario con existencias, reservas y unidades para reservar](capturas/08-inventario.png)
+
 ### Asignar permisos
 
 Abrí **Usuarios y permisos**, buscá la cuenta y revisá sus permisos antes de guardar cambios. Los permisos se comprueban también en el servidor. La aplicación protege al último administrador activo. Si otra persona modificó los mismos permisos, recargá el estado actual antes de volver a guardar.
+
+![Usuarios y permisos: búsqueda de cuentas y edición de roles](capturas/10-usuarios.png)
 
 ## Enviar y moderar fotos
 
 Con una cuenta activa, abrí **Galería de la ExpoTec** y elegí **¡Subí tu foto de la ExpoTec!**. Seleccioná una imagen JPG, PNG o WebP de hasta 10 MB, o usá un enlace HTTPS, y completá la descripción. Revisá la vista previa y enviá.
 
 La foto queda pendiente. En **Mis fotos** podés consultar la decisión. Las imágenes subidas permanecen privadas hasta la aprobación. Administración entra en la moderación para aprobar o rechazar; retirar una publicada la excluye de la galería pública. El rechazo o retiro exige un motivo visible para el autor.
+
+![Galería de la ExpoTec con fotos publicadas, propias y moderación](capturas/09-galeria.png)
 
 La demostración usa su propio formulario local, con límite de 2 MB para el archivo, y ofrece una imagen de ejemplo. Sus aportes no se envían a la galería compartida.
 
@@ -145,9 +171,13 @@ El sonido comienza desactivado; **Activar sonido** lo habilita cuando el disposi
 
 Para una exposición en televisor, comprobá previamente imagen, sonido, conexión y el modo de pantalla completa con el equipo que se vaya a usar.
 
+![Presentación TV con la ficha de un proyecto confirmado](capturas/11-presentacion.png)
+
 ## Practicar con la demostración
 
 Abrí **Demostración** desde la navegación. La franja superior indica la identidad ficticia. Elegí **Cambiar vista**, abrí **Probar vista como** y seleccioná Estudiante, Profesor, Préstamos, Organización o Invitado. No hace falta crear cinco cuentas para recorrer los perfiles de ejemplo.
+
+![Demostración con perfiles ficticios y datos locales](capturas/12-demostracion.png)
 
 Los datos locales se conservan entre cambios de perfil. Esto permite que el estudiante envíe una propuesta, el profesor la revise y el encargado registre un préstamo sobre los mismos ejemplos. La demostración no concede permisos reales, no comprueba el acceso a TiDB y no comparte sus cambios con otros dispositivos.
 
@@ -156,6 +186,8 @@ En esta versión, el formulario de propuesta compartido tiene cuatro pasos y bus
 Para preparar la defensa, seguí la **Guía de demostración de ExpoTec**. Incluye un recorrido con Estación meteorológica y Brazo robótico, alternativas si los ejemplos ya se modificaron y una breve comprobación del acceso real.
 
 ## Resolver problemas frecuentes
+
+Tabla: Situaciones frecuentes y acciones sugeridas
 
 | Situación | Qué hacer |
 | --- | --- |

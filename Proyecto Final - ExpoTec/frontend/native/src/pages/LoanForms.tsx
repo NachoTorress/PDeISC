@@ -1,3 +1,6 @@
+/**
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Formularios de entrega y devolución de la demostración.
+ */
 import { useState } from "react";
 import { Text, View } from "react-native";
 import { Button, Card, Choice, Field, Section } from "../components/ui";
@@ -5,6 +8,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import { useDemo } from "../hooks/useDemo";
 import type { Loan } from "../lib/types";
 
+/** Valida una cantidad entera entre 1 y el máximo disponible. */
 function quantityError(value: string, maximum: number) {
   if (
     !/^\d+$/.test(value) ||

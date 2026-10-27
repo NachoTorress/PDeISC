@@ -1,3 +1,4 @@
+/** Integrantes de proyectos en la demostración (nombres ficticios). */
 import type { DemoState, Project } from "./types";
 
 type ProjectTeam = Pick<Project, "student"> & Partial<Pick<Project, "members">>;
@@ -16,6 +17,7 @@ export function projectMembers(project: ProjectTeam): string[] {
     : [project.student];
 }
 
+/** Indica si un nombre integra el proyecto. */
 export function isProjectMember(project: ProjectTeam, name: string): boolean {
   return projectMembers(project).some(
     (member) => memberKey(member) === memberKey(name),

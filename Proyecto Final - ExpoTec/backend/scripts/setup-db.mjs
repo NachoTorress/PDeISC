@@ -1,3 +1,4 @@
+/** Preparación inicial en TiDB: crea las bases y un usuario de la API con permisos limitados. */
 import { readFile } from 'node:fs/promises';
 import { parseEnv } from 'node:util';
 import { createDatabase } from '../src/config/database.mjs';

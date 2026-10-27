@@ -1,3 +1,6 @@
+/**
+ * Menú de cuenta de la barra superior: datos, permisos, reintento de conexión y cierre de sesión con confirmación.
+ */
 import { useEffect, useRef, useState } from "react";
 import {
   Modal,
@@ -24,6 +27,7 @@ const roles: Record<AccountRole, string> = {
   admin: "Administrador",
 };
 
+/** Muestra el acceso (sin sesión) o el menú de la cuenta (con sesión). */
 export default function AccountMenu({ onSignIn }: { onSignIn: () => void }) {
   const { user, ready, client, error: sessionError } = useAuth();
   const { colors } = useTheme();
@@ -42,6 +46,7 @@ export default function AccountMenu({ onSignIn }: { onSignIn: () => void }) {
     setConfirm(false);
     setError("");
   }, [user?.id]);
+  /** Cierra el menú y devuelve el foco al botón. */
   function close() {
     if (working.current) return;
     setOpen(false);
@@ -50,6 +55,7 @@ export default function AccountMenu({ onSignIn }: { onSignIn: () => void }) {
     if (Platform.OS === "web")
       (trigger.current as unknown as { focus?: () => void })?.focus?.();
   }
+  /** Ejecuta una acción mostrando estado de carga y errores en el propio menú. */
   async function run(action: () => Promise<void>) {
     if (working.current) return;
     working.current = true;

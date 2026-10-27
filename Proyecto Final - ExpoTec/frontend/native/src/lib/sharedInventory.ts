@@ -1,3 +1,5 @@
+/** Tipos y validaciones del inventario compartido. */
+/** Elemento tal como lo devuelve `GET /api/inventory`. */
 export interface InventoryResource {
   id: string;
   name: string;
@@ -26,6 +28,7 @@ export interface InventoryResource {
     note: string;
   }[];
 }
+/** Elemento pedido por un proyecto. */
 export interface ProjectResource {
   resourceId: string;
   name: string;
@@ -37,11 +40,13 @@ export interface ProjectResource {
   unavailable: number;
   outstanding: number;
 }
+/** Pedido de un elemento en el formulario. */
 export interface ResourceRequestDraft {
   resourceId: string;
   name: string;
   quantity: string;
 }
+/** Convierte texto a entero dentro de un rango, o null. */
 export function integerQuantity(value: string, min: number, max: number) {
   return (
     /^\d+$/.test(value) &&
@@ -50,6 +55,7 @@ export function integerQuantity(value: string, min: number, max: number) {
     Number(value) <= max
   );
 }
+/** Errores por campo del formulario de elemento. */
 export function inventoryErrors(input: {
   name: string;
   description: string;
@@ -84,6 +90,7 @@ export function inventoryErrors(input: {
     fields.note = "Explicá el cambio de estado con 10 a 1000 caracteres.";
   return fields;
 }
+/** Valida el pedido de elementos de una propuesta. */
 export function requestsError(requests: ResourceRequestDraft[]) {
   if (
     requests.length > 50 ||

@@ -1,11 +1,14 @@
+/** Materias de un proyecto: sugerencias y validación. */
 import { seed } from "./seed";
 
 export const maximumProjectSubjects = 10;
 
+/** Clave para comparar materias sin mayúsculas ni tildes. */
 export function projectSubjectKey(value: string) {
   return value.trim().normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 }
 
+/** Materias sugeridas de la Tecnicatura. */
 export const projectSubjectSuggestions = [
   ...new Map(
     seed.projects.flatMap((project) =>
@@ -16,6 +19,7 @@ export const projectSubjectSuggestions = [
   ).values(),
 ].sort((left, right) => left.localeCompare(right, "es"));
 
+/** Valida una materia nueva. */
 export function projectSubjectInputError(value: string, selected: string[]) {
   const subject = value.trim();
   if (!subject) return "Escribí el nombre de una materia.";
@@ -32,6 +36,7 @@ export function projectSubjectInputError(value: string, selected: string[]) {
   return "";
 }
 
+/** Sugerencias que coinciden con lo escrito y no están elegidas. */
 export function suggestedProjectSubjects(selected: string[], query = "") {
   const keys = new Set(selected.map(projectSubjectKey));
   const term = projectSubjectKey(query);

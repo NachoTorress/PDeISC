@@ -1,3 +1,4 @@
+/** Búsqueda de alumnos y profesores por correo exacto para sumarlos a una propuesta. */
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { Button, Card, Field } from "./ui";
@@ -14,6 +15,7 @@ import {
 } from "../lib/projectPeople";
 import type { ProjectPeopleRole } from "../lib/projectPeople";
 
+/** Busca con `GET /api/projects/people` y agrega la persona confirmada. */
 export default function SharedPeoplePicker({
   role,
   people,
@@ -65,6 +67,7 @@ export default function SharedPeoplePicker({
       pendingCallback.current?.(false);
     };
   }, []);
+  /** Motivo por el que no se puede agregar una persona. */
   function additionError(personId: string) {
     return projectPersonAdditionError({
       role,
@@ -73,6 +76,7 @@ export default function SharedPeoplePicker({
       excludedIds: current.current.excludedIds,
     });
   }
+  /** Limpia la búsqueda y su resultado. */
   function clearSearch() {
     requestId.current++;
     working.current = null;
@@ -82,6 +86,7 @@ export default function SharedPeoplePicker({
     setLookupError("");
     setNotice("");
   }
+  /** Consulta la cuenta por correo; descarta respuestas viejas. */
   async function search() {
     if (working.current !== null || disabled || atLimit) return;
     if (candidate?.email === projectPeopleEmail(email)) return;
@@ -96,8 +101,9 @@ export default function SharedPeoplePicker({
     const searchedEmail = projectPeopleEmail(email);
     try {
       const { person } = await client.send<{ person: ProjectParticipant }>(
-        "/api/projects/people/find",
+        "/api/projects/people",
         { email: searchedEmail, role },
+        "GET",
       );
       if (
         !active.current ||
@@ -124,6 +130,7 @@ export default function SharedPeoplePicker({
       }
     }
   }
+  /** Agrega la persona encontrada. */
   function addCandidate() {
     if (!candidate || disabled || busy) return;
     const conflict = additionError(candidate.person.id);

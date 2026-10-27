@@ -1,3 +1,4 @@
+/** Android: oculta la barra inferior del sistema y la recupera con un deslizamiento. */
 import { useEffect } from "react";
 import { AppState, Keyboard, Platform } from "react-native";
 import { NavigationBar, setVisibilityAsync } from "expo-navigation-bar";

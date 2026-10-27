@@ -1,3 +1,6 @@
+/**
+ * Recuperación de contraseña: pedir el enlace por correo o elegir la contraseña nueva con el token del enlace.
+ */
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
@@ -7,6 +10,7 @@ import { AuthError } from "../lib/authTypes";
 import { passwordReset } from "../lib/passwordReset";
 import { Button, Card, CheckRow, Field, Heading, Screen } from "./ui";
 
+/** Formulario en dos modos: solicitud o cambio. */
 export default function PasswordRecovery({
   token,
   initialEmail,
@@ -37,6 +41,7 @@ export default function PasswordRecovery({
   const confirmationError =
     password !== confirmation ? "Las contraseñas deben coincidir." : "";
   const invalidToken = resetting && !/^[A-Za-z0-9_-]{43}$/.test(token);
+  /** Valida y envía `POST /api/auth/recovery/request` o `/complete`. */
   async function submit() {
     setAttempted(true);
     if (

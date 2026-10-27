@@ -1,6 +1,8 @@
+/** Detecta si el sistema pide reducir animaciones (accesibilidad). */
 import { useEffect, useState } from "react";
 import { AccessibilityInfo } from "react-native";
 
+/** true si se deben evitar animaciones. */
 export function useReducedMotion() {
   const [reduced, setReduced] = useState(true);
   useEffect(() => {
