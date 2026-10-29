@@ -15,6 +15,7 @@
     "db:check": "node --env-file-if-exists=.env scripts/check-db.mjs",
     "db:prune": "node --env-file-if-exists=.env scripts/prune.mjs",
     "admin:grant": "node --env-file-if-exists=.env scripts/grant-admin.mjs",
+    "docs:openapi": "node scripts/export-openapi.mjs",
     "test:database": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/database.integration.mjs",
     "test:spaces": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/spaces.integration.mjs",
     "test:users": "node --env-file-if-exists=.env --env-file-if-exists=.env.setup --test test/admin-users.integration.mjs",

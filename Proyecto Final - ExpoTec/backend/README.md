@@ -4,6 +4,7 @@ API de ExpoTec, la aplicación para organizar la exposición de proyectos de la 
 
 - Producción: `https://expotec-api-gn19.vercel.app`
 - Desarrollo local: `http://localhost:3001` (variable `PORT`)
+- Documentación interactiva (Swagger UI): `/api/docs` en cualquiera de las dos direcciones. La especificación OpenAPI 3.0 está en `src/docs/openapi.mjs` y se exporta a `docs/openapi.json` con `npm run docs:openapi`.
 - Versión del contrato: **0.5.1**. Recursos con `POST`, `PUT`, `PATCH` y `DELETE`; **no se usa GET** (las consultas van por POST). Ver [Compatibilidad con la APK 0.4.0](#compatibilidad-con-la-apk-040).
 
 ## Índice
@@ -33,6 +34,7 @@ backend/
 │   ├── routes/              Rutas por dominio (auth, spaces, projects, inventory, loans, gallery, uploads)
 │   ├── services/            Lógica: JWT y hash, accesos sociales, recuperación, cargas de fotos
 │   ├── repositories/        Consultas SQL y transacciones por dominio
+│   ├── docs/                Especificación OpenAPI que muestra Swagger en /api/docs
 │   └── validators/          Validación de cuerpos y parámetros de cada operación
 ├── sql/                     Migraciones 001–010 (no editar las ya aplicadas)
 ├── scripts/                 Migrar, comprobar base, crear administrador, limpieza
@@ -95,7 +97,8 @@ No existe un endpoint para autoasignarse permisos. Desde esa cuenta se asignan l
 | `npm run db:setup` | Preparación inicial en TiDB (bases y usuario limitado). |
 | `npm run db:prune` | Limpia sesiones, flujos sociales y cargas vencidos. |
 | `npm run admin:grant -- correo` | Asigna el rol de administrador. |
-| `npm test` | Pruebas unitarias. |
+| `npm run docs:openapi` | Regenera `docs/openapi.json` (para Postman o Insomnia). |
+| `npm test` | Pruebas unitarias (incluye que todas las rutas estén en Swagger). |
 | `npm run test:<dominio>` | Pruebas de integración contra `TEST_DB_NAME`. |
 
 ## Convenciones de la API
@@ -103,7 +106,7 @@ No existe un endpoint para autoasignarse permisos. Desde esa cuenta se asignan l
 - **Formato:** JSON (`Content-Type: application/json`) en solicitudes y respuestas.
 - **Métodos:** `POST` consulta (rutas terminadas en `/query`) o crea, `PUT` reemplaza, `PATCH` modifica parcialmente y `DELETE` da de baja.
 - **Sin GET:** la API no usa GET para leer datos. Las consultas se hacen con `POST` y sus filtros (`limit`, `offset`, `day`...) viajan en el cuerpo JSON, nunca en la URL; así no quedan registrados en historiales ni registros del servidor. Un campo desconocido responde 400.
-- **Excepciones:** solo dos rutas responden a GET porque no las llama la app sino el navegador o el teléfono: la imagen publicada (`/api/uploads/:id/image`, que muestran las etiquetas de imagen) y el retorno OAuth (`/api/auth/social/:provider/callback`, al que redirigen Google, Discord y GitHub según el estándar OAuth 2.0). Ninguna de las dos recibe datos privados.
+- **Excepciones:** solo tres rutas responden a GET porque no las llama la app sino el navegador o el teléfono: la imagen publicada (`/api/uploads/:id/image`, que muestran las etiquetas de imagen), el retorno OAuth (`/api/auth/social/:provider/callback`, al que redirigen Google, Discord y GitHub según el estándar OAuth 2.0) y la página de documentación Swagger (`/api/docs`). Ninguna recibe datos privados.
 - **Paginación:** `limit` (1–100, por defecto 25) y `offset` (0–100000, por defecto 0).
 - **Identificadores:** UUID v4. Un id con otro formato responde 400.
 - **Control de cambios simultáneos:** los recursos editables tienen `version`. `PUT`, `PATCH` y `DELETE` deben enviar en el cuerpo la versión leída; si otra persona modificó el registro, responde **409** y el cliente conserva su borrador.
@@ -372,7 +375,7 @@ Relaciones principales: un usuario tiene varios roles (`user_roles`); un proyect
 ## Pruebas
 
 ```powershell
-npm test                     # 60 pruebas unitarias, sin base de datos
+npm test                     # 64 pruebas unitarias, sin base de datos
 npm run test:projects        # integración: requiere TEST_DB_NAME=expotec_test_...
 ```
 

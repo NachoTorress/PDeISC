@@ -1,0 +1,5486 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API de ExpoTec",
+    "version": "0.5.1",
+    "description": "Backend de la aplicación ExpoTec (E.E.S.T. N° 5 Amancio Williams).\n\n**Sin GET:** las consultas usan `POST` con sus filtros en el cuerpo JSON (rutas terminadas en `/query`). Para crear se usa POST, para reemplazar PUT, para cambios parciales PATCH y para bajas DELETE con `{ \"version\": n }` en el cuerpo. Solo la imagen publicada, el retorno OAuth y esta página responden a GET.\n\n**Probar rutas protegidas:** ejecutá `POST /api/auth/login`, copiá `accessToken` y pegalo en **Authorize**. El token dura 15 minutos.\n\n**Errores:** siempre `{ error: { code, message, fields? }, requestId }`. `message` está en español y se puede mostrar al usuario."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Este servidor"
+    },
+    {
+      "url": "https://expotec-api-gn19.vercel.app",
+      "description": "Producción"
+    },
+    {
+      "url": "http://localhost:3001",
+      "description": "Desarrollo local"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Salud"
+    },
+    {
+      "name": "Autenticación"
+    },
+    {
+      "name": "Autenticación web"
+    },
+    {
+      "name": "Accesos sociales"
+    },
+    {
+      "name": "Recuperación de contraseña"
+    },
+    {
+      "name": "Usuarios"
+    },
+    {
+      "name": "Espacios"
+    },
+    {
+      "name": "Proyectos"
+    },
+    {
+      "name": "Inventario"
+    },
+    {
+      "name": "Préstamos"
+    },
+    {
+      "name": "Galería"
+    },
+    {
+      "name": "Fotos"
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "post": {
+        "tags": [
+          "Salud"
+        ],
+        "summary": "Estado del servicio",
+        "description": "**Acceso:** Público.\n\nNo consulta la base.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "expotec-api"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/health/ready": {
+      "post": {
+        "tags": [
+          "Salud"
+        ],
+        "summary": "Estado de la base de datos",
+        "description": "**Acceso:** Público.\n\n**Códigos de error propios:** 503 `DATABASE_UNAVAILABLE`.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "database": {
+                      "type": "string",
+                      "example": "connected"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Registrar una cuenta de alumno o invitado",
+        "description": "**Acceso:** Público.\n\n**Códigos de error propios:** 409 `EMAIL_REGISTERED`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "201": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Iniciar sesión",
+        "description": "**Acceso:** Público.\n\nCopiá `accessToken` de la respuesta y usalo en **Authorize** para probar las rutas protegidas.\n\n**Códigos de error propios:** 401 `INVALID_CREDENTIALS`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Renovar el token de acceso",
+        "description": "**Acceso:** Token de renovación.\n\nRota el token de renovación: el anterior deja de servir.\n\n**Códigos de error propios:** 401 `SESSION_INVALID`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshToken"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Cerrar sesión",
+        "description": "**Acceso:** Token de renovación.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshToken"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "204": {
+            "description": "Sesión cerrada."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/session": {
+      "post": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Cuenta de la sesión actual",
+        "description": "**Acceso:** Sesión.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/auth/browser/register": {
+      "post": {
+        "tags": [
+          "Autenticación web"
+        ],
+        "summary": "Registrar (web)",
+        "description": "**Acceso:** Público, solo desde un origen web autorizado.\n\nEl token de renovación se envía en una cookie HttpOnly; no se puede probar desde esta página porque exige el `Origin` de la web.\n\n**Códigos de error propios:** 403 `ORIGIN_FORBIDDEN`, 409 `EMAIL_REGISTERED`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "201": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/browser/login": {
+      "post": {
+        "tags": [
+          "Autenticación web"
+        ],
+        "summary": "Iniciar sesión (web)",
+        "description": "**Acceso:** Público, solo desde un origen web autorizado.\n\n**Códigos de error propios:** 401 `INVALID_CREDENTIALS`, 403 `ORIGIN_FORBIDDEN`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/browser/refresh": {
+      "post": {
+        "tags": [
+          "Autenticación web"
+        ],
+        "summary": "Renovar la sesión (web)",
+        "description": "**Acceso:** Cookie de renovación.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "refreshCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/browser/logout": {
+      "post": {
+        "tags": [
+          "Autenticación web"
+        ],
+        "summary": "Cerrar sesión (web)",
+        "description": "**Acceso:** Cookie de renovación.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "refreshCookie": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Sesión cerrada y cookie borrada."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/social/providers/query": {
+      "post": {
+        "tags": [
+          "Accesos sociales"
+        ],
+        "summary": "Proveedores configurados",
+        "description": "**Acceso:** Público.\n\n**Códigos de error propios:** 404 `SOCIAL_DISABLED`.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "providers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "enum": [
+                              "google",
+                              "discord",
+                              "github"
+                            ]
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/auth/browser/social/start": {
+      "post": {
+        "tags": [
+          "Accesos sociales"
+        ],
+        "summary": "Iniciar acceso social (web)",
+        "description": "**Acceso:** Público, solo desde un origen web autorizado.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "enum": [
+                      "google",
+                      "discord",
+                      "github"
+                    ]
+                  },
+                  "challenge": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$",
+                    "description": "SHA-256 en hexadecimal de la prueba secreta."
+                  }
+                },
+                "required": [
+                  "provider",
+                  "challenge"
+                ]
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/browser/social/status": {
+      "post": {
+        "tags": [
+          "Accesos sociales"
+        ],
+        "summary": "Estado del acceso social (web)",
+        "description": "**Acceso:** Público, solo desde un origen web autorizado.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SocialProof"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SocialStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/browser/social/complete": {
+      "post": {
+        "tags": [
+          "Accesos sociales"
+        ],
+        "summary": "Completar acceso social (web)",
+        "description": "**Acceso:** Público, solo desde un origen web autorizado.\n\n**Códigos de error propios:** 409 `SOCIAL_CHANGED`, `SOCIAL_CONFLICT`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SocialComplete"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/social/{provider}/callback": {
+      "get": {
+        "tags": [
+          "Accesos sociales"
+        ],
+        "summary": "Retorno del proveedor OAuth (excepción GET)",
+        "description": "**Acceso:** Proveedor OAuth.\n\nÚnica ruta de la API, junto con la imagen publicada, que responde a GET: el proveedor redirige el navegador aquí según el estándar OAuth 2.0. No la llama la app.",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "google",
+                "discord",
+                "github"
+              ]
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "303": {
+            "description": "Redirige a la web (`#social=<id>`) o a la app (`expotec://auth`)."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/social/status": {
+      "post": {
+        "tags": [
+          "Accesos sociales"
+        ],
+        "summary": "Estado del acceso social (Android)",
+        "description": "**Acceso:** Público.\n\nUsa POST porque envía la prueba secreta del flujo.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SocialProof"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SocialStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/social/complete": {
+      "post": {
+        "tags": [
+          "Accesos sociales"
+        ],
+        "summary": "Completar acceso social (Android)",
+        "description": "**Acceso:** Público.\n\n**Códigos de error propios:** 409 `SOCIAL_CHANGED`, `SOCIAL_CONFLICT`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SocialComplete"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/social/google/native/start": {
+      "post": {
+        "tags": [
+          "Accesos sociales"
+        ],
+        "summary": "Iniciar Google nativo (Android)",
+        "description": "**Acceso:** Público.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "challenge": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "required": [
+                  "challenge"
+                ]
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                    },
+                    "nonce": {
+                      "type": "string"
+                    },
+                    "webClientId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/social/google/native/verify": {
+      "post": {
+        "tags": [
+          "Accesos sociales"
+        ],
+        "summary": "Verificar Google nativo (Android)",
+        "description": "**Acceso:** Público.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                  },
+                  "proof": {
+                    "type": "string"
+                  },
+                  "idToken": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "proof",
+                  "idToken"
+                ]
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/auth/recovery/query": {
+      "post": {
+        "tags": [
+          "Recuperación de contraseña"
+        ],
+        "summary": "Saber si la recuperación está habilitada",
+        "description": "**Acceso:** Público.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/auth/recovery/request": {
+      "post": {
+        "tags": [
+          "Recuperación de contraseña"
+        ],
+        "summary": "Pedir el enlace por correo",
+        "description": "**Acceso:** Público.\n\nResponde lo mismo exista o no la cuenta. Límites: 3 pedidos por correo y 15 por IP cada hora.\n\n**Códigos de error propios:** 503 `RECOVERY_UNAVAILABLE`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "202": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/auth/recovery/complete": {
+      "post": {
+        "tags": [
+          "Recuperación de contraseña"
+        ],
+        "summary": "Elegir la contraseña nueva",
+        "description": "**Acceso:** Público (token del enlace).\n\nEl enlace vence a los 20 minutos y sirve una sola vez. Cierra todas las sesiones de la cuenta.\n\n**Códigos de error propios:** 400 `RESET_INVALID`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_-]{43}$"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 12,
+                    "maxLength": 128
+                  },
+                  "confirmation": {
+                    "type": "string",
+                    "minLength": 12,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "token",
+                  "password",
+                  "confirmation"
+                ]
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/admin/users/query": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Buscar cuentas",
+        "description": "**Acceso:** Administrador.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 25,
+                    "default": 25,
+                    "description": "Cantidad de resultados (1-100)."
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "example": 0,
+                    "default": 0,
+                    "description": "Resultados a saltear (paginación)."
+                  },
+                  "search": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Nombre o correo."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  },
+                  "required": [
+                    "users"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/admin/users/{id}/query": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Ver una cuenta",
+        "description": "**Acceso:** Administrador.\n\n**Códigos de error propios:** 404 `USER_NOT_FOUND`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id de la cuenta.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/admin/users/{id}/roles": {
+      "put": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Reemplazar los roles de una cuenta",
+        "description": "**Acceso:** Administrador.\n\n**Códigos de error propios:** 409 `ROLES_CHANGED`, `LAST_ADMIN`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id de la cuenta.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "minItems": 1,
+                    "maxItems": 5,
+                    "uniqueItems": true
+                  },
+                  "expectedRoles": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Role"
+                    },
+                    "maxItems": 5,
+                    "uniqueItems": true,
+                    "description": "Roles leídos antes de editar."
+                  }
+                },
+                "required": [
+                  "roles",
+                  "expectedRoles"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/spaces/query": {
+      "post": {
+        "tags": [
+          "Espacios"
+        ],
+        "summary": "Listar espacios",
+        "description": "**Acceso:** Público.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "spaces": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SpaceSummary"
+                      }
+                    }
+                  },
+                  "required": [
+                    "spaces"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/spaces/{id}/query": {
+      "post": {
+        "tags": [
+          "Espacios"
+        ],
+        "summary": "Ver un espacio con su plano",
+        "description": "**Acceso:** Público.\n\n**Códigos de error propios:** 404 `SPACE_NOT_FOUND`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del espacio.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "space": {
+                      "$ref": "#/components/schemas/Space"
+                    }
+                  },
+                  "required": [
+                    "space"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/spaces": {
+      "post": {
+        "tags": [
+          "Espacios"
+        ],
+        "summary": "Crear un espacio",
+        "description": "**Acceso:** Administrador.\n\n**Códigos de error propios:** 409 `SPACE_LIMIT` (100 activos).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpaceCreate"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "space": {
+                      "$ref": "#/components/schemas/Space"
+                    }
+                  },
+                  "required": [
+                    "space"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/spaces/{id}": {
+      "put": {
+        "tags": [
+          "Espacios"
+        ],
+        "summary": "Guardar el espacio y su plano",
+        "description": "**Acceso:** Administrador.\n\n**Códigos de error propios:** 409 `SPACE_CHANGED`, `SPACE_IN_USE`, `FURNITURE_ID_RESERVED`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del espacio.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpaceSave"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "space": {
+                      "$ref": "#/components/schemas/Space"
+                    }
+                  },
+                  "required": [
+                    "space"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "413": {
+            "$ref": "#/components/responses/TooLarge"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Espacios"
+        ],
+        "summary": "Dar de baja un espacio",
+        "description": "**Acceso:** Administrador.\n\n**Códigos de error propios:** 409 `SPACE_CHANGED`, `SPACE_IN_USE`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del espacio.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483646,
+                    "example": 1,
+                    "description": "Versión leída del registro (control de cambios simultáneos)."
+                  }
+                },
+                "required": [
+                  "version"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Espacio dado de baja."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/projects/public/query": {
+      "post": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Proyectos confirmados",
+        "description": "**Acceso:** Público.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 25,
+                    "default": 25,
+                    "description": "Cantidad de resultados (1-100)."
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "example": 0,
+                    "default": 0,
+                    "description": "Resultados a saltear (paginación)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProjectSummary"
+                      }
+                    }
+                  },
+                  "required": [
+                    "projects"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/projects/public/{id}/query": {
+      "post": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Ficha pública de un proyecto confirmado",
+        "description": "**Acceso:** Público.\n\n**Códigos de error propios:** 404 `PROJECT_NOT_FOUND`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del proyecto.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "project": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  },
+                  "required": [
+                    "project"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/projects/presentation/query": {
+      "post": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Página de la presentación TV",
+        "description": "**Acceso:** Público.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 100,
+                    "default": 100
+                  },
+                  "after": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01",
+                    "description": "Cursor: id del último proyecto recibido."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PresentationProject"
+                      }
+                    },
+                    "nextCursor": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/projects/query": {
+      "post": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Mis proyectos",
+        "description": "**Acceso:** Sesión.\n\nPropios (alumno), asignados (profesor) o todos (administrador).",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 25,
+                    "default": 25,
+                    "description": "Cantidad de resultados (1-100)."
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "example": 0,
+                    "default": 0,
+                    "description": "Resultados a saltear (paginación)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProjectSummary"
+                      }
+                    }
+                  },
+                  "required": [
+                    "projects"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/projects/people/find": {
+      "post": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Buscar un compañero o profesor por correo",
+        "description": "**Acceso:** Alumno o administrador.\n\n**Códigos de error propios:** 404 `PERSON_NOT_FOUND`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "student",
+                      "teacher"
+                    ]
+                  }
+                },
+                "required": [
+                  "email",
+                  "role"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "person": {
+                      "$ref": "#/components/schemas/Person"
+                    }
+                  },
+                  "required": [
+                    "person"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/projects/{id}/query": {
+      "post": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Ficha privada de un proyecto",
+        "description": "**Acceso:** Integrante, profesor asignado o administrador.\n\n**Códigos de error propios:** 404 `PROJECT_NOT_FOUND`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del proyecto.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "project": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  },
+                  "required": [
+                    "project"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/projects": {
+      "post": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Presentar una propuesta",
+        "description": "**Acceso:** Alumno.\n\n**Códigos de error propios:** 400 `PARTICIPANTS_INVALID`; 409 `BOOTH_UNAVAILABLE`, `RESOURCE_UNAVAILABLE`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Proposal"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "project": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  },
+                  "required": [
+                    "project"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "413": {
+            "$ref": "#/components/responses/TooLarge"
+          }
+        }
+      }
+    },
+    "/api/projects/{id}": {
+      "put": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Editar y reenviar una propuesta",
+        "description": "**Acceso:** Integrante (alumno).\n\n**Códigos de error propios:** 409 `PROJECT_CHANGED`, `PROJECT_LOCKED`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del proyecto.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Proposal"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 2147483646,
+                        "example": 1,
+                        "description": "Versión leída del registro (control de cambios simultáneos)."
+                      }
+                    },
+                    "required": [
+                      "version"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "project": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  },
+                  "required": [
+                    "project"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "413": {
+            "$ref": "#/components/responses/TooLarge"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Cancelar un proyecto",
+        "description": "**Acceso:** Integrante o administrador.\n\nBaja lógica: conserva el historial y libera el puesto y las reservas.\n\n**Códigos de error propios:** 409 `PROJECT_CHANGED`, `PROJECT_HAS_LOANS`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del proyecto.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483646,
+                    "example": 1,
+                    "description": "Versión leída del registro (control de cambios simultáneos)."
+                  }
+                },
+                "required": [
+                  "version"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "project": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  },
+                  "required": [
+                    "project"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/projects/{id}/reviews": {
+      "post": {
+        "tags": [
+          "Proyectos"
+        ],
+        "summary": "Revisar un proyecto",
+        "description": "**Acceso:** Profesor asignado (`approve`, `changes`) o administrador (`reopen`).\n\nConfirmar asigna el puesto y reserva los elementos en una sola transacción.\n\n**Códigos de error propios:** 409 `PROJECT_CHANGED`, `BOOTH_OCCUPIED`, `RESOURCE_STOCK`, `PROJECT_HAS_LOANS`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del proyecto.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "project": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  },
+                  "required": [
+                    "project"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/inventory/catalog/query": {
+      "post": {
+        "tags": [
+          "Inventario"
+        ],
+        "summary": "Catálogo para pedir en propuestas",
+        "description": "**Acceso:** Alumno, profesor, préstamos o administrador.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resources": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Resource"
+                      }
+                    }
+                  },
+                  "required": [
+                    "resources"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/inventory/query": {
+      "post": {
+        "tags": [
+          "Inventario"
+        ],
+        "summary": "Listar el inventario",
+        "description": "**Acceso:** Préstamos o administrador.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 25,
+                    "default": 25,
+                    "description": "Cantidad de resultados (1-100)."
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "example": 0,
+                    "default": 0,
+                    "description": "Resultados a saltear (paginación)."
+                  },
+                  "archived": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "true muestra los dados de baja."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resources": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Resource"
+                      }
+                    }
+                  },
+                  "required": [
+                    "resources"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/inventory/{id}/query": {
+      "post": {
+        "tags": [
+          "Inventario"
+        ],
+        "summary": "Ver un elemento con su historial",
+        "description": "**Acceso:** Préstamos o administrador.\n\n**Códigos de error propios:** 404 `RESOURCE_NOT_FOUND`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del elemento.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resource": {
+                      "$ref": "#/components/schemas/Resource"
+                    }
+                  },
+                  "required": [
+                    "resource"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/inventory": {
+      "post": {
+        "tags": [
+          "Inventario"
+        ],
+        "summary": "Agregar un elemento",
+        "description": "**Acceso:** Administrador.\n\n**Códigos de error propios:** 409 `RESOURCE_NAME_EXISTS`, `RESOURCE_LIMIT`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResourceBody"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resource": {
+                      "$ref": "#/components/schemas/Resource"
+                    }
+                  },
+                  "required": [
+                    "resource"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/inventory/{id}": {
+      "put": {
+        "tags": [
+          "Inventario"
+        ],
+        "summary": "Editar un elemento",
+        "description": "**Acceso:** Administrador.\n\n**Códigos de error propios:** 409 `RESOURCE_CHANGED`, `RESOURCE_IN_USE`, `RESOURCE_NAME_EXISTS`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del elemento.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ResourceBody"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 2147483646,
+                        "example": 1,
+                        "description": "Versión leída del registro (control de cambios simultáneos)."
+                      }
+                    },
+                    "required": [
+                      "version"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resource": {
+                      "$ref": "#/components/schemas/Resource"
+                    }
+                  },
+                  "required": [
+                    "resource"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Inventario"
+        ],
+        "summary": "Dar de baja un elemento",
+        "description": "**Acceso:** Administrador.\n\n**Códigos de error propios:** 409 `RESOURCE_CHANGED`, `RESOURCE_RESERVED`, `RESOURCE_HAS_LOANS`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del elemento.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483646,
+                    "example": 1,
+                    "description": "Versión leída del registro (control de cambios simultáneos)."
+                  }
+                },
+                "required": [
+                  "version"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Elemento dado de baja."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/loans/query": {
+      "post": {
+        "tags": [
+          "Préstamos"
+        ],
+        "summary": "Listar préstamos",
+        "description": "**Acceso:** Préstamos o administrador.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 25,
+                    "default": 25,
+                    "description": "Cantidad de resultados (1-100)."
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "example": 0,
+                    "default": 0,
+                    "description": "Resultados a saltear (paginación)."
+                  },
+                  "day": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 3,
+                    "description": "Jornada."
+                  },
+                  "openOnly": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Solo con unidades sin devolver."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "loans": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Loan"
+                      }
+                    },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "pendingCount": {
+                          "type": "integer"
+                        },
+                        "pendingQuantity": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/loans/projects/query": {
+      "post": {
+        "tags": [
+          "Préstamos"
+        ],
+        "summary": "Proyectos confirmados y lo que pueden retirar",
+        "description": "**Acceso:** Préstamos o administrador.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 25,
+                    "default": 25,
+                    "description": "Cantidad de resultados (1-100)."
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "example": 0,
+                    "default": 0,
+                    "description": "Resultados a saltear (paginación)."
+                  },
+                  "day": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 3,
+                    "example": 1
+                  }
+                },
+                "required": [
+                  "day"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LendingProject"
+                      }
+                    }
+                  },
+                  "required": [
+                    "projects"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/loans/{id}/query": {
+      "post": {
+        "tags": [
+          "Préstamos"
+        ],
+        "summary": "Ver un préstamo con sus devoluciones",
+        "description": "**Acceso:** Préstamos o administrador.\n\n**Códigos de error propios:** 404 `LOAN_NOT_FOUND`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del préstamo.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "loan": {
+                      "$ref": "#/components/schemas/Loan"
+                    }
+                  },
+                  "required": [
+                    "loan"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/loans": {
+      "post": {
+        "tags": [
+          "Préstamos"
+        ],
+        "summary": "Registrar una entrega",
+        "description": "**Acceso:** Préstamos o administrador.\n\nUna sola entrega por proyecto, elemento y jornada.\n\n**Códigos de error propios:** 400 `RECIPIENT_INVALID`; 409 `ALREADY_DELIVERED`, `LOAN_STOCK`, `PROJECT_LOAN_LIMIT`, `PROJECT_CHANGED`, `PROJECT_NOT_APPROVED`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Delivery"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "loan": {
+                      "$ref": "#/components/schemas/Loan"
+                    }
+                  },
+                  "required": [
+                    "loan"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/loans/{id}/returns": {
+      "post": {
+        "tags": [
+          "Préstamos"
+        ],
+        "summary": "Registrar una devolución o novedad",
+        "description": "**Acceso:** Préstamos o administrador.\n\nLas unidades dañadas quedan fuera de servicio en el inventario.\n\n**Códigos de error propios:** 409 `LOAN_CHANGED`, `RETURN_EXCEEDS_LOAN`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id del préstamo.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Return"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "loan": {
+                      "$ref": "#/components/schemas/Loan"
+                    }
+                  },
+                  "required": [
+                    "loan"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/gallery/public/query": {
+      "post": {
+        "tags": [
+          "Galería"
+        ],
+        "summary": "Fotos aprobadas",
+        "description": "**Acceso:** Público.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 25,
+                    "default": 25,
+                    "description": "Cantidad de resultados (1-100)."
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "example": 0,
+                    "default": 0,
+                    "description": "Resultados a saltear (paginación)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "photos": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Photo"
+                      }
+                    }
+                  },
+                  "required": [
+                    "photos"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/gallery/mine/query": {
+      "post": {
+        "tags": [
+          "Galería"
+        ],
+        "summary": "Mis fotos con su estado",
+        "description": "**Acceso:** Sesión.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 25,
+                    "default": 25,
+                    "description": "Cantidad de resultados (1-100)."
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "example": 0,
+                    "default": 0,
+                    "description": "Resultados a saltear (paginación)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "photos": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Photo"
+                      }
+                    }
+                  },
+                  "required": [
+                    "photos"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/gallery": {
+      "post": {
+        "tags": [
+          "Galería"
+        ],
+        "summary": "Enviar una foto a moderación",
+        "description": "**Acceso:** Sesión.\n\n**Códigos de error propios:** 400 `IMAGE_NOT_AVAILABLE`; 409 `GALLERY_PENDING_LIMIT` (20 pendientes).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhotoBody"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "photo": {
+                      "$ref": "#/components/schemas/Photo"
+                    }
+                  },
+                  "required": [
+                    "photo"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/gallery/moderation/query": {
+      "post": {
+        "tags": [
+          "Galería"
+        ],
+        "summary": "Fotos para moderar",
+        "description": "**Acceso:** Administrador.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "example": 25,
+                    "default": 25,
+                    "description": "Cantidad de resultados (1-100)."
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "example": 0,
+                    "default": 0,
+                    "description": "Resultados a saltear (paginación)."
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "approved",
+                      "rejected",
+                      "all"
+                    ],
+                    "default": "pending"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "photos": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Photo"
+                      }
+                    }
+                  },
+                  "required": [
+                    "photos"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/gallery/{id}": {
+      "patch": {
+        "tags": [
+          "Galería"
+        ],
+        "summary": "Aprobar o rechazar una foto",
+        "description": "**Acceso:** Administrador.\n\n**Códigos de error propios:** 409 `PHOTO_CHANGED`, `PHOTO_ALREADY_REVIEWED`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id de la foto.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhotoReview"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "photo": {
+                      "$ref": "#/components/schemas/Photo"
+                    }
+                  },
+                  "required": [
+                    "photo"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/uploads": {
+      "post": {
+        "tags": [
+          "Fotos"
+        ],
+        "summary": "Preparar la carga de una foto",
+        "description": "**Acceso:** Sesión (alumno para `project`).\n\nDevuelve un token para subir el archivo directamente al almacenamiento privado (válido 10 minutos). Límite: 20 por hora.\n\n**Códigos de error propios:** 503 `UPLOADS_UNAVAILABLE`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "purpose": {
+                    "type": "string",
+                    "enum": [
+                      "gallery",
+                      "project"
+                    ]
+                  },
+                  "contentType": {
+                    "type": "string",
+                    "enum": [
+                      "image/jpeg",
+                      "image/png",
+                      "image/webp"
+                    ]
+                  },
+                  "size": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10485760,
+                    "description": "Bytes (hasta 10 MB)."
+                  }
+                },
+                "required": [
+                  "purpose",
+                  "contentType",
+                  "size"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                    },
+                    "pathname": {
+                      "type": "string"
+                    },
+                    "clientToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/uploads/{id}/complete": {
+      "post": {
+        "tags": [
+          "Fotos"
+        ],
+        "summary": "Confirmar la carga",
+        "description": "**Acceso:** Dueño de la carga.\n\nValida el contenido real y lo optimiza a JPEG de hasta 1600 px.\n\n**Códigos de error propios:** 409 `UPLOAD_CHANGED`; 422 `IMAGE_INVALID`; 503 `UPLOAD_FAILED`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id de la carga.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Sin datos: enviar `{}` o no enviar cuerpo."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "imageUrl": {
+                      "type": "string",
+                      "format": "uri",
+                      "maxLength": 2048,
+                      "pattern": "^https://",
+                      "example": "https://expotec-web-gn19.vercel.app/api/uploads/3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01/image"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/uploads/preview": {
+      "post": {
+        "tags": [
+          "Fotos"
+        ],
+        "summary": "Vista previa de una imagen privada",
+        "description": "**Acceso:** Dueño o administrador.\n\n**Códigos de error propios:** 404 `IMAGE_NOT_FOUND`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageUrl": {
+                    "type": "string",
+                    "format": "uri",
+                    "maxLength": 2048,
+                    "pattern": "^https://",
+                    "example": "https://expotec-web-gn19.vercel.app/api/uploads/3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01/image"
+                  }
+                },
+                "required": [
+                  "imageUrl"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "image": {
+                      "type": "string",
+                      "description": "Imagen en base64 (data URL)."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/uploads/{id}/image": {
+      "get": {
+        "tags": [
+          "Fotos"
+        ],
+        "summary": "Imagen publicada (excepción GET)",
+        "description": "**Acceso:** Público.\n\nLa muestran las etiquetas de imagen del navegador y del teléfono, que solo pueden pedir con GET. Solo entrega imágenes de proyectos confirmados o fotos aprobadas.\n\n**Códigos de error propios:** 404 `IMAGE_NOT_FOUND`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id de la imagen.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Imagen JPEG (`image/jpeg`)."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "`accessToken` devuelto por el ingreso, el registro o la renovación."
+      },
+      "refreshCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Secure-expotec-refresh",
+        "description": "Cookie HttpOnly de la variante web (`expotec-refresh` en desarrollo)."
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Datos inválidos, incompletos o campos no admitidos.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+              "example": {
+                "error": {
+                  "code": "VALIDATION_ERROR",
+                  "message": "Revisá los campos indicados."
+                },
+                "requestId": "4d0f2c6e-0b1e-4d2a-9b7f-6c1f0c2a9e51"
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Sin sesión, token vencido o credenciales incorrectas.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+              "example": {
+                "error": {
+                  "code": "SESSION_INVALID",
+                  "message": "Tu sesión venció. Volvé a ingresar."
+                },
+                "requestId": "4d0f2c6e-0b1e-4d2a-9b7f-6c1f0c2a9e51"
+              }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "El rol no alcanza o el origen web no está autorizado.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+              "example": {
+                "error": {
+                  "code": "FORBIDDEN",
+                  "message": "Tu cuenta no tiene permiso para esta acción."
+                },
+                "requestId": "4d0f2c6e-0b1e-4d2a-9b7f-6c1f0c2a9e51"
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Registro inexistente o sin acceso.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+              "example": {
+                "error": {
+                  "code": "NOT_FOUND",
+                  "message": "No encontramos esa operación."
+                },
+                "requestId": "4d0f2c6e-0b1e-4d2a-9b7f-6c1f0c2a9e51"
+              }
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Conflicto con el estado actual (cambio simultáneo, stock, puesto ocupado o límite).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+              "example": {
+                "error": {
+                  "code": "PROJECT_CHANGED",
+                  "message": "Otra persona modificó el proyecto. Recargá antes de guardar."
+                },
+                "requestId": "4d0f2c6e-0b1e-4d2a-9b7f-6c1f0c2a9e51"
+              }
+            }
+          }
+        }
+      },
+      "TooLarge": {
+        "description": "El cuerpo supera el límite de la ruta.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+              "example": {
+                "error": {
+                  "code": "BODY_TOO_LARGE",
+                  "message": "La solicitud supera los 64 KB permitidos."
+                },
+                "requestId": "4d0f2c6e-0b1e-4d2a-9b7f-6c1f0c2a9e51"
+              }
+            }
+          }
+        }
+      },
+      "Unprocessable": {
+        "description": "El archivo no es una imagen válida.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+              "example": {
+                "error": {
+                  "code": "IMAGE_INVALID",
+                  "message": "El archivo no es una imagen válida."
+                },
+                "requestId": "4d0f2c6e-0b1e-4d2a-9b7f-6c1f0c2a9e51"
+              }
+            }
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "Demasiados intentos. Esperar los segundos indicados en `Retry-After`.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+              "example": {
+                "error": {
+                  "code": "RATE_LIMITED",
+                  "message": "Hiciste demasiados intentos. Esperá unos minutos."
+                },
+                "requestId": "4d0f2c6e-0b1e-4d2a-9b7f-6c1f0c2a9e51"
+              }
+            }
+          }
+        },
+        "headers": {
+          "Retry-After": {
+            "description": "Segundos a esperar.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "Unavailable": {
+        "description": "Base de datos o servicio externo no disponible.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+              "example": {
+                "error": {
+                  "code": "DATABASE_UNAVAILABLE",
+                  "message": "La base no está disponible. Probá de nuevo más tarde."
+                },
+                "requestId": "4d0f2c6e-0b1e-4d2a-9b7f-6c1f0c2a9e51"
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "VALIDATION_ERROR"
+              },
+              "message": {
+                "type": "string",
+                "example": "Revisá los campos indicados."
+              },
+              "fields": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "example": {
+                  "password": "Usá entre 12 y 128 caracteres."
+                }
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01",
+            "description": "Identificador de la solicitud (también en el encabezado `X-Request-Id`)."
+          }
+        },
+        "required": [
+          "error",
+          "requestId"
+        ]
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "student",
+          "teacher",
+          "loans",
+          "admin",
+          "guest"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "alumno@escuela.edu.ar"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "Lucía"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Fernández"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "firstName",
+          "lastName",
+          "roles",
+          "createdAt"
+        ]
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "JWT de acceso (15 minutos)."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "JWT de renovación. No se incluye en las rutas `/browser/` (va en una cookie HttpOnly)."
+          },
+          "tokenType": {
+            "type": "string",
+            "example": "Bearer"
+          },
+          "expiresIn": {
+            "type": "integer",
+            "example": 900
+          }
+        },
+        "required": [
+          "user",
+          "accessToken",
+          "tokenType",
+          "expiresIn"
+        ]
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254,
+            "example": "alumno@escuela.edu.ar"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "example": "Contraseña de ejemplo"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "Register": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "example": "Lucía"
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "example": "Fernández"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254,
+            "example": "alumno@escuela.edu.ar"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128,
+            "example": "Una contraseña larga"
+          },
+          "accountType": {
+            "type": "string",
+            "enum": [
+              "student",
+              "guest"
+            ],
+            "default": "student"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "RefreshToken": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        },
+        "required": [
+          "refreshToken"
+        ],
+        "additionalProperties": false
+      },
+      "Person": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName"
+        ]
+      },
+      "Furniture": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,64}$",
+            "example": "M1"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "table",
+              "bench",
+              "power",
+              "label"
+            ]
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Posición horizontal en porcentaje."
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Posición vertical en porcentaje."
+          },
+          "rotation": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 359,
+            "example": 0
+          },
+          "width": {
+            "type": "number",
+            "minimum": 6,
+            "maximum": 30,
+            "description": "Solo mesas."
+          },
+          "height": {
+            "type": "number",
+            "minimum": 4,
+            "maximum": 25,
+            "description": "Solo mesas."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 60,
+            "description": "Solo rótulos."
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "x",
+          "y",
+          "rotation"
+        ]
+      },
+      "SpaceSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "furnitureCount": {
+            "type": "integer"
+          },
+          "boothCount": {
+            "type": "integer"
+          }
+        }
+      },
+      "Space": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "furniture": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Furniture"
+            }
+          },
+          "booths": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                },
+                "furnitureId": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01",
+                  "nullable": true
+                },
+                "projectName": {
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "SpaceCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80,
+            "example": "Laboratorio 1"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 150,
+            "example": "Planta baja, al lado del patio"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "additionalProperties": false
+      },
+      "SpaceSave": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483646,
+            "example": 1,
+            "description": "Versión leída del registro (control de cambios simultáneos)."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 150
+          },
+          "furniture": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Furniture"
+            },
+            "maxItems": 150
+          },
+          "boothFurnitureIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 150,
+            "description": "Ids de mesas del plano que son puestos inscribibles."
+          }
+        },
+        "required": [
+          "version",
+          "name",
+          "description",
+          "furniture",
+          "boothFurnitureIds"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "name": {
+            "type": "string"
+          },
+          "course": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "changes",
+              "approved",
+              "cancelled"
+            ]
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "spaceName": {
+            "type": "string"
+          },
+          "furnitureId": {
+            "type": "string"
+          }
+        }
+      },
+      "ProjectResource": {
+        "type": "object",
+        "properties": {
+          "resourceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "reservedQuantity": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "available": {
+            "type": "integer"
+          },
+          "unavailable": {
+            "type": "integer"
+          },
+          "outstanding": {
+            "type": "integer"
+          },
+          "archivedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "course": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "changes",
+              "approved",
+              "cancelled"
+            ]
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "videoUrl": {
+            "type": "string"
+          },
+          "isSoftwareProject": {
+            "type": "boolean"
+          },
+          "githubUrl": {
+            "type": "string"
+          },
+          "websiteUrl": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            }
+          },
+          "teachers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            }
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "booth": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+              },
+              "spaceId": {
+                "type": "string",
+                "format": "uuid",
+                "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+              },
+              "spaceName": {
+                "type": "string"
+              },
+              "furnitureId": {
+                "type": "string"
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creatorId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01",
+            "description": "Solo en la vista privada."
+          },
+          "version": {
+            "type": "integer",
+            "description": "Solo en la vista privada."
+          },
+          "feedback": {
+            "type": "string"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectResource"
+            },
+            "description": "Solo en la vista privada."
+          },
+          "openLoanQuantity": {
+            "type": "integer",
+            "description": "Unidades prestadas sin devolver."
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                },
+                "action": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PresentationProject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "course": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "videoUrl": {
+            "type": "string"
+          },
+          "spaceName": {
+            "type": "string"
+          },
+          "furnitureId": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            }
+          },
+          "teachers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            }
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Proposal": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "example": "Estación meteorológica"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 5000,
+            "example": "Medimos temperatura, humedad y presión durante el día."
+          },
+          "course": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100,
+            "example": "6° 1° · Informática"
+          },
+          "imageUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048,
+            "pattern": "^https://",
+            "example": "https://expotec-web-gn19.vercel.app/api/uploads/3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01/image"
+          },
+          "videoUrl": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Vacío o enlace HTTPS directo a MP4 o WebM.",
+            "example": ""
+          },
+          "isSoftwareProject": {
+            "type": "boolean",
+            "example": true
+          },
+          "githubUrl": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Vacío o repositorio de github.com (solo proyectos informáticos).",
+            "example": "https://github.com/equipo/estacion"
+          },
+          "websiteUrl": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Vacío o enlace HTTPS (solo proyectos informáticos).",
+            "example": ""
+          },
+          "memberIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            },
+            "minItems": 1,
+            "maxItems": 12,
+            "description": "Alumnos integrantes (incluye a quien presenta)."
+          },
+          "teacherIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            },
+            "minItems": 1,
+            "maxItems": 5
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 80
+            },
+            "minItems": 1,
+            "maxItems": 10,
+            "example": [
+              "Programación",
+              "Electrónica"
+            ]
+          },
+          "boothId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01",
+            "description": "Puesto (mesa inscribible) elegido."
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resourceId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10000,
+                  "example": 2
+                }
+              },
+              "required": [
+                "resourceId",
+                "quantity"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 50
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "course",
+          "imageUrl",
+          "videoUrl",
+          "isSoftwareProject",
+          "githubUrl",
+          "websiteUrl",
+          "memberIds",
+          "teacherIds",
+          "subjects",
+          "boothId"
+        ],
+        "additionalProperties": false
+      },
+      "Review": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483646,
+            "example": 1,
+            "description": "Versión leída del registro (control de cambios simultáneos)."
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "changes",
+              "reopen"
+            ],
+            "description": "`approve` y `changes`: profesor asignado. `reopen`: administrador."
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "Obligatoria (10 a 2000 caracteres) salvo para aprobar."
+          }
+        },
+        "required": [
+          "version",
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "Resource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "reserved": {
+            "type": "integer"
+          },
+          "available": {
+            "type": "integer"
+          },
+          "unavailable": {
+            "type": "integer",
+            "description": "Fuera de servicio."
+          },
+          "outstanding": {
+            "type": "integer",
+            "description": "Prestadas sin devolver."
+          },
+          "availableToLend": {
+            "type": "integer"
+          },
+          "shortage": {
+            "type": "integer"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "archivedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                },
+                "action": {
+                  "type": "string"
+                },
+                "previousTotal": {
+                  "type": "integer",
+                  "nullable": true
+                },
+                "total": {
+                  "type": "integer"
+                },
+                "previousUnavailable": {
+                  "type": "integer",
+                  "nullable": true
+                },
+                "unavailable": {
+                  "type": "integer"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Solo en el detalle."
+          }
+        }
+      },
+      "ResourceBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100,
+            "example": "Proyector"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 250,
+            "example": "Proyector HDMI con control remoto"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000,
+            "example": 4
+          },
+          "unavailable": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000,
+            "example": 0,
+            "description": "Unidades fuera de servicio (no más que el total)."
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "total"
+        ],
+        "additionalProperties": false
+      },
+      "Loan": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "resourceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "projectName": {
+            "type": "string"
+          },
+          "resourceName": {
+            "type": "string"
+          },
+          "day": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "returned": {
+            "type": "integer"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "recipientId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "recipientFirstName": {
+            "type": "string"
+          },
+          "recipientLastName": {
+            "type": "string"
+          },
+          "deliveredFirstName": {
+            "type": "string"
+          },
+          "deliveredLastName": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "returns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                },
+                "quantity": {
+                  "type": "integer"
+                },
+                "damagedQuantity": {
+                  "type": "integer"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Solo en el detalle."
+          }
+        }
+      },
+      "LendingProject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "name": {
+            "type": "string"
+          },
+          "course": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "spaceName": {
+            "type": "string"
+          },
+          "furnitureId": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            }
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resourceId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "reservedQuantity": {
+                  "type": "integer"
+                },
+                "total": {
+                  "type": "integer"
+                },
+                "unavailable": {
+                  "type": "integer"
+                },
+                "outstanding": {
+                  "type": "integer"
+                },
+                "availableToLend": {
+                  "type": "integer"
+                },
+                "deliverable": {
+                  "type": "integer"
+                },
+                "loanId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01",
+                  "nullable": true
+                },
+                "archivedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "Delivery": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "projectVersion": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483646,
+            "example": 1,
+            "description": "Versión leída del registro (control de cambios simultáneos)."
+          },
+          "resourceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "day": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "example": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000,
+            "example": 2
+          },
+          "recipientId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01",
+            "description": "Integrante del proyecto que retira."
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "projectId",
+          "projectVersion",
+          "resourceId",
+          "day",
+          "quantity",
+          "recipientId"
+        ],
+        "additionalProperties": false
+      },
+      "Return": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483646,
+            "example": 1,
+            "description": "Versión leída del registro (control de cambios simultáneos)."
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "example": 2,
+            "description": "0 registra solo una novedad (exige nota)."
+          },
+          "damagedQuantity": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "example": 0,
+            "default": 0,
+            "description": "No puede superar `quantity`; si es mayor que 0, exige nota."
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "version",
+          "quantity"
+        ],
+        "additionalProperties": false
+      },
+      "Photo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "caption": {
+            "type": "string"
+          },
+          "authorName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "approved",
+              "rejected"
+            ]
+          },
+          "version": {
+            "type": "integer"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewNote": {
+            "type": "string"
+          }
+        }
+      },
+      "PhotoBody": {
+        "type": "object",
+        "properties": {
+          "imageUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048,
+            "pattern": "^https://",
+            "example": "https://expotec-web-gn19.vercel.app/api/uploads/3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01/image"
+          },
+          "caption": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 400,
+            "example": "Nuestro stand en la jornada 1"
+          }
+        },
+        "required": [
+          "imageUrl",
+          "caption"
+        ],
+        "additionalProperties": false
+      },
+      "PhotoReview": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483646,
+            "example": 1,
+            "description": "Versión leída del registro (control de cambios simultáneos)."
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "rejected"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Obligatoria (10 a 1000 caracteres) al rechazar."
+          }
+        },
+        "required": [
+          "version",
+          "decision"
+        ],
+        "additionalProperties": false
+      },
+      "SocialProof": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "proof": {
+            "type": "string",
+            "description": "Prueba secreta cuyo hash se envió al iniciar."
+          }
+        },
+        "required": [
+          "id",
+          "proof"
+        ]
+      },
+      "SocialStatus": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "login",
+              "link",
+              "signup"
+            ]
+          }
+        }
+      },
+      "SocialComplete": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+          },
+          "proof": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "login",
+              "link",
+              "signup"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "`link`: contraseña de ExpoTec. `signup`: contraseña nueva (12-128)."
+          },
+          "firstName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Solo `signup`."
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Solo `signup`."
+          },
+          "accountType": {
+            "type": "string",
+            "enum": [
+              "student",
+              "guest"
+            ],
+            "description": "Solo `signup`."
+          }
+        },
+        "required": [
+          "id",
+          "proof",
+          "mode"
+        ]
+      }
+    }
+  }
+}

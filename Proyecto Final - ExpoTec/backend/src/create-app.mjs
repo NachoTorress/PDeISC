@@ -6,7 +6,7 @@
  * Aplica seguridad común (Helmet, CORS, límites de tamaño), monta las rutas
  * de cada dominio y centraliza el manejo de errores en formato JSON.
  * La API no usa GET para consultas: se hacen por POST con sus datos en el
- * cuerpo JSON. Formato de error:
+ * cuerpo JSON. La documentación interactiva está en `/api/docs`. Formato de error:
  *
  *     { "error": { "code": "...", "message": "...", "fields": { ... } }, "requestId": "..." }
  */
@@ -28,6 +28,7 @@ import { recoveryRoutes } from './routes/recovery.mjs';
 import { createRecoveryService } from './services/recovery.mjs';
 import { createRecoveryMailer } from './services/recovery-mail.mjs';
 import { legacyRoutesMiddleware } from './middleware/legacy-routes.mjs';
+import { docsRoutes } from './routes/docs.mjs';
 
 /** Códigos de error de red de mysql2 que significan "base no disponible" (503). */
 const databaseDownCodes = ['ECONNREFUSED', 'ETIMEDOUT', 'ENOTFOUND', 'PROTOCOL_CONNECTION_LOST', 'ER_CON_COUNT_ERROR'];
@@ -65,16 +66,19 @@ export function createApp(repository, config, logger = console, app = express(),
     next();
   });
   app.use(helmet());
-  app.use(cors({
-    origin(origin, callback) {
-      // Sin encabezado Origin (app Android, curl) no aplica CORS; los navegadores deben estar autorizados.
-      if (!origin || config.origins.includes(origin)) return callback(null, true);
-      callback(new HttpError(403, 'ORIGIN_FORBIDDEN', 'Ese origen no está autorizado.'));
-    },
+  const corsOptions = {
     credentials: true,
     methods: ['POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Retry-After', 'X-Request-Id', 'Deprecation'], maxAge: 600,
+  };
+  app.use(cors((req, callback) => {
+    const origin = req.get('origin');
+    // Sin encabezado Origin (app Android, curl) no aplica CORS; los navegadores deben estar autorizados.
+    // El mismo origen de la API también se acepta: es la página de Swagger (/api/docs) al usar "Try it out".
+    const sameOrigin = origin === `${req.protocol}://${req.get('host')}`;
+    if (!origin || sameOrigin || config.origins.includes(origin)) return callback(null, { ...corsOptions, origin: true });
+    callback(new HttpError(403, 'ORIGIN_FORBIDDEN', 'Ese origen no está autorizado.'));
   }));
 
   // Límites de tamaño del cuerpo JSON: los planos y propuestas son más grandes que el resto.
@@ -93,6 +97,9 @@ export function createApp(repository, config, logger = console, app = express(),
     await repository.ready();
     res.json({ status: 'ok', database: 'connected' });
   });
+
+  // Documentación interactiva (Swagger UI) y especificación OpenAPI.
+  app.use('/api/docs', docsRoutes());
 
   const service = createAuthService(repository, config);
   const recovery = recoveryRepository && config.recovery

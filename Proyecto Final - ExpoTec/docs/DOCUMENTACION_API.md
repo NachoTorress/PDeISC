@@ -12,7 +12,7 @@ Versión de referencia 0.5.1
 
 ## Descripción general
 
-La API de ExpoTec es el backend que usan la aplicación Android y la versión web. Está hecha con Node.js 24 y Express 5, guarda los datos en una base MySQL (TiDB Cloud en producción) y protege las operaciones con JWT de acceso y de renovación. Este documento describe cómo interactuar con ella: convenciones, autenticación, roles, endpoints, respuestas y errores. La instalación del entorno está en la Guía de instalación y configuración.
+La API de ExpoTec es el backend que usan la aplicación Android y la versión web. También puede consultarse y probarse en forma interactiva con Swagger en `/api/docs` (ver Documentación interactiva). Está hecha con Node.js 24 y Express 5, guarda los datos en una base MySQL (TiDB Cloud en producción) y protege las operaciones con JWT de acceso y de renovación. Este documento describe cómo interactuar con ella: convenciones, autenticación, roles, endpoints, respuestas y errores. La instalación del entorno está en la Guía de instalación y configuración.
 
 - Dirección en producción: `https://expotec-api-gn19.vercel.app`.
 - Dirección en desarrollo: `http://localhost:3001` (variable `PORT`).
@@ -34,6 +34,7 @@ backend/
     services/          JWT, contraseñas, accesos sociales, fotos
     repositories/      Consultas SQL y transacciones
     validators/        Validación de cada operación
+    docs/              Especificación OpenAPI (Swagger)
   sql/                 Migraciones 001 a 010
   scripts/             Migrar, comprobar base, crear administrador
   test/                Pruebas unitarias y de integración
@@ -44,7 +45,7 @@ backend/
 - Formato: JSON (`Content-Type: application/json`) en solicitudes y respuestas.
 - Métodos: `POST` consulta (rutas terminadas en `/query`) o crea, `PUT` reemplaza, `PATCH` modifica parcialmente y `DELETE` da de baja.
 - Sin GET: la API no usa GET para leer datos. Las consultas se hacen con `POST` y sus filtros (`limit`, `offset`, `day`...) viajan en el cuerpo JSON, nunca en la URL; así no quedan registrados en historiales ni registros del servidor. Un campo desconocido responde 400.
-- Excepciones: solo dos rutas responden a GET porque no las llama la app sino el navegador o el teléfono: la imagen publicada (`/api/uploads/:id/image`, que muestran las etiquetas de imagen) y el retorno OAuth (`/api/auth/social/:provider/callback`, al que redirigen Google, Discord y GitHub según el estándar OAuth 2.0). Ninguna de las dos recibe datos privados.
+- Excepciones: solo tres rutas responden a GET porque no las llama la app sino el navegador o el teléfono: la imagen publicada (`/api/uploads/:id/image`, que muestran las etiquetas de imagen), el retorno OAuth (`/api/auth/social/:provider/callback`, al que redirigen Google, Discord y GitHub según el estándar OAuth 2.0) y la página de documentación Swagger (`/api/docs`). Ninguna recibe datos privados.
 - Paginación: `limit` (1–100, por defecto 25) y `offset` (0–100000, por defecto 0).
 - Identificadores: UUID v4. Un id con otro formato responde 400.
 - Control de cambios simultáneos: los recursos editables tienen `version`. `PUT`, `PATCH` y `DELETE` deben enviar en el cuerpo la versión leída; si otra persona modificó el registro, responde 409 y el cliente conserva su borrador.
@@ -135,6 +136,30 @@ Invoke-RestMethod -Method Post -Uri "$api/api/projects/query" `
 ```
 
 Cuando el token de acceso vence (15 minutos), el cliente pide uno nuevo con `POST /api/auth/refresh` enviando el token de renovación. La aplicación lo hace sola y repite la operación que había fallado.
+
+## Documentación interactiva (Swagger)
+
+Además de este documento, la API publica su especificación en formato OpenAPI 3.0 y una página de Swagger UI para leerla y probarla desde el navegador, sin instalar nada.
+
+Tabla: Accesos a la documentación interactiva
+
+| Recurso | Dirección | Uso |
+| --- | --- | --- |
+| Swagger UI (producción) | `https://expotec-api-gn19.vercel.app/api/docs` | Abrir en el navegador para ver y probar todos los endpoints. |
+| Swagger UI (desarrollo) | `http://localhost:3001/api/docs` | Igual, con el backend ejecutándose en la computadora. |
+| Especificación OpenAPI | `POST /api/docs/openapi` y archivo `docs/openapi.json` del repositorio | Importar la API en Postman, Insomnia u otro cliente. |
+
+![Página de Swagger UI de la API de ExpoTec con los grupos de endpoints y el botón Authorize](capturas/13-swagger.png)
+
+Para probar una ruta protegida desde Swagger:
+
+1. Abrir el grupo «Autenticación», elegir `POST /api/auth/login`, pulsar «Try it out», completar correo y contraseña y pulsar «Execute».
+2. Copiar el valor de `accessToken` de la respuesta.
+3. Pulsar «Authorize», pegar el token y confirmar. Las rutas con candado ya pueden ejecutarse durante 15 minutos.
+
+La página agrupa los endpoints igual que este documento e indica en cada uno quién puede usarlo, el cuerpo JSON con sus límites, las respuestas y los códigos de error propios. Las rutas `/api/auth/browser/...` solo responden al origen de la versión web, por lo que no se pueden ejecutar desde Swagger.
+
+La especificación está en `backend/src/docs/openapi.mjs`. Al cambiar una ruta hay que actualizarla y regenerar el archivo con `npm run docs:openapi`; la prueba `test/openapi.test.mjs` falla si alguna ruta del backend queda sin documentar.
 
 ## Roles y permisos
 
@@ -358,7 +383,7 @@ Relaciones principales: un usuario tiene varios roles (`user_roles`); un proyect
 ## Pruebas
 
 ```powershell
-npm test                     # 60 pruebas unitarias, sin base de datos
+npm test                     # 64 pruebas unitarias, sin base de datos
 npm run test:projects        # integración: requiere TEST_DB_NAME=expotec_test_...
 ```
 

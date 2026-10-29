@@ -10,6 +10,7 @@ Documentación de referencia de la versión 0.5.1, actualizada el 27 de octubre 
 | Guía de instalación y configuración | [Leer y editar](GUIA_INSTALACION.md) | [Abrir PDF](../output/pdf/ExpoTec_GUIA_INSTALACION.pdf) |
 | Guía de demostración para la exposición | [Leer y editar](GUIA_DEMOSTRACION.md) | [Abrir PDF](../output/pdf/ExpoTec_GUIA_DEMOSTRACION.pdf) |
 | Documentación de la API | [Leer y editar](DOCUMENTACION_API.md) | [Abrir PDF](../output/pdf/ExpoTec_DOCUMENTACION_API.pdf) |
+| Especificación OpenAPI (Swagger) | [openapi.json](openapi.json) · [Swagger en línea](https://expotec-api-gn19.vercel.app/api/docs) | — |
 
 Los cuatro documentos usan hoja A4, márgenes de 2,54 cm, Arial 11, interlineado 1,5 y texto justificado, todo en blanco y negro. La portada va centrada e identifica proyecto, escuela, versión y fecha. Cada página lleva en el encabezado el título del documento y el número de página. Los títulos se numeran por nivel (1, 1.1, 1.1.1) y el índice tiene enlaces a cada sección. Las tablas siguen APA: «Tabla N» en negrita, la descripción en cursiva y solo líneas horizontales; las imágenes usan el mismo rótulo con «Imagen N» y se imprimen en escala de grises.
 

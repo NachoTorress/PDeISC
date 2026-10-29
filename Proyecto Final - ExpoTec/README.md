@@ -16,7 +16,7 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 | Manual de usuario | [docs/MANUAL_USUARIO.md](docs/MANUAL_USUARIO.md) | [PDF](output/pdf/ExpoTec_MANUAL_USUARIO.pdf) |
 | Guía de instalación y configuración | [docs/GUIA_INSTALACION.md](docs/GUIA_INSTALACION.md) | [PDF](output/pdf/ExpoTec_GUIA_INSTALACION.pdf) |
 | Guía de demostración | [docs/GUIA_DEMOSTRACION.md](docs/GUIA_DEMOSTRACION.md) | [PDF](output/pdf/ExpoTec_GUIA_DEMOSTRACION.pdf) |
-| Documentación de la API (endpoints, métodos, parámetros, respuestas y errores) | [docs/DOCUMENTACION_API.md](docs/DOCUMENTACION_API.md) y [backend/README.md](backend/README.md) | [PDF](output/pdf/ExpoTec_DOCUMENTACION_API.pdf) |
+| Documentación de la API (endpoints, métodos, parámetros, respuestas y errores) | [docs/DOCUMENTACION_API.md](docs/DOCUMENTACION_API.md), [backend/README.md](backend/README.md) y Swagger en [`/api/docs`](https://expotec-api-gn19.vercel.app/api/docs) ([openapi.json](docs/openapi.json)) | [PDF](output/pdf/ExpoTec_DOCUMENTACION_API.pdf) |
 
 Documentación técnica complementaria: [despliegue](docs/DESPLIEGUE.md), [accesos sociales](docs/ACCESOS_SOCIALES.md), [Google en Android](docs/ANDROID_GOOGLE.md), [carga de fotos](docs/CARGA_FOTOS.md), [recuperación de contraseña](docs/RECUPERACION_CONTRASENA.md), [diagramas](docs/diagramas/README.md) y [requisitos](docs/REQUISITOS.md).
 
