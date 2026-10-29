@@ -60,11 +60,11 @@ test('TiDB real: espacios, planos atómicos, conflictos y bajas sin borrar histo
     api.put(`/api/spaces/${id}`, { ...input, version: 2, name: 'Edición B' }, accessToken),
   ]);
   assert.deepEqual(concurrent.map(result => result.status).sort(), [200, 409]);
-  let current = (await api.get(`/api/spaces/${id}`)).body.space;
+  let current = (await api.request(`/api/spaces/${id}/query`)).body.space;
   assert.equal(current.version, 3);
   assert.equal(current.booths[0].id, boothId);
   assert.equal((await api.put(`/api/spaces/${id}`, { ...input, version: 3, boothFurnitureIds: ['B01'] }, accessToken)).status, 400);
-  assert.deepEqual((await api.get(`/api/spaces/${id}`)).body.space, current);
+  assert.deepEqual((await api.request(`/api/spaces/${id}/query`)).body.space, current);
   await assert.rejects(pool.execute('INSERT INTO booths (id, space_id, furniture_code) VALUES (?, ?, ?)', [randomUUID(), id, 'missing']), error => error.code === 'ER_NO_REFERENCED_ROW_2');
   const removed = await api.put(`/api/spaces/${id}`, { ...input, version: 3, furniture: [bench], boothFurnitureIds: [] }, accessToken);
   assert.equal(removed.status, 200);
@@ -75,8 +75,8 @@ test('TiDB real: espacios, planos atómicos, conflictos y bajas sin borrar histo
   await pool.execute("INSERT INTO user_roles (user_id, role_code) VALUES (?, 'admin')", [user.id]);
   assert.equal((await api.del(`/api/spaces/${id}`, { version: 3 }, accessToken)).status, 409);
   assert.equal((await api.del(`/api/spaces/${id}`, { version: 4 }, accessToken)).status, 204);
-  assert.equal((await api.get(`/api/spaces/${id}`)).status, 404);
-  assert.ok(!(await api.get('/api/spaces')).body.spaces.some(space => space.id === id));
+  assert.equal((await api.request(`/api/spaces/${id}/query`)).status, 404);
+  assert.ok(!(await api.request('/api/spaces/query')).body.spaces.some(space => space.id === id));
   assert.equal((await pool.execute('SELECT COUNT(*) AS count FROM spaces WHERE id = ?', [id]))[0][0].count, 1);
   assert.equal((await pool.execute('SELECT COUNT(*) AS count FROM booths WHERE space_id = ?', [id]))[0][0].count, 1);
 });

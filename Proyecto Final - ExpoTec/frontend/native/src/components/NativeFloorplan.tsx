@@ -6,7 +6,6 @@
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  PanResponder,
   Pressable,
   StyleSheet,
   Text,
@@ -15,21 +14,18 @@ import {
 } from "react-native";
 import Svg, { Polygon } from "react-native-svg";
 import type { Furniture, Project, Space } from "../lib/types";
-import { furnitureSize } from "../lib/furnitureDrop";
-import {
-  furnitureSelection,
-  resizeDirections,
-} from "../lib/floorplanSelection";
+import { furnitureSelection } from "../lib/floorplanSelection";
 import { floorplanSize } from "../lib/floorplanSize";
-import { useGestureGuard } from "../hooks/useGestureGuard";
 import FurniturePalette from "./FurniturePalette";
-import { resizeTable, type ResizeHandle } from "../lib/resizeTable";
 import { useTheme } from "../contexts/ThemeContext";
 import { Icon } from "./Icon";
-import { Button } from "./ui";
+import { fitItem, type Geometry } from "./floorplan/geometry";
+import { MoveableItem } from "./floorplan/MoveableItem";
+import { ResizeKnob } from "./floorplan/ResizeKnob";
+import { SelectionStepper } from "./floorplan/SelectionStepper";
+import { FloorplanLegend } from "./floorplan/FloorplanLegend";
+import { styles } from "./floorplan/styles";
 
-type Size = { width: number; height: number };
-type Geometry = { x: number; y: number; width: number; height: number };
 interface Props {
   space: Space;
   projects: Project[];
@@ -45,359 +41,6 @@ interface Props {
   shared?: boolean;
   boothFurnitureIds?: string[];
   occupiedBooths?: { furnitureId: string; name: string }[];
-}
-
-const clamp = (value: number, min: number, max: number) =>
-  Math.max(min, Math.min(max, value));
-const directions = resizeDirections;
-
-/** Convierte el tamaño relativo guardado en píxeles, sin cambiar los datos del proyecto. */
-function sizeFor(item: Furniture, stage: Size): Size {
-  return furnitureSize(item, stage);
-}
-
-/** Incluye el giro en la huella del elemento para conservarlo dentro del plano. */
-function fitItem(item: Furniture, stage: Size): { x: number; y: number } {
-  const size = sizeFor(item, stage);
-  const angle = (item.rotation * Math.PI) / 180;
-  const halfX =
-    (Math.abs(Math.cos(angle)) * size.width +
-      Math.abs(Math.sin(angle)) * size.height) /
-      2 +
-    2;
-  const halfY =
-    (Math.abs(Math.sin(angle)) * size.width +
-      Math.abs(Math.cos(angle)) * size.height) /
-      2 +
-    2;
-  const minX = Math.min(50, (halfX / stage.width) * 100);
-  const minY = Math.min(50, (halfY / stage.height) * 100);
-  return {
-    x: clamp(item.x, minX, 100 - minX),
-    y: clamp(item.y, minY, 100 - minY),
-  };
-}
-
-/** Pieza del plano que se puede seleccionar y mover con gestos. */
-function MoveableItem({
-  item,
-  stage,
-  editing,
-  selected,
-  project,
-  pending,
-  onSelect,
-  onMove,
-  onMoving,
-  booth = true,
-}: {
-  item: Furniture;
-  stage: Size;
-  editing: boolean;
-  selected: boolean;
-  project?: Pick<Project, "name">;
-  pending: boolean;
-  onSelect: () => void;
-  onMove: (x: number, y: number) => void;
-  onMoving: (moving: boolean) => void;
-  booth?: boolean;
-}) {
-  const { colors } = useTheme();
-  const [preview, setPreview] = useState<{ x: number; y: number } | null>(null);
-  const start = useRef(item);
-  const stageRef = useRef(stage);
-  stageRef.current = stage;
-  const current = useRef(item);
-  current.current = item;
-  const committed = useRef<{ x: number; y: number } | null>(null);
-  const callbacks = useRef({ onSelect, onMove, onMoving });
-  callbacks.current = { onSelect, onMove, onMoving };
-  const guard = useGestureGuard(
-    (active) => callbacks.current.onMoving(active),
-    () => {
-      committed.current = null;
-      setPreview(null);
-    },
-  );
-  const guardRef = useRef(guard);
-  guardRef.current = guard;
-  const responder = useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => editing,
-        onStartShouldSetPanResponderCapture: () => editing,
-        onMoveShouldSetPanResponder: (_, gesture) =>
-          editing && Math.abs(gesture.dx) + Math.abs(gesture.dy) > 3,
-        onPanResponderGrant: () => {
-          start.current = current.current;
-          committed.current = null;
-          guardRef.current.begin();
-          callbacks.current.onSelect();
-        },
-        onPanResponderMove: (_, gesture) => {
-          if (!guardRef.current.isActive()) return;
-          const next = fitItem(
-            {
-              ...start.current,
-              x: start.current.x + (gesture.dx / stageRef.current.width) * 100,
-              y: start.current.y + (gesture.dy / stageRef.current.height) * 100,
-            },
-            stageRef.current,
-          );
-          committed.current = next;
-          setPreview(next);
-        },
-        onPanResponderRelease: () => {
-          const next = committed.current;
-          if (guardRef.current.isActive() && next)
-            callbacks.current.onMove(next.x, next.y);
-          setPreview(null);
-          guardRef.current.end();
-        },
-        onPanResponderTerminate: () => {
-          guardRef.current.cancel();
-        },
-        onPanResponderTerminationRequest: () => false,
-        onShouldBlockNativeResponder: () => true,
-      }),
-    [editing],
-  );
-  const size = sizeFor(item, stage);
-  const touchSize = {
-    width: Math.max(48, size.width),
-    height: Math.max(48, size.height),
-  };
-  const position = preview ?? fitItem(item, stage);
-  const background =
-    item.type === "table"
-      ? project
-        ? colors.tableOccupied
-        : pending
-          ? colors.warning
-          : colors.table
-      : item.type === "label"
-        ? colors.surface
-        : colors.surfaceVariant;
-  const label =
-    item.type === "table"
-      ? booth
-        ? `Puesto ${item.id}. ${project?.name ?? (pending ? "Solicitado" : "Disponible")}`
-        : `Mesa ${item.id}. Solo mobiliario`
-      : item.type === "label"
-        ? `Zona: ${item.text ?? "Nueva zona"}`
-        : item.type === "bench"
-          ? "Banco"
-          : "Punto eléctrico de referencia";
-  return (
-    <View
-      {...responder.panHandlers}
-      testID={`furniture-${item.id}`}
-      style={[
-        styles.furniturePosition,
-        {
-          left: (position.x / 100) * stage.width - touchSize.width / 2,
-          top: (position.y / 100) * stage.height - touchSize.height / 2,
-          width: touchSize.width,
-          height: touchSize.height,
-          transform: [{ rotate: `${item.rotation}deg` }],
-          zIndex: selected ? 20 : item.type === "label" ? 8 : 5,
-        },
-      ]}
-    >
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        accessibilityState={{ selected }}
-        accessibilityHint={
-          editing
-            ? "Arrastrá para mover. Los controles de la pieza permiten girar y cambiar su tamaño."
-            : "Muestra los detalles del elemento."
-        }
-        onPress={onSelect}
-        style={styles.itemTouch}
-      >
-        <View
-          style={[
-            styles.furniture,
-            {
-              width: size.width,
-              height: size.height,
-              backgroundColor: background,
-              borderColor: selected ? colors.primary : colors.tableEdge,
-              borderWidth: selected ? 2 : 1,
-              borderRadius:
-                item.type === "label" ? 6 : item.type === "power" ? 16 : 4,
-            },
-          ]}
-        >
-          {item.type === "table" ? (
-            <>
-              <Text
-                selectable={false}
-                numberOfLines={1}
-                style={{
-                  color: colors.text,
-                  fontSize: size.width < 56 ? 8 : 11,
-                  fontWeight: "700",
-                }}
-              >
-                {item.id}
-              </Text>
-              {size.height >= 45 && (
-                <Text
-                  selectable={false}
-                  numberOfLines={1}
-                  style={{ color: colors.muted, fontSize: 10 }}
-                >
-                  {booth
-                    ? (project?.name ?? (pending ? "Solicitado" : "Disponible"))
-                    : "Mesa"}
-                </Text>
-              )}
-              {booth && (
-                <View
-                  style={[
-                    styles.occupiedDot,
-                    {
-                      backgroundColor: project
-                        ? colors.primary
-                        : pending
-                          ? colors.onWarning
-                          : colors.outline,
-                    },
-                  ]}
-                />
-              )}
-            </>
-          ) : item.type === "power" ? (
-            <Icon name="power" size={22} color={colors.text} />
-          ) : (
-            <Text
-              selectable={false}
-              numberOfLines={1}
-              style={{
-                color: colors.text,
-                fontSize: 12,
-                fontWeight: item.type === "label" ? "600" : "400",
-              }}
-            >
-              {item.type === "label" ? item.text || "Nueva zona" : "Banco"}
-            </Text>
-          )}
-        </View>
-      </Pressable>
-    </View>
-  );
-}
-
-/** Un tirador nativo conserva el gesto inicial y calcula el tamaño con la geometría compartida. */
-function ResizeKnob({
-  item,
-  handle,
-  stage,
-  x,
-  y,
-  onPreview,
-  onCommit,
-  onActive,
-}: {
-  item: Furniture;
-  handle: ResizeHandle;
-  stage: Size;
-  x: number;
-  y: number;
-  onPreview: (geometry: Geometry | null) => void;
-  onCommit: (geometry: Geometry) => void;
-  onActive?: (active: boolean) => void;
-}) {
-  const { colors } = useTheme();
-  const itemRef = useRef(item);
-  itemRef.current = item;
-  const stageRef = useRef(stage);
-  stageRef.current = stage;
-  const origin = useRef(item);
-  const result = useRef<Geometry | null>(null);
-  const callbacks = useRef({ onPreview, onCommit });
-  callbacks.current = { onPreview, onCommit };
-  const guard = useGestureGuard(onActive, () => {
-    result.current = null;
-    callbacks.current.onPreview(null);
-  });
-  const guardRef = useRef(guard);
-  guardRef.current = guard;
-  const responder = useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        onMoveShouldSetPanResponder: () => true,
-        onPanResponderGrant: () => {
-          origin.current = itemRef.current;
-          result.current = null;
-          guardRef.current.begin();
-        },
-        onPanResponderMove: (_, gesture) => {
-          if (!guardRef.current.isActive()) return;
-          result.current = resizeTable(
-            origin.current,
-            handle,
-            gesture.dx,
-            gesture.dy,
-            stageRef.current,
-          );
-          callbacks.current.onPreview(result.current);
-        },
-        onPanResponderRelease: () => {
-          if (guardRef.current.isActive() && result.current)
-            callbacks.current.onCommit(result.current);
-          callbacks.current.onPreview(null);
-          guardRef.current.end();
-        },
-        onPanResponderTerminate: () => guardRef.current.cancel(),
-        onPanResponderTerminationRequest: () => false,
-        onShouldBlockNativeResponder: () => true,
-      }),
-    [handle],
-  );
-  return (
-    <View
-      {...responder.panHandlers}
-      accessible
-      accessibilityRole="adjustable"
-      accessibilityLabel={`Cambiar tamaño de ${item.id}, tirador ${handle}`}
-      accessibilityHint="Arrastrá hacia adentro para achicar o hacia afuera para agrandar."
-      accessibilityActions={[
-        { name: "increment", label: "Agrandar mesa" },
-        { name: "decrement", label: "Achicar mesa" },
-      ]}
-      onAccessibilityAction={(event) => {
-        const direction = event.nativeEvent.actionName === "increment" ? 1 : -1;
-        const [horizontal, vertical] = directions[handle];
-        const radians = (item.rotation * Math.PI) / 180;
-        callbacks.current.onCommit(
-          resizeTable(
-            item,
-            handle,
-            direction *
-              8 *
-              (horizontal * Math.cos(radians) - vertical * Math.sin(radians)),
-            direction *
-              8 *
-              (horizontal * Math.sin(radians) + vertical * Math.cos(radians)),
-            stage,
-          ),
-        );
-      }}
-      testID={`resize-knob-${handle}`}
-      style={[styles.knobTouch, { left: x - 12, top: y - 12 }]}
-    >
-      <View
-        style={[
-          styles.knob,
-          { backgroundColor: colors.surface, borderColor: colors.primary },
-        ]}
-      />
-    </View>
-  );
 }
 
 /** Plano compartido por invitados y administración. Los gestos solo cambian el borrador al soltar. */
@@ -438,21 +81,6 @@ export default function NativeFloorplan({
   const selectedFurniture = editing
     ? space.furniture.find((item) => item.id === selected)
     : undefined;
-  const selectedIndex = space.furniture.findIndex(
-    (item) => item.id === selected,
-  );
-  /** Selecciona la pieza anterior o siguiente (alternativa accesible). */
-  function selectNearby(direction: number) {
-    const count = space.furniture.length;
-    if (!count) return;
-    const index =
-      selectedIndex < 0
-        ? direction > 0
-          ? 0
-          : count - 1
-        : (selectedIndex + direction + count) % count;
-    onSelect(space.furniture[index].id);
-  }
   const displayed =
     selectedFurniture && resizePreview
       ? { ...selectedFurniture, ...resizePreview }
@@ -503,50 +131,11 @@ export default function NativeFloorplan({
         </Text>
       )}
       {editing && viewport.width < 900 && (
-        <View
-          testID="furniture-selection-controls"
-          style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-        >
-          <Button
-            title=""
-            icon="arrowLeft"
-            accessibilityLabel="Seleccionar pieza anterior"
-            variant="secondary"
-            style={{ width: 44, minWidth: 0, paddingHorizontal: 6, gap: 0 }}
-            disabled={!space.furniture.length}
-            onPress={() => selectNearby(-1)}
-          />
-          <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
-            <Text
-              numberOfLines={1}
-              accessibilityLiveRegion="polite"
-              style={{ color: colors.text, fontWeight: "600", fontSize: 13 }}
-            >
-              {selectedFurniture
-                ? `${{ table: "Mesa", bench: "Banco", power: "Toma", label: "Zona" }[selectedFurniture.type]} · ${selectedIndex + 1} de ${space.furniture.length}`
-                : space.furniture.length
-                  ? "Elegí una pieza"
-                  : "El plano está vacío"}
-            </Text>
-            {!!space.furniture.length && (
-              <Text
-                numberOfLines={1}
-                style={{ color: colors.muted, fontSize: 11 }}
-              >
-                {selectedFurniture?.id ?? "Usá las flechas o tocá el plano."}
-              </Text>
-            )}
-          </View>
-          <Button
-            title=""
-            icon="arrowRight"
-            accessibilityLabel="Seleccionar pieza siguiente"
-            variant="secondary"
-            style={{ width: 44, minWidth: 0, paddingHorizontal: 6, gap: 0 }}
-            disabled={!space.furniture.length}
-            onPress={() => selectNearby(1)}
-          />
-        </View>
+        <SelectionStepper
+          furniture={space.furniture}
+          selectedId={selected}
+          onSelect={onSelect}
+        />
       )}
       <View
         ref={canvasRef}
@@ -684,112 +273,7 @@ export default function NativeFloorplan({
           </View>
         )}
       </View>
-      <View style={styles.legend}>
-        {(shared
-          ? [
-              {
-                label: "Disponible",
-                color: colors.table,
-              },
-              { label: "Confirmado", color: colors.tableOccupied },
-            ]
-          : [
-              { label: "Disponible", color: colors.table },
-              { label: "Ocupado", color: colors.tableOccupied },
-              ...(showPending
-                ? [{ label: "Solicitado", color: colors.warning }]
-                : []),
-            ]
-        ).map((item) => (
-          <View key={item.label} style={styles.legendItem}>
-            <View
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                backgroundColor: item.color,
-                borderColor: colors.tableEdge,
-                borderWidth: 1,
-              }}
-            />
-            <Text
-              selectable={false}
-              style={{ color: colors.muted, fontSize: 12 }}
-            >
-              {item.label}
-            </Text>
-          </View>
-        ))}
-      </View>
+      <FloorplanLegend shared={shared} showPending={showPending} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  stage: {
-    position: "relative",
-    width: "100%",
-    borderWidth: 2,
-    borderRadius: 12,
-    overflow: "hidden",
-  },
-  furniturePosition: { position: "absolute" },
-  furniture: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 2,
-  },
-  itemTouch: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  occupiedDot: {
-    position: "absolute",
-    right: 3,
-    top: 3,
-    width: 5,
-    height: 5,
-    borderRadius: 3,
-  },
-  planCaption: {
-    position: "absolute",
-    top: 9,
-    left: 12,
-    right: 12,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  walkway: {
-    position: "absolute",
-    left: "42%",
-    top: "42%",
-    width: "16%",
-    height: "46%",
-    borderStyle: "dashed",
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    alignItems: "center",
-    paddingTop: 9,
-  },
-  entrance: {
-    position: "absolute",
-    bottom: 0,
-    left: "40%",
-    width: "20%",
-    alignItems: "center",
-    paddingVertical: 6,
-  },
-  knobTouch: {
-    position: "absolute",
-    zIndex: 40,
-    width: 24,
-    height: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  knob: { width: 15, height: 15, borderWidth: 2, borderRadius: 3 },
-  legend: { flexDirection: "row", flexWrap: "wrap", gap: 16 },
-  legendItem: { flexDirection: "row", alignItems: "center", gap: 6 },
-});

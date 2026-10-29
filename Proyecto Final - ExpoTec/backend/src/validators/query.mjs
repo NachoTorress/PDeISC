@@ -1,54 +1,52 @@
 /**
- * Conversión de parámetros de consulta (query string) para las rutas GET y DELETE.
+ * Lectura de los datos de una consulta enviados en el cuerpo JSON.
  *
- * En una URL todos los valores llegan como texto. Este módulo convierte los
- * parámetros conocidos al tipo que esperan los validadores (enteros y
- * booleanos) y deja el resto como texto, para que esos validadores sigan
- * rechazando campos desconocidos o mal formados con un error 400.
+ * La API no usa GET: las consultas se hacen con POST y sus filtros (límite,
+ * página, jornada...) viajan en el cuerpo, nunca en la URL. Las bajas
+ * (DELETE) también reciben la versión en el cuerpo.
+ *
+ * Estas funciones solo comprueban la forma general del cuerpo; cada
+ * validador específico decide qué campos admite y con qué valores.
  */
 import { HttpError } from '../lib/errors.mjs';
 
 /**
- * Convierte `req.query` en un objeto tipado.
+ * Devuelve el cuerpo de una consulta como objeto plano.
+ * Un cuerpo ausente equivale a `{}` (consulta sin filtros).
  *
- * @param {Record<string, unknown>} query Parámetros recibidos en la URL.
- * @param {Record<string, 'int' | 'bool' | 'string'>} types Tipo esperado de cada parámetro.
+ * @param {unknown} body Cuerpo JSON recibido (`req.body`).
  * @returns {Record<string, unknown>} Objeto listo para pasar a un validador.
- * @throws {HttpError} 400 si un parámetro se repite (por ejemplo `?limit=1&limit=2`).
+ * @throws {HttpError} 400 si el cuerpo no es un objeto JSON.
  */
-export function queryInput(query = {}, types = {}) {
-  const result = {};
-  for (const [key, raw] of Object.entries(query)) {
-    if (Array.isArray(raw) || (raw !== null && typeof raw === 'object'))
-      throw new HttpError(400, 'VALIDATION_ERROR', `El parámetro ${key} se indicó más de una vez.`);
-    const value = String(raw);
-    if (types[key] === 'int' && /^-?\d{1,15}$/.test(value)) result[key] = Number(value);
-    else if (types[key] === 'bool' && ['true', 'false'].includes(value)) result[key] = value === 'true';
-    else result[key] = value; // Se conserva el texto: el validador decidirá si es válido.
-  }
-  return result;
+export function queryInput(body) {
+  if (body === undefined || body === null) return {};
+  if (typeof body !== 'object' || Array.isArray(body))
+    throw new HttpError(400, 'VALIDATION_ERROR', 'Los datos de la consulta deben ser un objeto JSON.');
+  return body;
 }
 
 /**
- * Lee el número de versión obligatorio de una baja (`DELETE ...?version=N`).
+ * Lee el número de versión obligatorio de una baja (`DELETE` con `{ version }`).
  * La versión evita borrar un registro que otra persona modificó mientras tanto.
  *
- * @param {Record<string, unknown>} query Parámetros de la URL.
- * @returns {{ version: unknown }} Objeto con la versión convertida a número cuando corresponde.
+ * @param {unknown} body Cuerpo JSON recibido.
+ * @returns {{ version: unknown }} Versión sin convertir: la valida cada recurso.
  */
-export function versionQuery(query) {
-  return queryInput(query, { version: 'int' });
+export function versionInput(body) {
+  const { version, ...rest } = queryInput(body);
+  if (Object.keys(rest).length)
+    throw new HttpError(400, 'VALIDATION_ERROR', 'Hay campos que esta operación no admite.');
+  return { version };
 }
 
 /**
- * Rechaza cualquier parámetro en rutas de lectura que no admiten filtros.
- * Mantiene el mismo criterio estricto que los cuerpos JSON: un campo
- * desconocido es un error 400 y no se ignora en silencio.
+ * Rechaza cualquier dato en consultas que no admiten filtros.
+ * Un campo desconocido es un error 400 y no se ignora en silencio.
  *
- * @param {Record<string, unknown>} query Parámetros de la URL.
- * @throws {HttpError} 400 si se envió algún parámetro.
+ * @param {unknown} body Cuerpo JSON recibido.
+ * @throws {HttpError} 400 si se envió algún campo.
  */
-export function noQuery(query = {}) {
-  if (Object.keys(query).length)
-    throw new HttpError(400, 'VALIDATION_ERROR', 'Hay parámetros que esta operación no admite.');
+export function noInput(body) {
+  if (Object.keys(queryInput(body)).length)
+    throw new HttpError(400, 'VALIDATION_ERROR', 'Hay campos que esta operación no admite.');
 }

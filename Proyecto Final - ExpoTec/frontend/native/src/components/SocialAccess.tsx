@@ -2,34 +2,23 @@
  * Acceso con Google, Discord y GitHub. Muestra solo los proveedores
  * configurados en el servidor y, al volver del proveedor, permite ingresar,
  * vincular una cuenta existente (con su contraseña de ExpoTec) o completar el alta.
+ *
+ * Las piezas visuales están en `components/social/` (botón de proveedor,
+ * título y formulario de alta o vinculación).
  */
 import { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Platform,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
-import { Button, Choice, Field, Heading } from "./ui";
-import { SocialProviderIcon } from "./SocialProviderIcon";
+import { ActivityIndicator, Platform, Text, View } from "react-native";
+import { Button } from "./ui";
+import { ProviderButton } from "./social/ProviderButton";
+import { SocialHeading } from "./social/SocialHeading";
+import { SocialCompleteForm } from "./social/SocialCompleteForm";
+import type { Provider, SocialInput, SocialStatus } from "./social/types";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { hasSocialReturn, socialBridge } from "../lib/socialBridge";
 import { validateCredentials } from "../lib/authValidation";
 import { AuthError } from "../lib/authTypes";
 
-type Provider = { id: string; name: string };
-type Status = {
-  provider: string;
-  email: string;
-  mode: "signup" | "link" | "login";
-};
-const names: Record<string, string> = {
-  google: "Google",
-  discord: "Discord",
-  github: "GitHub",
-};
 /** Botones de proveedores y formulario para completar el acceso. */
 export function SocialAccess({
   onPendingChange,
@@ -46,7 +35,7 @@ export function SocialAccess({
   const { colors } = useTheme();
   const [providers, setProviders] = useState<Provider[]>([]);
   const [pending, setPending] = useState(socialBridge.pending);
-  const [status, setStatus] = useState<Status | null>(null);
+  const [status, setStatus] = useState<SocialStatus | null>(null);
   const [error, setError] = useState(
     hasSocialReturn && !pending
       ? "Este acceso no pertenece a esta sesión o venció. Volvé a iniciarlo."
@@ -73,7 +62,7 @@ export function SocialAccess({
   useEffect(() => {
     let active = true;
     void client
-      .query<{ providers: Provider[] }>("/api/auth/social/providers", {}, "GET")
+      .query<{ providers: Provider[] }>("/api/auth/social/providers/query", {})
       .then((result) => {
         if (active) setProviders(result.providers);
       })
@@ -106,7 +95,7 @@ export function SocialAccess({
     if (!pending) return;
     let active = true;
     void client
-      .query<Status>(
+      .query<SocialStatus>(
         `/api/auth/${Platform.OS === "web" ? "browser/" : ""}social/status`,
         pending,
       )
@@ -128,7 +117,7 @@ export function SocialAccess({
     };
   }, [client, pending]);
   /** Completa el acceso según el modo indicado por la API. */
-  async function complete(access: Status) {
+  async function complete(access: SocialStatus) {
     if (!pending) return;
     await client.completeSocial({
       ...pending,
@@ -148,7 +137,7 @@ export function SocialAccess({
     setInput({ firstName: "", lastName: "", password: "", confirmation: "" });
   }
   /** Actualiza un campo del formulario de alta o vinculación. */
-  function update(key: keyof typeof input, value: string) {
+  function update(key: keyof SocialInput, value: string) {
     const next = { ...input, [key]: value };
     setInput(next);
     if (status && status.mode !== "login") {
@@ -190,48 +179,11 @@ export function SocialAccess({
         borderLeftColor: colors.outline,
       }}
     >
-      {pending ? (
-        <Heading
-          title={
-            !status
-              ? "Ingresando a ExpoTec"
-              : status.mode === "signup"
-                ? "Creá tu cuenta de ExpoTec"
-                : status.mode === "link"
-                  ? "Vinculá tu cuenta existente"
-                  : "Ingresando a ExpoTec"
-          }
-        />
-      ) : sideBySide ? (
-        <View style={{ gap: 8 }}>
-          <Text
-            accessibilityRole="header"
-            style={{
-              color: colors.text,
-              fontSize: 20,
-              fontWeight: "600",
-              letterSpacing: -0.4,
-            }}
-          >
-            Continuá con otra cuenta
-          </Text>
-          <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 21 }}>
-            También podés usar estos medios para ingresar.
-          </Text>
-        </View>
-      ) : (
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-          <View
-            style={{ flex: 1, height: 1, backgroundColor: colors.outline }}
-          />
-          <Text style={{ color: colors.muted, fontSize: 13 }}>
-            O continuá con
-          </Text>
-          <View
-            style={{ flex: 1, height: 1, backgroundColor: colors.outline }}
-          />
-        </View>
-      )}
+      <SocialHeading
+        pending={!!pending}
+        status={status}
+        sideBySide={sideBySide}
+      />
       {!!error && (
         <Text
           accessibilityRole="alert"
@@ -259,94 +211,16 @@ export function SocialAccess({
               )}
             </View>
           ) : (
-            <>
-              <Text selectable style={text}>
-                {names[status.provider]} · {status.email}
-              </Text>
-              <Text style={text}>
-                {status.mode === "signup"
-                  ? "Creá también una contraseña propia de ExpoTec. Después podrás ingresar con este proveedor o con tu correo y contraseña."
-                  : `Tu cuenta de ExpoTec ya existe. Confirmá tu contraseña actual para vincular ${names[status.provider]}. Conservás tu contraseña y tus permisos. En los próximos accesos con ${names[status.provider]} no te la pediremos.`}
-              </Text>
-              {status.mode === "signup" && (
-                <>
-                  <Choice
-                    label="Tipo de cuenta"
-                    value={accountType}
-                    options={[
-                      { value: "guest", label: "Invitado" },
-                      { value: "student", label: "Alumno" },
-                    ]}
-                    onChange={(value) =>
-                      setAccountType(value as "student" | "guest")
-                    }
-                    disabled={busy}
-                  />
-                  <Field
-                    label="Nombre"
-                    value={input.firstName}
-                    onChangeText={(value) => update("firstName", value)}
-                    error={fields.firstName}
-                    maxLength={80}
-                    editable={!busy}
-                    autoComplete="given-name"
-                  />
-                  <Field
-                    label="Apellido"
-                    value={input.lastName}
-                    onChangeText={(value) => update("lastName", value)}
-                    error={fields.lastName}
-                    maxLength={80}
-                    editable={!busy}
-                    autoComplete="family-name"
-                  />
-                </>
-              )}
-              <Field
-                label={
-                  status.mode === "signup"
-                    ? "Crear contraseña de ExpoTec"
-                    : "Tu contraseña actual de ExpoTec"
-                }
-                value={input.password}
-                onChangeText={(value) => update("password", value)}
-                error={fields.password}
-                hint={
-                  status.mode === "signup"
-                    ? "Entre 12 y 128 caracteres."
-                    : "La que ya usás para entrar a ExpoTec, no la de Google u otro proveedor."
-                }
-                secureTextEntry
-                maxLength={128}
-                editable={!busy}
-                autoComplete={
-                  status.mode === "signup" ? "new-password" : "current-password"
-                }
-              />
-              {status.mode === "signup" && (
-                <Field
-                  label="Repetir contraseña de ExpoTec"
-                  value={input.confirmation}
-                  onChangeText={(value) => update("confirmation", value)}
-                  error={fields.confirmation}
-                  secureTextEntry
-                  maxLength={128}
-                  editable={!busy}
-                  autoComplete="new-password"
-                />
-              )}
-              <Button
-                title={
-                  busy
-                    ? "Completando…"
-                    : status.mode === "signup"
-                      ? "Crear cuenta e ingresar"
-                      : "Vincular e ingresar"
-                }
-                onPress={finish}
-                disabled={busy}
-              />
-            </>
+            <SocialCompleteForm
+              status={status}
+              input={input}
+              fields={fields}
+              accountType={accountType}
+              busy={busy}
+              onAccountType={setAccountType}
+              onChange={update}
+              onSubmit={finish}
+            />
           )}
           <Button
             title="Cancelar acceso"
@@ -386,76 +260,5 @@ export function SocialAccess({
         </View>
       )}
     </View>
-  );
-}
-
-/** Botón de un proveedor social con su ícono. */
-function ProviderButton({
-  provider,
-  disabled,
-  busy,
-  onPress,
-}: {
-  provider: Provider;
-  disabled: boolean;
-  busy: boolean;
-  onPress: () => void;
-}) {
-  const { colors } = useTheme();
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`Continuar con ${provider.name}`}
-      accessibilityState={{ disabled, busy }}
-      disabled={disabled}
-      onPress={onPress}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      style={({ pressed }) => ({
-        minHeight: 50,
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: focused ? colors.primary : colors.controlOutline,
-        backgroundColor:
-          pressed || hovered ? colors.surfaceVariant : colors.surface,
-        opacity: disabled ? 0.55 : 1,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 12,
-      })}
-    >
-      {busy ? (
-        <ActivityIndicator size="small" color={colors.text} />
-      ) : (
-        <SocialProviderIcon
-          provider={provider.id}
-          color={
-            provider.id === "discord"
-              ? colors.dark
-                ? "#a4adff"
-                : "#5865F2"
-              : colors.text
-          }
-        />
-      )}
-      <Text
-        style={{
-          color: colors.text,
-          fontSize: 15,
-          fontWeight: "600",
-          flexShrink: 1,
-          textAlign: "center",
-        }}
-      >
-        Continuar con {provider.name}
-      </Text>
-    </Pressable>
   );
 }

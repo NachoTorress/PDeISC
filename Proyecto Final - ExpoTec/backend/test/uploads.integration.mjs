@@ -65,9 +65,9 @@ test('TiDB y Blob privado: carga real, validación, propiedad, moderación y lim
   assert.equal(completed.status, 200, JSON.stringify(completed.body));
   assert.equal((await api.request(`/api/uploads/${image.id}/complete`, {}, owner.accessToken)).status, 200);
   const body = { imageUrl: completed.body.imageUrl };
-  assert.equal((await api.get('/api/uploads/preview', body, owner.accessToken)).status, 200);
-  assert.equal((await api.get('/api/uploads/preview', body, admin.accessToken)).status, 200);
-  assert.equal((await api.get('/api/uploads/preview', body, other.accessToken)).status, 404);
+  assert.equal((await api.request('/api/uploads/preview', body, owner.accessToken)).status, 200);
+  assert.equal((await api.request('/api/uploads/preview', body, admin.accessToken)).status, 200);
+  assert.equal((await api.request('/api/uploads/preview', body, other.accessToken)).status, 404);
   assert.equal((await fetch(`${api.base}/api/uploads/${image.id}/image`)).status, 404);
   const payload = { ...body, caption: 'Foto controlada para probar la moderación.' };
   assert.equal((await api.request('/api/gallery', payload, other.accessToken)).status, 400);

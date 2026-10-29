@@ -8,6 +8,8 @@ Los pasos de uso, instalación y exposición están en el [índice de documentac
 
 ## Compilación actual
 
+**Aviso del 27/10/2026:** el código 0.5.1 dejó de usar GET en la API (las consultas vuelven a POST). La APK 0.5.0 consulta con GET, así que **deja de funcionar cuando se publique el backend 0.5.1**. Hay que compilar la APK 0.5.1 (versionCode 7) con `npx eas-cli build --platform android --profile preview` desde `frontend/native` antes de publicar el backend, o inmediatamente después. La APK 0.4.0 sigue funcionando gracias a la capa de compatibilidad.
+
 APK actual: **0.5.0, Android versionCode 6**. [Descargar APK](https://expo.dev/artifacts/eas/1MRotQpnDJKRVPmB8o9TVXYwrNh0DEwpYrskWHbrQkg.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/d559c18d-cfeb-42a1-8aba-5aa3ead0ff5c), terminada el 26/10/2026 a las 22:20:35, hora de Argentina, desde el frontend de `6fb156adfa30887615ea95f8a8d951ec3695b1e7`.
 
 Incluye el código actualizado de la versión 0.5.0, sin cambios adicionales de implementación durante esta compilación. Se usó el mismo proyecto Expo y perfil `preview` de las APK anteriores, con la API pública y sin cargar archivos de entorno privados.

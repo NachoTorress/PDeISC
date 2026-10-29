@@ -61,7 +61,12 @@ test("el acceso social web adopta la sesión en memoria sin guardar tokens en el
   assert.equal(app.saved(), "previous");
 });
 function setup(
-  handler: (path: string, body: object, token?: string, method?: string) => Promise<unknown>,
+  handler: (
+    path: string,
+    body: object,
+    token?: string,
+    method?: string,
+  ) => Promise<unknown>,
   browser = false,
 ) {
   let saved: string | null = "previous";
@@ -196,9 +201,9 @@ test("una sesión revocada no se informa como verificada", async () => {
 
 test("las consultas públicas no envían acceso y un conflicto de guardado no se reintenta", async () => {
   let writes = 0;
-  const app = setup(async (path, body, token, method) => {
+  const app = setup(async (path, body, token) => {
     if (path.endsWith("/refresh")) return session;
-    if (method === "GET") {
+    if (path.endsWith("/query")) {
       assert.equal(token, undefined);
       return { spaces: [] };
     }
@@ -208,7 +213,7 @@ test("las consultas públicas no envían acceso y un conflicto de guardado no se
     throw new AuthError("Otra persona modificó el espacio", 409);
   });
   await app.client.restore();
-  await app.client.query("/api/spaces", {}, "GET");
+  await app.client.query("/api/spaces/query", {});
   await assert.rejects(
     app.client.send("/api/spaces/space", { version: 4 }, "PUT"),
     (error) => error instanceof AuthError && error.status === 409,

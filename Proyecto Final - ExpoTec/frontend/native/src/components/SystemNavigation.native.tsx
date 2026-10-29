@@ -9,10 +9,19 @@ export function SystemNavigation() {
   useEffect(() => {
     if (Platform.OS !== "android") return;
     // El teclado puede cambiar la visibilidad fuera del estado que conserva el componente.
-    const hide = () => { void setVisibilityAsync("hidden").catch(() => {}); };
+    const hide = () => {
+      void setVisibilityAsync("hidden").catch(() => {});
+    };
     const keyboard = Keyboard.addListener("keyboardDidHide", hide);
-    const state = AppState.addEventListener("change", (value) => { if (value === "active") hide(); });
-    return () => { keyboard.remove(); state.remove(); };
+    const state = AppState.addEventListener("change", (value) => {
+      if (value === "active") hide();
+    });
+    return () => {
+      keyboard.remove();
+      state.remove();
+    };
   }, []);
-  return Platform.OS === "android" ? <NavigationBar hidden style={colors.dark ? "light" : "dark"} /> : null;
+  return Platform.OS === "android" ? (
+    <NavigationBar hidden style={colors.dark ? "light" : "dark"} />
+  ) : null;
 }

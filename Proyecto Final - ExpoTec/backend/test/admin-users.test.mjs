@@ -30,20 +30,20 @@ test('usuarios: solo administración consulta y guarda, con identidad y comparac
   repository.setRoles = async (...args) => { calls.push(args); return { ...managed, roles: args[1] }; };
   const api = await listen(createApp(repository, testConfig));
   t.after(api.close);
-  assert.equal((await api.get('/api/admin/users')).status, 401);
+  assert.equal((await api.request('/api/admin/users/query')).status, 401);
   const result = await api.request('/api/auth/register', { firstName: 'Laura', lastName: 'Pérez', email: 'admin-test@example.com', password: 'Contraseña larga 2026' });
   const { user, accessToken } = result.body;
   const input = { roles: ['student', 'teacher'], expectedRoles: ['student'] };
-  for (const [method, path] of [['GET', '/api/admin/users'], ['GET', `/api/admin/users/${target}`], ['PUT', `/api/admin/users/${target}/roles`]])
+  for (const [method, path] of [['POST', '/api/admin/users/query'], ['POST', `/api/admin/users/${target}/query`], ['PUT', `/api/admin/users/${target}/roles`]])
     assert.equal((await api.request(path, method === 'PUT' ? input : {}, accessToken, { method })).status, 403);
   assert.equal(calls.length, 0);
   repository.users.get(user.id).roles.push('admin');
-  const listed = await api.get('/api/admin/users', { search: '  Ana ', limit: 20, offset: 0 }, accessToken);
+  const listed = await api.request('/api/admin/users/query', { search: '  Ana ', limit: 20, offset: 0 }, accessToken);
   assert.equal(listed.status, 200);
   assert.equal(listed.body.users[0].passwordHash, undefined);
   assert.deepEqual(calls[0], { search: 'Ana', limit: 20, offset: 0 });
-  assert.equal((await api.get(`/api/admin/users/${target}`, {}, accessToken)).status, 200);
-  assert.equal((await api.get(`/api/admin/users/not-uuid`, {}, accessToken)).status, 400);
+  assert.equal((await api.request(`/api/admin/users/${target}/query`, {}, accessToken)).status, 200);
+  assert.equal((await api.request(`/api/admin/users/not-uuid/query`, {}, accessToken)).status, 400);
   assert.equal((await api.put(`/api/admin/users/${target}/roles`, input, accessToken)).status, 200);
   assert.deepEqual(calls[1], [target, input.roles, user.id, input.expectedRoles]);
   assert.equal((await api.put(`/api/admin/users/${target}/roles`, { roles: ['admin'] }, accessToken)).status, 400);

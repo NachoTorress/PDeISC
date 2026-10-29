@@ -118,11 +118,17 @@ export function createAuthClient(
     /** Cierra la sesión local después de cambiar la contraseña (el servidor ya la revocó). */
     forgetAfterRecovery: () => serial(forget),
     /** Llamada pública, sin token (muestra, galería, presentación, accesos). */
-    query: <T>(endpoint: string, body: object = {}, method: HttpMethod = "POST") =>
-      request<T>(endpoint, body, undefined, method),
+    query: <T>(
+      endpoint: string,
+      body: object = {},
+      method: HttpMethod = "POST",
+    ) => request<T>(endpoint, body, undefined, method),
     /** Llamada autenticada con la sesión actual. */
-    send: <T>(endpoint: string, body: object = {}, method: HttpMethod = "POST") =>
-      serial(() => authorized<T>(endpoint, body, method)),
+    send: <T>(
+      endpoint: string,
+      body: object = {},
+      method: HttpMethod = "POST",
+    ) => serial(() => authorized<T>(endpoint, body, method)),
     /** Recupera la sesión guardada al abrir la app (sesión persistente). */
     restore: () => serial(renew),
     /** Termina un ingreso o alta con Google, Discord o GitHub. */
@@ -147,7 +153,7 @@ export function createAuthClient(
       serial(async () => {
         let result: { user: AccountUser };
         try {
-          result = await authorized("/api/auth/session", {}, "GET");
+          result = await authorized("/api/auth/session", {}, "POST");
         } catch (error) {
           if (!(error instanceof AuthError) || error.status !== 401)
             throw error;

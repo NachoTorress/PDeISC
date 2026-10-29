@@ -1,0 +1,797 @@
+From a170d619d844c4de06701cdc07a8bba17cb75ea1 Mon Sep 17 00:00:00 2001
+From: Nacho <ignaciogatorres@gmail.com>
+Date: Tue, 27 Oct 2026 13:50:43 +0000
+Subject: [PATCH] feat(front): acciones en el encabezado, cifras destacadas y
+ fotos completas en tarjetas
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- PageHeading recibe las acciones de la pantalla (actualizar, crear) y las
+  ubica junto al título; en teléfonos van debajo, dentro del mismo bloque.
+- StatRow: cifras grandes con etiqueta en inventario y préstamos.
+- Las fotos de las tarjetas llenan su recuadro (cover); el detalle muestra
+  la foto completa.
+- Choice admite una ayuda breve; los textos explicativos de préstamos e
+  inventario pasan a esa ayuda.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01GGCC4Ce4XjogSxaUnoKhQj
+---
+ .../native/src/components/GalleryImage.tsx    |  1 +
+ frontend/native/src/components/PhotoImage.tsx | 10 ++-
+ .../native/src/components/base/Layout.tsx     | 87 +++++++++++++------
+ .../native/src/components/base/Options.tsx    | 15 ++++
+ .../native/src/components/base/StatRow.tsx    | 45 ++++++++++
+ .../components/inventory/InventoryCard.tsx    | 42 ++-------
+ .../native/src/components/loans/LoanCard.tsx  | 17 ++--
+ frontend/native/src/components/ui.tsx         |  2 +
+ .../native/src/pages/SharedGalleryPage.tsx    | 59 ++++++-------
+ .../native/src/pages/SharedInventoryPage.tsx  | 74 ++++++++--------
+ frontend/native/src/pages/SharedLoansPage.tsx | 60 +++++++------
+ .../native/src/pages/SharedProjectsPage.tsx   | 32 ++++---
+ .../native/src/pages/SharedSpacesPage.tsx     | 44 +++++-----
+ 13 files changed, 291 insertions(+), 197 deletions(-)
+ create mode 100644 frontend/native/src/components/base/StatRow.tsx
+
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/components/GalleryImage.tsx b/Proyecto Final - ExpoTec/frontend/native/src/components/GalleryImage.tsx
+index 67b2786..a7d86a6 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/components/GalleryImage.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/components/GalleryImage.tsx	
+@@ -69,6 +69,7 @@ export default function GalleryImage({
+           caption={caption}
+           placeholderHeight={height}
+           fixedHeight={bounded ? height : undefined}
++          fit={bounded ? "cover" : "contain"}
+           onError={() => setFailed(true)}
+         />
+       )}
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/components/PhotoImage.tsx b/Proyecto Final - ExpoTec/frontend/native/src/components/PhotoImage.tsx
+index 9d575d8..4645a36 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/components/PhotoImage.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/components/PhotoImage.tsx	
+@@ -1,4 +1,8 @@
+-/** Imagen con estado de carga y mensaje de error recuperable. */
++/**
++ * Imagen con estado de carga y mensaje de error recuperable.
++ * `fit="contain"` muestra la foto completa; `fit="cover"` llena un recuadro de
++ * alto fijo recortando los bordes (tarjetas de listas).
++ */
+ import { useRef, useState } from "react";
+ import { Image } from "react-native";
+ import type { ImageProps } from "react-native";
+@@ -9,12 +13,14 @@ export default function PhotoImage({
+   placeholderHeight = 220,
+   fixedHeight,
+   onError,
++  fit = "contain",
+ }: {
+   source: ImageProps["source"];
+   caption: string;
+   placeholderHeight?: number;
+   fixedHeight?: number;
+   onError?: ImageProps["onError"];
++  fit?: "contain" | "cover";
+ }) {
+   const [ratio, setRatio] = useState<number | null>(null);
+   const image = useRef<Image>(null);
+@@ -23,7 +29,7 @@ export default function PhotoImage({
+       ref={image}
+       source={source}
+       accessibilityLabel={caption}
+-      resizeMode="contain"
++      resizeMode={fit}
+       onError={onError}
+       onLoad={(event) => {
+         const native = event.nativeEvent.source;
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/components/base/Layout.tsx b/Proyecto Final - ExpoTec/frontend/native/src/components/base/Layout.tsx
+index 867b0bc..2ee0a81 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/components/base/Layout.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/components/base/Layout.tsx	
+@@ -92,20 +92,29 @@ export function Heading({
+   );
+ }
+ 
+-/** Encabezado de página con descripción y acciones. */
++/**
++ * Encabezado de página: ícono, título, descripción y, opcionalmente, las
++ * acciones principales de la pantalla (actualizar, crear…). En pantallas
++ * anchas las acciones quedan a la derecha del título; en teléfonos, debajo,
++ * dentro del mismo bloque, para no gastar una fila aparte.
++ */
+ export function PageHeading({
+   title,
+   subtitle,
+   icon,
+   tone = "brand",
++  actions,
+ }: {
+   title: string;
+   subtitle?: string;
+   icon: IconName;
+   tone?: "brand" | "info" | "accent";
++  /** Botones de la pantalla que se muestran junto al título. */
++  actions?: ReactNode;
+ }) {
+   const { colors } = useTheme();
+   const { width } = useWindowDimensions();
++  const wide = width >= 700;
+   const fill =
+     tone === "info"
+       ? colors.infoContainer
+@@ -124,49 +133,73 @@ export function PageHeading({
+         backgroundColor: colors.dark ? colors.surface : fill,
+         padding: 16,
+         borderRadius: layout.cardRadius,
+-        flexDirection: "row",
+-        alignItems: "center",
++        flexDirection: wide ? "row" : "column",
++        alignItems: wide ? "center" : "stretch",
+         gap: 12,
+       }}
+     >
+       <View
+         style={{
+-          width: 40,
+-          height: 40,
+-          borderRadius: 12,
+-          backgroundColor: colors.surface,
++          flexDirection: "row",
+           alignItems: "center",
+-          justifyContent: "center",
++          gap: 12,
++          flex: wide ? 1 : undefined,
++          minWidth: 0,
+         }}
+       >
+-        <Icon name={icon} color={ink} size={26} />
+-      </View>
+-      <View style={{ flex: 1, minWidth: 0, gap: 6 }}>
+-        <Text
+-          accessibilityRole="header"
++        <View
+           style={{
+-            color: colors.text,
+-            fontSize: width < 600 ? 22 : 26,
+-            lineHeight: width < 600 ? 28 : 32,
+-            fontWeight: "700",
+-            letterSpacing: -0.7,
++            width: 40,
++            height: 40,
++            borderRadius: 12,
++            backgroundColor: colors.surface,
++            alignItems: "center",
++            justifyContent: "center",
+           }}
+         >
+-          {title}
+-        </Text>
+-        {!!subtitle && (
++          <Icon name={icon} color={ink} size={26} />
++        </View>
++        <View style={{ flex: 1, minWidth: 0, gap: 6 }}>
+           <Text
++            accessibilityRole="header"
+             style={{
+-              color: colors.muted,
+-              fontSize: 15,
+-              lineHeight: 23,
+-              maxWidth: 720,
++              color: colors.text,
++              fontSize: width < 600 ? 22 : 26,
++              lineHeight: width < 600 ? 28 : 32,
++              fontWeight: "700",
++              letterSpacing: -0.7,
+             }}
+           >
+-            {subtitle}
++            {title}
+           </Text>
+-        )}
++          {!!subtitle && (
++            <Text
++              style={{
++                color: colors.muted,
++                fontSize: 15,
++                lineHeight: 23,
++                maxWidth: 720,
++              }}
++            >
++              {subtitle}
++            </Text>
++          )}
++        </View>
+       </View>
++      {!!actions && (
++        <View
++          testID="page-actions"
++          style={{
++            flexDirection: "row",
++            flexWrap: "wrap",
++            alignItems: "center",
++            justifyContent: wide ? "flex-end" : "flex-start",
++            gap: 8,
++          }}
++        >
++          {actions}
++        </View>
++      )}
+     </View>
+   );
+ }
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/components/base/Options.tsx b/Proyecto Final - ExpoTec/frontend/native/src/components/base/Options.tsx
+index e32cf45..f753cac 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/components/base/Options.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/components/base/Options.tsx	
+@@ -53,12 +53,15 @@ export function Choice({
+   options,
+   onChange,
+   disabled = false,
++  hint,
+ }: {
+   label: string;
+   value: string;
+   options: { value: string; label: string }[];
+   onChange: (value: string) => void;
+   disabled?: boolean;
++  /** Ayuda breve debajo de las opciones. */
++  hint?: string;
+ }) {
+   const { colors } = useTheme();
+   const [width, setWidth] = useState(0);
+@@ -121,6 +124,18 @@ export function Choice({
+           </Pressable>
+         ))}
+       </View>
++      {!!hint && (
++        <Text
++          style={{
++            color: colors.muted,
++            fontSize: 13,
++            lineHeight: 19,
++            maxWidth: 760,
++          }}
++        >
++          {hint}
++        </Text>
++      )}
+     </View>
+   );
+ }
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/components/base/StatRow.tsx b/Proyecto Final - ExpoTec/frontend/native/src/components/base/StatRow.tsx
+new file mode 100644
+index 0000000..783151b
+--- /dev/null
++++ b/Proyecto Final - ExpoTec/frontend/native/src/components/base/StatRow.tsx	
+@@ -0,0 +1,45 @@
++/**
++ * Fila de cifras destacadas (número grande y etiqueta debajo). Se usa en las
++ * tarjetas de inventario y de préstamos para leer cantidades de un vistazo.
++ */
++import { Text, View } from "react-native";
++import { useTheme } from "../../contexts/ThemeContext";
++
++/** Una cifra: etiqueta visible, valor y, opcionalmente, su tono. */
++export type Stat = {
++  label: string;
++  value: number;
++  /** "success" resalta una cantidad disponible; "warning", una pendiente. */
++  tone?: "neutral" | "success" | "warning";
++};
++
++export function StatRow({ stats }: { stats: Stat[] }) {
++  const { colors } = useTheme();
++  const ink = (tone: Stat["tone"]) =>
++    tone === "success"
++      ? colors.success
++      : tone === "warning"
++        ? colors.onWarning
++        : colors.text;
++  return (
++    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
++      {stats.map((stat) => (
++        <View key={stat.label} style={{ flex: 1, minWidth: 64, gap: 2 }}>
++          <Text
++            style={{
++              color: ink(stat.tone),
++              fontSize: 20,
++              lineHeight: 25,
++              fontWeight: "600",
++            }}
++          >
++            {stat.value}
++          </Text>
++          <Text style={{ color: colors.muted, fontSize: 12, lineHeight: 17 }}>
++            {stat.label}
++          </Text>
++        </View>
++      ))}
++    </View>
++  );
++}
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/components/inventory/InventoryCard.tsx b/Proyecto Final - ExpoTec/frontend/native/src/components/inventory/InventoryCard.tsx
+index 7dd4681..09cb5d0 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/components/inventory/InventoryCard.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/components/inventory/InventoryCard.tsx	
+@@ -5,7 +5,7 @@
+  */
+ import type { ReactNode } from "react";
+ import { Text, View } from "react-native";
+-import { ActionRow, Button, Card, InlineConfirm } from "../ui";
++import { ActionRow, Button, Card, InlineConfirm, StatRow } from "../ui";
+ import { useTheme } from "../../contexts/ThemeContext";
+ import { formatDate } from "../../lib/format";
+ import type { InventoryResource } from "../../lib/sharedInventory";
+@@ -62,43 +62,17 @@ export function InventoryCard({
+           {resource.description}
+         </Text>
+       )}
+-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+-        {[
+-          { label: "Total", value: resource.total, ink: colors.text },
+-          {
+-            label: "Reservadas",
+-            value: resource.reserved,
+-            ink: colors.text,
+-          },
++      <StatRow
++        stats={[
++          { label: "Total", value: resource.total },
++          { label: "Reservadas", value: resource.reserved },
+           {
+             label: "Para reservar",
+             value: resource.available,
+-            ink: colors.success,
++            tone: "success",
+           },
+-        ].map((stat) => (
+-          <View key={stat.label} style={{ flex: 1, minWidth: 64, gap: 2 }}>
+-            <Text
+-              style={{
+-                color: stat.ink,
+-                fontSize: 20,
+-                lineHeight: 25,
+-                fontWeight: "600",
+-              }}
+-            >
+-              {stat.value}
+-            </Text>
+-            <Text
+-              style={{
+-                color: colors.muted,
+-                fontSize: 12,
+-                lineHeight: 17,
+-              }}
+-            >
+-              {stat.label}
+-            </Text>
+-          </View>
+-        ))}
+-      </View>
++        ]}
++      />
+       <Text style={{ ...paragraph, fontSize: 13, lineHeight: 19 }}>
+         Sin devolver: {resource.outstanding} · Para entregar:{" "}
+         {resource.availableToLend} · Fuera de servicio: {resource.unavailable}
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/components/loans/LoanCard.tsx b/Proyecto Final - ExpoTec/frontend/native/src/components/loans/LoanCard.tsx
+index 24f3e04..ba68474 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/components/loans/LoanCard.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/components/loans/LoanCard.tsx	
+@@ -5,7 +5,7 @@
+  */
+ import type { ReactNode } from "react";
+ import { Text } from "react-native";
+-import { ActionRow, Button, Card, Chip, Heading } from "../ui";
++import { ActionRow, Button, Card, Chip, Heading, StatRow } from "../ui";
+ import { useTheme } from "../../contexts/ThemeContext";
+ import { formatMoment } from "../../lib/format";
+ import type { LoanSummary } from "../../lib/sharedLoans";
+@@ -46,10 +46,17 @@ export function LoanCard({
+         title={loan.projectName}
+         subtitle={`${loan.resourceName} · Jornada ${loan.day}`}
+       />
+-      <Text style={{ color: colors.text, lineHeight: 24 }}>
+-        Entregadas: {loan.quantity} · Devueltas: {loan.returned} · Sin devolver:{" "}
+-        {remaining}
+-      </Text>
++      <StatRow
++        stats={[
++          { label: "Entregadas", value: loan.quantity },
++          { label: "Devueltas", value: loan.returned },
++          {
++            label: "Sin devolver",
++            value: remaining,
++            tone: remaining ? "warning" : "success",
++          },
++        ]}
++      />
+       <Text style={paragraph}>
+         Entrega: {formatMoment(loan.createdAt)} · {loan.deliveredFirstName}{" "}
+         {loan.deliveredLastName}
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/components/ui.tsx b/Proyecto Final - ExpoTec/frontend/native/src/components/ui.tsx
+index 4ebbe70..719760f 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/components/ui.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/components/ui.tsx	
+@@ -16,3 +16,5 @@ export { Card, Section, Heading, PageHeading } from "./base/Layout";
+ export { Chip, Choice, CheckRow } from "./base/Options";
+ export { InlineConfirm } from "./base/InlineConfirm";
+ export { Screen } from "./base/Screen";
++export { StatRow } from "./base/StatRow";
++export type { Stat } from "./base/StatRow";
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedGalleryPage.tsx b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedGalleryPage.tsx
+index 231dbd7..3dbdabf 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedGalleryPage.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedGalleryPage.tsx	
+@@ -2,18 +2,9 @@
+  * Pantalla del sistema compartido (datos de la API). Galería de la ExpoTec: fotos aprobadas, mis aportes y moderación (administración).
+  */
+ import { useCallback, useRef, useState } from "react";
+-import { ActivityIndicator, Text, View } from "react-native";
++import { ActivityIndicator, Text } from "react-native";
+ import { useFocusEffect } from "@react-navigation/native";
+-import {
+-  Button,
+-  Card,
+-  Chip,
+-  Choice,
+-  PageHeading,
+-  Screen,
+-  RefreshButton,
+-  ActionRow,
+-} from "../components/ui";
++import { Button, Card, Chip, Choice, PageHeading, Screen, RefreshButton, ActionRow } from "../components/ui";
+ import GalleryImage from "../components/GalleryImage";
+ import GallerySubmissionForm from "../components/GallerySubmissionForm";
+ import GalleryReviewForm from "../components/GalleryReviewForm";
+@@ -131,6 +122,32 @@ export default function SharedGalleryPage({
+         tone="accent"
+         title="Galería de la ExpoTec"
+         subtitle="La exposición, desde tu mirada."
++        actions={
++          currentForm ? undefined : (
++            <>
++              <Button
++                title={
++                  user && ready
++                    ? "Compartir una foto"
++                    : "Ingresar para compartir"
++                }
++                icon="gallery"
++                onPress={() => {
++                  setNotice("");
++                  if (user && ready)
++                    setForm({ type: "submit", actorId: user.id });
++                  else onAccount();
++                }}
++              />
++              <RefreshButton
++                label="Actualizar galería"
++                loading={loading}
++                disabled={loading}
++                onPress={() => void load()}
++              />
++            </>
++          )
++        }
+       />
+       {!!notice && (
+         <Text
+@@ -174,26 +191,6 @@ export default function SharedGalleryPage({
+         />
+       ) : (
+         <>
+-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+-            <Button
+-              title={
+-                user && ready ? "Compartir una foto" : "Ingresar para compartir"
+-              }
+-              icon="gallery"
+-              onPress={() => {
+-                setNotice("");
+-                if (user && ready)
+-                  setForm({ type: "submit", actorId: user.id });
+-                else onAccount();
+-              }}
+-            />
+-            <RefreshButton
+-              label="Actualizar galería"
+-              loading={loading}
+-              disabled={loading}
+-              onPress={() => void load()}
+-            />
+-          </View>
+           <Choice
+             label="Ver fotos"
+             value={effectiveMode}
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedInventoryPage.tsx b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedInventoryPage.tsx
+index 6a27e98..f2fbd3f 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedInventoryPage.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedInventoryPage.tsx	
+@@ -5,9 +5,17 @@
+  * `InventoryHistory` (carpeta `components/inventory/`).
+  */
+ import { useCallback, useRef, useState } from "react";
+-import { ActivityIndicator, Text, View } from "react-native";
++import { ActivityIndicator, Text } from "react-native";
+ import { useFocusEffect } from "@react-navigation/native";
+-import { Button, Card, Choice, Field, PageHeading, Screen, RefreshButton } from "../components/ui";
++import {
++  Button,
++  Card,
++  Choice,
++  Field,
++  PageHeading,
++  Screen,
++  RefreshButton,
++} from "../components/ui";
+ import SharedResourceForm from "../components/SharedResourceForm";
+ import ContentGrid from "../components/ContentGrid";
+ import { InventoryCard } from "../components/inventory/InventoryCard";
+@@ -172,42 +180,33 @@ export default function SharedInventoryPage({
+         tone="info"
+         title="Inventario de ExpoTec"
+         subtitle="Existencias y reservas compartidas de elementos para los proyectos."
++        actions={
++          <>
++            <RefreshButton
++              label="Actualizar inventario"
++              loading={loading}
++              disabled={loading || busy || !!editing}
++              onPress={() => {
++                setHistory(null);
++                void load();
++              }}
++            />
++            {canManage && (
++              <Button
++                title="Nuevo elemento"
++                icon="plus"
++                disabled={busy || !!editing}
++                onPress={() => {
++                  setEditor({ scope, revision: 0 });
++                  setArchive(null);
++                  setHistory(null);
++                  setNotice("");
++                }}
++              />
++            )}
++          </>
++        }
+       />
+-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+-        <RefreshButton
+-          label="Actualizar inventario"
+-          loading={loading}
+-          disabled={loading || busy || !!editing}
+-          onPress={() => {
+-            setHistory(null);
+-            void load();
+-          }}
+-        />
+-        {canManage && (
+-          <Button
+-            title="Nuevo elemento"
+-            icon="plus"
+-            disabled={busy || !!editing}
+-            onPress={() => {
+-              setEditor({ scope, revision: 0 });
+-              setArchive(null);
+-              setHistory(null);
+-              setNotice("");
+-            }}
+-          />
+-        )}
+-      </View>
+-      <Text style={paragraph}>
+-        Las unidades fuera de servicio no están disponibles. Las reservas se
+-        conservan entre jornadas; las entregas y devoluciones actualizan las
+-        unidades que todavía están prestadas.
+-      </Text>
+-      {!canManage && (
+-        <Text style={paragraph}>
+-          La administración puede modificar las existencias y dar de baja
+-          elementos.
+-        </Text>
+-      )}
+       {!!error && (
+         <Text
+           accessibilityRole="alert"
+@@ -269,6 +268,7 @@ export default function SharedInventoryPage({
+           setHistory(null);
+           setSearch("");
+         }}
++        hint={`Las unidades fuera de servicio no están disponibles. Las reservas se conservan entre jornadas; las entregas y devoluciones actualizan las unidades que todavía están prestadas.${canManage ? "" : " La administración puede modificar las existencias y dar de baja elementos."}`}
+       />
+       <Field
+         label="Buscar en los elementos cargados"
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedLoansPage.tsx b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedLoansPage.tsx
+index f0ea673..03accad 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedLoansPage.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedLoansPage.tsx	
+@@ -6,7 +6,15 @@
+  */
+ import { useRef, useState } from "react";
+ import { ActivityIndicator, Text, View } from "react-native";
+-import { Button, Card, Choice, Field, PageHeading, Screen, RefreshButton } from "../components/ui";
++import {
++  Button,
++  Card,
++  Choice,
++  Field,
++  PageHeading,
++  Screen,
++  RefreshButton,
++} from "../components/ui";
+ import SharedLendingForm from "../components/SharedLendingForm";
+ import SharedReturnForm from "../components/SharedReturnForm";
+ import ContentGrid from "../components/ContentGrid";
+@@ -146,28 +154,30 @@ export default function SharedLoansPage({
+         tone="accent"
+         title="Préstamos y devoluciones"
+         subtitle="Entregas, devoluciones parciales y novedades de las tres jornadas."
++        actions={
++          <>
++            <RefreshButton
++              label="Actualizar préstamos"
++              loading={loading}
++              disabled={busy || loading || editing}
++              onPress={() => {
++                setHistory(null);
++                void load();
++              }}
++            />
++            <Button
++              title="Nueva entrega"
++              icon="plus"
++              disabled={busy || editing}
++              onPress={() => {
++                setDeliveryScope(scope);
++                setHistory(null);
++                setNotice("");
++              }}
++            />
++          </>
++        }
+       />
+-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+-        <RefreshButton
+-          label="Actualizar préstamos"
+-          loading={loading}
+-          disabled={busy || loading || editing}
+-          onPress={() => {
+-            setHistory(null);
+-            void load();
+-          }}
+-        />
+-        <Button
+-          title="Nueva entrega"
+-          icon="plus"
+-          disabled={busy || editing}
+-          onPress={() => {
+-            setDeliveryScope(scope);
+-            setHistory(null);
+-            setNotice("");
+-          }}
+-        />
+-      </View>
+       <View style={{ gap: 12 }}>
+         <Choice
+           label="Jornada para entregas"
+@@ -182,12 +192,8 @@ export default function SharedLoansPage({
+             setHistory(null);
+             setNotice("");
+           }}
++          hint="La jornada identifica la entrega; la fecha y hora se registran al guardarla. Cambiar de jornada no devuelve elementos ni libera sus reservas."
+         />
+-        <Text style={{ ...paragraph, maxWidth: 760 }}>
+-          La jornada identifica la entrega; la fecha y hora se registran al
+-          guardarla. Cambiar de jornada no devuelve elementos ni libera sus
+-          reservas.
+-        </Text>
+       </View>
+       {loadedFor === listScope && (
+         <Text style={{ color: colors.text, fontSize: 16, lineHeight: 24 }}>
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedProjectsPage.tsx b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedProjectsPage.tsx
+index 73b09ec..d401cbe 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedProjectsPage.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedProjectsPage.tsx	
+@@ -108,20 +108,26 @@ export default function SharedProjectsPage({
+             ? "Propuestas del equipo y revisiones asignadas"
+             : "Conocé los proyectos confirmados de la exposición."
+         }
++        actions={
++          <>
++            {ready && user?.roles.includes("student") && (
++              <Button
++                title="Presentar proyecto"
++                icon="plus"
++                onPress={onCreate}
++              />
++            )}
++            <RefreshButton
++              label="Actualizar proyectos"
++              loading={loading}
++              disabled={loading}
++              onPress={() => {
++                void load();
++              }}
++            />
++          </>
++        }
+       />
+-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+-        {ready && user?.roles.includes("student") && (
+-          <Button title="Presentar proyecto" icon="plus" onPress={onCreate} />
+-        )}
+-        <RefreshButton
+-          label="Actualizar proyectos"
+-          loading={loading}
+-          disabled={loading}
+-          onPress={() => {
+-            void load();
+-          }}
+-        />
+-      </View>
+       {ready && user ? (
+         <Choice
+           label="Vista de proyectos"
+diff --git a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedSpacesPage.tsx b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedSpacesPage.tsx
+index 364e163..052925c 100644
+--- a/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedSpacesPage.tsx	
++++ b/Proyecto Final - ExpoTec/frontend/native/src/pages/SharedSpacesPage.tsx	
+@@ -51,29 +51,31 @@ export default function SharedSpacesPage({
+           icon="map"
+           title="Espacios de ExpoTec"
+           subtitle="Planos compartidos de la exposición"
++          actions={
++            <>
++              <RefreshButton
++                label="Actualizar espacios"
++                loading={loading}
++                disabled={busy || loading}
++                onPress={() => {
++                  view.setConfirm(null);
++                  void view.reload();
++                }}
++              />
++              {canEdit && (
++                <Button
++                  title={
++                    view.adding ? "Cancelar nuevo espacio" : "Nuevo espacio"
++                  }
++                  icon={view.adding ? "close" : "plus"}
++                  disabled={busy || loading}
++                  onPress={view.toggleAdding}
++                />
++              )}
++            </>
++          }
+         />
+       )}
+-      {!editing && (
+-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+-          <RefreshButton
+-            label="Actualizar espacios"
+-            loading={loading}
+-            disabled={busy || loading}
+-            onPress={() => {
+-              view.setConfirm(null);
+-              void view.reload();
+-            }}
+-          />
+-          {canEdit && (
+-            <Button
+-              title={view.adding ? "Cancelar nuevo espacio" : "Nuevo espacio"}
+-              icon={view.adding ? "close" : "plus"}
+-              disabled={busy || loading}
+-              onPress={view.toggleAdding}
+-            />
+-          )}
+-        </View>
+-      )}
+       {!!view.error && (
+         <Text
+           accessibilityRole="alert"
+-- 
+2.43.0
+

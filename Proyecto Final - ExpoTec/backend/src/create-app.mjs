@@ -4,7 +4,9 @@
  * Recibe los repositorios por parámetro (inyección de dependencias) para que
  * las pruebas puedan reemplazar la base de datos por versiones en memoria.
  * Aplica seguridad común (Helmet, CORS, límites de tamaño), monta las rutas
- * REST de cada dominio y centraliza el manejo de errores en formato JSON:
+ * de cada dominio y centraliza el manejo de errores en formato JSON.
+ * La API no usa GET para consultas: se hacen por POST con sus datos en el
+ * cuerpo JSON. Formato de error:
  *
  *     { "error": { "code": "...", "message": "...", "fields": { ... } }, "requestId": "..." }
  */
@@ -70,7 +72,7 @@ export function createApp(repository, config, logger = console, app = express(),
       callback(new HttpError(403, 'ORIGIN_FORBIDDEN', 'Ese origen no está autorizado.'));
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: ['POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Retry-After', 'X-Request-Id', 'Deprecation'], maxAge: 600,
   }));
@@ -80,14 +82,14 @@ export function createApp(repository, config, logger = console, app = express(),
   app.use('/api/projects', express.json({ limit: '64kb' }));
   app.use(express.json({ limit: '16kb' }));
 
-  // Traduce las rutas POST de la APK 0.4.0 a su equivalente REST.
+  // Traduce las rutas de escritura de la APK 0.4.0 a su equivalente actual.
   app.use(legacyRoutesMiddleware);
 
   // Salud del servicio: /health no consulta la base; /health/ready sí.
-  app.get('/api/health', (req, res) => {
+  app.post('/api/health', (req, res) => {
     res.json({ status: 'ok', service: 'expotec-api' });
   });
-  app.get('/api/health/ready', async (req, res) => {
+  app.post('/api/health/ready', async (req, res) => {
     await repository.ready();
     res.json({ status: 'ok', database: 'connected' });
   });

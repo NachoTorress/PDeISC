@@ -17,7 +17,7 @@ import type {
   ResourceRequestDraft,
 } from "../lib/sharedInventory";
 
-/** Carga `GET /api/inventory/catalog` y permite indicar cantidades. */
+/** Carga `POST /api/inventory/catalog/query` y permite indicar cantidades. */
 export default function SharedResourcePicker({
   requests,
   disabled,
@@ -45,9 +45,8 @@ export default function SharedResourcePicker({
     setLoadError("");
     try {
       const result = await client.send<{ resources: InventoryResource[] }>(
-        "/api/inventory/catalog",
+        "/api/inventory/catalog/query",
         {},
-        "GET",
       );
       if (request === revision.current) {
         setCatalog(result.resources);

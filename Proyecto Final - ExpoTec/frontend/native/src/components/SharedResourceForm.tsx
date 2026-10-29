@@ -74,9 +74,7 @@ export default function SharedResourceForm({
     setFields({});
     try {
       const result = await client.send<{ resource: InventoryResource }>(
-        resource
-          ? `/api/inventory/${resource.id}`
-          : "/api/inventory",
+        resource ? `/api/inventory/${resource.id}` : "/api/inventory",
         {
           name: input.name.trim(),
           description: input.description.trim(),

@@ -1,19 +1,20 @@
 /**
- * Rutas REST de espacios (aulas, patio, sectores) y su plano de mobiliario.
+ * Rutas de espacios (aulas, patio, sectores) y su plano de mobiliario.
+ * Las consultas usan POST con sus datos en el cuerpo JSON: la API no usa GET.
  *
- * | Método | Ruta              | Acceso         | Descripción                         |
- * | ------ | ----------------- | -------------- | ----------------------------------- |
- * | GET    | /api/spaces       | público        | Lista los espacios activos.         |
- * | GET    | /api/spaces/:id   | público        | Devuelve un espacio con su plano.   |
- * | POST   | /api/spaces       | administrador  | Crea un espacio vacío.              |
- * | PUT    | /api/spaces/:id   | administrador  | Guarda datos, mobiliario y puestos. |
- * | DELETE | /api/spaces/:id   | administrador  | Da de baja el espacio (?version=N). |
+ * | Método | Ruta                   | Acceso         | Cuerpo JSON          | Descripción                         |
+ * | ------ | ---------------------- | -------------- | -------------------- | ----------------------------------- |
+ * | POST   | /api/spaces/query      | público        | `{}`                 | Lista los espacios activos.         |
+ * | POST   | /api/spaces/:id/query  | público        | `{}`                 | Devuelve un espacio con su plano.   |
+ * | POST   | /api/spaces            | administrador  | datos del espacio    | Crea un espacio vacío.              |
+ * | PUT    | /api/spaces/:id        | administrador  | espacio completo     | Guarda datos, mobiliario y puestos. |
+ * | DELETE | /api/spaces/:id        | administrador  | `{ version }`        | Da de baja el espacio.              |
  */
 import { Router } from 'express';
 import { requireAdmin, requireSession, rateLimit } from '../middleware/auth.mjs';
 import { userId } from '../validators/auth.mjs';
 import { createSpaceBody, saveSpaceBody, spaceVersion } from '../validators/spaces.mjs';
-import { versionQuery, noQuery } from '../validators/query.mjs';
+import { versionInput, noInput } from '../validators/query.mjs';
 
 /**
  * Crea el enrutador de espacios.
@@ -28,12 +29,12 @@ export function spacesRoutes(repository, authRepository, service, config) {
   const router = Router();
 
   // Lecturas públicas: los visitantes sin cuenta también consultan el plano.
-  router.get('/', async (req, res) => {
-    noQuery(req.query);
+  router.post('/query', async (req, res) => {
+    noInput(req.body);
     res.json({ spaces: await repository.list() });
   });
-  router.get('/:id', async (req, res) => {
-    noQuery(req.query);
+  router.post('/:id/query', async (req, res) => {
+    noInput(req.body);
     res.json({ space: await repository.get(userId(req.params.id)) });
   });
 
@@ -47,7 +48,7 @@ export function spacesRoutes(repository, authRepository, service, config) {
     res.json({ space: await repository.save(userId(req.params.id), saveSpaceBody(req.body), req.auth.user.id) });
   });
   router.delete('/:id', async (req, res) => {
-    const { version } = versionQuery(req.query);
+    const { version } = versionInput(req.body);
     await repository.archive(userId(req.params.id), spaceVersion(version), req.auth.user.id);
     res.sendStatus(204);
   });

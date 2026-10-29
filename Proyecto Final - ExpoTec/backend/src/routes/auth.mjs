@@ -14,25 +14,27 @@
  * | POST   | /api/auth/login                        | Ingresa con correo y contraseña.                  |
  * | POST   | /api/auth/refresh                      | Renueva el token de acceso (rota la renovación).  |
  * | POST   | /api/auth/logout                       | Revoca la sesión.                                 |
- * | GET    | /api/auth/session                      | Devuelve la cuenta del token de acceso.           |
- * | GET    | /api/auth/social/providers             | Proveedores sociales configurados.                |
+ * | POST   | /api/auth/session                      | Devuelve la cuenta del token de acceso.           |
+ * | POST   | /api/auth/social/providers/query       | Proveedores sociales configurados.                |
  * | POST   | /api/auth/social/google/native/start   | Inicia Google nativo de Android.                  |
  * | POST   | /api/auth/social/google/native/verify  | Verifica el token de Google nativo.               |
  * | POST   | /api/auth/social/status                | Estado de un flujo social (envía la prueba privada). |
  * | POST   | /api/auth/social/complete              | Completa alta o vinculación social.               |
- * | GET    | /api/auth/social/:provider/callback    | Retorno OAuth del proveedor.                      |
- * | GET    | /api/admin/users                       | Lista cuentas (?search&limit&offset). Admin.      |
- * | GET    | /api/admin/users/:id                   | Detalle de una cuenta. Admin.                     |
+ * | GET    | /api/auth/social/:provider/callback    | Retorno OAuth del proveedor (única excepción*).   |
+ * | POST   | /api/admin/users/query                 | Lista cuentas ({ search?, limit?, offset? }). Admin. |
+ * | POST   | /api/admin/users/:id/query             | Detalle de una cuenta. Admin.                     |
  * | PUT    | /api/admin/users/:id/roles             | Reemplaza los permisos de una cuenta. Admin.      |
  *
- * `social/status` y `social/complete` usan POST porque envían una prueba
- * secreta del flujo: en una URL quedaría registrada en historiales y registros.
+ * La API no usa GET: las consultas van por POST con sus datos en el cuerpo.
+ * (*) El retorno OAuth es la única ruta GET porque no la llama la app: es
+ * Google, Discord o GitHub quien redirige el navegador a esa dirección, y el
+ * estándar OAuth 2.0 define esa redirección como GET.
  */
 import { Router } from 'express';
 import { credentials, refreshToken, objectBody, usersQuery, userId, rolesChange } from '../validators/auth.mjs';
 import { requireSession, requireAdmin, rateLimit } from '../middleware/auth.mjs';
 import { HttpError } from '../lib/errors.mjs';
-import { queryInput, noQuery } from '../validators/query.mjs';
+import { queryInput, noInput } from '../validators/query.mjs';
 import { randomBytes } from 'node:crypto';
 
 /**
@@ -118,8 +120,8 @@ export function authRoutes(repository, service, config, social) {
       const value = readCookie(req, bindingCookie);
       return /^[A-Za-z0-9_-]{43}$/.test(value ?? '') ? value : undefined;
     };
-    router.get('/social/providers', (req, res) => {
-    noQuery(req.query);
+    router.post('/social/providers/query', (req, res) => {
+    noInput(req.body);
       res.json(social.providers());
     });
     router.post('/social/google/native/start', ipLimit, async (req, res) => res.json(await social.startNativeGoogle(req.body)));
@@ -154,8 +156,8 @@ export function authRoutes(repository, service, config, social) {
     await service.logout(refreshToken(req.body));
     res.sendStatus(204);
   });
-  router.get('/session', requireSession(service), async (req, res) => {
-    noQuery(req.query);
+  router.post('/session', requireSession(service), async (req, res) => {
+    noInput(req.body);
     res.json({ user: req.auth.user });
   });
   return router;
@@ -173,11 +175,11 @@ export function authRoutes(repository, service, config, social) {
 export function adminRoutes(repository, service, config) {
   const router = Router();
   router.use(requireSession(service), requireAdmin);
-  router.get('/users', async (req, res) => {
-    res.json({ users: await repository.listUsers(usersQuery(queryInput(req.query, { limit: 'int', offset: 'int' }))) });
+  router.post('/users/query', async (req, res) => {
+    res.json({ users: await repository.listUsers(usersQuery(queryInput(req.body))) });
   });
-  router.get('/users/:id', async (req, res) => {
-    noQuery(req.query);
+  router.post('/users/:id/query', async (req, res) => {
+    noInput(req.body);
     res.json({ user: await repository.getUser(userId(req.params.id)) });
   });
   // expectedRoles evita pisar un cambio simultáneo de otro administrador (409 si difiere).

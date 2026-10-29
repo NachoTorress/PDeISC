@@ -118,18 +118,24 @@ export function AppNavigation({
                       : "transparent",
                   borderWidth: 2,
                   borderColor:
-                    focusedItem === item.id ? colors.navigationAccent : "transparent",
+                    focusedItem === item.id
+                      ? colors.navigationAccent
+                      : "transparent",
                 })}
               >
                 <Icon
                   name={item.icon}
-                  color={selected ? colors.navigationAccent : colors.navigationMuted}
+                  color={
+                    selected ? colors.navigationAccent : colors.navigationMuted
+                  }
                   size={21}
                 />
                 <Text
                   style={{
                     flex: 1,
-                    color: selected ? colors.navigationAccent : colors.onNavigation,
+                    color: selected
+                      ? colors.navigationAccent
+                      : colors.onNavigation,
                     fontSize: 14,
                     lineHeight: 21,
                     fontWeight: "600",
@@ -149,7 +155,11 @@ export function AppNavigation({
       <View
         role="navigation"
         accessibilityLabel="Navegación principal"
-        style={{ width: 248, borderRightWidth: 1, borderColor: colors.navigation }}
+        style={{
+          width: 248,
+          borderRightWidth: 1,
+          borderColor: colors.navigation,
+        }}
       >
         {content(false)}
       </View>

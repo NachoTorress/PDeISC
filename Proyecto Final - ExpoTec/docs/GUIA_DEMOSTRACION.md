@@ -6,9 +6,9 @@ Proyecto ExpoTec
 
 E.E.S.T. N° 5 Amancio Williams
 
-Versión de referencia 0.5.0
+Versión de referencia 0.5.1
 
-26 de octubre de 2026
+27 de octubre de 2026
 
 ## Propósito del recorrido
 

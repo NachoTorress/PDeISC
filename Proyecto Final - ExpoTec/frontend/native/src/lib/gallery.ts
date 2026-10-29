@@ -3,7 +3,7 @@ import { sharedLinkError } from "./sharedProjects";
 
 /** Estado de moderación de una foto. */
 export type GalleryStatus = "pending" | "approved" | "rejected";
-/** Foto tal como la devuelve `GET /api/gallery`. */
+/** Foto tal como la devuelve `POST /api/gallery/public/query`. */
 export interface GalleryPhoto {
   id: string;
   imageUrl: string;

@@ -1,19 +1,20 @@
 /**
- * Rutas REST de proyectos: muestra pública, presentación TV, propuestas de
- * alumnos y revisión de profesores.
+ * Rutas de proyectos: muestra pública, presentación TV, propuestas de alumnos
+ * y revisión de profesores. Las consultas usan POST con sus datos en el
+ * cuerpo JSON: la API no usa GET.
  *
- * | Método | Ruta                          | Acceso              | Descripción                                   |
- * | ------ | ----------------------------- | ------------------- | --------------------------------------------- |
- * | GET    | /api/projects/presentation    | público             | Secuencia de la presentación TV.              |
- * | GET    | /api/projects/public          | público             | Proyectos confirmados (?limit&offset).        |
- * | GET    | /api/projects/public/:id      | público             | Ficha pública de un proyecto confirmado.      |
- * | GET    | /api/projects                 | sesión              | Proyectos visibles para la cuenta.            |
- * | GET    | /api/projects/people          | sesión              | Busca alumno o profesor (?email&role).        |
- * | GET    | /api/projects/:id             | sesión              | Detalle con datos privados permitidos.        |
- * | POST   | /api/projects                 | alumno              | Crea una propuesta pendiente.                 |
- * | PUT    | /api/projects/:id             | integrante          | Modifica la propuesta antes de confirmarla.   |
- * | POST   | /api/projects/:id/reviews     | profesor asignado   | Confirma, pide cambios o reabre.              |
- * | DELETE | /api/projects/:id             | integrante / admin  | Cancela el proyecto (?version=N).             |
+ * | Método | Ruta                              | Acceso              | Cuerpo JSON                | Descripción                                 |
+ * | ------ | --------------------------------- | ------------------- | -------------------------- | ------------------------------------------- |
+ * | POST   | /api/projects/presentation/query  | público             | `{ limit?, after? }`       | Secuencia de la presentación TV.            |
+ * | POST   | /api/projects/public/query        | público             | `{ limit?, offset? }`      | Proyectos confirmados.                      |
+ * | POST   | /api/projects/public/:id/query    | público             | `{}`                       | Ficha pública de un proyecto confirmado.    |
+ * | POST   | /api/projects/query               | sesión              | `{ limit?, offset? }`      | Proyectos visibles para la cuenta.          |
+ * | POST   | /api/projects/people/find         | sesión              | `{ email, role }`          | Busca un alumno o profesor por correo.      |
+ * | POST   | /api/projects/:id/query           | sesión              | `{}`                       | Detalle con datos privados permitidos.      |
+ * | POST   | /api/projects                     | alumno              | propuesta                  | Crea una propuesta pendiente.               |
+ * | PUT    | /api/projects/:id                 | integrante          | propuesta + `version`      | Modifica la propuesta antes de confirmarla. |
+ * | POST   | /api/projects/:id/reviews         | profesor asignado   | `{ decision, note, version }` | Confirma, pide cambios o reabre.         |
+ * | DELETE | /api/projects/:id                 | integrante / admin  | `{ version }`              | Cancela el proyecto.                        |
  *
  * Los permisos finos (integrante, profesor asignado) se comprueban en el
  * repositorio dentro de la misma transacción que modifica los datos.
@@ -24,9 +25,8 @@ import { userId, pagination } from '../validators/auth.mjs';
 import { spaceVersion } from '../validators/spaces.mjs';
 import { proposalBody, reviewBody, personBody } from '../validators/projects.mjs';
 import { presentationQuery } from '../validators/presentation.mjs';
-import { queryInput, versionQuery, noQuery } from '../validators/query.mjs';
+import { queryInput, versionInput, noInput } from '../validators/query.mjs';
 
-const pageTypes = { limit: 'int', offset: 'int' };
 
 /**
  * Crea el enrutador de proyectos.
@@ -41,29 +41,29 @@ export function projectsRoutes(repository, authRepository, service, config) {
   const router = Router();
 
   // Consultas públicas: no exponen correos ni datos privados de las cuentas.
-  router.get('/presentation', async (req, res) => {
-    res.json(await repository.presentation(presentationQuery(queryInput(req.query, { limit: 'int' }))));
+  router.post('/presentation/query', async (req, res) => {
+    res.json(await repository.presentation(presentationQuery(queryInput(req.body))));
   });
-  router.get('/public', async (req, res) => {
-    res.json({ projects: await repository.list(pagination(queryInput(req.query, pageTypes))) });
+  router.post('/public/query', async (req, res) => {
+    res.json({ projects: await repository.list(pagination(queryInput(req.body))) });
   });
-  router.get('/public/:id', async (req, res) => {
-    noQuery(req.query);
+  router.post('/public/:id/query', async (req, res) => {
+    noInput(req.body);
     res.json({ project: await repository.get(userId(req.params.id)) });
   });
 
   // El resto requiere iniciar sesión.
   router.use(requireSession(service));
-  router.get('/', async (req, res) => {
-    res.json({ projects: await repository.list(pagination(queryInput(req.query, pageTypes)), req.auth.user.id) });
+  router.post('/query', async (req, res) => {
+    res.json({ projects: await repository.list(pagination(queryInput(req.body)), req.auth.user.id) });
   });
-  router.get('/people',
+  router.post('/people/find',
     rateLimit(authRepository, config, { scope: 'project-people', limit: 30, seconds: 900, byUser: true }),
     async (req, res) => {
-      res.json({ person: await repository.person(personBody(queryInput(req.query)), req.auth.user.id) });
+      res.json({ person: await repository.person(personBody(queryInput(req.body)), req.auth.user.id) });
     });
-  router.get('/:id', async (req, res) => {
-    noQuery(req.query);
+  router.post('/:id/query', async (req, res) => {
+    noInput(req.body);
     res.json({ project: await repository.get(userId(req.params.id), req.auth.user.id) });
   });
 
@@ -79,7 +79,7 @@ export function projectsRoutes(repository, authRepository, service, config) {
     res.json({ project: await repository.review(userId(req.params.id), reviewBody(req.body), req.auth.user.id) });
   });
   router.delete('/:id', async (req, res) => {
-    const { version } = versionQuery(req.query);
+    const { version } = versionInput(req.body);
     res.json({ project: await repository.cancel(userId(req.params.id), spaceVersion(version), req.auth.user.id) });
   });
   return router;

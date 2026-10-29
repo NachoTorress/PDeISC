@@ -55,16 +55,16 @@ test('TiDB: inventario, reservas atómicas, concurrencia y liberación con histo
   }
   const owner = await account('Lucía'), teacher = await account('Martín', 'teacher'), loans = await account('Paula', 'loans'), admin = await account('Ana', 'admin');
   const input = { name: `Alargue ${randomUUID()}`, description: 'Unidades equivalentes para pruebas', total: 5 };
-  assert.equal((await api.get('/api/inventory')).status, 401);
-  assert.equal((await api.get('/api/inventory', {}, owner.accessToken)).status, 403);
-  assert.equal((await api.get('/api/inventory', {}, loans.accessToken)).status, 200);
+  assert.equal((await api.request('/api/inventory/query')).status, 401);
+  assert.equal((await api.request('/api/inventory/query', {}, owner.accessToken)).status, 403);
+  assert.equal((await api.request('/api/inventory/query', {}, loans.accessToken)).status, 200);
   assert.equal((await api.request('/api/inventory', input, loans.accessToken)).status, 403);
   const created = await api.request('/api/inventory', input, admin.accessToken);
   assert.equal(created.status, 201, JSON.stringify(created.body));
   const resource = created.body.resource; resources.push(resource.id);
   assert.equal(resource.available, 5); assert.equal(resource.events.length, 1);
   assert.equal((await api.request('/api/inventory', input, admin.accessToken)).status, 409);
-  assert.ok((await api.get('/api/inventory/catalog', {}, owner.accessToken)).body.resources.some(item => item.id === resource.id));
+  assert.ok((await api.request('/api/inventory/catalog/query', {}, owner.accessToken)).body.resources.some(item => item.id === resource.id));
   const updates = await Promise.all([6, 7].map(total => api.put(`/api/inventory/${resource.id}`, { ...input, total, version: 1 }, admin.accessToken)));
   assert.deepEqual(updates.map(result => result.status).sort(), [200, 409]);
   const changed = updates.find(result => result.status === 200).body.resource;
@@ -75,8 +75,8 @@ test('TiDB: inventario, reservas atómicas, concurrencia y liberación con histo
   assert.equal((await api.del(`/api/inventory/${resource.id}`, { version: 2 }, admin.accessToken)).status, 204);
   const archived = await inventory.get(resource.id, admin.user.id);
   assert.ok(archived.archivedAt); assert.equal(archived.events.length, 3);
-  assert.equal((await api.get('/api/inventory/catalog', {}, teacher.accessToken)).body.resources.some(item => item.id === resource.id), false);
-  assert.ok((await api.get('/api/inventory', { archived: true }, loans.accessToken)).body.resources.some(item => item.id === resource.id));
+  assert.equal((await api.request('/api/inventory/catalog/query', {}, teacher.accessToken)).body.resources.some(item => item.id === resource.id), false);
+  assert.ok((await api.request('/api/inventory/query', { archived: true }, loans.accessToken)).body.resources.some(item => item.id === resource.id));
 
   const firstResource = await inventory.create({ name: `Cable ${randomUUID()}`, description: '', total: 2 }, admin.user.id);
   resources.push(firstResource.id);
@@ -112,7 +112,7 @@ test('TiDB: inventario, reservas atómicas, concurrencia y liberación con histo
   assert.deepEqual(confirmations.map(result => result.status).sort(), [200, 409]);
   const winner = confirmations.find(result => result.status === 200).body.project;
   assert.equal(winner.resources[0].reservedQuantity > 0, true);
-  const published = await api.get(`/api/projects/public/${winner.id}`);
+  const published = await api.request(`/api/projects/public/${winner.id}/query`);
   assert.equal(published.body.project.resources, undefined);
   assert.equal((await inventory.get(firstResource.id, admin.user.id)).reserved, 2);
   assert.equal((await layouts.get(space.id)).booths.filter(booth => booth.projectId).length, 1);

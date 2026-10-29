@@ -1,13 +1,14 @@
 /**
- * Rutas REST de la galería de fotos de la ExpoTec.
+ * Rutas de la galería de fotos de la ExpoTec.
+ * Las consultas usan POST con sus datos en el cuerpo JSON: la API no usa GET.
  *
- * | Método | Ruta                     | Acceso         | Descripción                                          |
- * | ------ | ------------------------ | -------------- | ---------------------------------------------------- |
- * | GET    | /api/gallery             | público        | Fotos aprobadas (?limit&offset).                     |
- * | GET    | /api/gallery/mine        | sesión         | Aportes propios con su estado.                       |
- * | POST   | /api/gallery             | sesión         | Envía una foto; queda pendiente de moderación.       |
- * | GET    | /api/gallery/moderation  | administrador  | Cola de moderación (?status=pending|approved|...).   |
- * | PATCH  | /api/gallery/:id         | administrador  | Aprueba, rechaza o retira una foto.                  |
+ * | Método | Ruta                           | Acceso         | Cuerpo JSON                       | Descripción                                    |
+ * | ------ | ------------------------------ | -------------- | --------------------------------- | ---------------------------------------------- |
+ * | POST   | /api/gallery/public/query      | público        | `{ limit?, offset? }`             | Fotos aprobadas.                               |
+ * | POST   | /api/gallery/mine/query        | sesión         | `{ limit?, offset? }`             | Aportes propios con su estado.                 |
+ * | POST   | /api/gallery                   | sesión         | foto                              | Envía una foto; queda pendiente de moderación. |
+ * | POST   | /api/gallery/moderation/query  | administrador  | `{ status?, limit?, offset? }`    | Cola de moderación.                            |
+ * | PATCH  | /api/gallery/:id               | administrador  | `{ decision, note?, version }`    | Aprueba, rechaza o retira una foto.            |
  */
 import { Router } from 'express';
 import { requireSession, requireAdmin, rateLimit } from '../middleware/auth.mjs';
@@ -15,7 +16,6 @@ import { userId } from '../validators/auth.mjs';
 import { galleryQuery, galleryPhoto, galleryReview } from '../validators/gallery.mjs';
 import { queryInput } from '../validators/query.mjs';
 
-const pageTypes = { limit: 'int', offset: 'int' };
 
 /**
  * Crea el enrutador de la galería.
@@ -30,13 +30,13 @@ export function galleryRoutes(repository, authRepository, service, config) {
   const router = Router();
 
   // Galería pública: solo fotos aprobadas, sin correos de los autores.
-  router.get('/', async (req, res) => {
-    res.json({ photos: await repository.publicList(galleryQuery(queryInput(req.query, pageTypes))) });
+  router.post('/public/query', async (req, res) => {
+    res.json({ photos: await repository.publicList(galleryQuery(queryInput(req.body))) });
   });
 
   router.use(requireSession(service));
-  router.get('/mine', async (req, res) => {
-    res.json({ photos: await repository.mine(galleryQuery(queryInput(req.query, pageTypes)), req.auth.user.id) });
+  router.post('/mine/query', async (req, res) => {
+    res.json({ photos: await repository.mine(galleryQuery(queryInput(req.body)), req.auth.user.id) });
   });
   router.post('/',
     rateLimit(authRepository, config, { scope: 'gallery-submit', limit: 10, seconds: 3600, byUser: true }),
@@ -46,8 +46,8 @@ export function galleryRoutes(repository, authRepository, service, config) {
 
   // Moderación: exclusiva de administración.
   router.use(requireAdmin);
-  router.get('/moderation', async (req, res) => {
-    res.json({ photos: await repository.moderation(galleryQuery(queryInput(req.query, pageTypes), true)) });
+  router.post('/moderation/query', async (req, res) => {
+    res.json({ photos: await repository.moderation(galleryQuery(queryInput(req.body), true)) });
   });
   router.patch('/:id',
     rateLimit(authRepository, config, { scope: 'gallery-review', limit: 120, seconds: 900, byUser: true }),

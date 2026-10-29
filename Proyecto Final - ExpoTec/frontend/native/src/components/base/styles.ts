@@ -1,0 +1,70 @@
+/** Estilos compartidos por los componentes base (botones, campos, tarjetas, opciones). */
+import { StyleSheet } from "react-native";
+import { layout } from "../../theme/tokens";
+
+export const styles = StyleSheet.create({
+  button: {
+    alignSelf: "flex-start",
+    maxWidth: "100%",
+    minHeight: layout.controlHeight,
+    minWidth: 132,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: layout.controlRadius,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 8,
+  },
+  input: {
+    borderRadius: layout.controlRadius,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 16,
+  },
+  field: { gap: 8, minWidth: 0 },
+  label: { fontSize: 14, fontWeight: "600" },
+  card: {
+    padding: layout.cardPadding,
+    gap: 10,
+    borderWidth: 1,
+    borderRadius: layout.cardRadius,
+    minWidth: 0,
+  },
+  section: { gap: 10 },
+  heading: { gap: 4, minWidth: 0, maxWidth: "100%" },
+  chip: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  wrap: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  choice: {
+    minHeight: layout.controlHeight,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderRadius: layout.controlRadius,
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  checkRow: {
+    minHeight: 44,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 8,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderWidth: 2,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  confirm: { borderRadius: 12, padding: 12, gap: 10 },
+});

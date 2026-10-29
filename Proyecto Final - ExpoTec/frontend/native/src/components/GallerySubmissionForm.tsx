@@ -51,10 +51,14 @@ export default function GallerySubmissionForm({
     setBusy(true);
     setError("");
     try {
-      await client.send("/api/gallery", {
-        imageUrl: input.imageUrl.trim(),
-        caption: input.caption.trim().normalize("NFC"),
-      }, "POST");
+      await client.send(
+        "/api/gallery",
+        {
+          imageUrl: input.imageUrl.trim(),
+          caption: input.caption.trim().normalize("NFC"),
+        },
+        "POST",
+      );
       setSaved(true);
       onSubmitted();
     } catch (cause) {

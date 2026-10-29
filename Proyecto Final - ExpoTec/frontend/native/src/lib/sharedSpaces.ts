@@ -1,11 +1,16 @@
 /** Tipos y edición del plano compartido. */
 import type { Furniture, Space } from "./types";
 
-/** Espacio con mobiliario y puestos (`GET /api/spaces/:id`). */
+/** Espacio con mobiliario y puestos (`POST /api/spaces/:id/query`). */
 export interface SharedSpace extends Space {
   version: number;
   updatedAt: string;
-  booths: { id: string; furnitureId: string; projectId?: string | null; projectName?: string | null }[];
+  booths: {
+    id: string;
+    furnitureId: string;
+    projectId?: string | null;
+    projectName?: string | null;
+  }[];
 }
 /** Espacio de la lista. */
 export type SpaceSummary = Omit<SharedSpace, "furniture" | "booths"> & {

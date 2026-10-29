@@ -63,9 +63,8 @@ export default function SharedLendingForm({
       setConfirm(null);
       try {
         const result = await client.send<{ projects: LendingProject[] }>(
-          "/api/loans/projects",
+          "/api/loans/projects/query",
           { day, limit: 25, offset },
-        "GET",
         );
         if (request === revision.current) {
           setProjects((current) =>

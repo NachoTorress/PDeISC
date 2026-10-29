@@ -116,7 +116,7 @@ test('social HTTP: proveedores sin secretos, inicio y final exigen origen y JSON
   const repo = { start: async () => {} };
   const api = await listen(createApp(memoryRepository(), socialConfig, console, undefined, undefined, undefined, undefined, undefined, undefined, repo));
   t.after(api.close);
-  const list = await api.get('/api/auth/social/providers');
+  const list = await api.request('/api/auth/social/providers/query');
   assert.equal(list.status, 200);
   assert.equal(list.body.providers.length, 3);
   assert.equal(JSON.stringify(list.body).includes('secret'), false);

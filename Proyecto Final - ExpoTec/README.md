@@ -6,8 +6,8 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 | --- | --- |
 | Web | [expotec-web-gn19.vercel.app](https://expotec-web-gn19.vercel.app) |
 | API | `https://expotec-api-gn19.vercel.app` |
-| APK Android | [Descargar ExpoTec 0.4.0](https://expo.dev/artifacts/eas/2PBiG--Pnz0L_bkfG5PCBe9A0grheNB3PZSQsYw94F0.apk) (ver [APK de prueba](docs/APK_PRUEBA.md)) |
-| Versión del código | 0.5.0 |
+| APK Android | Compilar la 0.5.1 con el código actual (la 0.5.0 usa GET y no funciona con esta API). Historial y enlaces en [APK de prueba](docs/APK_PRUEBA.md) |
+| Versión del código | 0.5.1 |
 
 ## Documentación
 
@@ -16,7 +16,7 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 | Manual de usuario | [docs/MANUAL_USUARIO.md](docs/MANUAL_USUARIO.md) | [PDF](output/pdf/ExpoTec_MANUAL_USUARIO.pdf) |
 | Guía de instalación y configuración | [docs/GUIA_INSTALACION.md](docs/GUIA_INSTALACION.md) | [PDF](output/pdf/ExpoTec_GUIA_INSTALACION.pdf) |
 | Guía de demostración | [docs/GUIA_DEMOSTRACION.md](docs/GUIA_DEMOSTRACION.md) | [PDF](output/pdf/ExpoTec_GUIA_DEMOSTRACION.pdf) |
-| Documentación de la API (endpoints, métodos, parámetros, respuestas y errores) | [backend/README.md](backend/README.md) | — |
+| Documentación de la API (endpoints, métodos, parámetros, respuestas y errores) | [docs/DOCUMENTACION_API.md](docs/DOCUMENTACION_API.md) y [backend/README.md](backend/README.md) | [PDF](output/pdf/ExpoTec_DOCUMENTACION_API.pdf) |
 
 Documentación técnica complementaria: [despliegue](docs/DESPLIEGUE.md), [accesos sociales](docs/ACCESOS_SOCIALES.md), [Google en Android](docs/ANDROID_GOOGLE.md), [carga de fotos](docs/CARGA_FOTOS.md), [recuperación de contraseña](docs/RECUPERACION_CONTRASENA.md), [diagramas](docs/diagramas/README.md) y [requisitos](docs/REQUISITOS.md).
 
@@ -27,16 +27,16 @@ Documentación técnica complementaria: [despliegue](docs/DESPLIEGUE.md), [acces
 | Registro e inicio de sesión | Registro como alumno o invitado, ingreso con correo y contraseña, recuperación por correo. | `backend/src/routes/auth.mjs`, `frontend/native/src/pages/AccountPage.tsx` |
 | Autenticación con 3 redes sociales | Google (selector nativo en Android), Discord y GitHub con OAuth 2.0. | `backend/src/services/social*.mjs`, `frontend/native/src/components/SocialAccess.tsx` |
 | Mínimo 3 roles con permisos distintos | Alumno, profesor, encargado de préstamos, administrador e invitado; menús y endpoints según el rol. | `backend/src/middleware/auth.mjs`, repositorios |
-| Interfaz amigable y adaptable | Componentes responsivos para teléfono, tablet y escritorio, tema claro y oscuro, modo horizontal y vertical. | `frontend/native/src/components/ui.tsx` |
-| Navegación entre pantallas | React Navigation: pila de pantallas y pestañas. | `frontend/native/src/app.tsx` |
-| API RESTful con CRUD | GET, POST, PUT, PATCH y DELETE sobre espacios, proyectos, inventario, préstamos, galería y usuarios. | `backend/src/routes/` |
+| Interfaz amigable y adaptable | Componentes responsivos para teléfono, tablet y escritorio, tema claro y oscuro, modo horizontal y vertical. | `frontend/native/src/components/base/` |
+| Navegación entre pantallas | React Navigation: pila de pantallas y pestañas. | `frontend/native/src/components/navigation/` |
+| API con CRUD | POST (consultar y crear), PUT, PATCH y DELETE sobre espacios, proyectos, inventario, préstamos, galería y usuarios. Sin GET: los datos viajan siempre en el cuerpo JSON. | `backend/src/routes/` |
 | Manejo de errores | Errores JSON con código y mensaje en español; validación por campo en los formularios. | `backend/src/create-app.mjs`, `frontend/native/src/lib/authRequest.ts` |
 | Estado global | Context API para sesión, tema y demostración. | `frontend/native/src/contexts/` |
 | Sesión persistente | Token de renovación en SecureStore (Android) o cookie HttpOnly (web). | `frontend/native/src/lib/sessionStorage.*.ts` |
 | JWT de acceso y renovación | Acceso de 15 minutos y renovación rotativa de hasta 30 días. | `backend/src/services/crypto.mjs` |
 | Base MySQL estructurada | 10 migraciones relacionales en TiDB (compatible con MySQL). | `backend/sql/` |
 | Documentación de la API en README | Endpoints, métodos, parámetros, respuestas y códigos de error. | [backend/README.md](backend/README.md) |
-| Manual de usuario y guía de instalación | Markdown y PDF. | `docs/`, `output/pdf/` |
+| Manual de usuario, guía de instalación y documentación de la API | Markdown y PDF. | `docs/`, `output/pdf/` |
 | APK | Compilación EAS con perfil `preview`. | `frontend/native/eas.json` |
 
 ## Tecnologías
@@ -50,7 +50,7 @@ Documentación técnica complementaria: [despliegue](docs/DESPLIEGUE.md), [acces
 
 ```text
 Proyecto Final - ExpoTec/
-├── backend/                API REST (Express + MySQL). Ver backend/README.md
+├── backend/                API (Express + MySQL). Ver backend/README.md
 │   ├── src/                config, middleware, routes, services, repositories, validators
 │   ├── sql/                migraciones 001–010
 │   ├── scripts/            migrar, comprobar, crear administrador, limpieza
@@ -59,7 +59,10 @@ Proyecto Final - ExpoTec/
 │   ├── native/             App React Native (Android y web)
 │   │   ├── src/app.tsx     navegación y estructura general
 │   │   ├── src/pages/      pantallas (Shared* = conectadas a la API; el resto, demostración)
-│   │   ├── src/components/ componentes reutilizables
+│   │   ├── src/components/ componentes reutilizables; base/ (botones, campos, tarjetas),
+│   │   │                   navigation/ (barra, menú, pila y pestañas) y una carpeta por
+│   │   │                   sección (proposal/, spaces/, inventory/, loans/, project/…)
+│   │   ├── src/hooks/      estado y llamadas a la API de las pantallas grandes
 │   │   ├── src/contexts/   estado global (sesión, tema, demostración)
 │   │   ├── src/lib/        cliente de API, validaciones y reglas
 │   │   └── scripts/        vista previa, ensayos visuales y capturas del manual
@@ -101,7 +104,7 @@ cd frontend/native
 npx eas-cli build --platform android --profile preview
 ```
 
-La APK 0.4.0 publicada sigue funcionando con la API 0.5.0 gracias a una capa de compatibilidad (ver [backend/README.md](backend/README.md#compatibilidad-con-la-apk-040)). Para entregar la versión 0.5.0 conviene generar una APK nueva con el comando anterior y adjuntarla también como *Release* en GitHub, porque los enlaces de descarga de Expo pueden vencer.
+La APK 0.4.0 publicada sigue funcionando con la API 0.5.1 gracias a una capa de compatibilidad (ver [backend/README.md](backend/README.md#compatibilidad-con-la-apk-040)). La APK 0.5.0 usaba GET y **no funciona** con la API 0.5.1: hay que generar la 0.5.1 con el comando anterior y adjuntarla también como *Release* en GitHub, porque los enlaces de descarga de Expo pueden vencer.
 
 ## Roles
 
@@ -123,7 +126,8 @@ El repositorio Git es la carpeta superior `PDelSC` (rama `main`). Los archivos `
 Mensajes de commit sugeridos para estos cambios:
 
 ```text
-feat(api): migrar la API a métodos REST con compatibilidad para la APK 0.4.0
+feat(api): consultas por POST sin GET, compatibles con la APK 0.4.0
+refactor(front): dividir pantallas y componentes largos en módulos
 docs(code): documentar backend y frontend
 docs: limpiar README, documentación de la API y manuales con capturas
 ```

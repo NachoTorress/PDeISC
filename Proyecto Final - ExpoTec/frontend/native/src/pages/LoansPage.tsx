@@ -47,7 +47,9 @@ export default function LoansPage() {
 
   return (
     <Screen>
-      <PageHeading icon="loans" tone="accent"
+      <PageHeading
+        icon="loans"
+        tone="accent"
         title="Préstamos"
         subtitle="Cada entrega, cada devolución. Todo en su lugar al terminar el día."
       />

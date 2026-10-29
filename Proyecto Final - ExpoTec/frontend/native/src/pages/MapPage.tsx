@@ -1,5 +1,8 @@
 /**
- * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Plano de espacios con editor de mobiliario.
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor).
+ * Plano de espacios con editor de mobiliario para el perfil de organización.
+ *
+ * Las tarjetas laterales y los destacados están en `components/map/`.
  */
 import { useCallback, useState } from "react";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
@@ -7,24 +10,15 @@ import { useDemo } from "../hooks/useDemo";
 import { useTheme } from "../contexts/ThemeContext";
 import NativeFloorplan from "../components/NativeFloorplan";
 import NativeSpaceEditor from "../components/NativeSpaceEditor";
-import ProjectArt from "../components/ProjectArt";
-import ContentGrid from "../components/ContentGrid";
-import {
-  Button,
-  ActionRow,
-  Card,
-  Chip,
-  Choice,
-  Field,
-  PageHeading,
-  InlineConfirm,
-  Screen,
-} from "../components/ui";
-import { formatDate } from "../lib/format";
+import { Button, Card, Screen } from "../components/ui";
+import { MapSelectionCard } from "../components/map/MapSelectionCard";
+import { MapOverview } from "../components/map/MapOverview";
+import { MapFeatured } from "../components/map/MapFeatured";
+import { MapIntro } from "../components/map/MapIntro";
 import { isProjectMember } from "../lib/team";
 import { cloneData } from "../lib/clone";
 import { newId, today } from "../lib/helpers";
-import type { Space } from "../lib/types";
+import type { Furniture, Space } from "../lib/types";
 
 /** Presenta la distribución pública y permite a administración guardar un borrador del plano. */
 export default function MapPage({
@@ -43,8 +37,6 @@ export default function MapPage({
   const [selected, setSelected] = useState<string | null>(null);
   const [draft, setDraft] = useState<Space | null>(null);
   const [adding, setAdding] = useState(false);
-  const [spaceName, setSpaceName] = useState("");
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState("");
   const [gestureActive, setGestureActive] = useState(false);
   const source =
@@ -74,6 +66,12 @@ export default function MapPage({
   const allTables = state.spaces
     .flatMap((item) => item.furniture)
     .filter((item) => item.type === "table").length;
+  /** Reemplaza la lista de piezas del borrador, si existe. */
+  function editFurniture(change: (items: Furniture[]) => Furniture[]) {
+    setDraft((current) =>
+      current ? { ...current, furniture: change(current.furniture) } : null,
+    );
+  }
   /** Reubica piezas que quedarían fuera del plano. */
   const fitPositions = useCallback(
     (positions: { id: string; x: number; y: number }[]) => {
@@ -100,7 +98,6 @@ export default function MapPage({
     setSpaceId(id);
     setSelected(null);
     setDraft(null);
-    setConfirmDelete(false);
     setError("");
   }
   /** Guarda el plano editado. */
@@ -116,10 +113,10 @@ export default function MapPage({
     notify("La distribución quedó guardada en este dispositivo.");
   }
   /** Crea un espacio nuevo en la demo. */
-  function createSpace() {
+  function createSpace(name: string) {
     const next: Space = {
       id: newId(),
-      name: spaceName.trim(),
+      name,
       description: "Espacio nuevo · configurá su distribución",
       furniture: [],
       createdAt: today(),
@@ -130,97 +127,44 @@ export default function MapPage({
       return;
     }
     setAdding(false);
-    setSpaceName("");
     setSpaceId(next.id);
     setDraft(next);
     setSelected(null);
     setError("");
     notify("Espacio creado. Agregá su mobiliario.");
   }
+  /** Elimina el espacio vacío elegido; devuelve true si se pudo. */
+  function deleteSpace() {
+    if (!space) return false;
+    const result = mutate({ type: "deleteSpace", id: space.id });
+    if (result) {
+      setError(result);
+      return false;
+    }
+    setSelected(null);
+    notify("Espacio eliminado.");
+    return true;
+  }
   const paragraph = { color: colors.muted, lineHeight: 22 };
   return (
     <Screen scrollEnabled={!gestureActive}>
       {!draft && (
-        <View style={[styles.header, width >= 700 && styles.headerWide]}>
-          <View style={width >= 700 ? styles.headingWide : undefined}>
-            <PageHeading
-              icon="map"
-              title="Todo en su lugar."
-              subtitle="Organizá los espacios y dale lugar a cada proyecto."
-            />
-          </View>
-          {role === "admin" ? (
-            <Button
-              title={adding ? "Cerrar nuevo espacio" : "Nuevo espacio"}
-              icon={adding ? "close" : "plus"}
-              onPress={() => setAdding(!adding)}
-            />
-          ) : role === "student" ? (
-            <Button
-              title="Cargar mi proyecto"
-              icon="plus"
-              onPress={onNewProject}
-            />
-          ) : (
-            <Button
-              title="Ver proyectos"
-              endIcon="arrowRight"
-              variant="secondary"
-              onPress={onProjects}
-            />
-          )}
-        </View>
-      )}
-      {!draft && (
-        <View style={styles.overview}>
-          <View style={styles.stats}>
-            <Chip label={`${approved.length} confirmados`} />
-            <Chip
-              label={`${allTables - approved.length} puestos disponibles`}
-            />
-            <Chip label={`${state.spaces.length} espacios`} />
-          </View>
-          {adding && (
-            <Card>
-              <Field
-                label="Nombre del nuevo espacio"
-                value={spaceName}
-                onChangeText={setSpaceName}
-                maxLength={80}
-                error={
-                  spaceName && spaceName.trim().length < 2
-                    ? "Escribí al menos 2 caracteres."
-                    : ""
-                }
-              />
-              <Button
-                title="Crear espacio"
-                icon="check"
-                disabled={spaceName.trim().length < 2}
-                onPress={createSpace}
-              />
-              <Button
-                title="Cancelar"
-                icon="close"
-                variant="quiet"
-                onPress={() => {
-                  setAdding(false);
-                  setError("");
-                }}
-              />
-            </Card>
-          )}
-          <Choice
-            label="Elegir espacio"
-            value={space?.id ?? ""}
-            disabled={!!draft}
-            options={state.spaces.map((item) => ({
-              value: item.id,
-              label: `${item.name} · ${state.projects.filter((project) => project.spaceId === item.id && project.status === "approved").length}/${item.furniture.filter((entry) => entry.type === "table").length}`,
-            }))}
-            onChange={changeSpace}
-          />
-        </View>
+        <MapIntro
+          role={role}
+          adding={adding}
+          confirmed={approved.length}
+          available={allTables - approved.length}
+          spaceId={space?.id ?? ""}
+          onToggleAdding={() => setAdding(!adding)}
+          onCreate={createSpace}
+          onCancelAdding={() => {
+            setAdding(false);
+            setError("");
+          }}
+          onChangeSpace={changeSpace}
+          onNewProject={onNewProject}
+          onProjects={onProjects}
+        />
       )}
       {!!error && (
         <Card>
@@ -289,38 +233,21 @@ export default function MapPage({
               onFit={fitPositions}
               onGestureActiveChange={setGestureActive}
               onAddFurniture={(furniture) => {
-                setDraft((current) =>
-                  current
-                    ? {
-                        ...current,
-                        furniture: [...current.furniture, furniture],
-                      }
-                    : null,
-                );
+                editFurniture((items) => [...items, furniture]);
                 setSelected(furniture.id);
               }}
               onMove={(id, x, y) =>
-                setDraft((current) =>
-                  current
-                    ? {
-                        ...current,
-                        furniture: current.furniture.map((item) =>
-                          item.id === id ? { ...item, x, y } : item,
-                        ),
-                      }
-                    : null,
+                editFurniture((items) =>
+                  items.map((item) =>
+                    item.id === id ? { ...item, x, y } : item,
+                  ),
                 )
               }
               onResize={(id, geometry) =>
-                setDraft((current) =>
-                  current
-                    ? {
-                        ...current,
-                        furniture: current.furniture.map((item) =>
-                          item.id === id ? { ...item, ...geometry } : item,
-                        ),
-                      }
-                    : null,
+                editFurniture((items) =>
+                  items.map((item) =>
+                    item.id === id ? { ...item, ...geometry } : item,
+                  ),
                 )
               }
             />
@@ -336,170 +263,31 @@ export default function MapPage({
                 onChange={setDraft}
                 onSelect={setSelected}
               />
-            ) : chosen ? (
-              <Card>
-                <Chip label={`Puesto ${chosen.furnitureId} · ocupado`} />
-                <ProjectArt project={chosen} />
-                <Text
-                  style={{
-                    color: colors.text,
-                    fontSize: 22,
-                    fontWeight: "600",
-                  }}
-                >
-                  {chosen.name}
-                </Text>
-                <Text style={paragraph}>{chosen.description}</Text>
-                <Text style={paragraph}>{chosen.course}</Text>
-                <Button
-                  title="Ver proyecto"
-                  endIcon="external"
-                  onPress={() => onSelectProject(chosen.id)}
-                />
-              </Card>
             ) : selectedItem ? (
-              <Card>
-                <Text
-                  style={{
-                    color: colors.text,
-                    fontSize: 22,
-                    fontWeight: "600",
-                  }}
-                >
-                  {selectedItem.type === "table"
-                    ? `Puesto ${selectedItem.id}`
-                    : selectedItem.type === "bench"
-                      ? "Banco"
-                      : selectedItem.type === "label"
-                        ? selectedItem.text
-                        : "Punto eléctrico"}
-                </Text>
-                <Text style={paragraph}>
-                  {selectedItem.type === "table"
-                    ? "Este puesto está disponible. Se ocupa cuando un profesor confirma un proyecto."
-                    : selectedItem.type === "power"
-                      ? "Referencia de ubicación. La capacidad eléctrica debe revisarla personal habilitado."
-                      : selectedItem.type === "label"
-                        ? "Referencia de zona para orientarte dentro de este espacio."
-                        : "Mobiliario del espacio. No es un puesto de inscripción."}
-                </Text>
-                {role === "student" && selectedItem.type === "table" && (
-                  <Button
-                    title="Cargar un proyecto"
-                    icon="plus"
-                    onPress={onNewProject}
-                  />
-                )}
-                <Button
-                  title="Volver al resumen"
-                  icon="arrowLeft"
-                  variant="quiet"
-                  onPress={() => setSelected(null)}
-                />
-              </Card>
+              <MapSelectionCard
+                project={chosen}
+                item={selectedItem}
+                role={role}
+                onSelectProject={onSelectProject}
+                onNewProject={onNewProject}
+                onClose={() => setSelected(null)}
+              />
             ) : (
-              <>
-                <Card>
-                  <Text
-                    style={{
-                      color: colors.text,
-                      fontSize: 20,
-                      fontWeight: "600",
-                    }}
-                  >
-                    El espacio, de un vistazo
-                  </Text>
-                  <Text
-                    style={{
-                      color: colors.primary,
-                      fontSize: 32,
-                      fontWeight: "700",
-                    }}
-                  >
-                    {tables.length - taken}{" "}
-                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                      puestos libres
-                    </Text>
-                  </Text>
-                  <Text style={paragraph}>
-                    Puestos ocupados: {taken} de {tables.length}
-                  </Text>
-                  <Text style={paragraph}>
-                    Puntos eléctricos de ejemplo:{" "}
-                    {
-                      space.furniture.filter((item) => item.type === "power")
-                        .length
-                    }
-                  </Text>
-                  <Text style={paragraph}>
-                    Creado el {formatDate(space.createdAt)}
-                  </Text>
-                </Card>
-                {pending.length > 0 && role !== "guest" && (
-                  <Card>
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontSize: 20,
-                        fontWeight: "600",
-                      }}
-                    >
-                      Por confirmar · {pending.length}
-                    </Text>
-                    {pending.slice(0, 3).map((project) => (
-                      <Button
-                        key={project.id}
-                        variant="secondary"
-                        title={`${project.name} · ${project.furnitureId}`}
-                        endIcon="arrowRight"
-                        onPress={() => onSelectProject(project.id)}
-                      />
-                    ))}
-                    <Text style={paragraph}>
-                      El lugar se ocupa después de la confirmación.
-                    </Text>
-                  </Card>
-                )}
-                <Card>
-                  <Text style={paragraph}>
-                    Para una ExpoTec segura, la distribución eléctrica debe
-                    revisarla personal habilitado.
-                  </Text>
-                </Card>
-                {role === "admin" &&
+              <MapOverview
+                key={space.id}
+                space={space}
+                tables={tables.length}
+                taken={taken}
+                pending={pending}
+                role={role}
+                canDelete={
                   !state.projects.some(
                     (project) => project.spaceId === space.id,
-                  ) && (
-                    <Card>
-                      {confirmDelete ? (
-                        <InlineConfirm
-                          text={`¿Seguro que querés eliminar ${space.name} y su distribución?`}
-                          confirmLabel="Eliminar espacio"
-                          onCancel={() => setConfirmDelete(false)}
-                          onConfirm={() => {
-                            const result = mutate({
-                              type: "deleteSpace",
-                              id: space.id,
-                            });
-                            if (result) setError(result);
-                            else {
-                              setConfirmDelete(false);
-                              setSelected(null);
-                              notify("Espacio eliminado.");
-                            }
-                          }}
-                        />
-                      ) : (
-                        <Button
-                          title="Eliminar espacio vacío"
-                          icon="trash"
-                          variant="danger"
-                          onPress={() => setConfirmDelete(true)}
-                        />
-                      )}
-                    </Card>
-                  )}
-              </>
+                  )
+                }
+                onSelectProject={onSelectProject}
+                onDelete={deleteSpace}
+              />
             )}
           </View>
         </View>
@@ -513,34 +301,11 @@ export default function MapPage({
           </Text>
         </Card>
       )}
-      <Text style={{ color: colors.text, fontSize: 22, fontWeight: "600" }}>
-        Lo que vas a encontrar
-      </Text>
-      <ContentGrid>
-        {approved.slice(0, 3).map((project) => (
-          <Card key={project.id} style={{ flex: 1 }}>
-            <ProjectArt project={project} compact />
-            <Text
-              style={{ color: colors.text, fontWeight: "700", fontSize: 18 }}
-            >
-              {project.name}
-            </Text>
-            <Text style={paragraph}>
-              {project.course} ·{" "}
-              {state.spaces.find((item) => item.id === project.spaceId)?.name} ·{" "}
-              {project.furnitureId}
-            </Text>
-            <ActionRow footer>
-              <Button
-                title="Ver proyecto"
-                endIcon="external"
-                variant="secondary"
-                onPress={() => onSelectProject(project.id)}
-              />
-            </ActionRow>
-          </Card>
-        ))}
-      </ContentGrid>
+      <MapFeatured
+        projects={approved}
+        spaces={state.spaces}
+        onSelectProject={onSelectProject}
+      />
       <Button
         title="Todos los proyectos"
         icon="projects"
@@ -552,11 +317,6 @@ export default function MapPage({
 }
 
 const styles = StyleSheet.create({
-  header: { gap: 12 },
-  headerWide: { flexDirection: "row", alignItems: "center", gap: 16 },
-  headingWide: { flex: 1, minWidth: 0 },
-  overview: { gap: 12 },
-  stats: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   layout: { gap: 12 },
   wide: { flexDirection: "row", alignItems: "flex-start" },
   planWide: { flex: 1, minWidth: 0 },

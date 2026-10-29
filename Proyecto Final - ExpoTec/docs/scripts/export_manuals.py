@@ -57,6 +57,7 @@ DOCUMENTS = [
     ("MANUAL_USUARIO", "Manual de usuario de ExpoTec"),
     ("GUIA_INSTALACION", "Guía de instalación y configuración de ExpoTec"),
     ("GUIA_DEMOSTRACION", "Guía de demostración de ExpoTec"),
+    ("DOCUMENTACION_API", "Documentación de la API de ExpoTec"),
 ]
 
 BLACK = colors.black
@@ -92,7 +93,11 @@ def register_fonts(font_dir: Path | None) -> str:
     raise SystemExit("No se encontró Arial ni Liberation Sans. Indicá --font-dir.")
 
 
-def inline(text: str) -> str:
+# Tamaño del código dentro de las tablas (un poco menor que el del texto).
+CODE_CELL_SIZE = 8.5
+
+
+def inline(text: str, code_size: float = 10) -> str:
     """Convierte el Markdown en línea (enlaces, código, negrita) a marcado de reportlab.
 
     Todo queda en negro: los enlaces solo se distinguen por el subrayado.
@@ -102,7 +107,7 @@ def inline(text: str) -> str:
         r"\[([^\]]+)\]\((https?://[^)]+)\)",
         r'<link href="\2" color="black"><u>\1</u></link>', text,
     )
-    text = re.sub(r"`([^`]+)`", r'<font name="Courier" size="10">\1</font>', text)
+    text = re.sub(r"`([^`]+)`", rf'<font name="Courier" size="{code_size}">\1</font>', text)
     return re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", text)
 
 
@@ -229,13 +234,54 @@ def caption(kind: str, number: int, description: str, styles) -> list:
     ]
 
 
+def column_widths(rows: list[list[str]], width: float) -> list[float]:
+    """Calcula el ancho de cada columna de una tabla.
+
+    Primero asegura que la palabra o el código más largo de cada columna entre
+    sin cortarse (así "Método", "POST" o "Público" no se parten). El ancho que
+    sobra se reparte según el largo medio del texto de cada columna. Los
+    códigos muy largos (rutas) pasan de línea para no achicar las demás.
+    """
+    if len(rows[0]) == 2:
+        return [width * 0.32, width * 0.68]
+    padding = 14
+    minimums, averages = [], []
+    for index in range(len(rows[0])):
+        cells = [row[index].strip() if index < len(row) else "" for row in rows]
+        longest = 0.0
+        for row_number, cell in enumerate(cells):
+            for code in re.findall(r"`([^`]+)`", cell):
+                for token in code.split():
+                    longest = max(longest, pdfmetrics.stringWidth(token, "Courier", CODE_CELL_SIZE))
+            plain = re.sub(r"`[^`]+`", " ", cell).replace("**", "")
+            font = "ManualBold" if row_number == 0 else "Manual"
+            for word in plain.split():
+                longest = max(longest, pdfmetrics.stringWidth(word, font, 10))
+        minimums.append(longest + padding)
+        averages.append(max(4.0, sum(len(cell) for cell in cells[1:]) / max(1, len(cells) - 1)))
+    # Un código muy largo (una ruta) no puede quitarle el espacio a las demás
+    # columnas: su mínimo se limita al 26 % del ancho y pasa de línea.
+    minimums = [min(minimum, width * 0.26) for minimum in minimums]
+    total_min = sum(minimums)
+    if total_min >= width:
+        # Achica solo las columnas anchas (código largo); las cortas no se parten.
+        wide = [i for i, minimum in enumerate(minimums) if minimum > width * 0.2]
+        excess = total_min - width + 1
+        wide_total = sum(minimums[i] for i in wide) or 1
+        minimums = [m - excess * m / wide_total if i in wide else m for i, m in enumerate(minimums)]
+        return minimums
+    spare = width - total_min
+    weight = sum(averages)
+    return [minimum + spare * average / weight for minimum, average in zip(minimums, averages)]
+
+
 def make_table(lines: list[str], width: float, styles) -> LongTable:
     """Arma una tabla APA: sin líneas verticales, con regla superior, bajo el encabezado e inferior."""
     rows = [line.strip().strip("|").split("|") for line in lines]
     rows = [r for r in rows if not all(re.fullmatch(r"\s*:?-+:?\s*", c) for c in r)]
-    cells = [[Paragraph(inline(cell), styles["cellhead"] if i == 0 else styles["cell"])
+    cells = [[Paragraph(inline(cell, CODE_CELL_SIZE), styles["cellhead"] if i == 0 else styles["cell"])
               for cell in row] for i, row in enumerate(rows)]
-    widths = [width * 0.32, width * 0.68] if len(rows[0]) == 2 else None
+    widths = column_widths(rows, width)
     table = LongTable(cells, colWidths=widths, repeatRows=1, hAlign="LEFT")
     table.setStyle(TableStyle([
         ("LINEABOVE", (0, 0), (-1, 0), 1, BLACK),

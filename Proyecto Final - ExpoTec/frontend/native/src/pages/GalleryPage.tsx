@@ -5,7 +5,14 @@ import { useState } from "react";
 import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { useDemo } from "../hooks/useDemo";
 import { useTheme } from "../contexts/ThemeContext";
-import { Button, Card, Chip, Field, PageHeading, Screen } from "../components/ui";
+import {
+  Button,
+  Card,
+  Chip,
+  Field,
+  PageHeading,
+  Screen,
+} from "../components/ui";
 import ProjectArt from "../components/ProjectArt";
 import { Icon } from "../components/Icon";
 import { projectMembers } from "../lib/team";
@@ -33,7 +40,9 @@ export default function GalleryPage({
   );
   return (
     <Screen>
-      <PageHeading icon="projects" tone="info"
+      <PageHeading
+        icon="projects"
+        tone="info"
         title="Ideas que toman forma."
         subtitle="Conocé los proyectos de nuestra ExpoTec."
       />
@@ -124,7 +133,14 @@ export default function GalleryPage({
                 <Chip key={subject} label={subject} />
               ))}
             </View>
-            <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20, marginTop: "auto" }}>
+            <Text
+              style={{
+                color: colors.muted,
+                fontSize: 14,
+                lineHeight: 20,
+                marginTop: "auto",
+              }}
+            >
               {state.spaces.find((space) => space.id === project.spaceId)?.name}{" "}
               · {project.furnitureId} · {formatDate(project.createdAt)}
             </Text>

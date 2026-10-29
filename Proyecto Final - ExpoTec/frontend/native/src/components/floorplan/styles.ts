@@ -1,0 +1,71 @@
+/** Estilos del plano interactivo (escenario, piezas, manijas y referencias). */
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  stage: {
+    position: "relative",
+    width: "100%",
+    borderWidth: 2,
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  furniturePosition: { position: "absolute" },
+  furniture: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 2,
+  },
+  itemTouch: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  occupiedDot: {
+    position: "absolute",
+    right: 3,
+    top: 3,
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+  },
+  planCaption: {
+    position: "absolute",
+    top: 9,
+    left: 12,
+    right: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  walkway: {
+    position: "absolute",
+    left: "42%",
+    top: "42%",
+    width: "16%",
+    height: "46%",
+    borderStyle: "dashed",
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    alignItems: "center",
+    paddingTop: 9,
+  },
+  entrance: {
+    position: "absolute",
+    bottom: 0,
+    left: "40%",
+    width: "20%",
+    alignItems: "center",
+    paddingVertical: 6,
+  },
+  knobTouch: {
+    position: "absolute",
+    zIndex: 40,
+    width: 24,
+    height: 24,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  knob: { width: 15, height: 15, borderWidth: 2, borderRadius: 3 },
+  legend: { flexDirection: "row", flexWrap: "wrap", gap: 16 },
+  legendItem: { flexDirection: "row", alignItems: "center", gap: 6 },
+});

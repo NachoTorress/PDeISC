@@ -3,7 +3,7 @@
  *
  * | Método | Ruta                          | Descripción                                               |
  * | ------ | ----------------------------- | --------------------------------------------------------- |
- * | GET    | /api/auth/recovery            | Indica si la recuperación está configurada ({ enabled }). |
+ * | POST   | /api/auth/recovery/query      | Indica si la recuperación está configurada ({ enabled }). |
  * | POST   | /api/auth/recovery/request    | Envía el enlace de un solo uso (respuesta 202 genérica).  |
  * | POST   | /api/auth/recovery/complete   | Cambia la contraseña con el token y cierra las sesiones.  |
  *
@@ -25,7 +25,7 @@ import { HttpError } from '../lib/errors.mjs';
  */
 export function recoveryRoutes(authRepository, service, config) {
   const router = Router();
-  router.get('/', (req, res) => {
+  router.post('/query', (req, res) => {
     res.json({ enabled: Boolean(service) });
   });
 

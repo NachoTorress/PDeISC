@@ -31,12 +31,12 @@ export interface SessionStorage {
   clear(): Promise<void>;
   lock<T>(action: () => Promise<T>): Promise<T>;
 }
-/** Métodos HTTP que usa la API REST de ExpoTec. */
-export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 /**
- * Función que envía una solicitud a la API.
- * En GET y DELETE el objeto `body` se envía como parámetros de la URL.
+ * Métodos HTTP que usa la API de ExpoTec. No se usa GET: las consultas van
+ * por POST con sus datos en el cuerpo JSON.
  */
+export type HttpMethod = "POST" | "PUT" | "PATCH" | "DELETE";
+/** Función que envía una solicitud a la API; `body` siempre viaja como JSON. */
 export type AuthRequest = <T>(
   path: string,
   body: object,

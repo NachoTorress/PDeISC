@@ -1,26 +1,19 @@
 /**
- * Pantalla del sistema compartido (datos de la API REST). Inventario (préstamos y administración): elementos, historial, altas, ajustes y bajas.
+ * Pantalla del sistema compartido (datos de la API). Inventario (préstamos y
+ * administración): elementos, historial, altas, ajustes y bajas.
+ * Cada elemento se muestra con `InventoryCard` y su historial con
+ * `InventoryHistory` (carpeta `components/inventory/`).
  */
 import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  Button,
-  Card,
-  Choice,
-  Field,
-  Heading,
-  PageHeading,
-  ActionRow,
-  InlineConfirm,
-  Screen,
-  RefreshButton,
-} from "../components/ui";
+import { Button, Card, Choice, Field, PageHeading, Screen, RefreshButton } from "../components/ui";
 import SharedResourceForm from "../components/SharedResourceForm";
 import ContentGrid from "../components/ContentGrid";
+import { InventoryCard } from "../components/inventory/InventoryCard";
+import { InventoryHistory } from "../components/inventory/InventoryHistory";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
-import { formatDate } from "../lib/format";
 import type { InventoryResource } from "../lib/sharedInventory";
 
 /** Lista de elementos activos o dados de baja. */
@@ -57,7 +50,7 @@ export default function SharedInventoryPage({
   const revision = useRef(0),
     working = useRef(false);
   const listScope = `${scope}:${mode}`;
-  /** Carga una página de `GET /api/inventory`. */
+  /** Carga una página del inventario (`POST /api/inventory/query`). */
   const load = useCallback(
     async (offset = 0) => {
       if (!canRead) {
@@ -69,9 +62,8 @@ export default function SharedInventoryPage({
       setError("");
       try {
         const result = await client.send<{ resources: InventoryResource[] }>(
-          "/api/inventory",
+          "/api/inventory/query",
           { limit: 25, offset, archived: mode === "archived" },
-        "GET",
         );
         if (request !== revision.current) return;
         setResources((current) =>
@@ -130,6 +122,29 @@ export default function SharedInventoryPage({
       working.current = false;
       setBusy(false);
     }
+  }
+  /** Consulta el elemento con su historial (`POST /api/inventory/:id/query`). */
+  function showHistory(resource: InventoryResource) {
+    void perform(async () => {
+      const result = await client.send<{ resource: InventoryResource }>(
+        `/api/inventory/${resource.id}/query`,
+        {},
+      );
+      setHistory({ scope: listScope, resource: result.resource });
+    });
+  }
+  /** Da de baja el elemento (`DELETE /api/inventory/:id`) y recarga la lista. */
+  function archiveResource(resource: InventoryResource) {
+    void perform(async () => {
+      await client.send(
+        `/api/inventory/${resource.id}`,
+        { version: resource.version },
+        "DELETE",
+      );
+      setArchive(null);
+      setNotice("El elemento fue dado de baja. Su historial se conserva.");
+      await load();
+    });
   }
   const paragraph = { color: colors.muted, lineHeight: 22 };
   if (!ready)
@@ -224,9 +239,8 @@ export default function SharedInventoryPage({
           }}
           onReload={async () => {
             const result = await client.send<{ resource: InventoryResource }>(
-              `/api/inventory/${editing.resource!.id}`,
+              `/api/inventory/${editing.resource!.id}/query`,
               {},
-        "GET",
             );
             if (result.resource.archivedAt)
               throw new Error(
@@ -292,196 +306,34 @@ export default function SharedInventoryPage({
               .includes(search.trim().toLocaleLowerCase("es")),
           )
           .map((resource) => (
-            <Card
+            <InventoryCard
               key={resource.id}
-              testID={`inventory-card-${resource.id}`}
-              style={{ flex: 1, padding: 16, gap: 10 }}
+              resource={resource}
+              canManage={canManage}
+              busy={busy}
+              locked={!!editing}
+              archiving={archive?.id === resource.id}
+              onEdit={() => {
+                setEditor({ scope, resource, revision: 0 });
+                setArchive(null);
+                setHistory(null);
+                setNotice("");
+              }}
+              onArchive={() => {
+                setArchive(resource);
+                setHistory(null);
+              }}
+              onCancelArchive={() => setArchive(null)}
+              onConfirmArchive={() => archiveResource(resource)}
+              onHistory={() => showHistory(resource)}
             >
-              <Text
-                style={{
-                  color: colors.text,
-                  fontSize: 18,
-                  lineHeight: 24,
-                  fontWeight: "600",
-                }}
-              >
-                {resource.name}
-              </Text>
-              {!!resource.description && (
-                <Text style={{ ...paragraph, fontSize: 14, lineHeight: 20 }}>
-                  {resource.description}
-                </Text>
-              )}
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-                {[
-                  { label: "Total", value: resource.total, ink: colors.text },
-                  {
-                    label: "Reservadas",
-                    value: resource.reserved,
-                    ink: colors.text,
-                  },
-                  {
-                    label: "Para reservar",
-                    value: resource.available,
-                    ink: colors.success,
-                  },
-                ].map((stat) => (
-                  <View
-                    key={stat.label}
-                    style={{ flex: 1, minWidth: 64, gap: 2 }}
-                  >
-                    <Text
-                      style={{
-                        color: stat.ink,
-                        fontSize: 20,
-                        lineHeight: 25,
-                        fontWeight: "600",
-                      }}
-                    >
-                      {stat.value}
-                    </Text>
-                    <Text
-                      style={{
-                        color: colors.muted,
-                        fontSize: 12,
-                        lineHeight: 17,
-                      }}
-                    >
-                      {stat.label}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-              <Text style={{ ...paragraph, fontSize: 13, lineHeight: 19 }}>
-                Sin devolver: {resource.outstanding} · Para entregar:{" "}
-                {resource.availableToLend} · Fuera de servicio:{" "}
-                {resource.unavailable}
-              </Text>
-              {resource.shortage > 0 && (
-                <Text style={{ color: colors.error, lineHeight: 22 }}>
-                  Faltan {resource.shortage} unidades utilizables para cubrir
-                  las reservas. Revisá el estado o las existencias.
-                </Text>
-              )}
-              <Text style={{ ...paragraph, fontSize: 13, lineHeight: 19 }}>
-                Creado el {formatDate(resource.createdAt)}
-                {resource.archivedAt
-                  ? ` · Baja el ${formatDate(resource.archivedAt)}`
-                  : ""}
-              </Text>
-              <ActionRow compact footer>
-                {canManage && !resource.archivedAt && (
-                  <>
-                    <Button
-                      title="Editar"
-                      style={{ minWidth: 100 }}
-                      accessibilityLabel={`Editar ${resource.name}`}
-                      icon="edit"
-                      variant="secondary"
-                      disabled={busy || !!editing}
-                      onPress={() => {
-                        setEditor({ scope, resource, revision: 0 });
-                        setArchive(null);
-                        setHistory(null);
-                        setNotice("");
-                      }}
-                    />
-                    <Button
-                      title="Dar de baja"
-                      accessibilityLabel={`Dar de baja ${resource.name}`}
-                      icon="trash"
-                      variant="danger"
-                      disabled={busy || !!editing}
-                      onPress={() => {
-                        setArchive(resource);
-                        setHistory(null);
-                      }}
-                    />
-                  </>
-                )}
-                <Button
-                  title="Ver historial"
-                  accessibilityLabel={`Ver historial de ${resource.name}`}
-                  variant="quiet"
-                  disabled={busy || !!editing}
-                  onPress={() => {
-                    void perform(async () => {
-                      const result = await client.send<{
-                        resource: InventoryResource;
-                      }>(`/api/inventory/${resource.id}`, {}, "GET");
-                      setHistory({
-                        scope: listScope,
-                        resource: result.resource,
-                      });
-                    });
-                  }}
-                />
-              </ActionRow>
-              {archive?.id === resource.id && (
-                <View pointerEvents={busy ? "none" : "auto"}>
-                  <InlineConfirm
-                    text={`¿Dar de baja ${resource.name}? Se conservará su historial. Los proyectos vigentes deben quitarlo de sus pedidos antes de la baja.`}
-                    confirmLabel={busy ? "Guardando baja…" : "Sí, dar de baja"}
-                    onCancel={() => setArchive(null)}
-                    onConfirm={() => {
-                      void perform(async () => {
-                        await client.send(
-                          `/api/inventory/${resource.id}`,
-                          { version: resource.version },
-        "DELETE",
-                        );
-                        setArchive(null);
-                        setNotice(
-                          "El elemento fue dado de baja. Su historial se conserva.",
-                        );
-                        await load();
-                      });
-                    }}
-                  />
-                </View>
-              )}
               {shownHistory?.id === resource.id && (
-                <View style={{ gap: 10 }}>
-                  <Heading title="Historial del elemento" />
-                  {shownHistory.events?.map((event) => (
-                    <View key={event.id}>
-                      <Text style={{ color: colors.text }}>
-                        {(
-                          {
-                            create: "Alta",
-                            update: "Modificación",
-                            archive: "Baja",
-                            damage: "Devolución con daños",
-                          } as Record<string, string>
-                        )[event.action] ?? event.action}{" "}
-                        · {formatDate(event.createdAt)} · {event.firstName}{" "}
-                        {event.lastName}
-                      </Text>
-                      <Text style={paragraph}>
-                        Total:{" "}
-                        {event.previousTotal === null
-                          ? event.total
-                          : `${event.previousTotal} → ${event.total}`}
-                      </Text>
-                      <Text style={paragraph}>
-                        Fuera de servicio:{" "}
-                        {event.previousUnavailable === null
-                          ? event.unavailable
-                          : `${event.previousUnavailable} → ${event.unavailable}`}
-                      </Text>
-                      {!!event.note && (
-                        <Text style={paragraph}>{event.note}</Text>
-                      )}
-                    </View>
-                  ))}
-                  <Button
-                    title="Cerrar historial"
-                    variant="quiet"
-                    onPress={() => setHistory(null)}
-                  />
-                </View>
+                <InventoryHistory
+                  resource={shownHistory}
+                  onClose={() => setHistory(null)}
+                />
               )}
-            </Card>
+            </InventoryCard>
           ))}
       </ContentGrid>
       {more && loadedFor === listScope && (

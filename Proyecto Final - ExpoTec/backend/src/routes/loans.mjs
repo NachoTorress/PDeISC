@@ -1,21 +1,21 @@
 /**
- * Rutas REST de préstamos: entregas de elementos a proyectos y devoluciones.
+ * Rutas de préstamos: entregas de elementos a proyectos y devoluciones.
+ * Las consultas usan POST con sus datos en el cuerpo JSON: la API no usa GET.
  *
- * | Método | Ruta                       | Acceso            | Descripción                                        |
- * | ------ | -------------------------- | ----------------- | -------------------------------------------------- |
- * | GET    | /api/loans                 | préstamos / admin | Movimientos (?limit&offset&day&openOnly).          |
- * | GET    | /api/loans/projects        | préstamos / admin | Proyectos con reservas para una jornada (?day).    |
- * | GET    | /api/loans/:id             | préstamos / admin | Detalle de un préstamo y sus devoluciones.         |
- * | POST   | /api/loans                 | préstamos / admin | Registra una entrega.                              |
- * | POST   | /api/loans/:id/returns     | préstamos / admin | Registra una devolución (total, parcial o novedad). |
+ * | Método | Ruta                       | Acceso            | Cuerpo JSON                              | Descripción                                         |
+ * | ------ | -------------------------- | ----------------- | ---------------------------------------- | --------------------------------------------------- |
+ * | POST   | /api/loans/query           | préstamos / admin | `{ limit?, offset?, day?, openOnly? }`   | Movimientos registrados.                            |
+ * | POST   | /api/loans/projects/query  | préstamos / admin | `{ day }`                                | Proyectos con reservas para una jornada.            |
+ * | POST   | /api/loans/:id/query       | préstamos / admin | `{}`                                     | Detalle de un préstamo y sus devoluciones.          |
+ * | POST   | /api/loans                 | préstamos / admin | entrega                                  | Registra una entrega.                               |
+ * | POST   | /api/loans/:id/returns     | préstamos / admin | devolución + `version`                   | Registra una devolución (total, parcial o novedad). |
  */
 import { Router } from 'express';
 import { requireSession, rateLimit } from '../middleware/auth.mjs';
 import { userId } from '../validators/auth.mjs';
 import { deliveryBody, returnBody, loansQuery } from '../validators/loans.mjs';
-import { queryInput, noQuery } from '../validators/query.mjs';
+import { queryInput, noInput } from '../validators/query.mjs';
 
-const loanQueryTypes = { limit: 'int', offset: 'int', day: 'int', openOnly: 'bool' };
 
 /**
  * Crea el enrutador de préstamos.
@@ -30,14 +30,14 @@ export function loansRoutes(repository, authRepository, service, config) {
   const router = Router();
   router.use(requireSession(service));
 
-  router.get('/', async (req, res) => {
-    res.json(await repository.list(loansQuery(queryInput(req.query, loanQueryTypes)), req.auth.user.id));
+  router.post('/query', async (req, res) => {
+    res.json(await repository.list(loansQuery(queryInput(req.body)), req.auth.user.id));
   });
-  router.get('/projects', async (req, res) => {
-    res.json({ projects: await repository.projects(loansQuery(queryInput(req.query, loanQueryTypes), true), req.auth.user.id) });
+  router.post('/projects/query', async (req, res) => {
+    res.json({ projects: await repository.projects(loansQuery(queryInput(req.body), true), req.auth.user.id) });
   });
-  router.get('/:id', async (req, res) => {
-    noQuery(req.query);
+  router.post('/:id/query', async (req, res) => {
+    noInput(req.body);
     res.json({ loan: await repository.get(userId(req.params.id), req.auth.user.id) });
   });
 

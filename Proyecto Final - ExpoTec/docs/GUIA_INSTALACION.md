@@ -6,9 +6,9 @@ Proyecto ExpoTec
 
 E.E.S.T. N° 5 Amancio Williams
 
-Versión de referencia 0.5.0
+Versión de referencia 0.5.1
 
-26 de octubre de 2026
+27 de octubre de 2026
 
 ## Alcance
 
@@ -118,8 +118,8 @@ npm run dev
 Para una ejecución sin recarga automática, usá `npm start`. La API local escucha en el puerto 3001 salvo configuración distinta. Comprobá salud y conexión a la base:
 
 ```powershell
-Invoke-RestMethod -Uri 'http://127.0.0.1:3001/api/health'
-Invoke-RestMethod -Uri 'http://127.0.0.1:3001/api/health/ready'
+Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:3001/api/health'
+Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:3001/api/health/ready'
 ```
 
 La segunda consulta debe responder correctamente e indicar `database: connected`. Una respuesta saludable no prueba por sí sola un recorrido de registro o préstamo; esos casos se verifican desde la aplicación o con las integraciones de pruebas.
@@ -159,7 +159,7 @@ El administrador puede gestionar usuarios, crear espacios, habilitar mesas como 
 
 Descargá [ExpoTec 0.4.0 para Android](https://expo.dev/artifacts/eas/2PBiG--Pnz0L_bkfG5PCBe9A0grheNB3PZSQsYw94F0.apk) desde el teléfono, abrí el archivo e instalalo. El paquete es `ar.edu.expotec.organizacion`, con versionCode 5. La APK se conecta a la API publicada y funciona sin un servidor de desarrollo local.
 
-La APK 0.4.0 usa las rutas anteriores de la API; el backend 0.5.0 las sigue aceptando mediante una capa de compatibilidad. Para distribuir la versión 0.5.0, generá una APK nueva como se indica más abajo.
+La APK 0.4.0 usa las rutas anteriores de la API; el backend 0.5.1 las sigue aceptando mediante una capa de compatibilidad. La APK 0.5.0 usaba GET y no funciona con el backend 0.5.1: generá la APK 0.5.1 como se indica más abajo.
 
 ### Trabajar con el código nativo
 
@@ -194,7 +194,7 @@ Conectá un almacén privado de Vercel Blob al backend y configurá BLOB_READ_WR
 
 ### Recuperación de contraseña
 
-Completá SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD y PASSWORD_RESET_WEB_ORIGIN. Para Gmail se utiliza una contraseña de aplicación. El origen de recuperación debe estar autorizado en CORS_ORIGINS. La disponibilidad se consulta con GET `/api/auth/recovery`; para acreditar el envío hay que recibir y usar un correo real de una cuenta propia. Los detalles están en `docs/RECUPERACION_CONTRASENA.md`.
+Completá SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD y PASSWORD_RESET_WEB_ORIGIN. Para Gmail se utiliza una contraseña de aplicación. El origen de recuperación debe estar autorizado en CORS_ORIGINS. La disponibilidad se consulta con POST `/api/auth/recovery/query`; para acreditar el envío hay que recibir y usar un correo real de una cuenta propia. Los detalles están en `docs/RECUPERACION_CONTRASENA.md`.
 
 ## Verificar la instalación
 
@@ -235,6 +235,6 @@ Tabla: Problemas de configuración frecuentes y puntos a revisar
 
 ## Documentación técnica de consulta
 
-El contrato de la API se mantiene en `backend/README.md`, con rutas, métodos, cuerpos, respuestas y códigos de error. La API es REST: GET para consultar, POST para crear, PUT para modificar, PATCH para cambios parciales y DELETE para dar de baja. El README del backend incluye la tabla de equivalencias con las rutas anteriores de la versión 0.4.0.
+El contrato de la API está en el documento **Documentación de la API de ExpoTec** (PDF) y en `backend/README.md`, con rutas, métodos, cuerpos, respuestas y códigos de error. La API no usa GET: POST para consultar (rutas terminadas en `/query`) y para crear, PUT para modificar, PATCH para cambios parciales y DELETE para dar de baja; los datos viajan siempre en el cuerpo JSON. Las únicas rutas GET son la imagen publicada y el retorno OAuth, que no los llama la app sino el navegador o el proveedor. El README del backend incluye la tabla de equivalencias con las rutas anteriores de la versión 0.4.0.
 
 Para profundizar: `docs/DESPLIEGUE.md`, `docs/APK_PRUEBA.md`, `docs/ACCESOS_SOCIALES.md`, `docs/ANDROID_GOOGLE.md`, `docs/CARGA_FOTOS.md` y `docs/RECUPERACION_CONTRASENA.md`. El manual de usuario explica las tareas y la guía de demostración organiza la presentación de los perfiles.

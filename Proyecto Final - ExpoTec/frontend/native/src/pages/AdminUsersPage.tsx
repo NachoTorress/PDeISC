@@ -1,5 +1,5 @@
 /**
- * Pantalla del sistema compartido (datos de la API REST). Usuarios y permisos (solo administración): búsqueda paginada y edición de roles.
+ * Pantalla del sistema compartido (datos de la API). Usuarios y permisos (solo administración): búsqueda paginada y edición de roles.
  */
 import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
@@ -44,7 +44,7 @@ export default function AdminUsersPage({
   const requestId = useRef(0);
   const canManage = ready && !!user?.roles.includes("admin");
 
-  /** Carga una página de `GET /api/admin/users`; descarta respuestas viejas. */
+  /** Carga una página de `POST /api/admin/users/query`; descarta respuestas viejas. */
   const load = useCallback(
     async (term: string, offset = 0) => {
       const id = ++requestId.current;
@@ -52,13 +52,12 @@ export default function AdminUsersPage({
       setError("");
       try {
         const result = await client.send<{ users: ManagedUser[] }>(
-          "/api/admin/users",
+          "/api/admin/users/query",
           {
             search: term,
             limit: pageSize,
             offset,
           },
-        "GET",
         );
         if (id !== requestId.current) return;
         setUsers((current) =>

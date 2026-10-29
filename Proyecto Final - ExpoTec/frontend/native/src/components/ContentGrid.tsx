@@ -61,7 +61,11 @@ export default function ContentGrid({
           {/* Las filas no envuelven: un redondeo de píxeles no puede perder una columna. */}
           {row.map((item) => (
             <View
-              key={typeof item === "object" && "key" in item ? item.key : String(item)}
+              key={
+                typeof item === "object" && "key" in item
+                  ? item.key
+                  : String(item)
+              }
               testID="content-grid-cell"
               style={cellStyle}
             >

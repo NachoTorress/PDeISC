@@ -1,24 +1,24 @@
 /**
- * Pantalla del sistema compartido (datos de la API REST). Ficha de un proyecto: vista pública o privada, revisión del profesor y cancelación.
+ * Pantalla del sistema compartido (datos de la API). Ficha de un proyecto:
+ * vista pública o privada, revisión del profesor y cancelación.
+ * Las tarjetas de la ficha están en `components/project/`.
  */
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Linking, Text, View } from "react-native";
 import {
   Button,
   Card,
-  Chip,
   Field,
   Heading,
   InlineConfirm,
   Screen,
   RefreshButton,
 } from "../components/ui";
-import ProjectVideo from "../components/ProjectVideo";
-import GalleryImage from "../components/GalleryImage";
+import { SharedProjectSummary } from "../components/project/SharedProjectSummary";
+import { ProjectResourcesCard } from "../components/project/ProjectResourcesCard";
+import { ProjectReviewHistory } from "../components/project/ProjectReviewHistory";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
-import { formatDate } from "../lib/format";
-import { sharedStatusLabel } from "../lib/sharedProjects";
 import type { SharedProject } from "../lib/sharedProjects";
 
 /** Muestra el proyecto y las acciones permitidas para la cuenta. */
@@ -64,13 +64,12 @@ export default function SharedProjectPage({
     setNote("");
     const query = privateView
       ? client.send<{ project: SharedProject }>(
-          `/api/projects/${projectId}`,
+          `/api/projects/${projectId}/query`,
           {},
-        "GET",
         )
       : client.query<{ project: SharedProject }>(
-          `/api/projects/public/${projectId}`,
-        {}, "GET",
+          `/api/projects/public/${projectId}/query`,
+          {},
         );
     query
       .then((result) => {
@@ -111,7 +110,7 @@ export default function SharedProjectPage({
   const reopenable = privateView && admin && project?.status === "approved";
   const cancellable =
     privateView && project?.status !== "cancelled" && (admin || editable);
-  /** Envía la revisión (`POST /api/projects/:id/reviews`) o la cancelación (`DELETE`). */
+  /** Envía la revisión (`POST /api/projects/:id/reviews`) o la cancelación (`DELETE /api/projects/:id`). */
   async function review() {
     if (!confirm || !project?.version || working.current) return;
     working.current = true;
@@ -120,7 +119,9 @@ export default function SharedProjectPage({
     setNotice("");
     try {
       const result = await client.send<{ project: SharedProject }>(
-        confirm === "cancel" ? `/api/projects/${projectId}` : `/api/projects/${projectId}/reviews`,
+        confirm === "cancel"
+          ? `/api/projects/${projectId}`
+          : `/api/projects/${projectId}/reviews`,
         confirm === "cancel"
           ? { version: project.version }
           : { version: project.version, action: confirm, note: note.trim() },
@@ -207,120 +208,15 @@ export default function SharedProjectPage({
         )}
         {project && (
           <>
-            <Card>
-              <Chip
-                label={sharedStatusLabel[project.status]}
-                tone={
-                  project.status === "approved"
-                    ? "success"
-                    : project.status === "changes"
-                      ? "warning"
-                      : "neutral"
-                }
-              />
-              <Heading title={project.name} subtitle={project.course} />
-              <GalleryImage
-                key={`${project.imageUrl}:${revision}`}
-                uri={project.imageUrl}
-                caption={`Imagen del proyecto ${project.name}`}
-                height={240}
-              />
-              <Text
-                style={{ color: colors.text, fontSize: 16, lineHeight: 25 }}
-              >
-                {project.description}
-              </Text>
-              <Text style={paragraph}>
-                {project.booth.spaceName} · Puesto {project.booth.furnitureId}
-              </Text>
-              <Text style={paragraph}>
-                Presentado el {formatDate(project.createdAt)}
-              </Text>
-              <Text style={paragraph}>
-                Equipo:{" "}
-                {project.members
-                  .map((person) => `${person.firstName} ${person.lastName}`)
-                  .join(", ")}
-              </Text>
-              <Text style={paragraph}>
-                Profesores:{" "}
-                {project.teachers
-                  .map((person) => `${person.firstName} ${person.lastName}`)
-                  .join(", ")}
-              </Text>
-              <Text style={paragraph}>
-                Materias: {project.subjects.join(", ")}
-              </Text>
-              {!!project.videoUrl && (
-                <ProjectVideo
-                  key={project.videoUrl}
-                  uri={project.videoUrl}
-                  showPresentationHint={false}
-                />
-              )}
-              {!!project.githubUrl && (
-                <Button
-                  title="Abrir repositorio de GitHub"
-                  variant="secondary"
-                  icon="external"
-                  onPress={() => open(project.githubUrl)}
-                />
-              )}
-              {!!project.websiteUrl && (
-                <Button
-                  title="Abrir página del proyecto"
-                  variant="secondary"
-                  icon="external"
-                  onPress={() => open(project.websiteUrl)}
-                />
-              )}
-            </Card>
+            <SharedProjectSummary
+              project={project}
+              revision={revision}
+              onOpen={open}
+            />
             {privateView && project.resources && (
-              <Card>
-                <Heading
-                  title={
-                    project.status === "approved"
-                      ? "Elementos reservados"
-                      : "Elementos solicitados"
-                  }
-                />
-                {!project.resources.length && (
-                  <Text style={paragraph}>
-                    Este proyecto no solicita elementos del inventario.
-                  </Text>
-                )}
-                {project.resources.map((item) => (
-                  <View key={item.resourceId} style={{ gap: 4 }}>
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontWeight: "600",
-                        fontSize: 16,
-                      }}
-                    >
-                      {item.name} · {item.quantity}{" "}
-                      {item.quantity === 1 ? "unidad" : "unidades"}
-                    </Text>
-                    <Text style={paragraph}>
-                      {project.status === "approved"
-                        ? `Reservadas para este proyecto: ${item.reservedQuantity}.`
-                        : project.status === "cancelled"
-                          ? "El pedido se conserva como historial; no reserva stock."
-                          : `Disponibles para reservar ahora: ${item.available} de ${item.total}.`}
-                      {item.archivedAt ? " Elemento dado de baja." : ""}
-                      {` Sin devolver de este proyecto: ${item.outstanding}. Fuera de servicio en el inventario: ${item.unavailable}.`}
-                    </Text>
-                  </View>
-                ))}
-                {project.status !== "approved" &&
-                  project.status !== "cancelled" &&
-                  !!project.resources.length && (
-                    <Text style={paragraph}>
-                      El pedido no descuenta stock. La confirmación comprueba y
-                      reserva todos los elementos junto con el puesto.
-                    </Text>
-                  )}
-              </Card>
+              <ProjectResourcesCard
+                project={{ ...project, resources: project.resources }}
+              />
             )}
             {hasOpenLoans && (
               <Text style={{ color: colors.error, lineHeight: 22 }}>
@@ -443,30 +339,7 @@ export default function SharedProjectPage({
               </View>
             )}
             {!!project.reviews?.length && (
-              <Card>
-                <Heading title="Historial de revisiones" />
-                {project.reviews.map((item) => (
-                  <View key={item.id} style={{ gap: 4 }}>
-                    <Text style={{ color: colors.text, fontWeight: "600" }}>
-                      {(
-                        {
-                          submit: "Presentación",
-                          resubmit: "Reenvío",
-                          approve: "Confirmación",
-                          changes: "Pedido de cambios",
-                          reopen: "Reapertura",
-                          cancel: "Cancelación",
-                        } as Record<string, string>
-                      )[item.action] ?? item.action}{" "}
-                      · {formatDate(item.createdAt)}
-                    </Text>
-                    <Text style={paragraph}>
-                      {item.firstName} {item.lastName}
-                      {item.note ? ` · ${item.note}` : ""}
-                    </Text>
-                  </View>
-                ))}
-              </Card>
+              <ProjectReviewHistory reviews={project.reviews} />
             )}
           </>
         )}

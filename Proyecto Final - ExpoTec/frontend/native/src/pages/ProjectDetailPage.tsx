@@ -1,5 +1,7 @@
 /**
- * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Detalle de un proyecto con revisión del profesor.
+ * Pantalla de la demostración (datos locales del dispositivo, sin servidor).
+ * Detalle de un proyecto con revisión del profesor. Las secciones de enlaces,
+ * elementos y revisión están en `components/project/`.
  */
 import { useState } from "react";
 import { Linking, Text, View, useWindowDimensions } from "react-native";
@@ -12,10 +14,12 @@ import ProjectArt from "../components/ProjectArt";
 import ProjectVideo from "../components/ProjectVideo";
 import { Icon } from "../components/Icon";
 import { STUDENT } from "../components/projectFormModel";
+import { ProjectLinksSection } from "../components/project/ProjectLinksSection";
+import { DemoResourcesSection } from "../components/project/DemoResourcesSection";
+import { DemoReviewSection } from "../components/project/DemoReviewSection";
 import {
   Button,
   Chip,
-  Field,
   Heading,
   InlineConfirm,
   Screen,
@@ -38,9 +42,6 @@ function ProjectDetail({ projectId, onBack, onEdit }: Props) {
   const { state, role, mutate, notify } = useDemo();
   const { colors } = useTheme();
   const expanded = useWindowDimensions().width >= 900;
-  const [requestingChanges, setRequestingChanges] = useState(false);
-  const [feedback, setFeedback] = useState("");
-  const [feedbackTouched, setFeedbackTouched] = useState(false);
   const [error, setError] = useState("");
   const [reopening, setReopening] = useState(false);
   const project = state.projects.find((item) => item.id === projectId);
@@ -83,32 +84,26 @@ function ProjectDetail({ projectId, onBack, onEdit }: Props) {
   const hasOpenLoans = state.loans.some(
     (loan) => loan.projectId === project.id && loan.quantity > loan.returned,
   );
-  const feedbackError =
-    feedback.trim().length < 10
-      ? "Explicá qué debe cambiar el equipo con al menos 10 caracteres."
-      : feedback.trim().length > 800
-        ? "El comentario puede tener hasta 800 caracteres."
-        : "";
   const github = project.isSoftwareProject
     ? safeProjectLink(project.githubUrl, "github")
     : "";
   const website = project.isSoftwareProject
     ? safeProjectLink(project.websiteUrl, "website")
     : "";
-  const review = (action: "approve" | "changes" | "reopen") => {
-    if (action === "changes") {
-      setFeedbackTouched(true);
-      if (feedbackError) return;
-    }
+  /** Registra la revisión en el modelo local; devuelve true si se guardó. */
+  const review = (
+    action: "approve" | "changes" | "reopen",
+    feedback = "",
+  ): boolean => {
     const result = mutate({
       type: "review",
       id: project.id,
       action,
-      ...(action === "changes" ? { feedback: feedback.trim() } : {}),
+      ...(action === "changes" ? { feedback } : {}),
     });
     if (result) {
       setError(result);
-      return;
+      return false;
     }
     notify(
       action === "approve"
@@ -118,8 +113,8 @@ function ProjectDetail({ projectId, onBack, onEdit }: Props) {
           : "Proyecto reabierto. La mesa quedó disponible.",
     );
     setError("");
-    setRequestingChanges(false);
     setReopening(false);
+    return true;
   };
   const openLink = async (url: string) => {
     try {
@@ -216,85 +211,13 @@ function ProjectDetail({ projectId, onBack, onEdit }: Props) {
             </View>
           </Section>
           {(github || website) && (
-            <Section title="Explorá el proyecto informático">
-              {github && (
-                <View style={{ gap: 8 }}>
-                  <Button
-                    title="Ver repositorio en GitHub"
-                    icon="github"
-                    variant="secondary"
-                    style={{ alignSelf: "flex-start" }}
-                    onPress={() => {
-                      void openLink(github);
-                    }}
-                  />
-                  <Text
-                    selectable
-                    style={{
-                      color: colors.muted,
-                      fontSize: 14,
-                      lineHeight: 20,
-                    }}
-                  >
-                    {github}
-                  </Text>
-                </View>
-              )}
-              {website && (
-                <View style={{ gap: 8 }}>
-                  <Button
-                    title="Visitar la página del proyecto"
-                    icon="external"
-                    variant="secondary"
-                    style={{ alignSelf: "flex-start" }}
-                    onPress={() => {
-                      void openLink(website);
-                    }}
-                  />
-                  <Text
-                    selectable
-                    style={{
-                      color: colors.muted,
-                      fontSize: 14,
-                      lineHeight: 20,
-                    }}
-                  >
-                    {website}
-                  </Text>
-                </View>
-              )}
-            </Section>
+            <ProjectLinksSection
+              github={github}
+              website={website}
+              onOpen={(url) => void openLink(url)}
+            />
           )}
-          <Section title="Elementos solicitados">
-            {resources.length ? (
-              resources.map((resource) => (
-                <View
-                  key={resource.id}
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    gap: 16,
-                  }}
-                >
-                  <Text style={{ color: colors.text, flex: 1 }}>
-                    {resource.name}
-                  </Text>
-                  <Text style={{ color: colors.text, fontWeight: "700" }}>
-                    {project.resources[resource.id]}
-                  </Text>
-                </View>
-              ))
-            ) : (
-              <Text
-                style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}
-              >
-                Este proyecto no solicitó elementos del inventario.
-              </Text>
-            )}
-            <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}>
-              Los préstamos se registran y se devuelven al final de cada día.
-            </Text>
-          </Section>
+          <DemoResourcesSection project={project} resources={resources} />
           {!!project.video && (
             <Section title="Video explicativo">
               <ProjectVideo uri={project.video} />
@@ -317,64 +240,10 @@ function ProjectDetail({ projectId, onBack, onEdit }: Props) {
             />
           )}
           {canReview && (
-            <Section title="Revisión del proyecto">
-              <Text
-                style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}
-              >
-                Al confirmar, se reserva la mesa y el proyecto aparece en la
-                muestra pública.
-              </Text>
-              {requestingChanges ? (
-                <>
-                  <Field
-                    label="¿Qué necesita ajustar el equipo?"
-                    value={feedback}
-                    multiline
-                    maxLength={800}
-                    autoFocus
-                    onChangeText={(value) => {
-                      setFeedback(value);
-                      setFeedbackTouched(true);
-                      setError("");
-                    }}
-                    error={feedbackTouched ? feedbackError : ""}
-                    hint={`${feedback.length}/800 caracteres. La devolución se muestra a los estudiantes.`}
-                  />
-                  <Button
-                    title="Enviar devolución"
-                    icon="check"
-                    style={{ alignSelf: "flex-start" }}
-                    onPress={() => review("changes")}
-                  />
-                  <Button
-                    title="Cancelar devolución"
-                    icon="close"
-                    variant="secondary"
-                    style={{ alignSelf: "flex-start" }}
-                    onPress={() => setRequestingChanges(false)}
-                  />
-                </>
-              ) : (
-                <>
-                  <Button
-                    title="Confirmar proyecto"
-                    icon="check"
-                    style={{ alignSelf: "flex-start" }}
-                    onPress={() => review("approve")}
-                  />
-                  <Button
-                    title="Pedir cambios"
-                    icon="edit"
-                    variant="secondary"
-                    style={{ alignSelf: "flex-start" }}
-                    onPress={() => {
-                      setRequestingChanges(true);
-                      setError("");
-                    }}
-                  />
-                </>
-              )}
-            </Section>
+            <DemoReviewSection
+              onReview={review}
+              onClearError={() => setError("")}
+            />
           )}
           {assignedTeacher && project.status === "approved" && (
             <View

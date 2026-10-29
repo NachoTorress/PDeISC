@@ -17,9 +17,13 @@ function discardPhoto(file?: File) {
 }
 
 /** Devuelve un JPEG temporal listo para subir. */
-export async function preparePhoto(asset: ImagePickerAsset): Promise<LocalPhoto> {
+export async function preparePhoto(
+  asset: ImagePickerAsset,
+): Promise<LocalPhoto> {
   if (!/^(?:file|content):\/\//.test(asset.uri))
-    throw new Error("No pudimos abrir esa foto. Volvé a elegirla de la galería.");
+    throw new Error(
+      "No pudimos abrir esa foto. Volvé a elegirla de la galería.",
+    );
   if (asset.fileSize !== undefined && asset.fileSize > maximumPhotoBytes)
     throw new Error("Elegí una foto de hasta 10 MB.");
   const resize = photoResize(asset.width, asset.height);
@@ -58,7 +62,9 @@ export async function preparePhoto(asset: ImagePickerAsset): Promise<LocalPhoto>
     discardPhoto(saved);
     if (cause instanceof Error && /10 MB|40 megapíxeles/.test(cause.message))
       throw cause;
-    throw new Error("No pudimos preparar esa foto. Elegí otra imagen de la galería.");
+    throw new Error(
+      "No pudimos preparar esa foto. Elegí otra imagen de la galería.",
+    );
   } finally {
     images.reverse().forEach((image) => image.release());
     contexts.reverse().forEach((context) => context.release());

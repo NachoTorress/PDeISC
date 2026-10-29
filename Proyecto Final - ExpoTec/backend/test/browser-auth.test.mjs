@@ -34,10 +34,10 @@ test('sesión web protegida: cookie, rotación, revocación y CSRF', async t => 
   assert.equal(refreshed.status, 200);
   assert.notEqual(cookie(refreshed), initialCookie);
   assert.equal(refreshed.body.refreshToken, undefined);
-  assert.equal((await api.get('/api/auth/session', {}, refreshed.body.accessToken)).status, 200);
+  assert.equal((await api.request('/api/auth/session', {}, refreshed.body.accessToken)).status, 200);
   assert.equal((await api.request('/api/auth/browser/logout', {}, null,
     { headers: { ...headers, Cookie: cookie(refreshed) } })).status, 204);
-  assert.equal((await api.get('/api/auth/session', {}, refreshed.body.accessToken)).status, 401);
+  assert.equal((await api.request('/api/auth/session', {}, refreshed.body.accessToken)).status, 401);
   const expired = await api.request('/api/auth/browser/refresh', {}, null, { headers: { ...headers, Cookie: cookie(refreshed) } });
   assert.equal(expired.status, 401);
   assert.match(expired.headers.get('set-cookie'), /Expires=Thu, 01 Jan 1970/);

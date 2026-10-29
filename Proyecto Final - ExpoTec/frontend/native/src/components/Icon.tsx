@@ -76,7 +76,8 @@ export function Icon({
   size?: number;
 }) {
   const path = typeof paths[name] === "string" ? paths[name] : paths.projects;
-  const accessibility = Platform.OS === "web" ? { "aria-hidden": true } : { accessible: false };
+  const accessibility =
+    Platform.OS === "web" ? { "aria-hidden": true } : { accessible: false };
   return (
     <Svg
       width={size}

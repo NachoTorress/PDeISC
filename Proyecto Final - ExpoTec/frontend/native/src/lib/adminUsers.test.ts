@@ -14,10 +14,21 @@ test("los permisos se comparan como conjuntos sin modificar las selecciones", ()
 });
 
 test("guardar conserva los permisos leídos y no permite que editar el envío altere el origen", () => {
-  const source: ManagedUser = { id: "user", firstName: "Ana", lastName: "García", email: "ana@example.com", createdAt: "2026-10-21", active: true, roles: ["student"] };
+  const source: ManagedUser = {
+    id: "user",
+    firstName: "Ana",
+    lastName: "García",
+    email: "ana@example.com",
+    createdAt: "2026-10-21",
+    active: true,
+    roles: ["student"],
+  };
   const roles: AccountRole[] = ["student", "teacher"];
   const body = rolesChangeBody(source, roles);
-  assert.deepEqual(body, { expectedRoles: ["student"], roles: ["student", "teacher"] });
+  assert.deepEqual(body, {
+    expectedRoles: ["student"],
+    roles: ["student", "teacher"],
+  });
   body.expectedRoles.push("admin");
   body.roles.push("loans");
   assert.deepEqual(source.roles, ["student"]);

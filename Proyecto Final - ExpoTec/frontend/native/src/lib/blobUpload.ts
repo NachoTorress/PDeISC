@@ -92,7 +92,9 @@ export async function putPhoto(
           : body,
       );
     } catch {
-      finish(new Error("No pudimos leer la foto para subirla. Volvé a elegirla."));
+      finish(
+        new Error("No pudimos leer la foto para subirla. Volvé a elegirla."),
+      );
     }
   });
 }

@@ -1,5 +1,5 @@
 /**
- * Pantalla del sistema compartido (datos de la API REST). Presentación TV pública con los proyectos confirmados del servidor.
+ * Pantalla del sistema compartido (datos de la API). Presentación TV pública con los proyectos confirmados del servidor.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";

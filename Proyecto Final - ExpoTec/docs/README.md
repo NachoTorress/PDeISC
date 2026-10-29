@@ -1,6 +1,6 @@
 # Documentación de ExpoTec
 
-Documentación de referencia de la versión 0.5.0, actualizada el 26 de octubre de 2026.
+Documentación de referencia de la versión 0.5.1, actualizada el 27 de octubre de 2026.
 
 ## Documentos para la entrega
 
@@ -9,9 +9,11 @@ Documentación de referencia de la versión 0.5.0, actualizada el 26 de octubre 
 | Manual de usuario | [Leer y editar](MANUAL_USUARIO.md) | [Abrir PDF](../output/pdf/ExpoTec_MANUAL_USUARIO.pdf) |
 | Guía de instalación y configuración | [Leer y editar](GUIA_INSTALACION.md) | [Abrir PDF](../output/pdf/ExpoTec_GUIA_INSTALACION.pdf) |
 | Guía de demostración para la exposición | [Leer y editar](GUIA_DEMOSTRACION.md) | [Abrir PDF](../output/pdf/ExpoTec_GUIA_DEMOSTRACION.pdf) |
-| Documentación de la API | [README del backend](../backend/README.md) | Se mantiene en README según la consigna. |
+| Documentación de la API | [Leer y editar](DOCUMENTACION_API.md) | [Abrir PDF](../output/pdf/ExpoTec_DOCUMENTACION_API.pdf) |
 
-Los tres documentos usan hoja A4, márgenes de 2,54 cm, Arial 11, interlineado 1,5 y texto justificado, todo en blanco y negro. La portada va centrada e identifica proyecto, escuela, versión y fecha. Cada página lleva en el encabezado el título del documento y el número de página. Los títulos se numeran por nivel (1, 1.1, 1.1.1) y el índice tiene enlaces a cada sección. Las tablas siguen APA: «Tabla N» en negrita, la descripción en cursiva y solo líneas horizontales; las imágenes usan el mismo rótulo con «Imagen N» y se imprimen en escala de grises.
+Los cuatro documentos usan hoja A4, márgenes de 2,54 cm, Arial 11, interlineado 1,5 y texto justificado, todo en blanco y negro. La portada va centrada e identifica proyecto, escuela, versión y fecha. Cada página lleva en el encabezado el título del documento y el número de página. Los títulos se numeran por nivel (1, 1.1, 1.1.1) y el índice tiene enlaces a cada sección. Las tablas siguen APA: «Tabla N» en negrita, la descripción en cursiva y solo líneas horizontales; las imágenes usan el mismo rótulo con «Imagen N» y se imprimen en escala de grises.
+
+La documentación de la API también se mantiene en el [README del backend](../backend/README.md), junto al código.
 
 Las capturas del manual están en `capturas/` y se regeneran con `npm run capture:manual` desde `frontend/native` (con la exportación web local en ejecución; usa datos de ejemplo, sin conectarse a producción). Los archivos Markdown son las fuentes mantenidas en el repositorio.
 
@@ -26,7 +28,7 @@ La demostración no acredita por sí sola llamadas al backend ni permisos del se
 
 ## APK
 
-La compilación disponible y sus verificaciones están en [APK de prueba](APK_PRUEBA.md). La API 0.5.0 mantiene compatibilidad con la APK 0.4.0 instalada.
+La compilación disponible y sus verificaciones están en [APK de prueba](APK_PRUEBA.md). La API 0.5.1 mantiene compatibilidad con la APK 0.4.0 instalada; la APK 0.5.0 debe reemplazarse por la 0.5.1.
 
 ## Documentación técnica y evidencia
 

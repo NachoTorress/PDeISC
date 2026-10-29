@@ -4,9 +4,9 @@ Proyecto ExpoTec
 
 E.E.S.T. N° 5 Amancio Williams
 
-Versión de referencia 0.5.0
+Versión de referencia 0.5.1
 
-26 de octubre de 2026
+27 de octubre de 2026
 
 ## Presentación
 
@@ -204,4 +204,4 @@ Tabla: Situaciones frecuentes y acciones sugeridas
 
 La guía de instalación explica cómo preparar el frontend, el backend y la base de datos. El README del backend describe los endpoints, parámetros, respuestas y errores. La guía de demostración organiza el recorrido para la evaluación.
 
-Documentos del proyecto: **Guía de instalación y configuración de ExpoTec** (2026), **Guía de demostración de ExpoTec** (2026) y **Documentación de la API de ExpoTec**, disponible en `backend/README.md` dentro del repositorio.
+Documentos del proyecto: **Guía de instalación y configuración de ExpoTec** (2026), **Guía de demostración de ExpoTec** (2026) y **Documentación de la API de ExpoTec** (2026), disponible en PDF junto a este manual y en `backend/README.md` dentro del repositorio.

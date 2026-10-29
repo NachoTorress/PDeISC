@@ -2,7 +2,7 @@
 
 Fecha de registro: 13/10/2026.
 
-Actualización documental del 25/10/2026: disponibles el [manual de usuario](MANUAL_USUARIO.md), la [guía de instalación](GUIA_INSTALACION.md), la [guía de demostración](GUIA_DEMOSTRACION.md) y sus [PDF](README.md). Ya se generó la APK 0.4.0 y el usuario confirmó su uso y Google nativo. Los accesos sociales, la recuperación y las fotos tienen implementaciones posteriores documentadas; las decisiones y pendientes fechados que siguen se conservan como historial, no como estado actual de todas las funciones. Desde el 26/10/2026, por indicación del usuario, la API usa métodos REST (GET, POST, PUT, PATCH y DELETE) y conserva una capa de compatibilidad para la APK 0.4.0; el contrato está en el README del backend.
+Actualización documental del 25/10/2026: disponibles el [manual de usuario](MANUAL_USUARIO.md), la [guía de instalación](GUIA_INSTALACION.md), la [guía de demostración](GUIA_DEMOSTRACION.md) y sus [PDF](README.md). Ya se generó la APK 0.4.0 y el usuario confirmó su uso y Google nativo. Los accesos sociales, la recuperación y las fotos tienen implementaciones posteriores documentadas; las decisiones y pendientes fechados que siguen se conservan como historial, no como estado actual de todas las funciones. Desde el 27/10/2026, por indicación del usuario, la API no usa GET: las consultas van por POST con sus datos en el cuerpo, y las escrituras usan POST, PUT, PATCH y DELETE. Conserva una capa de compatibilidad para la APK 0.4.0; el contrato está en el README del backend.
 
 Este documento registra la consigna. No afirma que las funciones ya estén implementadas. El desarrollo se realizará por etapas, revisando cada una con el usuario.
 
@@ -187,7 +187,7 @@ El usuario pidió postergar la generación del APK. Se preparará la aplicación
 - Documentar método, ruta, permisos, parámetros, respuestas y errores de cada endpoint en README.
 - Puerto y demás parámetros del servidor mediante variables de entorno.
 
-Decisión del 26/10/2026: el usuario indicó migrar a métodos REST, incluido GET para consultas. Registro anterior: la consigna pide REST y también «NO usar más get». Para los datos se puede proponer POST de consulta y mantener POST/PATCH/DELETE para modificaciones; deberá confirmarse si esta excepción es aceptada en la evaluación. La carga normal de una web y los protocolos de proveedores externos pueden requerir GET.
+Decisión del 27/10/2026: el usuario indicó no usar GET; las consultas vuelven a POST (`/query`) con los datos en el cuerpo y las escrituras conservan PUT, PATCH y DELETE. Solo la imagen publicada y el retorno OAuth siguen en GET porque los piden el navegador y los proveedores, no la app. Decisión anterior del 26/10/2026: migrar a métodos REST, incluido GET para consultas. Registro anterior: la consigna pide REST y también «NO usar más get». Para los datos se puede proponer POST de consulta y mantener POST/PATCH/DELETE para modificaciones; deberá confirmarse si esta excepción es aceptada en la evaluación. La carga normal de una web y los protocolos de proveedores externos pueden requerir GET.
 
 ## Interfaz y validaciones
 

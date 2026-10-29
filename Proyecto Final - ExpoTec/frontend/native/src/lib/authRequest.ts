@@ -1,25 +1,16 @@
 /**
- * Capa HTTP de la app: arma cada solicitud a la API REST, aplica un tiempo
+ * Capa HTTP de la app: arma cada solicitud a la API, aplica un tiempo
  * máximo de espera y traduce las respuestas de error a `AuthError` con un
  * mensaje listo para mostrar en pantalla.
+ *
+ * La app no usa GET: las consultas se envían por POST y todos los datos
+ * viajan en el cuerpo JSON, nunca en la URL.
  */
 import { AuthError } from "./authTypes";
 import type { AuthRequest, HttpMethod } from "./authTypes";
 
 /** Las cargas de fotos se procesan en el servidor y pueden tardar más. */
 const slowPaths = /^\/api\/uploads\/[^/]+\/complete$/;
-
-/**
- * Convierte un objeto en parámetros de URL para GET y DELETE.
- * Se omiten los valores `undefined` y `null`.
- */
-export function queryString(body: object): string {
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(body))
-    if (value !== undefined && value !== null) params.set(key, String(value));
-  const text = params.toString();
-  return text ? `?${text}` : "";
-}
 
 /**
  * Crea la función de solicitudes contra la API.
@@ -55,22 +46,17 @@ export function createAuthRequest(base: string, browser: boolean): AuthRequest {
       () => controller.abort(),
       slowPaths.test(path) ? 60000 : 15000,
     );
-    // GET y DELETE no llevan cuerpo: sus datos viajan en la URL.
-    const withoutBody = method === "GET" || method === "DELETE";
     try {
-      const response = await fetch(
-        `${base.replace(/\/$/, "")}${path}${withoutBody ? queryString(body) : ""}`,
-        {
-          method,
-          headers: {
-            ...(withoutBody ? {} : { "Content-Type": "application/json" }),
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          credentials: browser ? "include" : "omit",
-          ...(withoutBody ? {} : { body: JSON.stringify(body) }),
-          signal: controller.signal,
+      const response = await fetch(`${base.replace(/\/$/, "")}${path}`, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-      );
+        credentials: browser ? "include" : "omit",
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      });
       if (response.status === 204) return undefined as T;
       const data = await response.json().catch(() => null);
       if (!response.ok)

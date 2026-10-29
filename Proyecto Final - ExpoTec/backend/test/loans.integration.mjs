@@ -60,13 +60,13 @@ test('TiDB: tres jornadas, entregas y devoluciones concurrentes, saldos y daños
   const proposal = { name: 'Proyecto con préstamo', description: 'Proyecto temporal para verificar las entregas de las jornadas.', course: '6° 1°', imageUrl: 'https://example.com/image.png', videoUrl: '', githubUrl: '', websiteUrl: '', isSoftwareProject: false, memberIds: [student.user.id], teacherIds: [teacher.user.id], subjects: [subject], resources: [{ resourceId: resource.id, quantity: 2 }] };
   for (const booth of layout.booths) { const project = await proposals.create({ ...proposal, boothId: booth.id }, student.user.id); projects.push(project.id); }
   const delivery = { projectId: projects[0], projectVersion: 1, resourceId: resource.id, day: 1, quantity: 2, recipientId: student.user.id };
-  assert.equal((await api.get('/api/loans')).status, 401);
-  assert.equal((await api.get('/api/loans', {}, student.accessToken)).status, 403);
+  assert.equal((await api.request('/api/loans/query')).status, 401);
+  assert.equal((await api.request('/api/loans/query', {}, student.accessToken)).status, 403);
   assert.equal((await api.request('/api/loans', delivery, teacher.accessToken)).status, 403);
   assert.equal((await api.request('/api/loans', delivery, operator.accessToken)).body.error.code, 'PROJECT_NOT_APPROVED');
   for (const id of projects) await proposals.review(id, { version: 1, action: 'approve', note: '' }, teacher.user.id);
   delivery.projectVersion = 2;
-  const queue = await api.get('/api/loans/projects', { day: 1 }, operator.accessToken);
+  const queue = await api.request('/api/loans/projects/query', { day: 1 }, operator.accessToken);
   assert.equal(queue.status, 200); assert.ok(queue.body.projects.some(project => project.id === projects[0] && project.resources[0].deliverable === 2));
   assert.equal(queue.body.projects.find(project => project.id === projects[0]).members[0].email, undefined);
   assert.equal((await api.request('/api/loans', { ...delivery, recipientId: admin.user.id }, operator.accessToken)).status, 400);
@@ -109,7 +109,7 @@ test('TiDB: tres jornadas, entregas y devoluciones concurrentes, saldos y daños
   const returns = await Promise.all([api.request(`/api/loans/${secondDay.body.loan.id}/returns`, { version: 1, quantity: 1 }, operator.accessToken), api.request(`/api/loans/${secondDay.body.loan.id}/returns`, { version: 1, quantity: 1 }, admin.accessToken)]);
   assert.deepEqual(returns.map(result => result.status).sort(), [200, 409]);
   for (const loan of [other.body.loan, thirdDay.body.loan]) assert.equal((await api.request(`/api/loans/${loan.id}/returns`, { version: 1, quantity: loan.quantity }, operator.accessToken)).status, 200);
-  const summary = await api.get('/api/loans', { openOnly: true }, operator.accessToken);
+  const summary = await api.request('/api/loans/query', { openOnly: true }, operator.accessToken);
   assert.equal(summary.body.loans.some(loan => projects.includes(loan.projectId)), false);
   assert.equal((await inventory.get(resource.id, admin.user.id)).reserved, 4);
   const repairLoan = await api.request('/api/loans', { ...delivery, projectId: projects[1], day: 1 }, operator.accessToken);
@@ -126,5 +126,5 @@ test('TiDB: tres jornadas, entregas y devoluciones concurrentes, saldos y daños
   const finalStock = await inventory.get(resource.id, admin.user.id); await inventory.archive(resource.id, finalStock.version, admin.user.id);
   assert.equal((await repository.get(first.id, operator.user.id)).returns.length, 3);
   await pool.execute("DELETE FROM user_roles WHERE user_id = ? AND role_code = 'loans'", [operator.user.id]);
-  assert.equal((await api.get('/api/loans', {}, operator.accessToken)).status, 403);
+  assert.equal((await api.request('/api/loans/query', {}, operator.accessToken)).status, 403);
 });

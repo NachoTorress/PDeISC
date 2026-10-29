@@ -1,5 +1,5 @@
 /**
- * Rutas REST de carga de fotos a almacenamiento privado (Vercel Blob).
+ * Rutas de carga de fotos a almacenamiento privado (Vercel Blob).
  *
  * Flujo: el cliente pide permiso (`POST /api/uploads`), sube el archivo
  * directamente al almacenamiento con el token temporal recibido y luego pide
@@ -8,10 +8,15 @@
  *
  * | Método | Ruta                            | Acceso  | Descripción                                        |
  * | ------ | ------------------------------- | ------- | -------------------------------------------------- |
- * | GET    | /api/uploads/:id/image          | público | Imagen publicada (404 si todavía es privada).      |
- * | GET    | /api/uploads/preview?imageUrl=  | sesión  | Vista previa privada para su autor o moderación.   |
+ * | GET    | /api/uploads/:id/image          | público | Imagen publicada (404 si todavía es privada).*     |
+ * | POST   | /api/uploads/preview            | sesión  | Vista previa privada (`{ imageUrl }`).             |
  * | POST   | /api/uploads                    | sesión  | Prepara una carga y entrega un token temporal.     |
  * | POST   | /api/uploads/:id/complete       | sesión  | Valida, optimiza y guarda la imagen subida.        |
+ *
+ * (*) La imagen publicada es la única ruta GET de la app: no es una consulta
+ * de datos sino el archivo JPEG que muestran las etiquetas de imagen del
+ * teléfono y del navegador, y esas etiquetas solo pueden pedir archivos por
+ * GET. No recibe datos: solo el id de la foto, que ya es público.
  */
 import { Router } from 'express';
 import { requireSession, rateLimit } from '../middleware/auth.mjs';
@@ -39,10 +44,10 @@ export function uploadsRoutes(repository, authRepository, authService, config, s
   });
 
   router.use(requireSession(authService));
-  router.get('/preview',
+  router.post('/preview',
     rateLimit(authRepository, config, { scope: 'image-preview', limit: 200, seconds: 900, byUser: true }),
     async (req, res) => {
-      res.json(await service.preview(queryInput(req.query), req.auth.user));
+      res.json(await service.preview(queryInput(req.body), req.auth.user));
     });
   router.post('/',
     rateLimit(authRepository, config, { scope: 'image-upload', limit: 20, seconds: 3600, byUser: true }),

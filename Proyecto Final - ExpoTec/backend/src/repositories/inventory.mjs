@@ -9,7 +9,7 @@ import { assertProjectReturned, openLoans, outstanding } from './loan-balances.m
 
 const forbidden = () => new HttpError(403, 'FORBIDDEN', 'No tenés permiso para consultar o modificar el inventario.');
 const missing = () => new HttpError(404, 'RESOURCE_NOT_FOUND', 'No encontramos ese elemento.');
-const columns = 'r.id, r.name, r.description, r.total, COALESCE(c.unavailable, 0) AS unavailable, r.version, r.created_at AS createdAt, r.updated_at AS updatedAt, r.archived_at AS archivedAt';
+const columns = 'r.id, r.name, r.description, r.total, CAST(COALESCE(c.unavailable, 0) AS SIGNED) AS unavailable, r.version, r.created_at AS createdAt, r.updated_at AS updatedAt, r.archived_at AS archivedAt';
 /** Reservas confirmadas de los elementos indicados. */
 async function allocations(db, ids, locking = false) {
   if (!ids.length) return [];
@@ -30,7 +30,7 @@ export async function recordInventoryEvent(db, { resourceId, actorId, action, pr
 /** Elementos pedidos por un proyecto con su saldo pendiente de devolución. */
 export async function projectResources(db, projectId, locking = false) {
   const [rows] = await db.execute(`SELECT q.resource_id AS resourceId, q.quantity, r.name, r.total,
-    r.archived_at AS archivedAt, COALESCE(c.unavailable, 0) AS unavailable, COALESCE(a.quantity, 0) AS reservedQuantity
+    r.archived_at AS archivedAt, CAST(COALESCE(c.unavailable, 0) AS SIGNED) AS unavailable, COALESCE(a.quantity, 0) AS reservedQuantity
     FROM project_resource_requests q JOIN resources r ON r.id = q.resource_id
     LEFT JOIN resource_conditions c ON c.resource_id = r.id
     LEFT JOIN resource_allocations a ON a.project_id = q.project_id AND a.resource_id = q.resource_id
@@ -91,7 +91,7 @@ export function createInventoryRepository(pool) {
     const used = reserved(await allocations(db, [id], locking), id);
     const borrowed = outstanding(await openLoans(db, { resourceIds: [id] }, locking), id);
     const [events] = await db.execute(`SELECT e.id, e.action, e.previous_total AS previousTotal, e.total, e.created_at AS createdAt,
-      ce.previous_unavailable AS previousUnavailable, COALESCE(ce.unavailable, 0) AS unavailable, COALESCE(ce.note, '') AS note,
+      ce.previous_unavailable AS previousUnavailable, CAST(COALESCE(ce.unavailable, 0) AS SIGNED) AS unavailable, COALESCE(ce.note, '') AS note,
       u.first_name AS firstName, u.last_name AS lastName FROM inventory_events e JOIN users u ON u.id = e.actor_id
       LEFT JOIN inventory_condition_events ce ON ce.event_id = e.id
       WHERE e.resource_id = ? ORDER BY e.created_at DESC, e.id DESC LIMIT 100${locking ? ' FOR UPDATE' : ''}`, [id]);

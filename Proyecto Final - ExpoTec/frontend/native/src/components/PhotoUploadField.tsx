@@ -110,10 +110,14 @@ export default function PhotoUploadField({
       });
       if (!mounted.current || picked.canceled) return;
       const asset = picked.assets[0];
-      if (!asset) throw new Error("No recibimos la foto seleccionada. Elegila nuevamente.");
+      if (!asset)
+        throw new Error(
+          "No recibimos la foto seleccionada. Elegila nuevamente.",
+        );
       await upload(asset);
     } catch {
-      if (mounted.current) setFailure("No pudimos abrir la galería. Volvé a elegir la foto.");
+      if (mounted.current)
+        setFailure("No pudimos abrir la galería. Volvé a elegir la foto.");
     } finally {
       selecting.current = false;
     }

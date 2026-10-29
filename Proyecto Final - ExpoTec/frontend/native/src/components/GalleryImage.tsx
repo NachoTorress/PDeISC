@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { managedPhoto } from "../lib/photoUpload";
 import PhotoImage from "./PhotoImage";
 
-/** Muestra la imagen o su vista previa privada (`GET /api/uploads/preview`). */
+/** Muestra la imagen o su vista previa privada (`POST /api/uploads/preview`). */
 export default function GalleryImage({
   uri,
   caption,
@@ -29,7 +29,7 @@ export default function GalleryImage({
     if (!privateImage) return;
     let active = true;
     void client
-      .send<{ image: string }>("/api/uploads/preview", { imageUrl: uri }, "GET")
+      .send<{ image: string }>("/api/uploads/preview", { imageUrl: uri })
       .then((result) => {
         if (active) setResolved({ key, uri: result.image });
       })

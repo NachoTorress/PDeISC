@@ -10,7 +10,8 @@ export async function putPhoto(
   body: PhotoBody,
   options: PhotoUploadOptions,
 ) {
-  if (localPhoto(body)) throw new Error("Volvé a elegir la foto desde este navegador.");
+  if (localPhoto(body))
+    throw new Error("Volvé a elegir la foto desde este navegador.");
   await put(pathname, body, {
     access: "private",
     token: options.token,

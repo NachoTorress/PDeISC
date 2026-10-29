@@ -65,12 +65,12 @@ test('TiDB: equipos reales, privacidad, revisiones y dos confirmaciones para un 
     return result.body.project;
   }
   const first = await create(input, owner);
-  assert.equal((await api.get(`/api/projects/public/${first.id}`)).status, 404);
-  assert.equal((await api.get(`/api/projects/${first.id}`, {}, outsider.accessToken)).status, 404);
-  assert.equal((await api.get(`/api/projects/${first.id}`, {}, teammate.accessToken)).status, 200);
+  assert.equal((await api.request(`/api/projects/public/${first.id}/query`)).status, 404);
+  assert.equal((await api.request(`/api/projects/${first.id}/query`, {}, outsider.accessToken)).status, 404);
+  assert.equal((await api.request(`/api/projects/${first.id}/query`, {}, teammate.accessToken)).status, 200);
   assert.equal((await api.put(`/api/projects/${first.id}`, { ...input, version: 1, memberIds: [...input.memberIds, outsider.user.id] }, outsider.accessToken)).status, 404);
   assert.equal((await api.put(`/api/projects/${first.id}`, { ...input, version: 1, memberIds: [teammate.user.id] }, teammate.accessToken)).status, 400);
-  assert.equal((await api.get('/api/projects/people', { email: teacher.user.email, role: 'teacher' }, owner.accessToken)).body.person.email, undefined);
+  assert.equal((await api.request('/api/projects/people/find', { email: teacher.user.email, role: 'teacher' }, owner.accessToken)).body.person.email, undefined);
   assert.equal((await api.request(`/api/projects/${first.id}/reviews`, { version: 1, action: 'approve', note: '' }, otherTeacher.accessToken)).status, 403);
   const changes = await api.request(`/api/projects/${first.id}/reviews`, { version: 1, action: 'changes', note: 'Ampliar la descripción del circuito de control.' }, teacher.accessToken);
   assert.equal(changes.body.project.status, 'changes');
@@ -85,7 +85,7 @@ test('TiDB: equipos reales, privacidad, revisiones y dos confirmaciones para un 
   ]);
   assert.deepEqual(confirms.map(result => result.status).sort(), [200, 409]);
   const approved = confirms.find(result => result.status === 200).body.project;
-  const published = await api.get(`/api/projects/public/${approved.id}`);
+  const published = await api.request(`/api/projects/public/${approved.id}/query`);
   assert.equal(published.status, 200);
   for (const field of ['creatorId', 'feedback', 'version', 'reviews']) assert.equal(published.body.project[field], undefined);
   assert.ok(published.body.project.members.every(member => member.id === undefined && member.email === undefined));

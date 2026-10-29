@@ -93,7 +93,10 @@ async function run() {
       const visibleStep = (key) => page.locator(`[data-testid="proposal-step-${key}"]:visible`);
       async function step(key) { await visibleStep(key).waitFor(); }
       async function navigate(label) {
-        if (!(await page.getByRole("navigation", { name: "Navegación principal" }).isVisible())) await button("Abrir menú de navegación").click();
+        // Espera a que cargue la barra: en teléfonos hay menú hamburguesa; en escritorio, menú fijo.
+        const menu = button("Abrir menú de navegación");
+        await menu.or(button(label)).first().waitFor();
+        if (await menu.isVisible()) await menu.click();
         await button(label).click();
       }
       async function capture(label) {

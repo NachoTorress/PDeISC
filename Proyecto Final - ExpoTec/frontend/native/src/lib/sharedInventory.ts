@@ -1,5 +1,5 @@
 /** Tipos y validaciones del inventario compartido. */
-/** Elemento tal como lo devuelve `GET /api/inventory`. */
+/** Elemento tal como lo devuelve `POST /api/inventory/query`. */
 export interface InventoryResource {
   id: string;
   name: string;

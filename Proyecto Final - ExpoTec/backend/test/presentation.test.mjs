@@ -19,8 +19,8 @@ test('la presentación es pública y valida antes de consultar el repositorio', 
   const repository = { async presentation(input) { called++; assert.equal(input.limit, 100); return { projects: [], nextCursor: null }; } };
   const api = await listen(createApp(memoryRepository(), testConfig, console, undefined, undefined, repository));
   t.after(api.close);
-  const result = await api.get('/api/projects/presentation');
+  const result = await api.request('/api/projects/presentation/query');
   assert.equal(result.status, 200); assert.deepEqual(result.body, { projects: [], nextCursor: null });
-  assert.equal((await api.get('/api/projects/presentation', { status: 'pending' })).status, 400);
+  assert.equal((await api.request('/api/projects/presentation/query', { status: 'pending' })).status, 400);
   assert.equal(called, 1);
 });

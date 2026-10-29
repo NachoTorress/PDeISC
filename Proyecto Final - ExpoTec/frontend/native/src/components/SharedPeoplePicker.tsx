@@ -15,7 +15,7 @@ import {
 } from "../lib/projectPeople";
 import type { ProjectPeopleRole } from "../lib/projectPeople";
 
-/** Busca con `GET /api/projects/people` y agrega la persona confirmada. */
+/** Busca con `POST /api/projects/people/find` y agrega la persona confirmada. */
 export default function SharedPeoplePicker({
   role,
   people,
@@ -101,9 +101,8 @@ export default function SharedPeoplePicker({
     const searchedEmail = projectPeopleEmail(email);
     try {
       const { person } = await client.send<{ person: ProjectParticipant }>(
-        "/api/projects/people",
+        "/api/projects/people/find",
         { email: searchedEmail, role },
-        "GET",
       );
       if (
         !active.current ||

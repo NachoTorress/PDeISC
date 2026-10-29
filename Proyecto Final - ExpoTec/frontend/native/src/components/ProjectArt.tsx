@@ -16,11 +16,12 @@ export default function ProjectArt({
   bounded?: boolean;
 }) {
   const { colors } = useTheme();
-  const tone = project.category === "plant"
-    ? { fill: colors.selectedContainer, ink: colors.onSelectedContainer }
-    : project.category === "energy"
-      ? { fill: colors.accentContainer, ink: colors.accent }
-      : { fill: colors.infoContainer, ink: colors.info };
+  const tone =
+    project.category === "plant"
+      ? { fill: colors.selectedContainer, ink: colors.onSelectedContainer }
+      : project.category === "energy"
+        ? { fill: colors.accentContainer, ink: colors.accent }
+        : { fill: colors.infoContainer, ink: colors.info };
   if (project.image)
     return (
       <PhotoImage
@@ -41,11 +42,7 @@ export default function ProjectArt({
         justifyContent: "center",
       }}
     >
-      <Icon
-        name={project.category}
-        size={compact ? 36 : 44}
-        color={tone.ink}
-      />
+      <Icon name={project.category} size={compact ? 36 : 44} color={tone.ink} />
     </View>
   );
 }

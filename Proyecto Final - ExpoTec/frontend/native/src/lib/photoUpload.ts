@@ -60,11 +60,15 @@ export async function uploadPhoto(
       id: string;
       pathname: string;
       clientToken: string;
-    }>("/api/uploads", {
-      purpose,
-      size: body.size,
-      contentType: body.type,
-    }, "POST");
+    }>(
+      "/api/uploads",
+      {
+        purpose,
+        size: body.size,
+        contentType: body.type,
+      },
+      "POST",
+    );
     assertPhotoActive(signal);
     await putPhoto(prepared.pathname, body, {
       token: prepared.clientToken,

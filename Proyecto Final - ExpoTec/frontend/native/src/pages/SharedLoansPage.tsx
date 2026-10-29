@@ -1,33 +1,21 @@
 /**
- * Pantalla del sistema compartido (datos de la API REST). Préstamos (préstamos y administración): entregas y devoluciones de las tres jornadas.
+ * Pantalla del sistema compartido (datos de la API). Préstamos (préstamos y
+ * administración): entregas y devoluciones de las tres jornadas.
+ * Cada préstamo se muestra con `LoanCard` y sus movimientos con `LoanHistory`
+ * (carpeta `components/loans/`).
  */
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import {
-  Button,
-  Card,
-  Chip,
-  Choice,
-  Field,
-  Heading,
-  PageHeading,
-  ActionRow,
-  Screen,
-  RefreshButton,
-} from "../components/ui";
+import { Button, Card, Choice, Field, PageHeading, Screen, RefreshButton } from "../components/ui";
 import SharedLendingForm from "../components/SharedLendingForm";
 import SharedReturnForm from "../components/SharedReturnForm";
 import ContentGrid from "../components/ContentGrid";
+import { LoanCard } from "../components/loans/LoanCard";
+import { LoanHistory } from "../components/loans/LoanHistory";
 import { useAuth } from "../contexts/AuthContext";
+import { useLoanList } from "../hooks/useLoanList";
 import { useTheme } from "../contexts/ThemeContext";
-import { formatDate } from "../lib/format";
 import type { LoanSummary, SharedLoan } from "../lib/sharedLoans";
-
-/** Fecha y hora local de un movimiento. */
-function moment(value: string) {
-  return `${formatDate(value)} ${new Date(value).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}`;
-}
 
 /** Lista de movimientos por jornada, pendientes o historial. */
 export default function SharedLoansPage({
@@ -43,15 +31,7 @@ export default function SharedLoansPage({
   const [day, setDay] = useState("1"),
     [view, setView] = useState("open"),
     [search, setSearch] = useState("");
-  const [loans, setLoans] = useState<LoanSummary[]>([]),
-    [loadedFor, setLoadedFor] = useState("");
-  const [summary, setSummary] = useState({
-    pendingCount: 0,
-    pendingQuantity: 0,
-  });
-  const [loading, setLoading] = useState(true),
-    [busy, setBusy] = useState(false),
-    [more, setMore] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [deliveryScope, setDeliveryScope] = useState("");
@@ -65,68 +45,19 @@ export default function SharedLoansPage({
     scope: string;
     loan: SharedLoan;
   } | null>(null);
-  const revision = useRef(0),
-    working = useRef(false);
+  const working = useRef(false);
   const listScope = `${scope}:${view}:${view === "day" ? day : "all"}`;
   const lending = canManage && deliveryScope === scope,
     receiving = canManage && operation?.scope === scope ? operation : null;
   const editing = lending || !!receiving;
-  /** Carga una página de `GET /api/loans` con sus filtros. */
-  const load = useCallback(
-    async (offset = 0) => {
-      if (!canManage) {
-        setLoading(false);
-        return;
-      }
-      const request = ++revision.current;
-      setLoading(true);
-      setError("");
-      try {
-        const result = await client.send<{
-          loans: LoanSummary[];
-          summary: typeof summary;
-        }>("/api/loans", {
-          limit: 25,
-          offset,
-          ...(view === "day" ? { day: Number(day) } : {}),
-          openOnly: view === "open",
-        }, "GET");
-        if (request !== revision.current) return;
-        setLoans((current) =>
-          offset
-            ? [
-                ...current,
-                ...result.loans.filter(
-                  (item) =>
-                    !current.some((previous) => previous.id === item.id),
-                ),
-              ]
-            : result.loans,
-        );
-        setSummary(result.summary);
-        setLoadedFor(listScope);
-        setMore(result.loans.length === 25);
-      } catch (cause) {
-        if (request === revision.current)
-          setError(
-            cause instanceof Error
-              ? cause.message
-              : "No pudimos consultar los préstamos.",
-          );
-      } finally {
-        if (request === revision.current) setLoading(false);
-      }
-    },
-    [client, canManage, view, day, listScope],
-  );
-  useFocusEffect(
-    useCallback(() => {
-      void load();
-      return () => {
-        revision.current++;
-      };
-    }, [load]),
-  );
+  const { loans, summary, loading, more, loadedFor, load } = useLoanList({
+    client,
+    enabled: canManage,
+    view,
+    day,
+    listScope,
+    onError: setError,
+  });
   const visible = loadedFor === listScope ? loans : [];
   const matching = visible.filter((loan) =>
     `${loan.projectName} ${loan.resourceName} ${loan.note}`
@@ -155,8 +86,39 @@ export default function SharedLoansPage({
   /** Consulta el detalle actualizado de un préstamo. */
   async function getLoan(id: string) {
     return (
-      await client.send<{ loan: SharedLoan }>(`/api/loans/${id}`, {}, "GET")
+      await client.send<{ loan: SharedLoan }>(`/api/loans/${id}/query`, {})
     ).loan;
+  }
+  /** Abre la devolución con datos actualizados (o avisa si ya se devolvió todo). */
+  function startReturn(loan: LoanSummary) {
+    void perform(async () => {
+      const fresh = await getLoan(loan.id);
+      if (fresh.quantity === fresh.returned) {
+        setNotice("Este préstamo ya fue devuelto por completo.");
+        void load();
+      } else {
+        setOperation({ scope, loan: fresh, noteOnly: false, revision: 0 });
+        setNotice("");
+      }
+    });
+  }
+  /** Abre el registro de una novedad sin devolución. */
+  function startNote(loan: LoanSummary) {
+    void perform(async () => {
+      setOperation({
+        scope,
+        loan: await getLoan(loan.id),
+        noteOnly: true,
+        revision: 0,
+      });
+      setNotice("");
+    });
+  }
+  /** Muestra las devoluciones y novedades del préstamo. */
+  function showHistory(loan: LoanSummary) {
+    void perform(async () =>
+      setHistory({ scope: listScope, loan: await getLoan(loan.id) }),
+    );
   }
   const paragraph = { color: colors.muted, lineHeight: 22 };
   if (!ready)
@@ -336,142 +298,23 @@ export default function SharedLoansPage({
         </Text>
       )}
       <ContentGrid minItemWidth={360}>
-        {matching.map((loan) => {
-          const remaining = loan.quantity - loan.returned,
-            shownHistory =
-              history?.scope === listScope && history.loan.id === loan.id
-                ? history.loan
-                : null;
-          return (
-            <Card key={loan.id} style={{ flex: 1 }}>
-              <Chip
-                label={
-                  remaining === 0
-                    ? "Devuelto"
-                    : loan.returned
-                      ? "Devolución parcial"
-                      : "En préstamo"
-                }
-                tone={remaining === 0 ? "success" : "warning"}
+        {matching.map((loan) => (
+          <LoanCard
+            key={loan.id}
+            loan={loan}
+            locked={busy || editing}
+            onReturn={() => startReturn(loan)}
+            onNote={() => startNote(loan)}
+            onHistory={() => showHistory(loan)}
+          >
+            {history?.scope === listScope && history.loan.id === loan.id && (
+              <LoanHistory
+                loan={history.loan}
+                onClose={() => setHistory(null)}
               />
-              <Heading
-                title={loan.projectName}
-                subtitle={`${loan.resourceName} · Jornada ${loan.day}`}
-              />
-              <Text style={{ color: colors.text, lineHeight: 24 }}>
-                Entregadas: {loan.quantity} · Devueltas: {loan.returned} · Sin
-                devolver: {remaining}
-              </Text>
-              <Text style={paragraph}>
-                Entrega: {moment(loan.createdAt)} · {loan.deliveredFirstName}{" "}
-                {loan.deliveredLastName}
-              </Text>
-              <Text style={paragraph}>
-                Retiró: {loan.recipientFirstName} {loan.recipientLastName}
-              </Text>
-              {!!loan.note && (
-                <Text style={paragraph}>
-                  Observación de entrega: {loan.note}
-                </Text>
-              )}
-              <ActionRow footer>
-                {remaining > 0 && (
-                  <Button
-                    title="Devolver"
-                    accessibilityLabel={`Devolver ${loan.resourceName} de ${loan.projectName}`}
-                    icon="check"
-                    disabled={busy || editing}
-                    onPress={() => {
-                      void perform(async () => {
-                        const fresh = await getLoan(loan.id);
-                        if (fresh.quantity === fresh.returned) {
-                          setNotice(
-                            "Este préstamo ya fue devuelto por completo.",
-                          );
-                          void load();
-                        } else {
-                          setOperation({
-                            scope,
-                            loan: fresh,
-                            noteOnly: false,
-                            revision: 0,
-                          });
-                          setNotice("");
-                        }
-                      });
-                    }}
-                  />
-                )}
-                <Button
-                  title="Registrar novedad"
-                  accessibilityLabel={`Registrar novedad de ${loan.resourceName} de ${loan.projectName}`}
-                  variant="secondary"
-                  disabled={busy || editing}
-                  onPress={() => {
-                    void perform(async () => {
-                      setOperation({
-                        scope,
-                        loan: await getLoan(loan.id),
-                        noteOnly: true,
-                        revision: 0,
-                      });
-                      setNotice("");
-                    });
-                  }}
-                />
-                <Button
-                  title="Ver movimientos"
-                  accessibilityLabel={`Ver movimientos de ${loan.resourceName} de ${loan.projectName}`}
-                  variant="quiet"
-                  disabled={busy || editing}
-                  onPress={() => {
-                    void perform(async () =>
-                      setHistory({
-                        scope: listScope,
-                        loan: await getLoan(loan.id),
-                      }),
-                    );
-                  }}
-                />
-              </ActionRow>
-              {shownHistory && (
-                <View style={{ gap: 12 }}>
-                  <Heading title="Devoluciones y novedades" />
-                  {!shownHistory.returns.length && (
-                    <Text style={paragraph}>
-                      Todavía no hay devoluciones ni novedades registradas.
-                    </Text>
-                  )}
-                  {shownHistory.returns.map((entry) => (
-                    <View key={entry.id} style={{ gap: 4 }}>
-                      <Text style={{ color: colors.text, fontWeight: "600" }}>
-                        {entry.quantity
-                          ? `Devolución: ${entry.quantity} · Dañadas: ${entry.damagedQuantity}`
-                          : "Novedad sin devolución"}
-                      </Text>
-                      <Text style={paragraph}>
-                        {moment(entry.createdAt)} · {entry.firstName}{" "}
-                        {entry.lastName}
-                      </Text>
-                      {!!entry.note && (
-                        <Text style={paragraph}>{entry.note}</Text>
-                      )}
-                    </View>
-                  ))}
-                  <Text style={paragraph}>
-                    Se muestran los últimos 100 movimientos; el historial se
-                    conserva en el servidor.
-                  </Text>
-                  <Button
-                    title="Cerrar movimientos"
-                    variant="quiet"
-                    onPress={() => setHistory(null)}
-                  />
-                </View>
-              )}
-            </Card>
-          );
-        })}
+            )}
+          </LoanCard>
+        ))}
       </ContentGrid>
       {more && loadedFor === listScope && (
         <Button

@@ -82,17 +82,29 @@ export const socialBridge = {
     await SecureStore.setItemAsync(key, JSON.stringify(flow));
     return { proof, challenge };
   },
-  async start(provider: string, query: <T>(path: string, body: object) => Promise<T>) {
+  async start(
+    provider: string,
+    query: <T>(path: string, body: object) => Promise<T>,
+  ) {
     if (!["google", "discord", "github"].includes(provider))
       throw new Error("Ese proveedor no está disponible.");
     const { challenge, proof } = await socialBridge.begin();
     if (provider === "google" && Platform.OS === "android") {
       try {
-        const id = await nativeGoogleAccess(query, challenge, proof, async () => {
-          const { GoogleOneTapSignIn } = await import("react-native-nitro-google-signin");
-          return GoogleOneTapSignIn;
-        });
-        if (!id) { socialBridge.clear(); return; }
+        const id = await nativeGoogleAccess(
+          query,
+          challenge,
+          proof,
+          async () => {
+            const { GoogleOneTapSignIn } =
+              await import("react-native-nitro-google-signin");
+            return GoogleOneTapSignIn;
+          },
+        );
+        if (!id) {
+          socialBridge.clear();
+          return;
+        }
         if (!flow || flow.proof !== proof || flow.expiresAt <= Date.now())
           throw new Error("Este acceso venció. Volvé a iniciarlo.");
         flow = { ...flow, id };

@@ -83,7 +83,9 @@ test("Android: envía el archivo nativo por URI y completa la carga sólo despu�
       assert.equal(method, "PUT");
       assert.equal(new URL(url).hostname, "vercel.com");
     }
-    setRequestHeader(key: string, value: string) { headers[key] = value; }
+    setRequestHeader(key: string, value: string) {
+      headers[key] = value;
+    }
     send(value: unknown) {
       sentBody = value;
       actions.push("put");
@@ -93,27 +95,56 @@ test("Android: envía el archivo nativo por URI y completa la carga sólo despu�
   globalThis.XMLHttpRequest = NativeRequest as unknown as typeof XMLHttpRequest;
   try {
     const controller = new NativeAbortController();
-    assert.equal("throwIfAborted" in controller.signal, false,
-      "La prueba debe usar el AbortController de React Native, que no implementa throwIfAborted");
+    assert.equal(
+      "throwIfAborted" in controller.signal,
+      false,
+      "La prueba debe usar el AbortController de React Native, que no implementa throwIfAborted",
+    );
     const photo: LocalPhoto = {
       uri: "file:///data/user/0/ar.edu.expotec.organizacion/cache/photo.jpg",
       type: "image/jpeg",
       size: 1234,
-      dispose: () => { disposed = true; },
+      dispose: () => {
+        disposed = true;
+      },
     };
-    const result = await uploadPhoto(photo, "gallery", async <T>(endpoint: string, input: object) => {
-      actions.push(endpoint);
-      if (endpoint === "/api/uploads") {
-        assert.deepEqual(input, { purpose: "gallery", contentType: "image/jpeg", size: 1234 });
-        return { id: "image-id", pathname: pathname.replace(".png", ".jpg"), clientToken: token } as T;
-      }
-      assert.equal(disposed, false, "No borrar el archivo mientras está subiendo");
-      return { imageUrl: "https://expotec.example/api/uploads/image-id/image" } as T;
-    }, () => {}, controller.signal as unknown as AbortSignal);
+    const result = await uploadPhoto(
+      photo,
+      "gallery",
+      async <T>(endpoint: string, input: object) => {
+        actions.push(endpoint);
+        if (endpoint === "/api/uploads") {
+          assert.deepEqual(input, {
+            purpose: "gallery",
+            contentType: "image/jpeg",
+            size: 1234,
+          });
+          return {
+            id: "image-id",
+            pathname: pathname.replace(".png", ".jpg"),
+            clientToken: token,
+          } as T;
+        }
+        assert.equal(
+          disposed,
+          false,
+          "No borrar el archivo mientras está subiendo",
+        );
+        return {
+          imageUrl: "https://expotec.example/api/uploads/image-id/image",
+        } as T;
+      },
+      () => {},
+      controller.signal as unknown as AbortSignal,
+    );
     assert.deepEqual(sentBody, { uri: photo.uri });
     assert.equal(headers["Content-Type"], "image/jpeg");
     assert.equal(headers["x-content-length"], "1234");
-    assert.deepEqual(actions, ["/api/uploads", "put", "/api/uploads/image-id/complete"]);
+    assert.deepEqual(actions, [
+      "/api/uploads",
+      "put",
+      "/api/uploads/image-id/complete",
+    ]);
     assert.equal(result, "https://expotec.example/api/uploads/image-id/image");
     assert.equal(disposed, true);
   } finally {
@@ -128,17 +159,33 @@ test("Android: un archivo ilegible no confirma ni filtra la foto temporal", asyn
     upload = {};
     open() {}
     setRequestHeader() {}
-    send() { throw new Error("file not found"); }
+    send() {
+      throw new Error("file not found");
+    }
   }
-  globalThis.XMLHttpRequest = UnreadableRequest as unknown as typeof XMLHttpRequest;
+  globalThis.XMLHttpRequest =
+    UnreadableRequest as unknown as typeof XMLHttpRequest;
   try {
-    await assert.rejects(uploadPhoto({
-      uri: "file:///cache/photo.jpg", type: "image/jpeg", size: 1234,
-      dispose: () => { disposed = true; },
-    }, "gallery", async <T>(endpoint: string) => {
-      assert.equal(endpoint, "/api/uploads");
-      return { id: "image-id", pathname, clientToken: token } as T;
-    }, () => {}, new AbortController().signal), /leer la foto/);
+    await assert.rejects(
+      uploadPhoto(
+        {
+          uri: "file:///cache/photo.jpg",
+          type: "image/jpeg",
+          size: 1234,
+          dispose: () => {
+            disposed = true;
+          },
+        },
+        "gallery",
+        async <T>(endpoint: string) => {
+          assert.equal(endpoint, "/api/uploads");
+          return { id: "image-id", pathname, clientToken: token } as T;
+        },
+        () => {},
+        new AbortController().signal,
+      ),
+      /leer la foto/,
+    );
     assert.equal(disposed, true);
   } finally {
     globalThis.XMLHttpRequest = previous;
@@ -149,10 +196,22 @@ test("Android: cancelar durante la preparación libera el archivo sin contactar 
   const controller = new NativeAbortController();
   controller.abort();
   let disposed = false;
-  await assert.rejects(uploadPhoto({
-    uri: "file:///cache/photo.jpg", type: "image/jpeg", size: 12,
-    dispose: () => { disposed = true; },
-  }, "gallery", async () => assert.fail("No iniciar una carga cancelada"), () => {}, controller.signal as unknown as AbortSignal));
+  await assert.rejects(
+    uploadPhoto(
+      {
+        uri: "file:///cache/photo.jpg",
+        type: "image/jpeg",
+        size: 12,
+        dispose: () => {
+          disposed = true;
+        },
+      },
+      "gallery",
+      async () => assert.fail("No iniciar una carga cancelada"),
+      () => {},
+      controller.signal as unknown as AbortSignal,
+    ),
+  );
   assert.equal(disposed, true);
 });
 
@@ -166,18 +225,38 @@ test("Android: el AbortController nativo cancela el PUT activo y no confirma la 
     onabort?: () => void;
     open() {}
     setRequestHeader() {}
-    send() { actions.push("put"); queueMicrotask(() => controller.abort()); }
-    abort() { actions.push("abort"); this.onabort?.(); }
+    send() {
+      actions.push("put");
+      queueMicrotask(() => controller.abort());
+    }
+    abort() {
+      actions.push("abort");
+      this.onabort?.();
+    }
   }
-  globalThis.XMLHttpRequest = PendingRequest as unknown as typeof XMLHttpRequest;
+  globalThis.XMLHttpRequest =
+    PendingRequest as unknown as typeof XMLHttpRequest;
   try {
-    await assert.rejects(uploadPhoto({
-      uri: "file:///cache/photo.jpg", type: "image/jpeg", size: 1234,
-      dispose: () => { disposed = true; },
-    }, "gallery", async <T>(endpoint: string) => {
-      actions.push(endpoint);
-      return { id: "image-id", pathname, clientToken: token } as T;
-    }, () => {}, controller.signal as unknown as AbortSignal), /cancelada/);
+    await assert.rejects(
+      uploadPhoto(
+        {
+          uri: "file:///cache/photo.jpg",
+          type: "image/jpeg",
+          size: 1234,
+          dispose: () => {
+            disposed = true;
+          },
+        },
+        "gallery",
+        async <T>(endpoint: string) => {
+          actions.push(endpoint);
+          return { id: "image-id", pathname, clientToken: token } as T;
+        },
+        () => {},
+        controller.signal as unknown as AbortSignal,
+      ),
+      /cancelada/,
+    );
     assert.deepEqual(actions, ["/api/uploads", "put", "abort"]);
     assert.equal(disposed, true);
   } finally {

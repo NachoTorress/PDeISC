@@ -1,5 +1,8 @@
 /**
- * Pantalla del sistema compartido (datos de la API REST). Mi cuenta: ingreso, registro (alumno o invitado), accesos sociales, recuperación de contraseña y datos de la sesión.
+ * Pantalla del sistema compartido (datos de la API). Mi cuenta: ingreso,
+ * registro (alumno o invitado), accesos sociales, recuperación de contraseña
+ * y datos de la sesión. Las partes del formulario están en
+ * `components/account/`.
  */
 import { useEffect, useRef, useState } from "react";
 import {
@@ -8,14 +11,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import {
-  Button,
-  Card,
-  CheckRow,
-  Choice,
-  Field,
-  Screen,
-} from "../components/ui";
+import { Button, Card, CheckRow, Field, Screen } from "../components/ui";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { AuthError } from "../lib/authTypes";
@@ -25,6 +21,9 @@ import { SocialAccess } from "../components/SocialAccess";
 import { socialBridge } from "../lib/socialBridge";
 import { passwordReset } from "../lib/passwordReset";
 import PasswordRecovery from "../components/PasswordRecovery";
+import { AccountIntro } from "../components/account/AccountIntro";
+import { RegisterFields } from "../components/account/RegisterFields";
+import { AccountSwitch } from "../components/account/AccountSwitch";
 
 const empty: Credentials = {
   email: "",
@@ -49,7 +48,7 @@ export default function AccountPage({
   useEffect(() => {
     let active = true;
     void client
-      .query<{ enabled: boolean }>("/api/auth/recovery", {}, "GET")
+      .query<{ enabled: boolean }>("/api/auth/recovery/query", {})
       .then((result) => {
         if (active) setRecoveryEnabled(result.enabled);
       })
@@ -146,6 +145,17 @@ export default function AccountPage({
         : "Iniciaste sesión.",
     );
   }
+  /** Cambia entre ingreso y registro, limpiando el formulario. */
+  function switchMode() {
+    setRegister(!register);
+    setInput(empty);
+    setConfirmation("");
+    setTouched({});
+    setServerFields({});
+    setError("");
+    setMessage("");
+    setShowPassword(false);
+  }
   const paragraph = { color: colors.muted, fontSize: 15, lineHeight: 22 };
   const sideBySide =
     width >= 1100 &&
@@ -228,68 +238,16 @@ export default function AccountPage({
             <View
               style={{ gap: 14, flex: sideBySide ? 1 : undefined, minWidth: 0 }}
             >
-              <View style={{ gap: 10, marginBottom: 4, backgroundColor: colors.selectedContainer, padding: 20, borderRadius: 12 }}>
-                {width > 700 && <Text
-                  style={{
-                    color: colors.primary,
-                    fontSize: 22,
-                    fontWeight: "700",
-                    letterSpacing: -1,
-                  }}
-                >
-                  expotec.
-                </Text>}
-                <Text
-                  accessibilityRole="header"
-                  style={{
-                    color: colors.text,
-                    fontSize: 30,
-                    lineHeight: 36,
-                    fontWeight: "700",
-                    letterSpacing: -0.9,
-                  }}
-                >
-                  {register ? "Creá tu cuenta" : "Iniciá sesión"}
-                </Text>
-                <Text style={paragraph}>
-                  {register
-                    ? "Elegí cómo vas a participar. La escuela asigna los permisos de organización."
-                    : "Ingresá a tu cuenta para participar de la ExpoTec."}
-                </Text>
-              </View>
+              <AccountIntro register={register} />
               {register && (
-                <>
-                  <Choice
-                    label="Tipo de cuenta"
-                    value={accountType}
-                    options={[
-                      { value: "student", label: "Alumno" },
-                      { value: "guest", label: "Invitado" },
-                    ]}
-                    disabled={busy}
-                    onChange={(value) =>
-                      setAccountType(value as "student" | "guest")
-                    }
-                  />
-                  <Field
-                    label="Nombre"
-                    value={input.firstName ?? ""}
-                    onChangeText={(value) => update("firstName", value)}
-                    error={fieldError("firstName")}
-                    maxLength={80}
-                    autoComplete="given-name"
-                    editable={!busy}
-                  />
-                  <Field
-                    label="Apellido"
-                    value={input.lastName ?? ""}
-                    onChangeText={(value) => update("lastName", value)}
-                    error={fieldError("lastName")}
-                    maxLength={80}
-                    autoComplete="family-name"
-                    editable={!busy}
-                  />
-                </>
+                <RegisterFields
+                  accountType={accountType}
+                  input={input}
+                  busy={busy}
+                  fieldError={fieldError}
+                  onAccountType={setAccountType}
+                  onChange={update}
+                />
               )}
               <Field
                 label="Correo electrónico"
@@ -364,37 +322,11 @@ export default function AccountPage({
                   onPress={() => setRecovering(true)}
                 />
               )}
-              <View
-                style={{
-                  gap: 2,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                }}
-              >
-                <Text style={{ ...paragraph, fontSize: 14 }}>
-                  {register
-                    ? "¿Ya tenés una cuenta?"
-                    : "¿Primera vez en ExpoTec?"}
-                </Text>
-                <Button
-                  title={register ? "Ya tengo una cuenta" : "Crear una cuenta"}
-                  variant="quiet"
-                  disabled={busy}
-                  style={{ alignSelf: "center" }}
-                  onPress={() => {
-                    setRegister(!register);
-                    setInput(empty);
-                    setConfirmation("");
-                    setTouched({});
-                    setServerFields({});
-                    setError("");
-                    setMessage("");
-                    setShowPassword(false);
-                  }}
-                />
-              </View>
+              <AccountSwitch
+                register={register}
+                busy={busy}
+                onSwitch={switchMode}
+              />
             </View>
           )}
           <SocialAccess

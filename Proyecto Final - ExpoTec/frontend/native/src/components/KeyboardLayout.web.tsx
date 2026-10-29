@@ -1,5 +1,11 @@
 /** Web: ajusta el alto visible cuando el teclado virtual del teléfono se abre. */
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import type { ReactNode } from "react";
 import { ScrollView, View } from "react-native";
 import type { ScrollViewProps } from "react-native";
@@ -15,7 +21,10 @@ export function KeyboardRoot({ children }: { children: ReactNode }) {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const input = document.activeElement;
-        if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement)
+        if (
+          input instanceof HTMLInputElement ||
+          input instanceof HTMLTextAreaElement
+        )
           input.scrollIntoView({ block: "nearest", inline: "nearest" });
       });
     };
@@ -28,14 +37,21 @@ export function KeyboardRoot({ children }: { children: ReactNode }) {
       window.removeEventListener("resize", resize);
     };
   }, []);
-  return <View style={{ flex: 1, minHeight: 0, height, maxHeight: height }}>{children}</View>;
+  return (
+    <View style={{ flex: 1, minHeight: 0, height, maxHeight: height }}>
+      {children}
+    </View>
+  );
 }
 
 /** ScrollView común con referencia para desplazar. */
-export const FormScrollView = forwardRef<Pick<ScrollView, "scrollTo">, ScrollViewProps>(
-  function FormScrollView(props, ref) {
-    const scroll = useRef<ScrollView>(null);
-    useImperativeHandle(ref, () => ({ scrollTo: (options) => scroll.current?.scrollTo(options) }));
-    return <ScrollView {...props} ref={scroll} />;
-  },
-);
+export const FormScrollView = forwardRef<
+  Pick<ScrollView, "scrollTo">,
+  ScrollViewProps
+>(function FormScrollView(props, ref) {
+  const scroll = useRef<ScrollView>(null);
+  useImperativeHandle(ref, () => ({
+    scrollTo: (options) => scroll.current?.scrollTo(options),
+  }));
+  return <ScrollView {...props} ref={scroll} />;
+});

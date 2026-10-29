@@ -24,9 +24,9 @@ export default function SharedProjectDetails({
   const [extra, setExtra] = useState(
     Boolean(
       draft.videoUrl ||
-        draft.isSoftwareProject ||
-        draft.githubUrl ||
-        draft.websiteUrl,
+      draft.isSoftwareProject ||
+      draft.githubUrl ||
+      draft.websiteUrl,
     ),
   );
   const [clearLinks, setClearLinks] = useState(false);

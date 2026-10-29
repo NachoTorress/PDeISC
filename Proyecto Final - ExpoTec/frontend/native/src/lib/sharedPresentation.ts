@@ -20,7 +20,7 @@ export interface PresentationPage {
 }
 type PublicQuery = ApiCall;
 
-/** Recorre todas las páginas de `GET /api/projects/presentation`. */
+/** Recorre todas las páginas de `POST /api/projects/presentation/query`. */
 export async function loadPresentation(
   query: PublicQuery,
   current = () => true,
@@ -30,9 +30,8 @@ export async function loadPresentation(
   let after: string | undefined;
   do {
     const page = await query<PresentationPage>(
-      "/api/projects/presentation",
+      "/api/projects/presentation/query",
       { limit: 100, ...(after ? { after } : {}) },
-        "GET",
     );
     if (!current()) return null;
     if (

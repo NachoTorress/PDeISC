@@ -21,13 +21,13 @@ test('API de espacios: lectura pública, escritura solo de administradores y val
   };
   const api = await listen(createApp(auth, testConfig, console, undefined, spaces));
   t.after(api.close);
-  assert.equal((await api.get('/api/spaces')).status, 200);
-  const publicSpace = await api.get(`/api/spaces/${id}`);
+  assert.equal((await api.request('/api/spaces/query')).status, 200);
+  const publicSpace = await api.request(`/api/spaces/${id}/query`);
   assert.equal(publicSpace.status, 200);
   assert.deepEqual(publicSpace.body.space, saved);
   assert.equal(publicSpace.body.space.createdBy, undefined);
-  assert.equal((await api.get('/api/spaces/not-an-id')).status, 400);
-  assert.equal((await api.get('/api/spaces', { email: 'extra' })).status, 400);
+  assert.equal((await api.request('/api/spaces/not-an-id/query')).status, 400);
+  assert.equal((await api.request('/api/spaces/query', { email: 'extra' })).status, 400);
   const input = { name: 'Aula', description: '' };
   assert.equal((await api.request('/api/spaces', input)).status, 401);
   const registration = await api.request('/api/auth/register', { firstName: 'Ana', lastName: 'García', email: 'space@example.com', password: 'Contraseña de prueba 2026' });
