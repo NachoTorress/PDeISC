@@ -8,17 +8,23 @@ Los pasos de uso, instalación y exposición están en el [índice de documentac
 
 ## Compilación actual
 
-**Aviso del 27/10/2026:** el código 0.5.1 dejó de usar GET en la API (las consultas vuelven a POST). La APK 0.5.0 consulta con GET, así que **deja de funcionar cuando se publique el backend 0.5.1**. Hay que compilar la APK 0.5.1 (versionCode 7) con `npx eas-cli build --platform android --profile preview` desde `frontend/native` antes de publicar el backend, o inmediatamente después. La APK 0.4.0 sigue funcionando gracias a la capa de compatibilidad.
+APK actual: **0.5.1, Android versionCode 7**. [Descargar APK](https://expo.dev/artifacts/eas/_DrYzpt3Pc2cg8VchHXkfpwbNFUIU2ctImsTNd6F9YY.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/8b57beca-be9a-49d3-869c-4ff23ec68fd4), terminada el 29/10/2026 a las 14:15:27, hora de Argentina, desde el frontend de `8ee3a3b44f8f8168c6b5db5bd41b5bb021d13fda`.
 
-APK actual: **0.5.0, Android versionCode 6**. [Descargar APK](https://expo.dev/artifacts/eas/1MRotQpnDJKRVPmB8o9TVXYwrNh0DEwpYrskWHbrQkg.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/d559c18d-cfeb-42a1-8aba-5aa3ead0ff5c), terminada el 26/10/2026 a las 22:20:35, hora de Argentina, desde el frontend de `6fb156adfa30887615ea95f8a8d951ec3695b1e7`.
+Incluye las consultas por POST de la API 0.5.1, con los datos en el cuerpo JSON, y la reorganización de componentes del frontend. Se compiló el código existente sin cambios de implementación, con el mismo proyecto Expo, perfil `preview`, API pública y credenciales de firma de las versiones anteriores. La APK 0.5.0 usaba GET y no funciona con la API actual; la 0.4.0 conserva compatibilidad.
+
+Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.1-7.apk`, 110.003.139 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.5.1`, código `7`, sin modo depuración. Integridad ZIP, digest y firma APK v2 correctos; certificado idéntico al de la APK 0.5.0, para instalarla como actualización. SHA-256: `09da65aa1b61b17b0e70f7161fa936916a1deaf39a0678490a424fa59d16f779`. Informe local: `artifacts/android/verification-0.5.1.json`. Expo indica vencimiento del artefacto el 12/11/2026 a las 13:22, hora de Argentina; conservar una copia descargada.
+
+Antes de subir se inspeccionaron 207 archivos de fuentes, recursos y configuración del frontend; sus hashes coincidieron con el código local. No se incluyeron archivos de entorno privados ni otros proyectos. El listado quedó en `artifacts/android/source-manifest-0.5.1-7.json`. Pasaron 121 pruebas del frontend, revisión de tipos, análisis de estilo y exportación Android. También respondieron con HTTP 200 y JSON válido las consultas POST publicadas de salud, disponibilidad de la base, espacios, proyectos públicos, galería y proveedores sociales. Registro local: `artifacts/android/preflight-0.5.1.json`. La instalación y los recorridos en un teléfono físico siguen pendientes para esta versión.
+
+## APK anteriores
+
+Sexta APK de prueba: **0.5.0, Android versionCode 6**. [Descargar APK](https://expo.dev/artifacts/eas/1MRotQpnDJKRVPmB8o9TVXYwrNh0DEwpYrskWHbrQkg.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/d559c18d-cfeb-42a1-8aba-5aa3ead0ff5c), terminada el 26/10/2026 a las 22:20:35, hora de Argentina, desde el frontend de `6fb156adfa30887615ea95f8a8d951ec3695b1e7`.
 
 Incluye el código actualizado de la versión 0.5.0, sin cambios adicionales de implementación durante esta compilación. Se usó el mismo proyecto Expo y perfil `preview` de las APK anteriores, con la API pública y sin cargar archivos de entorno privados.
 
 Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.0-6.apk`, 109.979.775 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.5.0`, código `6`, sin modo depuración. Integridad ZIP, digest y firma APK v2 correctos; certificado idéntico al de la APK 0.4.0, para instalarla como actualización. SHA-256: `5d4b0ef8a5ea5c2102cca8867c29fef1f8e38f18c70e397fc8509b53d0ff9ba0`. Informe local: `artifacts/android/verification-0.5.0.json`.
 
 Antes de subir el código se inspeccionaron 151 archivos de fuentes, recursos y configuración del frontend; sus hashes coincidieron con el código actual y no se incluyeron archivos privados ni otros proyectos. El listado con hashes quedó en `artifacts/android/source-manifest-0.5.0-6.json`. Pasaron 119 pruebas del frontend, revisión de tipos, análisis de estilo y exportación Android. La nueva APK todavía requiere instalación y prueba en un teléfono; la confirmación de uso del 25/10 corresponde a la versión anterior.
-
-## APK anteriores
 
 Quinta APK de prueba: **0.4.0, Android versionCode 5**. [Descargar APK](https://expo.dev/artifacts/eas/2PBiG--Pnz0L_bkfG5PCBe9A0grheNB3PZSQsYw94F0.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/53774cc9-9297-4fcf-ae97-27a21a2d602f), terminada el 23/10/2026 a las 10:30:46, hora de Argentina, desde el frontend de `b8213d23bd31eb531f4f454829ee3b21d2a575e6`.
 

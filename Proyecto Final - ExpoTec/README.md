@@ -6,7 +6,7 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 | --- | --- |
 | Web | [expotec-web-gn19.vercel.app](https://expotec-web-gn19.vercel.app) |
 | API | `https://expotec-api-gn19.vercel.app` |
-| APK Android | Compilar la 0.5.1 con el código actual (la 0.5.0 usa GET y no funciona con esta API). Historial y enlaces en [APK de prueba](docs/APK_PRUEBA.md) |
+| APK Android | [Descargar 0.5.1](https://expo.dev/artifacts/eas/_DrYzpt3Pc2cg8VchHXkfpwbNFUIU2ctImsTNd6F9YY.apk), compatible con las consultas por POST. Historial y verificación en [APK de prueba](docs/APK_PRUEBA.md) |
 | Versión del código | 0.5.1 |
 
 ## Documentación
@@ -104,7 +104,7 @@ cd frontend/native
 npx eas-cli build --platform android --profile preview
 ```
 
-La APK 0.4.0 publicada sigue funcionando con la API 0.5.1 gracias a una capa de compatibilidad (ver [backend/README.md](backend/README.md#compatibilidad-con-la-apk-040)). La APK 0.5.0 usaba GET y **no funciona** con la API 0.5.1: hay que generar la 0.5.1 con el comando anterior y adjuntarla también como *Release* en GitHub, porque los enlaces de descarga de Expo pueden vencer.
+La APK 0.5.1 publicada consulta por POST y funciona con la API actual. La APK 0.4.0 sigue funcionando gracias a una capa de compatibilidad (ver [backend/README.md](backend/README.md#compatibilidad-con-la-apk-040)); la 0.5.0 usaba GET y **no funciona** con la API 0.5.1. Los enlaces de Expo pueden vencer: conservar la descarga y adjuntarla como *Release* en GitHub para distribuirla a largo plazo.
 
 ## Roles
 
