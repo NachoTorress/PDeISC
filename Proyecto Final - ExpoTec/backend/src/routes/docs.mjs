@@ -17,11 +17,8 @@
  */
 import { Router } from 'express';
 import { randomBytes } from 'node:crypto';
-import { createRequire } from 'node:module';
-import { openApiSpec } from '../docs/openapi.mjs';
+import { openApiSpec, API_VERSION } from '../docs/openapi.mjs';
 import { noInput } from '../validators/query.mjs';
-
-const { version } = createRequire(import.meta.url)('../../package.json');
 
 /** Archivos de Swagger UI (versión fija) y sus hashes SHA-384. */
 const swaggerUi = 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.17.14';
@@ -83,7 +80,7 @@ function page(spec, nonce) {
  */
 export function docsRoutes() {
   const router = Router();
-  const spec = openApiSpec(version);
+  const spec = openApiSpec(API_VERSION);
 
   router.get('/', (req, res) => {
     const nonce = randomBytes(16).toString('base64');

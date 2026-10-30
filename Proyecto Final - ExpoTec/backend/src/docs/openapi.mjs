@@ -11,6 +11,13 @@
  * prueba `test/openapi.test.mjs` falla si alguna ruta queda sin documentar.
  */
 
+/**
+ * Versión del contrato. Se escribe aquí y no se lee de `package.json` porque
+ * en Vercel la función no siempre incluye ese archivo y la API no arrancaría.
+ * La prueba `test/openapi.test.mjs` verifica que coincida con `package.json`.
+ */
+export const API_VERSION = '0.5.1';
+
 /** Referencia a un esquema de `components.schemas`. */
 const ref = name => ({ $ref: `#/components/schemas/${name}` });
 
@@ -392,10 +399,10 @@ const errorResponse = (description, code, message) => ({
 /**
  * Especificación completa.
  *
- * @param {string} [version] Versión de la API (la de `package.json`).
+ * @param {string} [version] Versión de la API.
  * @returns {object} Documento OpenAPI 3.0.3.
  */
-export function openApiSpec(version = '0.5.1') {
+export function openApiSpec(version = API_VERSION) {
   return {
     openapi: '3.0.3',
     info: {

@@ -9,7 +9,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { openApiSpec } from '../src/docs/openapi.mjs';
+import { openApiSpec, API_VERSION } from '../src/docs/openapi.mjs';
 import { createApp } from '../src/create-app.mjs';
 
 const source = file => readFile(new URL(`../src/${file}`, import.meta.url), 'utf8');
@@ -89,4 +89,9 @@ test('GET /api/docs sirve Swagger UI con la especificación incluida', async () 
   } finally {
     server.close();
   }
+});
+
+test('la versión de la especificación coincide con package.json', async () => {
+  const { version } = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+  assert.equal(API_VERSION, version);
 });
