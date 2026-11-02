@@ -8,15 +8,25 @@ Los pasos de uso, instalación y exposición están en el [índice de documentac
 
 ## Compilación actual
 
-APK actual: **0.5.1, Android versionCode 7**. [Descargar APK](https://expo.dev/artifacts/eas/_DrYzpt3Pc2cg8VchHXkfpwbNFUIU2ctImsTNd6F9YY.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/8b57beca-be9a-49d3-869c-4ff23ec68fd4), terminada el 29/10/2026 a las 14:15:27, hora de Argentina, desde el frontend de `8ee3a3b44f8f8168c6b5db5bd41b5bb021d13fda`.
+APK actual: **0.5.2, Android versionCode 8**. [Descargar APK](https://expo.dev/artifacts/eas/NM8NSyDKDkEx2WhevZsiOaAZrx2aPv28tKiEJghmtSM.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/b5df5f71-5dcf-4989-a028-6728a18fd352), terminada el 02/11/2026 a las 18:35:41, hora de Argentina, desde el frontend de `4de7f42b32b4640079fcb49161c53b944a876298`.
+
+Incluye **Eliminar foto** en **Galería de la ExpoTec → Moderar fotos**, disponible para administración sobre fotos pendientes, publicadas o rechazadas. Pide confirmación antes de eliminar el aporte y sus revisiones. La opción también está disponible en la demostración. Conserva las consultas por POST y utiliza la API pública 0.5.1, que ya admite la eliminación de fotos.
+
+Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.2-8.apk`, 110.004.595 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.5.2`, código `8`, sin modo depuración. Integridad ZIP, digest y firma APK v2 correctos; certificado idéntico al de la APK 0.5.1, para instalarla como actualización. El código Android incluido en la APK contiene la opción de eliminar fotos y la dirección de la API pública. SHA-256: `1953143cc54abe624a0ea56623da5b88409569959820abf6a678fe22df317937`. Informe local: `artifacts/android/verification-0.5.2.json`. Expo indica vencimiento del artefacto el 16/11/2026 a las 17:50, hora de Argentina; conservar una copia descargada.
+
+Antes de subir se inspeccionaron 207 archivos de fuentes, recursos y configuración del frontend; sus hashes coincidieron con el código local y no se incluyeron archivos privados ni otros proyectos. El listado quedó en `artifacts/android/source-manifest-0.5.2-8.json`. Pasaron 122 pruebas del frontend, revisión de tipos, análisis de estilo y exportación Android. Las seis consultas POST publicadas de salud, disponibilidad de la base, espacios, proyectos públicos, galería y proveedores sociales respondieron HTTP 200 con JSON válido. Registro local: `artifacts/android/preflight-0.5.2.json`.
+
+EAS conserva el aviso de `expo doctor` observado también en las APK anteriores; la compilación Android finalizó correctamente. Se verificaron el archivo y su firma; la instalación y el nuevo recorrido en un teléfono físico siguen pendientes para esta versión.
+
+## APK anteriores
+
+Séptima APK de prueba: **0.5.1, Android versionCode 7**. [Descargar APK](https://expo.dev/artifacts/eas/_DrYzpt3Pc2cg8VchHXkfpwbNFUIU2ctImsTNd6F9YY.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/8b57beca-be9a-49d3-869c-4ff23ec68fd4), terminada el 29/10/2026 a las 14:15:27, hora de Argentina, desde el frontend de `8ee3a3b44f8f8168c6b5db5bd41b5bb021d13fda`.
 
 Incluye las consultas por POST de la API 0.5.1, con los datos en el cuerpo JSON, y la reorganización de componentes del frontend. Se compiló el código existente sin cambios de implementación, con el mismo proyecto Expo, perfil `preview`, API pública y credenciales de firma de las versiones anteriores. La APK 0.5.0 usaba GET y no funciona con la API actual; la 0.4.0 conserva compatibilidad.
 
 Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.1-7.apk`, 110.003.139 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.5.1`, código `7`, sin modo depuración. Integridad ZIP, digest y firma APK v2 correctos; certificado idéntico al de la APK 0.5.0, para instalarla como actualización. SHA-256: `09da65aa1b61b17b0e70f7161fa936916a1deaf39a0678490a424fa59d16f779`. Informe local: `artifacts/android/verification-0.5.1.json`. Expo indica vencimiento del artefacto el 12/11/2026 a las 13:22, hora de Argentina; conservar una copia descargada.
 
 Antes de subir se inspeccionaron 207 archivos de fuentes, recursos y configuración del frontend; sus hashes coincidieron con el código local. No se incluyeron archivos de entorno privados ni otros proyectos. El listado quedó en `artifacts/android/source-manifest-0.5.1-7.json`. Pasaron 121 pruebas del frontend, revisión de tipos, análisis de estilo y exportación Android. También respondieron con HTTP 200 y JSON válido las consultas POST publicadas de salud, disponibilidad de la base, espacios, proyectos públicos, galería y proveedores sociales. Registro local: `artifacts/android/preflight-0.5.1.json`. La instalación y los recorridos en un teléfono físico siguen pendientes para esta versión.
-
-## APK anteriores
 
 Sexta APK de prueba: **0.5.0, Android versionCode 6**. [Descargar APK](https://expo.dev/artifacts/eas/1MRotQpnDJKRVPmB8o9TVXYwrNh0DEwpYrskWHbrQkg.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/d559c18d-cfeb-42a1-8aba-5aa3ead0ff5c), terminada el 26/10/2026 a las 22:20:35, hora de Argentina, desde el frontend de `6fb156adfa30887615ea95f8a8d951ec3695b1e7`.
 

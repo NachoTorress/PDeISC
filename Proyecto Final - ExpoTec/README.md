@@ -6,8 +6,8 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 | --- | --- |
 | Web | [expotec-web-gn19.vercel.app](https://expotec-web-gn19.vercel.app) |
 | API | `https://expotec-api-gn19.vercel.app` |
-| APK Android | [Descargar 0.5.1](https://expo.dev/artifacts/eas/_DrYzpt3Pc2cg8VchHXkfpwbNFUIU2ctImsTNd6F9YY.apk), compatible con las consultas por POST. Historial y verificación en [APK de prueba](docs/APK_PRUEBA.md) |
-| Versión del código | 0.5.1 |
+| APK Android | [Descargar 0.5.2](https://expo.dev/artifacts/eas/NM8NSyDKDkEx2WhevZsiOaAZrx2aPv28tKiEJghmtSM.apk), con eliminación de fotos moderadas y publicadas. Historial y verificación en [APK de prueba](docs/APK_PRUEBA.md) |
+| Versión app / API | 0.5.2 / 0.5.1 |
 
 ## Documentación
 
@@ -104,7 +104,7 @@ cd frontend/native
 npx eas-cli build --platform android --profile preview
 ```
 
-La APK 0.5.1 publicada consulta por POST y funciona con la API actual. La APK 0.4.0 sigue funcionando gracias a una capa de compatibilidad (ver [backend/README.md](backend/README.md#compatibilidad-con-la-apk-040)); la 0.5.0 usaba GET y **no funciona** con la API 0.5.1. Los enlaces de Expo pueden vencer: conservar la descarga y adjuntarla como *Release* en GitHub para distribuirla a largo plazo.
+La APK 0.5.2 publicada consulta por POST, funciona con la API actual y permite a administración eliminar fotos ya moderadas y publicadas. La APK 0.4.0 sigue funcionando gracias a una capa de compatibilidad (ver [backend/README.md](backend/README.md#compatibilidad-con-la-apk-040)); la 0.5.0 usaba GET y **no funciona** con la API 0.5.1. Los enlaces de Expo pueden vencer: conservar la descarga y adjuntarla como *Release* en GitHub para distribuirla a largo plazo.
 
 ## Roles
 
