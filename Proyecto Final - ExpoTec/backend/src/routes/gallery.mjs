@@ -9,12 +9,14 @@
  * | POST   | /api/gallery                   | sesión         | foto                              | Envía una foto; queda pendiente de moderación. |
  * | POST   | /api/gallery/moderation/query  | administrador  | `{ status?, limit?, offset? }`    | Cola de moderación.                            |
  * | PATCH  | /api/gallery/:id               | administrador  | `{ decision, note?, version }`    | Aprueba, rechaza o retira una foto.            |
+ * | DELETE | /api/gallery/:id               | administrador  | `{ version }`                    | Elimina una foto de cualquier estado.         |
  */
 import { Router } from 'express';
 import { requireSession, requireAdmin, rateLimit } from '../middleware/auth.mjs';
 import { userId } from '../validators/auth.mjs';
 import { galleryQuery, galleryPhoto, galleryReview } from '../validators/gallery.mjs';
-import { queryInput } from '../validators/query.mjs';
+import { queryInput, versionInput } from '../validators/query.mjs';
+import { spaceVersion } from '../validators/spaces.mjs';
 
 
 /**
@@ -53,6 +55,13 @@ export function galleryRoutes(repository, authRepository, service, config) {
     rateLimit(authRepository, config, { scope: 'gallery-review', limit: 120, seconds: 900, byUser: true }),
     async (req, res) => {
       res.json({ photo: await repository.review(userId(req.params.id), galleryReview(req.body), req.auth.user.id) });
+    });
+  router.delete('/:id',
+    rateLimit(authRepository, config, { scope: 'gallery-review', limit: 120, seconds: 900, byUser: true }),
+    async (req, res) => {
+      const { version } = versionInput(req.body);
+      await repository.remove(userId(req.params.id), spaceVersion(version), req.auth.user.id);
+      res.sendStatus(204);
     });
   return router;
 }

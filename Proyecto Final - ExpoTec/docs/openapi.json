@@ -3582,6 +3582,77 @@
             "$ref": "#/components/responses/Conflict"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Galería"
+        ],
+        "summary": "Eliminar una foto",
+        "description": "**Acceso:** Administrador.\n\nElimina definitivamente la foto y sus revisiones, en cualquier estado (pendiente, aprobada o rechazada). La imagen propia deja de ser pública si no tiene otras publicaciones aprobadas; el archivo sin referencias se retira con la limpieza de cargas.\n\n**Códigos de error propios:** 404 `PHOTO_NOT_FOUND`; 409 `PHOTO_CHANGED`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id de la foto.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3f6c1a2e-8b4d-4c1e-9a7f-2d5e6b8c9a01"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483646,
+                    "example": 1,
+                    "description": "Versión leída del registro (control de cambios simultáneos)."
+                  }
+                },
+                "required": [
+                  "version"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Foto eliminada."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
       }
     },
     "/api/uploads": {

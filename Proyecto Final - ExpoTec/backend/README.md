@@ -327,6 +327,9 @@ Solo hay una entrega por proyecto, elemento y jornada. Las devoluciones pueden s
 | POST | `/api/gallery` | Sesión | `imageUrl` (HTTPS o imagen subida), `caption` (5–400) | 201 `{ photo }` pendiente; 409 `GALLERY_PENDING_LIMIT` (20) |
 | POST | `/api/gallery/moderation/query` | Administrador | `status` (`pending`, `approved`, `rejected`, `all`), `limit`, `offset` | 200 `{ photos }` |
 | PATCH | `/api/gallery/:id` | Administrador | `version`, `decision` (`approved` o `rejected`), `note` (obligatoria al rechazar) | 200 `{ photo }`; 409 `PHOTO_CHANGED` |
+| DELETE | `/api/gallery/:id` | Administrador | `version` | 204; elimina la foto y sus revisiones en cualquier estado; 404 `PHOTO_NOT_FOUND`, 409 `PHOTO_CHANGED` |
+
+En **Galería de la ExpoTec → Moderar fotos**, administración puede usar **Eliminar foto** sobre aportes pendientes, publicados o rechazados. La acción pide confirmación y elimina definitivamente el aporte y sus revisiones. Si otra persona revisó la foto, se debe actualizar la lista antes de eliminarla.
 
 ### Fotos — `/api/uploads`
 

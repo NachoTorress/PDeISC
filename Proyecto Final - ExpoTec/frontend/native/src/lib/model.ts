@@ -71,6 +71,16 @@ export function applyMutation(
       ];
       break;
     }
+    case "deleteGalleryPhoto": {
+      requireRole(role, "admin");
+      const photos = demoGalleryPhotos(next);
+      if (!photos.some((photo) => photo.id === action.id))
+        throw new Error("La foto ya no existe.");
+      next.galleryPhotos = cloneData(
+        photos.filter((photo) => photo.id !== action.id),
+      );
+      break;
+    }
     case "reviewGalleryPhoto": {
       requireRole(role, "admin");
       next.galleryPhotos = cloneData(demoGalleryPhotos(next));

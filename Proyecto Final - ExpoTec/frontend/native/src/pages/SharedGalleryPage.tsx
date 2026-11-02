@@ -27,7 +27,12 @@ import { formatDate } from "../lib/format";
 
 type Form =
   | { actorId: string; type: "submit" }
-  | { actorId: string; type: "review"; photo: GalleryPhoto };
+  | {
+      actorId: string;
+      type: "review";
+      photo: GalleryPhoto;
+      deletePhoto?: boolean;
+    };
 /** Vista pública, propia o de moderación según la cuenta. */
 export default function SharedGalleryPage({
   onAccount,
@@ -160,14 +165,17 @@ export default function SharedGalleryPage({
         <GalleryReviewForm
           key={`${currentForm.actorId}:${currentForm.photo.id}:${currentForm.photo.version}`}
           photo={currentForm.photo}
+          deletePhoto={currentForm.deletePhoto}
           onClose={() => {
             setForm(null);
             void load();
           }}
-          onReviewed={() => {
+          onReviewed={(deleted) => {
             setForm(null);
             setNotice(
-              "La decisión quedó guardada y el autor podrá consultarla.",
+              deleted
+                ? "La foto fue eliminada."
+                : "La decisión quedó guardada y el autor podrá consultarla.",
             );
             void load();
           }}
@@ -286,6 +294,21 @@ export default function SharedGalleryPage({
                       onPress={() => {
                         setNotice("");
                         setForm({ type: "review", actorId: user.id, photo });
+                      }}
+                    />
+                    <Button
+                      title="Eliminar foto"
+                      icon="trash"
+                      variant="danger"
+                      disabled={loading || !photo.version}
+                      onPress={() => {
+                        setNotice("");
+                        setForm({
+                          type: "review",
+                          actorId: user.id,
+                          photo,
+                          deletePhoto: true,
+                        });
                       }}
                     />
                   </ActionRow>

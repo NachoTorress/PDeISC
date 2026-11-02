@@ -187,6 +187,50 @@ test("aprobar publica la foto y retirarla exige un motivo que persiste", () => {
   );
 });
 
+test("administración elimina fotos pendientes, publicadas y rechazadas sin que reaparezcan al recargar", () => {
+  const original = JSON.stringify(seed);
+  const originalPhotos = structuredClone(demoGalleryPhotos(seed));
+  for (const photo of demoGalleryPhotos(seed)) {
+    const action = { type: "deleteGalleryPhoto" as const, id: photo.id };
+    for (const role of ["student", "teacher", "loans", "guest"] as const)
+      assert.throws(() => applyMutation(seed, action, role), /permiso/);
+    const deleted = parseSavedState(
+      JSON.stringify(applyMutation(seed, action, "admin")),
+    );
+    assert.equal(
+      demoGalleryPhotos(deleted).some((item) => item.id === photo.id),
+      false,
+    );
+    assert.equal(
+      demoGalleryPhotos(deleted).length,
+      demoGalleryPhotos(seed).length - 1,
+    );
+    assert.throws(
+      () => applyMutation(deleted, action, "admin"),
+      /ya no existe/,
+    );
+  }
+  let empty = seed;
+  for (const photo of demoGalleryPhotos(seed))
+    empty = applyMutation(
+      empty,
+      { type: "deleteGalleryPhoto", id: photo.id },
+      "admin",
+    );
+  assert.deepEqual(
+    demoGalleryPhotos(parseSavedState(JSON.stringify(empty))),
+    [],
+  );
+  const changed = applyMutation(
+    seed,
+    { type: "deleteGalleryPhoto", id: originalPhotos[0].id },
+    "admin",
+  );
+  changed.galleryPhotos![0].caption = "Otra descripción para la copia local.";
+  assert.deepEqual(demoGalleryPhotos(seed), originalPhotos);
+  assert.equal(JSON.stringify(seed), original);
+});
+
 test("rechaza archivos ajenos a imágenes, descripciones inválidas y datos guardados corruptos", () => {
   for (const imageUrl of [
     "javascript:alert(1)",

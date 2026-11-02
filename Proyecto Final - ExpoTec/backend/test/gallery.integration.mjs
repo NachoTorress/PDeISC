@@ -83,8 +83,35 @@ test('TiDB: invitados, privacidad de fotos, moderación atómica, retiro y lími
   assert.equal((await api.request('/api/gallery/mine/query', {}, guest.accessToken)).body.photos.find(photo => photo.id === id).reviewNote, note);
   const stale = await api.patch(`/api/gallery/${id}`, { version: 1, decision: 'approved' }, admin.accessToken);
   assert.equal(stale.status, 409);
+  for (const status of ['pending', 'approved', 'rejected']) {
+    const contribution = await gallery.submit(input, guest.user.id);
+    const target = status === 'pending' ? contribution : await gallery.review(contribution.id, {
+      version: 1, decision: status, note: status === 'rejected' ? 'Imagen rechazada para esta prueba.' : '',
+    }, admin.user.id);
+    assert.equal((await api.del(`/api/gallery/${target.id}`, { version: target.version }, guest.accessToken)).status, 403);
+    assert.equal((await api.del(`/api/gallery/${target.id}`, { version: target.version + 1 }, admin.accessToken)).status, 409);
+    const [[before]] = await pool.execute('SELECT COUNT(*) AS count FROM gallery_photos WHERE id = ?', [target.id]);
+    assert.equal(before.count, 1);
+    assert.equal((await api.del(`/api/gallery/${target.id}`, { version: target.version }, admin.accessToken)).status, 204);
+    assert.equal((await publicPhotos()).some(photo => photo.id === target.id), false);
+    for (const route of ['mine', 'moderation']) {
+      const listed = await api.request(`/api/gallery/${route}/query`, route === 'moderation' ? { status: 'all' } : {}, route === 'moderation' ? admin.accessToken : guest.accessToken);
+      assert.equal(listed.body.photos.some(photo => photo.id === target.id), false);
+    }
+    const [[reviews]] = await pool.execute('SELECT COUNT(*) AS count FROM gallery_reviews WHERE photo_id = ?', [target.id]);
+    assert.equal(reviews.count, 0);
+    assert.equal((await api.del(`/api/gallery/${target.id}`, { version: target.version }, admin.accessToken)).status, 404);
+  }
+  const competing = await gallery.submit(input, guest.user.id);
+  const outcomes = await Promise.all([
+    api.del(`/api/gallery/${competing.id}`, { version: 1 }, admin.accessToken),
+    api.patch(`/api/gallery/${competing.id}`, { version: 1, decision: 'approved' }, admin.accessToken),
+  ]);
+  assert.equal(outcomes.filter(result => [200, 204].includes(result.status)).length, 1);
+  assert.ok(outcomes.some(result => [404, 409].includes(result.status)));
   await pool.execute("DELETE FROM user_roles WHERE user_id = ? AND role_code = 'admin'", [admin.user.id]);
   await assert.rejects(gallery.review(id, { version: removed.body.photo.version, decision: 'approved', note: '' }, admin.user.id), error => error.status === 403);
+  await assert.rejects(gallery.remove(id, removed.body.photo.version, admin.user.id), error => error.status === 403);
   // Los dos envíos compiten por la última plaza pendiente, bajo el bloqueo de su autor.
   for (let index = 0; index < 19; index++)
     await pool.execute('INSERT INTO gallery_photos (id, author_id, image_url, caption) VALUES (?, ?, ?, ?)', [randomUUID(), other.user.id, input.imageUrl, input.caption]);

@@ -35,11 +35,12 @@ test('galería: visitante consulta, invitado aporta, solo administración modera
     async moderation(page) { calls.push(['moderation', page]); return []; },
     async submit(input, actor) { calls.push(['submit', input, actor]); return { id, status: 'pending', version: 1 }; },
     async review(key, input, actor) { calls.push(['review', key, input, actor]); return { id: key, status: input.decision, version: 2 }; },
+    async remove(key, version, actor) { calls.push(['remove', key, version, actor]); },
   };
   const api = await listen(createApp(auth, testConfig, console, undefined, undefined, undefined, undefined, undefined, repository));
   t.after(api.close);
   assert.equal((await api.request('/api/gallery/public/query')).status, 200);
-  for (const [method, route] of [['POST', 'mine/query'], ['POST', ''], ['POST', 'moderation/query'], ['PATCH', id]])
+  for (const [method, route] of [['POST', 'mine/query'], ['POST', ''], ['POST', 'moderation/query'], ['PATCH', id], ['DELETE', id]])
     assert.equal((await api.request(`/api/gallery/${route}`, {}, undefined, { method })).status, 401);
   const account = { firstName: 'Ana', lastName: 'García', email: 'guest@example.com', password: 'Una contraseña larga 2026', accountType: 'guest' };
   for (const type of ['admin', 'teacher', 'loans', '', null])
@@ -60,14 +61,25 @@ test('galería: visitante consulta, invitado aporta, solo administración modera
   assert.equal((await api.request('/api/gallery', { ...photo, status: 'approved' }, accessToken)).status, 400);
   assert.equal((await api.request('/api/gallery/moderation/query', {}, accessToken)).status, 403);
   assert.equal((await api.patch(`/api/gallery/${id}`, { version: 1, decision: 'approved' }, accessToken)).status, 403);
+  assert.equal((await api.del(`/api/gallery/${id}`, { version: 1 }, accessToken)).status, 403);
   auth.users.get(user.id).roles.push('admin');
   assert.equal((await api.request('/api/gallery/moderation/query', {}, accessToken)).status, 200);
   assert.equal((await api.patch(`/api/gallery/${id}`, { version: 1, decision: 'approved' }, accessToken)).status, 200);
   assert.deepEqual(calls.at(-1), ['review', id, { version: 1, decision: 'approved', note: '' }, user.id]);
+  for (const body of [{}, { version: 0 }, { version: '2' }, { version: 2, actorId: user.id }, { version: 2, status: 'approved' }])
+    assert.equal((await api.del(`/api/gallery/${id}`, body, accessToken)).status, 400);
+  assert.equal((await api.del('/api/gallery/invalid', { version: 2 }, accessToken)).status, 400);
+  const deleted = await api.del(`/api/gallery/${id}`, { version: 2 }, accessToken);
+  assert.equal(deleted.status, 204);
+  assert.equal(deleted.body, null);
+  assert.deepEqual(calls.at(-1), ['remove', id, 2, user.id]);
   auth.users.get(user.id).roles = ['guest'];
   assert.equal((await api.patch(`/api/gallery/${id}`, { version: 2, decision: 'rejected', note: 'Retirada para revisar' }, accessToken)).status, 403);
+  assert.equal((await api.del(`/api/gallery/${id}`, { version: 2 }, accessToken)).status, 403);
   auth.consumeRate = async () => 60;
   const limited = await api.request('/api/gallery', photo, accessToken);
   assert.equal(limited.status, 429);
   assert.equal(limited.headers.get('retry-after'), '60');
+  auth.users.get(user.id).roles.push('admin');
+  assert.equal((await api.del(`/api/gallery/${id}`, { version: 2 }, accessToken)).status, 429);
 });

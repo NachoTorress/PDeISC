@@ -35,6 +35,7 @@ export default function DemoGalleryPage() {
     null,
   );
   const [decision, setDecision] = useState("approved");
+  const deleting = decision === "delete";
   const [note, setNote] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [error, setError] = useState("");
@@ -60,18 +61,29 @@ export default function DemoGalleryPage() {
   /** Aplica la decisión de moderación en la demo. */
   function review() {
     if (!reviewing || noteError) return;
-    const failure = mutate({
-      type: "reviewGalleryPhoto",
-      id: reviewing.id,
-      decision: decision as "approved" | "rejected",
-      note,
-    });
+    const failure = mutate(
+      deleting
+        ? {
+            type: "deleteGalleryPhoto",
+            id: reviewing.id,
+          }
+        : {
+            type: "reviewGalleryPhoto",
+            id: reviewing.id,
+            decision: decision as "approved" | "rejected",
+            note,
+          },
+    );
     if (failure) {
       setError(failure);
       setConfirm(false);
     } else {
       setForm(null);
-      notify("La decisión quedó guardada. El autor podrá verla en Mis fotos.");
+      notify(
+        deleting
+          ? "La foto fue eliminada."
+          : "La decisión quedó guardada. El autor podrá verla en Mis fotos.",
+      );
     }
   }
   const paragraph = { color: colors.muted, fontSize: 14, lineHeight: 21 };
@@ -99,7 +111,10 @@ export default function DemoGalleryPage() {
         />
       ) : reviewing ? (
         <Card style={{ width: "100%", maxWidth: 680, alignSelf: "center" }}>
-          <Heading title="Revisar foto" subtitle={reviewing.authorName} />
+          <Heading
+            title={deleting ? "Eliminar foto" : "Revisar foto"}
+            subtitle={reviewing.authorName}
+          />
           <DemoGalleryImage
             uri={reviewing.imageUrl}
             caption={reviewing.caption}
@@ -130,17 +145,20 @@ export default function DemoGalleryPage() {
                           : "Rechazar foto",
                     },
                   ]),
+              { value: "delete", label: "Eliminar definitivamente" },
             ]}
           />
-          <Field
-            label="Mensaje para el autor"
-            value={note}
-            onChangeText={setNote}
-            maxLength={1000}
-            editable={!confirm}
-            hint="Es obligatorio al rechazar o retirar la foto."
-            error={noteError}
-          />
+          {!deleting && (
+            <Field
+              label="Mensaje para el autor"
+              value={note}
+              onChangeText={setNote}
+              maxLength={1000}
+              editable={!confirm}
+              hint="Es obligatorio al rechazar o retirar la foto."
+              error={noteError}
+            />
+          )}
           {!!error && (
             <Text accessibilityRole="alert" style={{ color: colors.error }}>
               {error}
@@ -150,18 +168,23 @@ export default function DemoGalleryPage() {
             <InlineConfirm
               tone={decision === "approved" ? "success" : "danger"}
               text={
-                decision === "approved"
-                  ? "¿Publicar esta foto en la galería de demostración?"
-                  : "¿Dejar la foto fuera de la galería de demostración y guardar el motivo?"
+                deleting
+                  ? "¿Eliminar definitivamente esta foto y sus revisiones? Desaparecerá de la galería y de Mis fotos. Esta acción no se puede deshacer."
+                  : decision === "approved"
+                    ? "¿Publicar esta foto en la galería de demostración?"
+                    : "¿Dejar la foto fuera de la galería de demostración y guardar el motivo?"
               }
-              confirmLabel="Confirmar decisión"
+              confirmLabel={
+                deleting ? "Sí, eliminar foto" : "Confirmar decisión"
+              }
               onCancel={() => setConfirm(false)}
               onConfirm={review}
             />
           ) : (
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
               <Button
-                title="Revisar decisión"
+                title={deleting ? "Eliminar foto" : "Revisar decisión"}
+                variant={deleting ? "danger" : "primary"}
                 disabled={!!noteError}
                 onPress={() => setConfirm(true)}
               />
@@ -262,6 +285,18 @@ export default function DemoGalleryPage() {
                         setDecision(
                           photo.status === "approved" ? "rejected" : "approved",
                         );
+                        setNote("");
+                        setError("");
+                        setConfirm(false);
+                      }}
+                    />
+                    <Button
+                      title="Eliminar foto"
+                      icon="trash"
+                      variant="danger"
+                      onPress={() => {
+                        setForm({ role, photoId: photo.id });
+                        setDecision("delete");
                         setNote("");
                         setError("");
                         setConfirm(false);

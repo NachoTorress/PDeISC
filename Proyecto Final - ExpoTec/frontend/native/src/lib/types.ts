@@ -82,6 +82,7 @@ export interface DemoState {
 /** Acciones que modifican el estado de la demo. */
 export type Mutation =
   | { type: "submitGalleryPhoto"; imageUrl: string; caption: string }
+  | { type: "deleteGalleryPhoto"; id: string }
   | {
       type: "reviewGalleryPhoto";
       id: string;

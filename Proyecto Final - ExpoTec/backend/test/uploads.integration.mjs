@@ -90,4 +90,16 @@ test('TiDB y Blob privado: carga real, validación, propiedad, moderación y lim
   const cleaned = [];
   await uploads.prune(async obsolete => { cleaned.push(...obsolete); await del(obsolete); });
   assert(cleaned.includes(bad.rawPath)); assert(!cleaned.includes(image.imagePath), 'Conserva las fotos referenciadas incluso si fueron rechazadas');
+  assert.equal((await api.patch(`/api/gallery/${photoId}`, { decision: 'approved', version: 3 }, admin.accessToken)).status, 200);
+  const duplicate = await api.request('/api/gallery', payload, owner.accessToken);
+  assert.equal(duplicate.status, 201);
+  assert.equal((await api.patch(`/api/gallery/${duplicate.body.photo.id}`, { decision: 'approved', version: 1 }, admin.accessToken)).status, 200);
+  assert.equal((await api.del(`/api/gallery/${photoId}`, { version: 4 }, admin.accessToken)).status, 204);
+  assert.equal((await fetch(`${api.base}/api/uploads/${image.id}/image`)).status, 200, 'La otra publicación aprobada conserva el acceso a la imagen');
+  assert.equal((await api.del(`/api/gallery/${duplicate.body.photo.id}`, { version: 2 }, admin.accessToken)).status, 204);
+  assert.equal((await fetch(`${api.base}/api/uploads/${image.id}/image`)).status, 404);
+  const deletedPaths = [];
+  await uploads.prune(async obsolete => { deletedPaths.push(...obsolete); await del(obsolete); });
+  assert(deletedPaths.includes(image.imagePath), 'La limpieza elimina el archivo cuando ya no hay aportes que lo usen');
+  assert.equal(await uploads.get(image.id), undefined);
 });

@@ -37,6 +37,18 @@ export function createGalleryRepository(pool) {
     publicList: page => list(page, null, true),
     mine: (page, actorId) => list(page, actorId),
     moderation: page => list(page),
+    /** Elimina la foto y sus revisiones, incluso si ya fue publicada. */
+    async remove(id, version, actorId) {
+      return transaction(pool, async db => {
+        await member(db, actorId, true);
+        const [rows] = await db.execute('SELECT version FROM gallery_photos WHERE id = ? FOR UPDATE', [id]);
+        if (!rows.length) throw new HttpError(404, 'PHOTO_NOT_FOUND', 'No encontramos esa foto.');
+        if (rows[0].version !== version)
+          throw new HttpError(409, 'PHOTO_CHANGED', 'Otra persona revisó esta foto. Actualizá la lista antes de eliminarla.');
+        await db.execute('DELETE FROM gallery_reviews WHERE photo_id = ?', [id]);
+        await db.execute('DELETE FROM gallery_photos WHERE id = ?', [id]);
+      });
+    },
     /** Registra una foto pendiente (máximo 20 pendientes por autor). */
     async submit(input, actorId) {
       return transaction(pool, async db => {

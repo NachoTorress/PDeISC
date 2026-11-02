@@ -23,6 +23,8 @@ Los enlaces externos siguen dependiendo de su alojamiento original: ExpoTec cont
 
 `npm run db:prune` también retira cargas sin referencias que lleven más de siete días sin actualizarse. Comprueba las referencias bajo bloqueo antes de borrar objetos y registro. Conserva fotos de proyectos y galería, incluso rechazadas, para que sus autores puedan consultarlas. Esta limpieza es manual; no se creó una automatización periódica.
 
+Administración puede eliminar definitivamente un aporte desde **Galería de la ExpoTec → Moderar fotos → Eliminar foto**, incluso después de aprobarlo y publicarlo. Al confirmar, desaparecen el aporte y sus revisiones de todas las listas. La imagen subida deja de ser pública si no tiene otras publicaciones aprobadas; su archivo queda sujeto a la limpieza de cargas sin referencias. Los enlaces externos conservan el archivo en su alojamiento original.
+
 ## Verificación
 
 `npm test` cubre formatos falsos, límites, optimización, permisos, concurrencia, idempotencia y bloqueo de visitantes. `npm run test:uploads` usa exclusivamente `TEST_DB_NAME=expotec_test_*`, con Blob privado real y una imagen sintética; comprueba carga, acceso directo privado, propiedad, aprobación, retiro y limpieza. Retira únicamente sus propios objetos y registros. El token local puede configurarse en `.env.uploads`, siempre excluido de Git.
