@@ -1,0 +1,1042 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram id="general" name="1. Estructura general">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="788" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="general-title" value="1. Estructura general" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="general-note" value="Web y APK comparten frontend y API; TiDB conserva los datos compartidos." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="708" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="general-persona" value="Persona&lt;br&gt;&lt;small&gt;Visitante o cuenta con roles&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/components/navigation/navigationItems.ts" data-model-id="general-persona" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="general-web" value="Web y TV&lt;br&gt;&lt;small&gt;React Native Web en Vercel&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/vercel.json" data-model-id="general-web" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="general-apk" value="APK Android&lt;br&gt;&lt;small&gt;Expo / React Native instalado&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/app.json" data-model-id="general-apk" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="general-api" value="API ExpoTec&lt;br&gt;&lt;small&gt;Express / Node.js en Vercel&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/app.mjs" data-model-id="general-api" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="general-tidb" value="TiDB&lt;br&gt;&lt;small&gt;Filas, relaciones e historiales&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/config/database.mjs" data-model-id="general-tidb" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="95.33333333333334" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="general-blob" value="Vercel Blob&lt;br&gt;&lt;small&gt;Archivos de imágenes privados&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/services/uploads.mjs" data-model-id="general-blob" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="general-externos" value="Identidad y correo&lt;br&gt;&lt;small&gt;Google, Discord, GitHub y SMTP&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/create-app.mjs" data-model-id="general-externos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="748.6666666666667" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="general-edge-0" value="Navegador" edge="1" parent="1" source="general-persona" target="general-web" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="315.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="general-edge-1" value="Instalación" edge="1" parent="1" source="general-persona" target="general-apk" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="805.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="general-edge-2" value="HTTPS /api" edge="1" parent="1" source="general-web" target="general-api" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="general-edge-3" value="HTTPS directo" edge="1" parent="1" source="general-apk" target="general-api" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="general-edge-4" value="SQL + TLS" edge="1" parent="1" source="general-api" target="general-tidb" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="233.33333333333334" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="general-edge-5" value="Archivos" edge="1" parent="1" source="general-api" target="general-blob" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="560.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="general-edge-6" value="Servicios" edge="1" parent="1" source="general-api" target="general-externos" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="886.6666666666667" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="peticion" name="2. Del botón a la base">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="1100" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="peticion-title" value="2. Del botón a la base" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="peticion-note" value="La pantalla ayuda a validar; el servidor decide permisos y guarda los cambios relacionados juntos." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="1020" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="peticion-pantalla" value="Pantalla y formulario&lt;br&gt;&lt;small&gt;Captura datos y muestra errores&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/pages/SharedProposalPage.tsx" data-model-id="peticion-pantalla" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="peticion-hook" value="Hook y cliente&lt;br&gt;&lt;small&gt;Borrador, sesión y pedido JSON&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/hooks/useSharedProposal.ts" data-model-id="peticion-hook" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="peticion-ruta" value="Express y ruta&lt;br&gt;&lt;small&gt;Protecciones, sesión y validadores&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/create-app.mjs" data-model-id="peticion-ruta" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="peticion-repo" value="Repositorio&lt;br&gt;&lt;small&gt;Roles vigentes y reglas de negocio&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/projects.mjs" data-model-id="peticion-repo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="peticion-db" value="Transacción TiDB&lt;br&gt;&lt;small&gt;Confirma todo o revierte todo&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/config/database.mjs" data-model-id="peticion-db" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="peticion-json" value="Resultado JSON&lt;br&gt;&lt;small&gt;Éxito o error con código y campos&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/lib/errors.mjs" data-model-id="peticion-json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="896" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="peticion-edge-0" value="Enviar" edge="1" parent="1" source="peticion-pantalla" target="peticion-hook" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="560.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peticion-edge-1" value="HTTPS" edge="1" parent="1" source="peticion-hook" target="peticion-ruta" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peticion-edge-2" value="Datos válidos" edge="1" parent="1" source="peticion-ruta" target="peticion-repo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="560.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peticion-edge-3" value="SQL" edge="1" parent="1" source="peticion-repo" target="peticion-db" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peticion-edge-4" value="Resultado" edge="1" parent="1" source="peticion-db" target="peticion-json" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="860.0" />
+              <mxPoint x="560.0" y="860.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peticion-edge-5" value="Actualizar o corregir" edge="1" parent="1" source="peticion-json" target="peticion-pantalla" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="1004" />
+              <mxPoint x="48" y="1004" />
+              <mxPoint x="48" y="88" />
+              <mxPoint x="560.0" y="88" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="sesion" name="3. Acceso y sesión">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="944" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="sesion-title" value="3. Acceso y sesión" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="sesion-note" value="La web renueva mediante cookie HttpOnly; Android usa SecureStore. Los roles los comprueba la API." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="864" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="sesion-abrir" value="Abrir ExpoTec&lt;br&gt;&lt;small&gt;AuthProvider restaura la sesión&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/contexts/AuthContext.tsx" data-model-id="sesion-abrir" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="sesion-correo" value="Correo y contraseña&lt;br&gt;&lt;small&gt;Registro o verificación del hash&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/services/auth.mjs" data-model-id="sesion-correo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="sesion-social" value="Acceso social&lt;br&gt;&lt;small&gt;Identidad verificada por proveedor&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/services/social.mjs" data-model-id="sesion-social" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="sesion-sesion" value="Sesión ExpoTec&lt;br&gt;&lt;small&gt;Acceso de 15 min y renovación rotativa&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/services/crypto.mjs" data-model-id="sesion-sesion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="sesion-memoria" value="Token de acceso&lt;br&gt;&lt;small&gt;Se conserva en memoria&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/lib/authClient.ts" data-model-id="sesion-memoria" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="sesion-seguro" value="Renovación&lt;br&gt;&lt;small&gt;Cookie web o SecureStore Android&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/lib/sessionStorage.native.ts" data-model-id="sesion-seguro" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="sesion-operar" value="Llamada autenticada&lt;br&gt;&lt;small&gt;API comprueba cuenta y roles&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/middleware/auth.mjs" data-model-id="sesion-operar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="sesion-edge-0" value="Si necesita ingresar" edge="1" parent="1" source="sesion-abrir" target="sesion-correo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="315.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sesion-edge-1" value="Otra forma de ingreso" edge="1" parent="1" source="sesion-abrir" target="sesion-social" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="805.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sesion-edge-2" value="Credenciales válidas" edge="1" parent="1" source="sesion-correo" target="sesion-sesion" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sesion-edge-3" value="Completar flujo" edge="1" parent="1" source="sesion-social" target="sesion-sesion" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sesion-edge-4" value="Acceso" edge="1" parent="1" source="sesion-sesion" target="sesion-memoria" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="315.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sesion-edge-5" value="Hasta 30 días" edge="1" parent="1" source="sesion-sesion" target="sesion-seguro" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="805.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sesion-edge-6" value="Bearer" edge="1" parent="1" source="sesion-memoria" target="sesion-operar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sesion-edge-7" value="Renueva cuando hace falta" edge="1" parent="1" source="sesion-seguro" target="sesion-operar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="proyectos" name="4. Ciclo del proyecto">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="944" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="proyectos-title" value="4. Ciclo del proyecto" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="proyectos-note" value="La confirmación asigna puesto y reserva elementos en una sola transacción." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="864" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="proyectos-borrador" value="Alumno: propuesta&lt;br&gt;&lt;small&gt;Datos, equipo, lugar y revisión final&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/pages/SharedProposalPage.tsx" data-model-id="proyectos-borrador" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="proyectos-pending" value="En revisión&lt;br&gt;&lt;small&gt;Estado pending; todavía es un pedido&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/projects.mjs" data-model-id="proyectos-pending" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="proyectos-changes" value="Requiere cambios&lt;br&gt;&lt;small&gt;Integrante corrige y reenvía&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/pages/SharedProjectPage.tsx" data-model-id="proyectos-changes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="80" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="proyectos-approved" value="Confirmado&lt;br&gt;&lt;small&gt;Puesto y elementos reservados&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/inventory.mjs" data-model-id="proyectos-approved" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="720" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="proyectos-publico" value="Muestra, plano y TV&lt;br&gt;&lt;small&gt;Se expone la información pública&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/projects.mjs" data-model-id="proyectos-publico" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="720" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="proyectos-cancelled" value="Cancelado&lt;br&gt;&lt;small&gt;Conserva historial y libera asignaciones&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/projects.mjs" data-model-id="proyectos-cancelled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="80" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="proyectos-reabrir" value="Reabrir propuesta&lt;br&gt;&lt;small&gt;Admin; exige devolver y libera reservas&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/loan-balances.mjs" data-model-id="proyectos-reabrir" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="720" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="proyectos-edge-0" value="Enviar" edge="1" parent="1" source="proyectos-borrador" target="proyectos-pending" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="560.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="proyectos-edge-1" value="Profesor pide cambios" edge="1" parent="1" source="proyectos-pending" target="proyectos-changes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="392.0" />
+              <mxPoint x="218.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="proyectos-edge-2" value="Profesor asignado confirma" edge="1" parent="1" source="proyectos-pending" target="proyectos-approved" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="392.0" />
+              <mxPoint x="858.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="proyectos-edge-3" value="Reenviar" edge="1" parent="1" source="proyectos-changes" target="proyectos-pending" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="218.0" y="536" />
+              <mxPoint x="24" y="536" />
+              <mxPoint x="24" y="244" />
+              <mxPoint x="560.0" y="244" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="proyectos-edge-4" value="Publicar" edge="1" parent="1" source="proyectos-approved" target="proyectos-publico" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="858.0" y="548.0" />
+              <mxPoint x="858.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="proyectos-edge-5" value="Administración" edge="1" parent="1" source="proyectos-approved" target="proyectos-reabrir" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="858.0" y="536" />
+              <mxPoint x="1068" y="536" />
+              <mxPoint x="1068" y="712" />
+              <mxPoint x="858.0" y="712" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="proyectos-edge-6" value="Vuelve a revisión" edge="1" parent="1" source="proyectos-reabrir" target="proyectos-pending" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="858.0" y="848" />
+              <mxPoint x="1092" y="848" />
+              <mxPoint x="1092" y="244" />
+              <mxPoint x="560.0" y="244" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="proyectos-edge-7" value="Cancelación autorizada" edge="1" parent="1" source="proyectos-pending" target="proyectos-cancelled" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="712" />
+              <mxPoint x="218.0" y="712" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="proyectos-edge-8" value="Cancelación autorizada" edge="1" parent="1" source="proyectos-changes" target="proyectos-cancelled" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="218.0" y="712" />
+              <mxPoint x="218.0" y="712" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="proyectos-edge-9" value="Antes debe devolver" edge="1" parent="1" source="proyectos-approved" target="proyectos-cancelled" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="858.0" y="536" />
+              <mxPoint x="560" y="536" />
+              <mxPoint x="560" y="712" />
+              <mxPoint x="218.0" y="712" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="espacios" name="5. Espacios e inventario">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="944" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="espacios-title" value="5. Espacios e inventario" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="espacios-note" value="Un puesto es una mesa habilitada. Un pedido de elementos se convierte en reserva al confirmar el proyecto." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="864" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="espacios-admin" value="Administración&lt;br&gt;&lt;small&gt;Cuenta real con rol admin&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/components/navigation/navigationItems.ts" data-model-id="espacios-admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="espacios-plano" value="Espacio y mobiliario&lt;br&gt;&lt;small&gt;Crea y acomoda el plano&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/spaces.mjs" data-model-id="espacios-plano" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="espacios-stock" value="Inventario&lt;br&gt;&lt;small&gt;Total y unidades fuera de servicio&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/inventory.mjs" data-model-id="espacios-stock" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="espacios-puestos" value="Puestos habilitados&lt;br&gt;&lt;small&gt;Mesas que el equipo puede solicitar&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/002_spaces.sql" data-model-id="espacios-puestos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="espacios-catalogo" value="Catálogo autorizado&lt;br&gt;&lt;small&gt;Elementos para el pedido del equipo&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/routes/inventory.mjs" data-model-id="espacios-catalogo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="espacios-confirmar" value="Confirmación&lt;br&gt;&lt;small&gt;Verifica disponibilidad y versión&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/projects.mjs" data-model-id="espacios-confirmar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="espacios-asignar" value="Asignaciones&lt;br&gt;&lt;small&gt;Puesto ocupado y elementos reservados&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/004_inventory.sql" data-model-id="espacios-asignar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="espacios-edge-0" value="Gestiona" edge="1" parent="1" source="espacios-admin" target="espacios-plano" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="315.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="espacios-edge-1" value="Gestiona" edge="1" parent="1" source="espacios-admin" target="espacios-stock" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="805.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="espacios-edge-2" value="Habilita" edge="1" parent="1" source="espacios-plano" target="espacios-puestos" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="392.0" />
+              <mxPoint x="315.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="espacios-edge-3" value="Ofrece" edge="1" parent="1" source="espacios-stock" target="espacios-catalogo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="392.0" />
+              <mxPoint x="805.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="espacios-edge-4" value="Puesto pedido" edge="1" parent="1" source="espacios-puestos" target="espacios-confirmar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="548.0" />
+              <mxPoint x="560.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="espacios-edge-5" value="Cantidades pedidas" edge="1" parent="1" source="espacios-catalogo" target="espacios-confirmar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="548.0" />
+              <mxPoint x="560.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="espacios-edge-6" value="Todo junto o nada" edge="1" parent="1" source="espacios-confirmar" target="espacios-asignar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="prestamos" name="6. Entregas y devoluciones">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="1100" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="prestamos-title" value="6. Entregas y devoluciones" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="prestamos-note" value="Cambiar de jornada no cierra saldos. Devolver libera disponibilidad física y conserva la reserva del proyecto." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="1020" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="prestamos-reserva" value="Proyecto confirmado&lt;br&gt;&lt;small&gt;Reserva vigente de elementos&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/loans.mjs" data-model-id="prestamos-reserva" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="prestamos-entrega" value="Revisar entrega&lt;br&gt;&lt;small&gt;Jornada, alumno, reserva y stock físico&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/components/SharedLendingForm.tsx" data-model-id="prestamos-entrega" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="prestamos-prestamo" value="Entrega registrada&lt;br&gt;&lt;small&gt;Una por proyecto, elemento y jornada&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/005_loans.sql" data-model-id="prestamos-prestamo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="prestamos-devolver" value="Devolución parcial o total&lt;br&gt;&lt;small&gt;Saldo = entregado menos devuelto&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/components/SharedReturnForm.tsx" data-model-id="prestamos-devolver" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="prestamos-bien" value="Vuelve utilizable&lt;br&gt;&lt;small&gt;Recupera disponibilidad física&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/loans.mjs" data-model-id="prestamos-bien" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="prestamos-dano" value="Vuelve con daño&lt;br&gt;&lt;small&gt;Cuenta devuelta y fuera de servicio&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/inventory.mjs" data-model-id="prestamos-dano" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="prestamos-historia" value="Saldo e historial&lt;br&gt;&lt;small&gt;Registra quién, cuándo y observación&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/loan-balances.mjs" data-model-id="prestamos-historia" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="896" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="prestamos-edge-0" value="Encargado o admin" edge="1" parent="1" source="prestamos-reserva" target="prestamos-entrega" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="560.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="prestamos-edge-1" value="Confirmar" edge="1" parent="1" source="prestamos-entrega" target="prestamos-prestamo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="prestamos-edge-2" value="Registrar retorno" edge="1" parent="1" source="prestamos-prestamo" target="prestamos-devolver" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="560.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="prestamos-edge-3" value="Sin daño" edge="1" parent="1" source="prestamos-devolver" target="prestamos-bien" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="704.0" />
+              <mxPoint x="315.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="prestamos-edge-4" value="Con motivo" edge="1" parent="1" source="prestamos-devolver" target="prestamos-dano" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="704.0" />
+              <mxPoint x="805.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="prestamos-edge-5" value="Actualizar" edge="1" parent="1" source="prestamos-bien" target="prestamos-historia" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="860.0" />
+              <mxPoint x="560.0" y="860.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="prestamos-edge-6" value="Evento de inventario" edge="1" parent="1" source="prestamos-dano" target="prestamos-historia" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="860.0" />
+              <mxPoint x="560.0" y="860.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="fotos" name="7. Archivo y foto publicada">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="1100" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="fotos-title" value="7. Archivo y foto publicada" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-note" value="Subir el archivo no lo publica: el aporte queda pendiente hasta la moderación." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="1020" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-elegir" value="Elegir foto o enlace&lt;br&gt;&lt;small&gt;Archivo JPG/PNG/WebP o URL HTTPS&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/components/PhotoUploadField.tsx" data-model-id="fotos-elegir" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-permiso" value="API autoriza archivo&lt;br&gt;&lt;small&gt;Token temporal para una carga&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/services/uploads.mjs" data-model-id="fotos-permiso" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-enlace" value="Conservar enlace&lt;br&gt;&lt;small&gt;El archivo sigue en el sitio externo&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/validators/gallery.mjs" data-model-id="fotos-enlace" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-blob" value="Subir a Blob privado&lt;br&gt;&lt;small&gt;Cliente sube; API valida y optimiza&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/lib/photoUpload.ts" data-model-id="fotos-blob" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-aporte" value="Aporte pendiente&lt;br&gt;&lt;small&gt;TiDB guarda autor, URL y descripción&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/gallery.mjs" data-model-id="fotos-aporte" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-moderar" value="Administración revisa&lt;br&gt;&lt;small&gt;Aprueba o rechaza; controla versión&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/routes/gallery.mjs" data-model-id="fotos-moderar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-publicar" value="Galería pública&lt;br&gt;&lt;small&gt;Solo aprobadas; imagen con acceso permitido&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/uploads.mjs" data-model-id="fotos-publicar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="896" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-eliminar" value="Eliminar aporte&lt;br&gt;&lt;small&gt;Cualquier estado; borra fila y revisiones&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/gallery.mjs" data-model-id="fotos-eliminar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="896" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="fotos-edge-0" value="Archivo" edge="1" parent="1" source="fotos-elegir" target="fotos-permiso" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="315.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fotos-edge-1" value="URL" edge="1" parent="1" source="fotos-elegir" target="fotos-enlace" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="805.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fotos-edge-2" value="Subida y complete" edge="1" parent="1" source="fotos-permiso" target="fotos-blob" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fotos-edge-3" value="Enviar aporte" edge="1" parent="1" source="fotos-blob" target="fotos-aporte" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="560.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fotos-edge-4" value="Enviar aporte" edge="1" parent="1" source="fotos-enlace" target="fotos-aporte" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="380" />
+              <mxPoint x="1080" y="380" />
+              <mxPoint x="1080" y="556" />
+              <mxPoint x="560.0" y="556" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fotos-edge-5" value="Pendiente" edge="1" parent="1" source="fotos-aporte" target="fotos-moderar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fotos-edge-6" value="Aprobar" edge="1" parent="1" source="fotos-moderar" target="fotos-publicar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="860.0" />
+              <mxPoint x="315.0" y="860.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fotos-edge-7" value="Eliminar si corresponde" edge="1" parent="1" source="fotos-moderar" target="fotos-eliminar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="860.0" />
+              <mxPoint x="805.0" y="860.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="tv" name="8. Presentación TV">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="944" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="tv-title" value="8. Presentación TV" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="tv-note" value="TV consulta los datos publicados; no necesita una nueva compilación cuando se confirma un proyecto." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="864" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="tv-publicados" value="Proyectos confirmados&lt;br&gt;&lt;small&gt;Origen de la muestra pública&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/repositories/projects.mjs" data-model-id="tv-publicados" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="tv-consultar" value="Consultar presentación&lt;br&gt;&lt;small&gt;Carga todas las páginas de fichas&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/lib/sharedPresentation.ts" data-model-id="tv-consultar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="tv-reproducir" value="Iniciar o pausar&lt;br&gt;&lt;small&gt;Anterior, siguiente y pantalla completa&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/pages/SharedPresentationPage.tsx" data-model-id="tv-reproducir" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="tv-imagen" value="Ficha con imagen&lt;br&gt;&lt;small&gt;Avance a los 8, 15 o 30 segundos&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/pages/SharedPresentationPage.tsx" data-model-id="tv-imagen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="tv-video" value="Ficha con video&lt;br&gt;&lt;small&gt;Avance al terminar; sonido opcional&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/components/SharedPresentationVideo.web.tsx" data-model-id="tv-video" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="tv-actualizar" value="Actualizar cada minuto&lt;br&gt;&lt;small&gt;Pausa ante error de conexión&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/pages/SharedPresentationPage.tsx" data-model-id="tv-actualizar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="tv-edge-0" value="POST público" edge="1" parent="1" source="tv-publicados" target="tv-consultar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="560.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tv-edge-1" value="Fichas cargadas" edge="1" parent="1" source="tv-consultar" target="tv-reproducir" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tv-edge-2" value="Imagen" edge="1" parent="1" source="tv-reproducir" target="tv-imagen" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="315.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tv-edge-3" value="Video" edge="1" parent="1" source="tv-reproducir" target="tv-video" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="805.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tv-edge-4" value="Sigue la secuencia" edge="1" parent="1" source="tv-imagen" target="tv-actualizar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tv-edge-5" value="Sigue la secuencia" edge="1" parent="1" source="tv-video" target="tv-actualizar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tv-edge-6" value="Volver a consultar" edge="1" parent="1" source="tv-actualizar" target="tv-consultar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="848" />
+              <mxPoint x="24" y="848" />
+              <mxPoint x="24" y="244" />
+              <mxPoint x="560.0" y="244" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="publicacion" name="9. Código, web y APK">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="788" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="publicacion-title" value="9. Código, web y APK" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-note" value="La web y la API se despliegan desde main; Android requiere construir y distribuir otra APK." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="708" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-codigo" value="Código de ExpoTec&lt;br&gt;&lt;small&gt;Repositorio PDelSC: carpeta ExpoTec&lt;/small&gt;" vertex="1" parent="1" data-source="AGENTS.md" data-model-id="publicacion-codigo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-main" value="Commit y push a main&lt;br&gt;&lt;small&gt;Publicación autorizada del proyecto&lt;/small&gt;" vertex="1" parent="1" data-source="AGENTS.md" data-model-id="publicacion-main" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-eas" value="EAS build preview&lt;br&gt;&lt;small&gt;Compila y firma Android&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/eas.json" data-model-id="publicacion-eas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-vercelweb" value="Vercel: frontend&lt;br&gt;&lt;small&gt;Expo export web genera dist&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/vercel.json" data-model-id="publicacion-vercelweb" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="95.33333333333334" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-vercelapi" value="Vercel: backend&lt;br&gt;&lt;small&gt;Publica Express por separado&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/app.mjs" data-model-id="publicacion-vercelapi" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-apk" value="Archivo APK&lt;br&gt;&lt;small&gt;Descarga e instalación en Android&lt;/small&gt;" vertex="1" parent="1" data-source="docs/APK_PRUEBA.md" data-model-id="publicacion-apk" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="748.6666666666667" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-web" value="Web actualizada&lt;br&gt;&lt;small&gt;Al cargar la versión publicada&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/package.json" data-model-id="publicacion-web" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="95.33333333333334" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-api" value="API actualizada&lt;br&gt;&lt;small&gt;Clientes compatibles usan el servidor&lt;/small&gt;" vertex="1" parent="1" data-source="backend/src/create-app.mjs" data-model-id="publicacion-api" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-android" value="Android actualizado&lt;br&gt;&lt;small&gt;La APK instalada cambia al reemplazarla&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/app.json" data-model-id="publicacion-android" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="748.6666666666667" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="publicacion-edge-0" value="Guardar y publicar" edge="1" parent="1" source="publicacion-codigo" target="publicacion-main" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="315.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publicacion-edge-1" value="Build aparte" edge="1" parent="1" source="publicacion-codigo" target="publicacion-eas" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="805.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publicacion-edge-2" value="Frontend" edge="1" parent="1" source="publicacion-main" target="publicacion-vercelweb" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="392.0" />
+              <mxPoint x="233.33333333333334" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publicacion-edge-3" value="Backend" edge="1" parent="1" source="publicacion-main" target="publicacion-vercelapi" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publicacion-edge-4" value="Resultado" edge="1" parent="1" source="publicacion-eas" target="publicacion-apk" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="392.0" />
+              <mxPoint x="886.6666666666667" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publicacion-edge-5" value="Publicar" edge="1" parent="1" source="publicacion-vercelweb" target="publicacion-web" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="233.33333333333334" y="548.0" />
+              <mxPoint x="233.33333333333334" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publicacion-edge-6" value="Publicar" edge="1" parent="1" source="publicacion-vercelapi" target="publicacion-api" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="560.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publicacion-edge-7" value="Instalar" edge="1" parent="1" source="publicacion-apk" target="publicacion-android" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="886.6666666666667" y="548.0" />
+              <mxPoint x="886.6666666666667" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="demo" name="10. Demostración local">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="944" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="demo-title" value="10. Demostración local" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="demo-note" value="Cambiar el perfil del ejemplo no cambia los roles reales ni sincroniza los datos con TiDB." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="864" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="demo-demo" value="Demostración&lt;br&gt;&lt;small&gt;Datos ficticios de ejemplo&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/contexts/DemoContext.tsx" data-model-id="demo-demo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="demo-perfil" value="Perfil ficticio&lt;br&gt;&lt;small&gt;Alumno, profesor, organización y otros&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/components/navigation/DemoBar.tsx" data-model-id="demo-perfil" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="demo-modelo" value="Pantallas y modelo local&lt;br&gt;&lt;small&gt;applyMutation comprueba reglas del ejemplo&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/lib/model.ts" data-model-id="demo-modelo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="demo-web" value="En navegador&lt;br&gt;&lt;small&gt;AsyncStorage / almacenamiento local&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/lib/demoStorage.web.ts" data-model-id="demo-web" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="demo-android" value="En Android&lt;br&gt;&lt;small&gt;Archivos JSON con respaldo&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/lib/demoStorage.native.ts" data-model-id="demo-android" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="demo-local" value="Datos de ese dispositivo&lt;br&gt;&lt;small&gt;Separados de cuenta real y base compartida&lt;/small&gt;" vertex="1" parent="1" data-source="frontend/native/src/contexts/DemoContext.tsx" data-model-id="demo-local" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="demo-edge-0" value="Elegir vista" edge="1" parent="1" source="demo-demo" target="demo-perfil" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="560.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="demo-edge-1" value="Probar acciones" edge="1" parent="1" source="demo-perfil" target="demo-modelo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="392.0" />
+              <mxPoint x="560.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="demo-edge-2" value="Web" edge="1" parent="1" source="demo-modelo" target="demo-web" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="315.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="demo-edge-3" value="APK" edge="1" parent="1" source="demo-modelo" target="demo-android" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="548.0" />
+              <mxPoint x="805.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="demo-edge-4" value="Guardar" edge="1" parent="1" source="demo-web" target="demo-local" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="demo-edge-5" value="Guardar" edge="1" parent="1" source="demo-android" target="demo-local" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="datos" name="11. Relaciones de los datos">
+    <mxGraphModel page="1" pageWidth="1120" pageHeight="944" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="datos-title" value="11. Relaciones de los datos" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=25;fontColor=#173e2b;">
+          <mxGeometry x="70" y="24" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="datos-note" value="La base conecta identidad, lugares y movimientos; los archivos de imagen permanecen en Blob." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#173e2b;">
+          <mxGeometry x="70" y="864" width="980" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="datos-cuentas" value="Cuentas y roles&lt;br&gt;&lt;small&gt;users, user_roles, sessions&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/001_auth.sql" data-model-id="datos-cuentas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="116" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="datos-proyectos" value="Proyectos y equipo&lt;br&gt;&lt;small&gt;projects, members, teachers, reviews&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/003_projects.sql" data-model-id="datos-proyectos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="datos-galeria" value="Fotos y cargas&lt;br&gt;&lt;small&gt;gallery_photos, reviews, image_uploads&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/006_gallery.sql" data-model-id="datos-galeria" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="272" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="datos-lugares" value="Espacios y puestos&lt;br&gt;&lt;small&gt;spaces, furniture, booths, allocations&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/002_spaces.sql" data-model-id="datos-lugares" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="177.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="datos-recursos" value="Pedidos y reservas&lt;br&gt;&lt;small&gt;resources, requests, allocations&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/004_inventory.sql" data-model-id="datos-recursos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="667.0" y="428" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="datos-movimientos" value="Préstamos y devoluciones&lt;br&gt;&lt;small&gt;loans, loan_returns&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/005_loans.sql" data-model-id="datos-movimientos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="584" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="datos-condicion" value="Condición e historial&lt;br&gt;&lt;small&gt;Fuera de servicio y eventos de inventario&lt;/small&gt;" vertex="1" parent="1" data-source="backend/sql/005_loans.sql" data-model-id="datos-condicion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf5ef;strokeColor=#799783;fontColor=#173e2b;fontFamily=Arial;fontSize=18;spacing=8;">
+          <mxGeometry x="422.0" y="740" width="276" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="datos-edge-0" value="Participan" edge="1" parent="1" source="datos-cuentas" target="datos-proyectos" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="315.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="datos-edge-1" value="Autor y moderador" edge="1" parent="1" source="datos-cuentas" target="datos-galeria" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="236.0" />
+              <mxPoint x="805.0" y="236.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="datos-edge-2" value="Solicitan y ocupan" edge="1" parent="1" source="datos-proyectos" target="datos-lugares" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="392.0" />
+              <mxPoint x="315.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="datos-edge-3" value="Piden y reservan" edge="1" parent="1" source="datos-proyectos" target="datos-recursos" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315.0" y="392.0" />
+              <mxPoint x="805.0" y="392.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="datos-edge-4" value="Entrega física" edge="1" parent="1" source="datos-recursos" target="datos-movimientos" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="805.0" y="548.0" />
+              <mxPoint x="560.0" y="548.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="datos-edge-5" value="Daño o novedad" edge="1" parent="1" source="datos-movimientos" target="datos-condicion" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#60746a;fontColor=#3b5445;fontSize=12;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560.0" y="704.0" />
+              <mxPoint x="560.0" y="704.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

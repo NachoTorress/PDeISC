@@ -1,0 +1,1120 @@
+{
+  "reviewed": "2026-11-03",
+  "views": [
+    {
+      "id": "general",
+      "title": "1. Estructura general",
+      "takeaway": "Web y APK comparten frontend y API; TiDB conserva los datos compartidos.",
+      "nodes": [
+        {
+          "id": "persona",
+          "label": "Persona",
+          "detail": "Visitante o cuenta con roles",
+          "source": "frontend/native/src/components/navigation/navigationItems.ts",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "web",
+          "label": "Web y TV",
+          "detail": "React Native Web en Vercel",
+          "source": "frontend/native/vercel.json",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "apk",
+          "label": "APK Android",
+          "detail": "Expo / React Native instalado",
+          "source": "frontend/native/app.json",
+          "rank": 1,
+          "order": 1
+        },
+        {
+          "id": "api",
+          "label": "API ExpoTec",
+          "detail": "Express / Node.js en Vercel",
+          "source": "backend/src/app.mjs",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "tidb",
+          "label": "TiDB",
+          "detail": "Filas, relaciones e historiales",
+          "source": "backend/src/config/database.mjs",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "blob",
+          "label": "Vercel Blob",
+          "detail": "Archivos de imágenes privados",
+          "source": "backend/src/services/uploads.mjs",
+          "rank": 3,
+          "order": 1
+        },
+        {
+          "id": "externos",
+          "label": "Identidad y correo",
+          "detail": "Google, Discord, GitHub y SMTP",
+          "source": "backend/src/create-app.mjs",
+          "rank": 3,
+          "order": 2
+        }
+      ],
+      "edges": [
+        {
+          "source": "persona",
+          "target": "web",
+          "label": "Navegador"
+        },
+        {
+          "source": "persona",
+          "target": "apk",
+          "label": "Instalación"
+        },
+        {
+          "source": "web",
+          "target": "api",
+          "label": "HTTPS /api"
+        },
+        {
+          "source": "apk",
+          "target": "api",
+          "label": "HTTPS directo"
+        },
+        {
+          "source": "api",
+          "target": "tidb",
+          "label": "SQL + TLS"
+        },
+        {
+          "source": "api",
+          "target": "blob",
+          "label": "Archivos"
+        },
+        {
+          "source": "api",
+          "target": "externos",
+          "label": "Servicios"
+        }
+      ]
+    },
+    {
+      "id": "peticion",
+      "title": "2. Del botón a la base",
+      "takeaway": "La pantalla ayuda a validar; el servidor decide permisos y guarda los cambios relacionados juntos.",
+      "nodes": [
+        {
+          "id": "pantalla",
+          "label": "Pantalla y formulario",
+          "detail": "Captura datos y muestra errores",
+          "source": "frontend/native/src/pages/SharedProposalPage.tsx",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "hook",
+          "label": "Hook y cliente",
+          "detail": "Borrador, sesión y pedido JSON",
+          "source": "frontend/native/src/hooks/useSharedProposal.ts",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "ruta",
+          "label": "Express y ruta",
+          "detail": "Protecciones, sesión y validadores",
+          "source": "backend/src/create-app.mjs",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "repo",
+          "label": "Repositorio",
+          "detail": "Roles vigentes y reglas de negocio",
+          "source": "backend/src/repositories/projects.mjs",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "db",
+          "label": "Transacción TiDB",
+          "detail": "Confirma todo o revierte todo",
+          "source": "backend/src/config/database.mjs",
+          "rank": 4,
+          "order": 0
+        },
+        {
+          "id": "json",
+          "label": "Resultado JSON",
+          "detail": "Éxito o error con código y campos",
+          "source": "backend/src/lib/errors.mjs",
+          "rank": 5,
+          "order": 0
+        }
+      ],
+      "edges": [
+        {
+          "source": "pantalla",
+          "target": "hook",
+          "label": "Enviar"
+        },
+        {
+          "source": "hook",
+          "target": "ruta",
+          "label": "HTTPS"
+        },
+        {
+          "source": "ruta",
+          "target": "repo",
+          "label": "Datos válidos"
+        },
+        {
+          "source": "repo",
+          "target": "db",
+          "label": "SQL"
+        },
+        {
+          "source": "db",
+          "target": "json",
+          "label": "Resultado"
+        },
+        {
+          "source": "json",
+          "target": "pantalla",
+          "label": "Actualizar o corregir"
+        }
+      ]
+    },
+    {
+      "id": "sesion",
+      "title": "3. Acceso y sesión",
+      "takeaway": "La web renueva mediante cookie HttpOnly; Android usa SecureStore. Los roles los comprueba la API.",
+      "nodes": [
+        {
+          "id": "abrir",
+          "label": "Abrir ExpoTec",
+          "detail": "AuthProvider restaura la sesión",
+          "source": "frontend/native/src/contexts/AuthContext.tsx",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "correo",
+          "label": "Correo y contraseña",
+          "detail": "Registro o verificación del hash",
+          "source": "backend/src/services/auth.mjs",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "social",
+          "label": "Acceso social",
+          "detail": "Identidad verificada por proveedor",
+          "source": "backend/src/services/social.mjs",
+          "rank": 1,
+          "order": 1
+        },
+        {
+          "id": "sesion",
+          "label": "Sesión ExpoTec",
+          "detail": "Acceso de 15 min y renovación rotativa",
+          "source": "backend/src/services/crypto.mjs",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "memoria",
+          "label": "Token de acceso",
+          "detail": "Se conserva en memoria",
+          "source": "frontend/native/src/lib/authClient.ts",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "seguro",
+          "label": "Renovación",
+          "detail": "Cookie web o SecureStore Android",
+          "source": "frontend/native/src/lib/sessionStorage.native.ts",
+          "rank": 3,
+          "order": 1
+        },
+        {
+          "id": "operar",
+          "label": "Llamada autenticada",
+          "detail": "API comprueba cuenta y roles",
+          "source": "backend/src/middleware/auth.mjs",
+          "rank": 4,
+          "order": 0
+        }
+      ],
+      "edges": [
+        {
+          "source": "abrir",
+          "target": "correo",
+          "label": "Si necesita ingresar"
+        },
+        {
+          "source": "abrir",
+          "target": "social",
+          "label": "Otra forma de ingreso"
+        },
+        {
+          "source": "correo",
+          "target": "sesion",
+          "label": "Credenciales válidas"
+        },
+        {
+          "source": "social",
+          "target": "sesion",
+          "label": "Completar flujo"
+        },
+        {
+          "source": "sesion",
+          "target": "memoria",
+          "label": "Acceso"
+        },
+        {
+          "source": "sesion",
+          "target": "seguro",
+          "label": "Hasta 30 días"
+        },
+        {
+          "source": "memoria",
+          "target": "operar",
+          "label": "Bearer"
+        },
+        {
+          "source": "seguro",
+          "target": "operar",
+          "label": "Renueva cuando hace falta"
+        }
+      ]
+    },
+    {
+      "id": "proyectos",
+      "title": "4. Ciclo del proyecto",
+      "takeaway": "La confirmación asigna puesto y reserva elementos en una sola transacción.",
+      "nodes": [
+        {
+          "id": "borrador",
+          "label": "Alumno: propuesta",
+          "detail": "Datos, equipo, lugar y revisión final",
+          "source": "frontend/native/src/pages/SharedProposalPage.tsx",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "pending",
+          "label": "En revisión",
+          "detail": "Estado pending; todavía es un pedido",
+          "source": "backend/src/repositories/projects.mjs",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "changes",
+          "label": "Requiere cambios",
+          "detail": "Integrante corrige y reenvía",
+          "source": "frontend/native/src/pages/SharedProjectPage.tsx",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "approved",
+          "label": "Confirmado",
+          "detail": "Puesto y elementos reservados",
+          "source": "backend/src/repositories/inventory.mjs",
+          "rank": 2,
+          "order": 1
+        },
+        {
+          "id": "publico",
+          "label": "Muestra, plano y TV",
+          "detail": "Se expone la información pública",
+          "source": "backend/src/repositories/projects.mjs",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "cancelled",
+          "label": "Cancelado",
+          "detail": "Conserva historial y libera asignaciones",
+          "source": "backend/src/repositories/projects.mjs",
+          "rank": 4,
+          "order": 0
+        },
+        {
+          "id": "reabrir",
+          "label": "Reabrir propuesta",
+          "detail": "Admin; exige devolver y libera reservas",
+          "source": "backend/src/repositories/loan-balances.mjs",
+          "rank": 4,
+          "order": 1
+        }
+      ],
+      "edges": [
+        {
+          "source": "borrador",
+          "target": "pending",
+          "label": "Enviar"
+        },
+        {
+          "source": "pending",
+          "target": "changes",
+          "label": "Profesor pide cambios"
+        },
+        {
+          "source": "pending",
+          "target": "approved",
+          "label": "Profesor asignado confirma"
+        },
+        {
+          "source": "changes",
+          "target": "pending",
+          "label": "Reenviar"
+        },
+        {
+          "source": "approved",
+          "target": "publico",
+          "label": "Publicar"
+        },
+        {
+          "source": "approved",
+          "target": "reabrir",
+          "label": "Administración"
+        },
+        {
+          "source": "reabrir",
+          "target": "pending",
+          "label": "Vuelve a revisión"
+        },
+        {
+          "source": "pending",
+          "target": "cancelled",
+          "label": "Cancelación autorizada"
+        },
+        {
+          "source": "changes",
+          "target": "cancelled",
+          "label": "Cancelación autorizada"
+        },
+        {
+          "source": "approved",
+          "target": "cancelled",
+          "label": "Antes debe devolver"
+        }
+      ]
+    },
+    {
+      "id": "espacios",
+      "title": "5. Espacios e inventario",
+      "takeaway": "Un puesto es una mesa habilitada. Un pedido de elementos se convierte en reserva al confirmar el proyecto.",
+      "nodes": [
+        {
+          "id": "admin",
+          "label": "Administración",
+          "detail": "Cuenta real con rol admin",
+          "source": "frontend/native/src/components/navigation/navigationItems.ts",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "plano",
+          "label": "Espacio y mobiliario",
+          "detail": "Crea y acomoda el plano",
+          "source": "backend/src/repositories/spaces.mjs",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "stock",
+          "label": "Inventario",
+          "detail": "Total y unidades fuera de servicio",
+          "source": "backend/src/repositories/inventory.mjs",
+          "rank": 1,
+          "order": 1
+        },
+        {
+          "id": "puestos",
+          "label": "Puestos habilitados",
+          "detail": "Mesas que el equipo puede solicitar",
+          "source": "backend/sql/002_spaces.sql",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "catalogo",
+          "label": "Catálogo autorizado",
+          "detail": "Elementos para el pedido del equipo",
+          "source": "backend/src/routes/inventory.mjs",
+          "rank": 2,
+          "order": 1
+        },
+        {
+          "id": "confirmar",
+          "label": "Confirmación",
+          "detail": "Verifica disponibilidad y versión",
+          "source": "backend/src/repositories/projects.mjs",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "asignar",
+          "label": "Asignaciones",
+          "detail": "Puesto ocupado y elementos reservados",
+          "source": "backend/sql/004_inventory.sql",
+          "rank": 4,
+          "order": 0
+        }
+      ],
+      "edges": [
+        {
+          "source": "admin",
+          "target": "plano",
+          "label": "Gestiona"
+        },
+        {
+          "source": "admin",
+          "target": "stock",
+          "label": "Gestiona"
+        },
+        {
+          "source": "plano",
+          "target": "puestos",
+          "label": "Habilita"
+        },
+        {
+          "source": "stock",
+          "target": "catalogo",
+          "label": "Ofrece"
+        },
+        {
+          "source": "puestos",
+          "target": "confirmar",
+          "label": "Puesto pedido"
+        },
+        {
+          "source": "catalogo",
+          "target": "confirmar",
+          "label": "Cantidades pedidas"
+        },
+        {
+          "source": "confirmar",
+          "target": "asignar",
+          "label": "Todo junto o nada"
+        }
+      ]
+    },
+    {
+      "id": "prestamos",
+      "title": "6. Entregas y devoluciones",
+      "takeaway": "Cambiar de jornada no cierra saldos. Devolver libera disponibilidad física y conserva la reserva del proyecto.",
+      "nodes": [
+        {
+          "id": "reserva",
+          "label": "Proyecto confirmado",
+          "detail": "Reserva vigente de elementos",
+          "source": "backend/src/repositories/loans.mjs",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "entrega",
+          "label": "Revisar entrega",
+          "detail": "Jornada, alumno, reserva y stock físico",
+          "source": "frontend/native/src/components/SharedLendingForm.tsx",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "prestamo",
+          "label": "Entrega registrada",
+          "detail": "Una por proyecto, elemento y jornada",
+          "source": "backend/sql/005_loans.sql",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "devolver",
+          "label": "Devolución parcial o total",
+          "detail": "Saldo = entregado menos devuelto",
+          "source": "frontend/native/src/components/SharedReturnForm.tsx",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "bien",
+          "label": "Vuelve utilizable",
+          "detail": "Recupera disponibilidad física",
+          "source": "backend/src/repositories/loans.mjs",
+          "rank": 4,
+          "order": 0
+        },
+        {
+          "id": "dano",
+          "label": "Vuelve con daño",
+          "detail": "Cuenta devuelta y fuera de servicio",
+          "source": "backend/src/repositories/inventory.mjs",
+          "rank": 4,
+          "order": 1
+        },
+        {
+          "id": "historia",
+          "label": "Saldo e historial",
+          "detail": "Registra quién, cuándo y observación",
+          "source": "backend/src/repositories/loan-balances.mjs",
+          "rank": 5,
+          "order": 0
+        }
+      ],
+      "edges": [
+        {
+          "source": "reserva",
+          "target": "entrega",
+          "label": "Encargado o admin"
+        },
+        {
+          "source": "entrega",
+          "target": "prestamo",
+          "label": "Confirmar"
+        },
+        {
+          "source": "prestamo",
+          "target": "devolver",
+          "label": "Registrar retorno"
+        },
+        {
+          "source": "devolver",
+          "target": "bien",
+          "label": "Sin daño"
+        },
+        {
+          "source": "devolver",
+          "target": "dano",
+          "label": "Con motivo"
+        },
+        {
+          "source": "bien",
+          "target": "historia",
+          "label": "Actualizar"
+        },
+        {
+          "source": "dano",
+          "target": "historia",
+          "label": "Evento de inventario"
+        }
+      ]
+    },
+    {
+      "id": "fotos",
+      "title": "7. Archivo y foto publicada",
+      "takeaway": "Subir el archivo no lo publica: el aporte queda pendiente hasta la moderación.",
+      "nodes": [
+        {
+          "id": "elegir",
+          "label": "Elegir foto o enlace",
+          "detail": "Archivo JPG/PNG/WebP o URL HTTPS",
+          "source": "frontend/native/src/components/PhotoUploadField.tsx",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "permiso",
+          "label": "API autoriza archivo",
+          "detail": "Token temporal para una carga",
+          "source": "backend/src/services/uploads.mjs",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "enlace",
+          "label": "Conservar enlace",
+          "detail": "El archivo sigue en el sitio externo",
+          "source": "backend/src/validators/gallery.mjs",
+          "rank": 1,
+          "order": 1
+        },
+        {
+          "id": "blob",
+          "label": "Subir a Blob privado",
+          "detail": "Cliente sube; API valida y optimiza",
+          "source": "frontend/native/src/lib/photoUpload.ts",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "aporte",
+          "label": "Aporte pendiente",
+          "detail": "TiDB guarda autor, URL y descripción",
+          "source": "backend/src/repositories/gallery.mjs",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "moderar",
+          "label": "Administración revisa",
+          "detail": "Aprueba o rechaza; controla versión",
+          "source": "backend/src/routes/gallery.mjs",
+          "rank": 4,
+          "order": 0
+        },
+        {
+          "id": "publicar",
+          "label": "Galería pública",
+          "detail": "Solo aprobadas; imagen con acceso permitido",
+          "source": "backend/src/repositories/uploads.mjs",
+          "rank": 5,
+          "order": 0
+        },
+        {
+          "id": "eliminar",
+          "label": "Eliminar aporte",
+          "detail": "Cualquier estado; borra fila y revisiones",
+          "source": "backend/src/repositories/gallery.mjs",
+          "rank": 5,
+          "order": 1
+        }
+      ],
+      "edges": [
+        {
+          "source": "elegir",
+          "target": "permiso",
+          "label": "Archivo"
+        },
+        {
+          "source": "elegir",
+          "target": "enlace",
+          "label": "URL"
+        },
+        {
+          "source": "permiso",
+          "target": "blob",
+          "label": "Subida y complete"
+        },
+        {
+          "source": "blob",
+          "target": "aporte",
+          "label": "Enviar aporte"
+        },
+        {
+          "source": "enlace",
+          "target": "aporte",
+          "label": "Enviar aporte"
+        },
+        {
+          "source": "aporte",
+          "target": "moderar",
+          "label": "Pendiente"
+        },
+        {
+          "source": "moderar",
+          "target": "publicar",
+          "label": "Aprobar"
+        },
+        {
+          "source": "moderar",
+          "target": "eliminar",
+          "label": "Eliminar si corresponde"
+        }
+      ]
+    },
+    {
+      "id": "tv",
+      "title": "8. Presentación TV",
+      "takeaway": "TV consulta los datos publicados; no necesita una nueva compilación cuando se confirma un proyecto.",
+      "nodes": [
+        {
+          "id": "publicados",
+          "label": "Proyectos confirmados",
+          "detail": "Origen de la muestra pública",
+          "source": "backend/src/repositories/projects.mjs",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "consultar",
+          "label": "Consultar presentación",
+          "detail": "Carga todas las páginas de fichas",
+          "source": "frontend/native/src/lib/sharedPresentation.ts",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "reproducir",
+          "label": "Iniciar o pausar",
+          "detail": "Anterior, siguiente y pantalla completa",
+          "source": "frontend/native/src/pages/SharedPresentationPage.tsx",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "imagen",
+          "label": "Ficha con imagen",
+          "detail": "Avance a los 8, 15 o 30 segundos",
+          "source": "frontend/native/src/pages/SharedPresentationPage.tsx",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "video",
+          "label": "Ficha con video",
+          "detail": "Avance al terminar; sonido opcional",
+          "source": "frontend/native/src/components/SharedPresentationVideo.web.tsx",
+          "rank": 3,
+          "order": 1
+        },
+        {
+          "id": "actualizar",
+          "label": "Actualizar cada minuto",
+          "detail": "Pausa ante error de conexión",
+          "source": "frontend/native/src/pages/SharedPresentationPage.tsx",
+          "rank": 4,
+          "order": 0
+        }
+      ],
+      "edges": [
+        {
+          "source": "publicados",
+          "target": "consultar",
+          "label": "POST público"
+        },
+        {
+          "source": "consultar",
+          "target": "reproducir",
+          "label": "Fichas cargadas"
+        },
+        {
+          "source": "reproducir",
+          "target": "imagen",
+          "label": "Imagen"
+        },
+        {
+          "source": "reproducir",
+          "target": "video",
+          "label": "Video"
+        },
+        {
+          "source": "imagen",
+          "target": "actualizar",
+          "label": "Sigue la secuencia"
+        },
+        {
+          "source": "video",
+          "target": "actualizar",
+          "label": "Sigue la secuencia"
+        },
+        {
+          "source": "actualizar",
+          "target": "consultar",
+          "label": "Volver a consultar"
+        }
+      ]
+    },
+    {
+      "id": "publicacion",
+      "title": "9. Código, web y APK",
+      "takeaway": "La web y la API se despliegan desde main; Android requiere construir y distribuir otra APK.",
+      "nodes": [
+        {
+          "id": "codigo",
+          "label": "Código de ExpoTec",
+          "detail": "Repositorio PDelSC: carpeta ExpoTec",
+          "source": "AGENTS.md",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "main",
+          "label": "Commit y push a main",
+          "detail": "Publicación autorizada del proyecto",
+          "source": "AGENTS.md",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "eas",
+          "label": "EAS build preview",
+          "detail": "Compila y firma Android",
+          "source": "frontend/native/eas.json",
+          "rank": 1,
+          "order": 1
+        },
+        {
+          "id": "vercelweb",
+          "label": "Vercel: frontend",
+          "detail": "Expo export web genera dist",
+          "source": "frontend/native/vercel.json",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "vercelapi",
+          "label": "Vercel: backend",
+          "detail": "Publica Express por separado",
+          "source": "backend/src/app.mjs",
+          "rank": 2,
+          "order": 1
+        },
+        {
+          "id": "apk",
+          "label": "Archivo APK",
+          "detail": "Descarga e instalación en Android",
+          "source": "docs/APK_PRUEBA.md",
+          "rank": 2,
+          "order": 2
+        },
+        {
+          "id": "web",
+          "label": "Web actualizada",
+          "detail": "Al cargar la versión publicada",
+          "source": "frontend/native/package.json",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "api",
+          "label": "API actualizada",
+          "detail": "Clientes compatibles usan el servidor",
+          "source": "backend/src/create-app.mjs",
+          "rank": 3,
+          "order": 1
+        },
+        {
+          "id": "android",
+          "label": "Android actualizado",
+          "detail": "La APK instalada cambia al reemplazarla",
+          "source": "frontend/native/app.json",
+          "rank": 3,
+          "order": 2
+        }
+      ],
+      "edges": [
+        {
+          "source": "codigo",
+          "target": "main",
+          "label": "Guardar y publicar"
+        },
+        {
+          "source": "codigo",
+          "target": "eas",
+          "label": "Build aparte"
+        },
+        {
+          "source": "main",
+          "target": "vercelweb",
+          "label": "Frontend"
+        },
+        {
+          "source": "main",
+          "target": "vercelapi",
+          "label": "Backend"
+        },
+        {
+          "source": "eas",
+          "target": "apk",
+          "label": "Resultado"
+        },
+        {
+          "source": "vercelweb",
+          "target": "web",
+          "label": "Publicar"
+        },
+        {
+          "source": "vercelapi",
+          "target": "api",
+          "label": "Publicar"
+        },
+        {
+          "source": "apk",
+          "target": "android",
+          "label": "Instalar"
+        }
+      ]
+    },
+    {
+      "id": "demo",
+      "title": "10. Demostración local",
+      "takeaway": "Cambiar el perfil del ejemplo no cambia los roles reales ni sincroniza los datos con TiDB.",
+      "nodes": [
+        {
+          "id": "demo",
+          "label": "Demostración",
+          "detail": "Datos ficticios de ejemplo",
+          "source": "frontend/native/src/contexts/DemoContext.tsx",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "perfil",
+          "label": "Perfil ficticio",
+          "detail": "Alumno, profesor, organización y otros",
+          "source": "frontend/native/src/components/navigation/DemoBar.tsx",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "modelo",
+          "label": "Pantallas y modelo local",
+          "detail": "applyMutation comprueba reglas del ejemplo",
+          "source": "frontend/native/src/lib/model.ts",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "web",
+          "label": "En navegador",
+          "detail": "AsyncStorage / almacenamiento local",
+          "source": "frontend/native/src/lib/demoStorage.web.ts",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "android",
+          "label": "En Android",
+          "detail": "Archivos JSON con respaldo",
+          "source": "frontend/native/src/lib/demoStorage.native.ts",
+          "rank": 3,
+          "order": 1
+        },
+        {
+          "id": "local",
+          "label": "Datos de ese dispositivo",
+          "detail": "Separados de cuenta real y base compartida",
+          "source": "frontend/native/src/contexts/DemoContext.tsx",
+          "rank": 4,
+          "order": 0
+        }
+      ],
+      "edges": [
+        {
+          "source": "demo",
+          "target": "perfil",
+          "label": "Elegir vista"
+        },
+        {
+          "source": "perfil",
+          "target": "modelo",
+          "label": "Probar acciones"
+        },
+        {
+          "source": "modelo",
+          "target": "web",
+          "label": "Web"
+        },
+        {
+          "source": "modelo",
+          "target": "android",
+          "label": "APK"
+        },
+        {
+          "source": "web",
+          "target": "local",
+          "label": "Guardar"
+        },
+        {
+          "source": "android",
+          "target": "local",
+          "label": "Guardar"
+        }
+      ]
+    },
+    {
+      "id": "datos",
+      "title": "11. Relaciones de los datos",
+      "takeaway": "La base conecta identidad, lugares y movimientos; los archivos de imagen permanecen en Blob.",
+      "nodes": [
+        {
+          "id": "cuentas",
+          "label": "Cuentas y roles",
+          "detail": "users, user_roles, sessions",
+          "source": "backend/sql/001_auth.sql",
+          "rank": 0,
+          "order": 0
+        },
+        {
+          "id": "proyectos",
+          "label": "Proyectos y equipo",
+          "detail": "projects, members, teachers, reviews",
+          "source": "backend/sql/003_projects.sql",
+          "rank": 1,
+          "order": 0
+        },
+        {
+          "id": "galeria",
+          "label": "Fotos y cargas",
+          "detail": "gallery_photos, reviews, image_uploads",
+          "source": "backend/sql/006_gallery.sql",
+          "rank": 1,
+          "order": 1
+        },
+        {
+          "id": "lugares",
+          "label": "Espacios y puestos",
+          "detail": "spaces, furniture, booths, allocations",
+          "source": "backend/sql/002_spaces.sql",
+          "rank": 2,
+          "order": 0
+        },
+        {
+          "id": "recursos",
+          "label": "Pedidos y reservas",
+          "detail": "resources, requests, allocations",
+          "source": "backend/sql/004_inventory.sql",
+          "rank": 2,
+          "order": 1
+        },
+        {
+          "id": "movimientos",
+          "label": "Préstamos y devoluciones",
+          "detail": "loans, loan_returns",
+          "source": "backend/sql/005_loans.sql",
+          "rank": 3,
+          "order": 0
+        },
+        {
+          "id": "condicion",
+          "label": "Condición e historial",
+          "detail": "Fuera de servicio y eventos de inventario",
+          "source": "backend/sql/005_loans.sql",
+          "rank": 4,
+          "order": 0
+        }
+      ],
+      "edges": [
+        {
+          "source": "cuentas",
+          "target": "proyectos",
+          "label": "Participan"
+        },
+        {
+          "source": "cuentas",
+          "target": "galeria",
+          "label": "Autor y moderador"
+        },
+        {
+          "source": "proyectos",
+          "target": "lugares",
+          "label": "Solicitan y ocupan"
+        },
+        {
+          "source": "proyectos",
+          "target": "recursos",
+          "label": "Piden y reservan"
+        },
+        {
+          "source": "recursos",
+          "target": "movimientos",
+          "label": "Entrega física"
+        },
+        {
+          "source": "movimientos",
+          "target": "condicion",
+          "label": "Daño o novedad"
+        }
+      ]
+    }
+  ]
+}

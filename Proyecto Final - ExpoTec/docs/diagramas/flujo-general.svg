@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="788" viewBox="0 0 1120 788" role="img" aria-labelledby="title desc">
+<title id="title">1. Estructura general</title><desc id="desc">Web y APK comparten frontend y API; TiDB conserva los datos compartidos.</desc>
+<rect width="1120" height="788" fill="#ffffff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#60746a"/></marker></defs>
+<g font-family="Arial, sans-serif" fill="#173e2b">
+<text x="70" y="46" font-size="27" font-weight="700">1. Estructura general</text>
+<polyline points="560.0,200 560.0,236.0 315.0,236.0 315.0,272" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,200 560.0,236.0 805.0,236.0 805.0,272" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="315.0,356 315.0,392.0 560.0,392.0 560.0,428" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="805.0,356 805.0,392.0 560.0,392.0 560.0,428" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,512 560.0,548.0 233.33333333333334,548.0 233.33333333333334,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,512 560.0,548.0 560.0,548.0 560.0,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,512 560.0,548.0 886.6666666666667,548.0 886.6666666666667,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<g><title>frontend/native/src/components/navigation/navigationItems.ts</title><rect x="422.0" y="116" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="145" text-anchor="middle" font-size="19" font-weight="700">Persona</text>
+<text x="560.0" y="172" text-anchor="middle" font-size="13" fill="#395d48">Visitante o cuenta con roles</text>
+</g>
+<g><title>frontend/native/vercel.json</title><rect x="177.0" y="272" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="315.0" y="301" text-anchor="middle" font-size="19" font-weight="700">Web y TV</text>
+<text x="315.0" y="328" text-anchor="middle" font-size="13" fill="#395d48">React Native Web en Vercel</text>
+</g>
+<g><title>frontend/native/app.json</title><rect x="667.0" y="272" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="805.0" y="301" text-anchor="middle" font-size="19" font-weight="700">APK Android</text>
+<text x="805.0" y="328" text-anchor="middle" font-size="13" fill="#395d48">Expo / React Native instalado</text>
+</g>
+<g><title>backend/src/app.mjs</title><rect x="422.0" y="428" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="457" text-anchor="middle" font-size="19" font-weight="700">API ExpoTec</text>
+<text x="560.0" y="484" text-anchor="middle" font-size="13" fill="#395d48">Express / Node.js en Vercel</text>
+</g>
+<g><title>backend/src/config/database.mjs</title><rect x="95.33333333333334" y="584" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="233.33333333333334" y="613" text-anchor="middle" font-size="19" font-weight="700">TiDB</text>
+<text x="233.33333333333334" y="640" text-anchor="middle" font-size="13" fill="#395d48">Filas, relaciones e historiales</text>
+</g>
+<g><title>backend/src/services/uploads.mjs</title><rect x="422.0" y="584" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="613" text-anchor="middle" font-size="19" font-weight="700">Vercel Blob</text>
+<text x="560.0" y="640" text-anchor="middle" font-size="13" fill="#395d48">Archivos de imágenes privados</text>
+</g>
+<g><title>backend/src/create-app.mjs</title><rect x="748.6666666666667" y="584" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="886.6666666666667" y="613" text-anchor="middle" font-size="19" font-weight="700">Identidad y correo</text>
+<text x="886.6666666666667" y="640" text-anchor="middle" font-size="13" fill="#395d48">Google, Discord, GitHub y SMTP</text>
+</g>
+<text x="437.5" y="229.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Navegador</text>
+<text x="682.5" y="229.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Instalación</text>
+<text x="437.5" y="385.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">HTTPS /api</text>
+<text x="682.5" y="385.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">HTTPS directo</text>
+<text x="396.6666666666667" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">SQL + TLS</text>
+<text x="560.0" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Archivos</text>
+<text x="723.3333333333334" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Servicios</text>
+<text x="70" y="734" font-size="16">Web y APK comparten frontend y API; TiDB conserva los datos compartidos.</text>
+</g></svg>

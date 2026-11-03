@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="788" viewBox="0 0 1120 788" role="img" aria-labelledby="title desc">
+<title id="title">9. Código, web y APK</title><desc id="desc">La web y la API se despliegan desde main; Android requiere construir y distribuir otra APK.</desc>
+<rect width="1120" height="788" fill="#ffffff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#60746a"/></marker></defs>
+<g font-family="Arial, sans-serif" fill="#173e2b">
+<text x="70" y="46" font-size="27" font-weight="700">9. Código, web y APK</text>
+<polyline points="560.0,200 560.0,236.0 315.0,236.0 315.0,272" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,200 560.0,236.0 805.0,236.0 805.0,272" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="315.0,356 315.0,392.0 233.33333333333334,392.0 233.33333333333334,428" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="315.0,356 315.0,392.0 560.0,392.0 560.0,428" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="805.0,356 805.0,392.0 886.6666666666667,392.0 886.6666666666667,428" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="233.33333333333334,512 233.33333333333334,548.0 233.33333333333334,548.0 233.33333333333334,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,512 560.0,548.0 560.0,548.0 560.0,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="886.6666666666667,512 886.6666666666667,548.0 886.6666666666667,548.0 886.6666666666667,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<g><title>AGENTS.md</title><rect x="422.0" y="116" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="145" text-anchor="middle" font-size="19" font-weight="700">Código de ExpoTec</text>
+<text x="560.0" y="172" text-anchor="middle" font-size="13" fill="#395d48">Repositorio PDelSC: carpeta ExpoTec</text>
+</g>
+<g><title>AGENTS.md</title><rect x="177.0" y="272" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="315.0" y="301" text-anchor="middle" font-size="19" font-weight="700">Commit y push a main</text>
+<text x="315.0" y="328" text-anchor="middle" font-size="13" fill="#395d48">Publicación autorizada del proyecto</text>
+</g>
+<g><title>frontend/native/eas.json</title><rect x="667.0" y="272" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="805.0" y="301" text-anchor="middle" font-size="19" font-weight="700">EAS build preview</text>
+<text x="805.0" y="328" text-anchor="middle" font-size="13" fill="#395d48">Compila y firma Android</text>
+</g>
+<g><title>frontend/native/vercel.json</title><rect x="95.33333333333334" y="428" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="233.33333333333334" y="457" text-anchor="middle" font-size="19" font-weight="700">Vercel: frontend</text>
+<text x="233.33333333333334" y="484" text-anchor="middle" font-size="13" fill="#395d48">Expo export web genera dist</text>
+</g>
+<g><title>backend/src/app.mjs</title><rect x="422.0" y="428" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="457" text-anchor="middle" font-size="19" font-weight="700">Vercel: backend</text>
+<text x="560.0" y="484" text-anchor="middle" font-size="13" fill="#395d48">Publica Express por separado</text>
+</g>
+<g><title>docs/APK_PRUEBA.md</title><rect x="748.6666666666667" y="428" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="886.6666666666667" y="457" text-anchor="middle" font-size="19" font-weight="700">Archivo APK</text>
+<text x="886.6666666666667" y="484" text-anchor="middle" font-size="13" fill="#395d48">Descarga e instalación en Android</text>
+</g>
+<g><title>frontend/native/package.json</title><rect x="95.33333333333334" y="584" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="233.33333333333334" y="613" text-anchor="middle" font-size="19" font-weight="700">Web actualizada</text>
+<text x="233.33333333333334" y="640" text-anchor="middle" font-size="13" fill="#395d48">Al cargar la versión publicada</text>
+</g>
+<g><title>backend/src/create-app.mjs</title><rect x="422.0" y="584" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="613" text-anchor="middle" font-size="19" font-weight="700">API actualizada</text>
+<text x="560.0" y="640" text-anchor="middle" font-size="13" fill="#395d48">Clientes compatibles usan el servidor</text>
+</g>
+<g><title>frontend/native/app.json</title><rect x="748.6666666666667" y="584" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="886.6666666666667" y="613" text-anchor="middle" font-size="19" font-weight="700">Android actualizado</text>
+<text x="886.6666666666667" y="640" text-anchor="middle" font-size="13" fill="#395d48">La APK instalada cambia al</text>
+<text x="886.6666666666667" y="656" text-anchor="middle" font-size="13" fill="#395d48">reemplazarla</text>
+</g>
+<text x="437.5" y="229.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Guardar y publicar</text>
+<text x="682.5" y="229.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Build aparte</text>
+<text x="274.1666666666667" y="385.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Frontend</text>
+<text x="437.5" y="385.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Backend</text>
+<text x="845.8333333333334" y="385.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Resultado</text>
+<text x="233.33333333333334" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Publicar</text>
+<text x="560.0" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Publicar</text>
+<text x="886.6666666666667" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Instalar</text>
+<text x="70" y="734" font-size="16">La web y la API se despliegan desde main; Android requiere construir y distribuir otra APK.</text>
+</g></svg>

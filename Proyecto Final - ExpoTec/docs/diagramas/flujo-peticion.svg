@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1100" viewBox="0 0 1120 1100" role="img" aria-labelledby="title desc">
+<title id="title">2. Del botón a la base</title><desc id="desc">La pantalla ayuda a validar; el servidor decide permisos y guarda los cambios relacionados juntos.</desc>
+<rect width="1120" height="1100" fill="#ffffff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#60746a"/></marker></defs>
+<g font-family="Arial, sans-serif" fill="#173e2b">
+<text x="70" y="46" font-size="27" font-weight="700">2. Del botón a la base</text>
+<polyline points="560.0,200 560.0,236.0 560.0,236.0 560.0,272" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,356 560.0,392.0 560.0,392.0 560.0,428" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,512 560.0,548.0 560.0,548.0 560.0,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,668 560.0,704.0 560.0,704.0 560.0,740" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,824 560.0,860.0 560.0,860.0 560.0,896" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,980 560.0,1004 48,1004 48,88 560.0,88 560.0,116" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<g><title>frontend/native/src/pages/SharedProposalPage.tsx</title><rect x="422.0" y="116" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="145" text-anchor="middle" font-size="19" font-weight="700">Pantalla y formulario</text>
+<text x="560.0" y="172" text-anchor="middle" font-size="13" fill="#395d48">Captura datos y muestra errores</text>
+</g>
+<g><title>frontend/native/src/hooks/useSharedProposal.ts</title><rect x="422.0" y="272" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="301" text-anchor="middle" font-size="19" font-weight="700">Hook y cliente</text>
+<text x="560.0" y="328" text-anchor="middle" font-size="13" fill="#395d48">Borrador, sesión y pedido JSON</text>
+</g>
+<g><title>backend/src/create-app.mjs</title><rect x="422.0" y="428" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="457" text-anchor="middle" font-size="19" font-weight="700">Express y ruta</text>
+<text x="560.0" y="484" text-anchor="middle" font-size="13" fill="#395d48">Protecciones, sesión y validadores</text>
+</g>
+<g><title>backend/src/repositories/projects.mjs</title><rect x="422.0" y="584" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="613" text-anchor="middle" font-size="19" font-weight="700">Repositorio</text>
+<text x="560.0" y="640" text-anchor="middle" font-size="13" fill="#395d48">Roles vigentes y reglas de negocio</text>
+</g>
+<g><title>backend/src/config/database.mjs</title><rect x="422.0" y="740" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="769" text-anchor="middle" font-size="19" font-weight="700">Transacción TiDB</text>
+<text x="560.0" y="796" text-anchor="middle" font-size="13" fill="#395d48">Confirma todo o revierte todo</text>
+</g>
+<g><title>backend/src/lib/errors.mjs</title><rect x="422.0" y="896" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="925" text-anchor="middle" font-size="19" font-weight="700">Resultado JSON</text>
+<text x="560.0" y="952" text-anchor="middle" font-size="13" fill="#395d48">Éxito o error con código y campos</text>
+</g>
+<text x="560.0" y="229.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Enviar</text>
+<text x="560.0" y="385.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">HTTPS</text>
+<text x="560.0" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Datos válidos</text>
+<text x="560.0" y="697.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">SQL</text>
+<text x="560.0" y="853.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Resultado</text>
+<text x="304.0" y="1022" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Actualizar o corregir</text>
+<text x="70" y="1046" font-size="16">La pantalla ayuda a validar; el servidor decide permisos y guarda los cambios relacionados juntos.</text>
+</g></svg>

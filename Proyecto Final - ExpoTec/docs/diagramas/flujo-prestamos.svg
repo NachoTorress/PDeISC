@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1100" viewBox="0 0 1120 1100" role="img" aria-labelledby="title desc">
+<title id="title">6. Entregas y devoluciones</title><desc id="desc">Cambiar de jornada no cierra saldos. Devolver libera disponibilidad física y conserva la reserva del proyecto.</desc>
+<rect width="1120" height="1100" fill="#ffffff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#60746a"/></marker></defs>
+<g font-family="Arial, sans-serif" fill="#173e2b">
+<text x="70" y="46" font-size="27" font-weight="700">6. Entregas y devoluciones</text>
+<polyline points="560.0,200 560.0,236.0 560.0,236.0 560.0,272" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,356 560.0,392.0 560.0,392.0 560.0,428" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,512 560.0,548.0 560.0,548.0 560.0,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,668 560.0,704.0 315.0,704.0 315.0,740" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,668 560.0,704.0 805.0,704.0 805.0,740" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="315.0,824 315.0,860.0 560.0,860.0 560.0,896" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="805.0,824 805.0,860.0 560.0,860.0 560.0,896" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<g><title>backend/src/repositories/loans.mjs</title><rect x="422.0" y="116" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="145" text-anchor="middle" font-size="19" font-weight="700">Proyecto confirmado</text>
+<text x="560.0" y="172" text-anchor="middle" font-size="13" fill="#395d48">Reserva vigente de elementos</text>
+</g>
+<g><title>frontend/native/src/components/SharedLendingForm.tsx</title><rect x="422.0" y="272" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="301" text-anchor="middle" font-size="19" font-weight="700">Revisar entrega</text>
+<text x="560.0" y="328" text-anchor="middle" font-size="13" fill="#395d48">Jornada, alumno, reserva y stock</text>
+<text x="560.0" y="344" text-anchor="middle" font-size="13" fill="#395d48">físico</text>
+</g>
+<g><title>backend/sql/005_loans.sql</title><rect x="422.0" y="428" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="457" text-anchor="middle" font-size="19" font-weight="700">Entrega registrada</text>
+<text x="560.0" y="484" text-anchor="middle" font-size="13" fill="#395d48">Una por proyecto, elemento y jornada</text>
+</g>
+<g><title>frontend/native/src/components/SharedReturnForm.tsx</title><rect x="422.0" y="584" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="613" text-anchor="middle" font-size="19" font-weight="700">Devolución parcial o total</text>
+<text x="560.0" y="640" text-anchor="middle" font-size="13" fill="#395d48">Saldo = entregado menos devuelto</text>
+</g>
+<g><title>backend/src/repositories/loans.mjs</title><rect x="177.0" y="740" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="315.0" y="769" text-anchor="middle" font-size="19" font-weight="700">Vuelve utilizable</text>
+<text x="315.0" y="796" text-anchor="middle" font-size="13" fill="#395d48">Recupera disponibilidad física</text>
+</g>
+<g><title>backend/src/repositories/inventory.mjs</title><rect x="667.0" y="740" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="805.0" y="769" text-anchor="middle" font-size="19" font-weight="700">Vuelve con daño</text>
+<text x="805.0" y="796" text-anchor="middle" font-size="13" fill="#395d48">Cuenta devuelta y fuera de servicio</text>
+</g>
+<g><title>backend/src/repositories/loan-balances.mjs</title><rect x="422.0" y="896" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="925" text-anchor="middle" font-size="19" font-weight="700">Saldo e historial</text>
+<text x="560.0" y="952" text-anchor="middle" font-size="13" fill="#395d48">Registra quién, cuándo y observación</text>
+</g>
+<text x="560.0" y="229.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Encargado o admin</text>
+<text x="560.0" y="385.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Confirmar</text>
+<text x="560.0" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Registrar retorno</text>
+<text x="437.5" y="697.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Sin daño</text>
+<text x="682.5" y="697.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Con motivo</text>
+<text x="437.5" y="853.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Actualizar</text>
+<text x="682.5" y="853.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Evento de inventario</text>
+<text x="70" y="1046" font-size="16">Cambiar de jornada no cierra saldos. Devolver libera disponibilidad física y conserva la reserva del</text>
+<text x="70" y="1068" font-size="16">proyecto.</text>
+</g></svg>

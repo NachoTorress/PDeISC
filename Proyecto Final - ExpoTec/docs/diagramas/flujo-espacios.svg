@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="944" viewBox="0 0 1120 944" role="img" aria-labelledby="title desc">
+<title id="title">5. Espacios e inventario</title><desc id="desc">Un puesto es una mesa habilitada. Un pedido de elementos se convierte en reserva al confirmar el proyecto.</desc>
+<rect width="1120" height="944" fill="#ffffff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#60746a"/></marker></defs>
+<g font-family="Arial, sans-serif" fill="#173e2b">
+<text x="70" y="46" font-size="27" font-weight="700">5. Espacios e inventario</text>
+<polyline points="560.0,200 560.0,236.0 315.0,236.0 315.0,272" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,200 560.0,236.0 805.0,236.0 805.0,272" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="315.0,356 315.0,392.0 315.0,392.0 315.0,428" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="805.0,356 805.0,392.0 805.0,392.0 805.0,428" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="315.0,512 315.0,548.0 560.0,548.0 560.0,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="805.0,512 805.0,548.0 560.0,548.0 560.0,584" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<polyline points="560.0,668 560.0,704.0 560.0,704.0 560.0,740" fill="none" stroke="#60746a" stroke-width="1.7" marker-end="url(#arrow)"/>
+<g><title>frontend/native/src/components/navigation/navigationItems.ts</title><rect x="422.0" y="116" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="145" text-anchor="middle" font-size="19" font-weight="700">Administración</text>
+<text x="560.0" y="172" text-anchor="middle" font-size="13" fill="#395d48">Cuenta real con rol admin</text>
+</g>
+<g><title>backend/src/repositories/spaces.mjs</title><rect x="177.0" y="272" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="315.0" y="301" text-anchor="middle" font-size="19" font-weight="700">Espacio y mobiliario</text>
+<text x="315.0" y="328" text-anchor="middle" font-size="13" fill="#395d48">Crea y acomoda el plano</text>
+</g>
+<g><title>backend/src/repositories/inventory.mjs</title><rect x="667.0" y="272" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="805.0" y="301" text-anchor="middle" font-size="19" font-weight="700">Inventario</text>
+<text x="805.0" y="328" text-anchor="middle" font-size="13" fill="#395d48">Total y unidades fuera de servicio</text>
+</g>
+<g><title>backend/sql/002_spaces.sql</title><rect x="177.0" y="428" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="315.0" y="457" text-anchor="middle" font-size="19" font-weight="700">Puestos habilitados</text>
+<text x="315.0" y="484" text-anchor="middle" font-size="13" fill="#395d48">Mesas que el equipo puede solicitar</text>
+</g>
+<g><title>backend/src/routes/inventory.mjs</title><rect x="667.0" y="428" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="805.0" y="457" text-anchor="middle" font-size="19" font-weight="700">Catálogo autorizado</text>
+<text x="805.0" y="484" text-anchor="middle" font-size="13" fill="#395d48">Elementos para el pedido del equipo</text>
+</g>
+<g><title>backend/src/repositories/projects.mjs</title><rect x="422.0" y="584" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="613" text-anchor="middle" font-size="19" font-weight="700">Confirmación</text>
+<text x="560.0" y="640" text-anchor="middle" font-size="13" fill="#395d48">Verifica disponibilidad y versión</text>
+</g>
+<g><title>backend/sql/004_inventory.sql</title><rect x="422.0" y="740" width="276" height="84" rx="8" fill="#edf5ef" stroke="#799783"/>
+<text x="560.0" y="769" text-anchor="middle" font-size="19" font-weight="700">Asignaciones</text>
+<text x="560.0" y="796" text-anchor="middle" font-size="13" fill="#395d48">Puesto ocupado y elementos reservados</text>
+</g>
+<text x="437.5" y="229.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Gestiona</text>
+<text x="682.5" y="229.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Gestiona</text>
+<text x="315.0" y="385.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Habilita</text>
+<text x="805.0" y="385.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Ofrece</text>
+<text x="437.5" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Puesto pedido</text>
+<text x="682.5" y="541.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Cantidades pedidas</text>
+<text x="560.0" y="697.0" text-anchor="middle" font-size="12" fill="#3b5445" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">Todo junto o nada</text>
+<text x="70" y="890" font-size="16">Un puesto es una mesa habilitada. Un pedido de elementos se convierte en reserva al confirmar el</text>
+<text x="70" y="912" font-size="16">proyecto.</text>
+</g></svg>
