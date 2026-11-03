@@ -25,3 +25,14 @@ test('los pedidos rechazan duplicados y cantidades inválidas; un cliente anteri
   for (const value of [null, {}, [{ resourceId, quantity: 0 }], [{ resourceId, quantity: 1.5 }], [{ resourceId, quantity: '2' }], [{ resourceId, quantity: 10001 }], [{ resourceId, quantity: 1, reserved: 1 }], [{ resourceId: 'fake', quantity: 1 }], [{ resourceId, quantity: 1 }, { resourceId, quantity: 2 }]])
     assert.throws(() => resourceRequests(value), error => error.status === 400);
 });
+
+test('las notas de inventario validan el texto normalizado antes de guardarlo', () => {
+  const input = { name: 'Alargue', description: '', total: 2, unavailable: 1 };
+  const boundary = '\u0344'.repeat(500), excessive = '\u0344'.repeat(501);
+  for (const editing of [false, true]) {
+    const body = { ...input, ...(editing ? { version: 1 } : {}) };
+    assert.equal(resourceBody({ ...body, note: boundary }, editing).note.length, 1000);
+    assert.throws(() => resourceBody({ ...body, note: excessive }, editing), error => error.status === 400 && !!error.fields?.note);
+    assert.equal(resourceBody({ ...body, note: `  ${'e\u0301'.repeat(1000)}  ` }, editing).note, '\u00e9'.repeat(1000));
+  }
+});

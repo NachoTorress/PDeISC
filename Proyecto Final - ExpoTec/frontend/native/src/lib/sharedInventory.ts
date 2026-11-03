@@ -65,6 +65,7 @@ export function inventoryErrors(input: {
   previousUnavailable?: number;
 }) {
   const fields: Record<string, string> = {};
+  const note = (input.note ?? "").trim().normalize("NFC");
   if (
     input.name.trim().length < 2 ||
     input.name.trim().length > 100 ||
@@ -82,10 +83,10 @@ export function inventoryErrors(input: {
   )
     fields.unavailable = "Indicá un entero entre 0 y el total.";
   if (
-    (input.note?.trim().length ?? 0) > 1000 ||
+    note.length > 1000 ||
     (input.unavailable !== undefined &&
       Number(input.unavailable) !== (input.previousUnavailable ?? 0) &&
-      (input.note?.trim().length ?? 0) < 10)
+      note.length < 10)
   )
     fields.note = "Explicá el cambio de estado con 10 a 1000 caracteres.";
   return fields;

@@ -110,6 +110,11 @@ export default function ProjectMediaPicker({
           {pickerError || imageError}
         </Text>
       )}
+      {!!pickerError && !!image && (
+        <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}>
+          La imagen anterior se conserva. Podés guardar los demás cambios.
+        </Text>
+      )}
       <Field
         label="Enlace al video explicativo (opcional)"
         value={video}

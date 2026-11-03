@@ -12,12 +12,14 @@ export function InlineConfirm({
   onCancel,
   confirmLabel = "Sí, eliminar",
   tone = "danger",
+  disabled = false,
 }: {
   text: string;
   onConfirm: () => void;
   onCancel: () => void;
   confirmLabel?: string;
   tone?: "success" | "danger";
+  disabled?: boolean;
 }) {
   const { colors } = useTheme();
   return (
@@ -40,12 +42,14 @@ export function InlineConfirm({
           title={confirmLabel}
           icon="check"
           variant={tone === "success" ? "primary" : "danger"}
+          disabled={disabled}
           onPress={onConfirm}
         />
         <Button
           title="Cancelar"
           icon="close"
           variant="quiet"
+          disabled={disabled}
           onPress={onCancel}
         />
       </ActionRow>

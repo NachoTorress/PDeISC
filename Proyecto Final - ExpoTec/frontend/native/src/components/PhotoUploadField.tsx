@@ -11,6 +11,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import { managedPhoto, uploadPhoto } from "../lib/photoUpload";
 import type { PhotoPurpose } from "../lib/photoUpload";
 import { preparePhoto } from "../lib/preparePhoto";
+import { sharedLinkError } from "../lib/sharedProjects";
 
 /** Selector de foto conectado a la carga de la API. */
 export default function PhotoUploadField({
@@ -218,7 +219,7 @@ export default function PhotoUploadField({
           <Button
             title="Ver vista previa"
             variant="quiet"
-            disabled={disabled || busy || !/^https:\/\//.test(value)}
+            disabled={disabled || busy || !!sharedLinkError(value, true)}
             onPress={() => setPreview(value.trim())}
           />
         </>

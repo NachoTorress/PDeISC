@@ -24,6 +24,7 @@ export function validateCredentials(input: Credentials, register: boolean) {
       const name = (input[key] ?? "").trim().normalize("NFC");
       if (
         !/^[\p{L}\p{M}]+(?:[ '’][\p{L}\p{M}]+)*$/u.test(name) ||
+        !/\p{L}/u.test(name) ||
         name.length > 80
       )
         fields[key] = "Usá letras, espacios o apóstrofes; hasta 80 caracteres.";

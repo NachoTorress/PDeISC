@@ -84,9 +84,14 @@ export function useSharedProposal(
   const loaded = useRef("");
   const working = useRef(false);
   const canSubmit = ready && !!user?.roles.includes("student");
+  const draftReady =
+    !!draft && !!user && draftFor === `${user.id}:${projectId ?? "new"}`;
 
   usePreventRemove(
-    (dirty || uploading || Object.values(pending).some(Boolean)) && !savedId,
+    canSubmit &&
+      draftReady &&
+      (dirty || saving || uploading || Object.values(pending).some(Boolean)) &&
+      !savedId,
     ({ data }) => setLeaveAction(data.action),
   );
   useEffect(() => {
@@ -95,12 +100,14 @@ export function useSharedProposal(
   useEffect(() => {
     if (!ready) return;
     if (!user?.roles.includes("student")) {
+      setLeaveAction(null);
       setLoading(false);
       return;
     }
     const key = `${user.id}:${projectId ?? "new"}`;
     if (loaded.current === key) return;
     let active = true;
+    setLeaveAction(null);
     setLoading(true);
     Promise.all([
       client.query<{ spaces: SpaceSummary[] }>("/api/spaces/query", {}),
@@ -314,8 +321,7 @@ export function useSharedProposal(
     canSubmit,
     scroll,
     draft,
-    draftReady:
-      !!draft && !!user && draftFor === `${user.id}:${projectId ?? "new"}`,
+    draftReady,
     spaces,
     spaceId,
     setSpaceId,

@@ -57,7 +57,12 @@ function ProjectForm({ projectId, onDone }: Props) {
   };
   const submit = () => {
     setSubmitAttempt(true);
-    if (Object.keys(errors).length || imageError || readingImage) return;
+    if (
+      Object.keys(errors).length ||
+      (!draft.image && imageError) ||
+      readingImage
+    )
+      return;
     const project: Project = {
       ...draft,
       id: editing?.id ?? newId(),

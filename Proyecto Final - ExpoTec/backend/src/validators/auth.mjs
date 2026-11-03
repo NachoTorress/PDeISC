@@ -37,7 +37,7 @@ export function credentials(body, register = false) {
     if (body.accountType !== undefined) names.accountType = body.accountType;
     for (const key of ['firstName', 'lastName']) {
       names[key] = typeof body[key] === 'string' ? body[key].trim().normalize('NFC') : '';
-      if (!/^[\p{L}\p{M}]+(?:[ '’][\p{L}\p{M}]+)*$/u.test(names[key]) || names[key].length > 80)
+      if (!/^[\p{L}\p{M}]+(?:[ '’][\p{L}\p{M}]+)*$/u.test(names[key]) || !/\p{L}/u.test(names[key]) || names[key].length > 80)
         fields[key] = 'Usá letras, espacios o apóstrofes; hasta 80 caracteres.';
     }
   }

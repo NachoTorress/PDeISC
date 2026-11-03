@@ -60,6 +60,7 @@ export function useSharedSpaces() {
   const [notice, setNotice] = useState("");
   const [gestureActive, setGestureActive] = useState(false);
   const working = useRef(false);
+  const listRequest = useRef(0);
   const canEdit = ready && !!user?.roles.includes("admin");
   const editing = canEdit && editorId === user?.id ? draft : null;
   const space = editing?.space ?? source;
@@ -81,12 +82,14 @@ export function useSharedSpaces() {
 
   /** Recarga la lista de espacios. */
   const reload = useCallback(async () => {
+    const request = ++listRequest.current;
     setLoading(true);
     try {
       const result = await client.query<{ spaces: SpaceSummary[] }>(
         "/api/spaces/query",
         {},
       );
+      if (request !== listRequest.current) return;
       setSpaces(result.spaces);
       setSpaceId((current) =>
         result.spaces.some((item) => item.id === current)
@@ -96,13 +99,14 @@ export function useSharedSpaces() {
       setRevision((current) => current + 1);
       setError("");
     } catch (cause) {
+      if (request !== listRequest.current) return;
       setError(
         cause instanceof Error
           ? cause.message
           : "No pudimos cargar los espacios.",
       );
     } finally {
-      setLoading(false);
+      if (request === listRequest.current) setLoading(false);
     }
   }, [client]);
   // Consultar de nuevo al volver de una confirmación, sin reemplazar un borrador.
@@ -110,6 +114,10 @@ export function useSharedSpaces() {
   useFocusEffect(
     useCallback(() => {
       if (!hasDraft) void reload();
+      return () => {
+        listRequest.current++;
+        setLoading(false);
+      };
     }, [reload, hasDraft]),
   );
   useEffect(() => {
@@ -159,6 +167,8 @@ export function useSharedSpaces() {
   }
   /** Toma la versión guardada como base del editor. */
   function accept(next: SharedSpace) {
+    listRequest.current++;
+    setLoading(false);
     setSource(next);
     setSpaces((current) => {
       const items = current ?? [];

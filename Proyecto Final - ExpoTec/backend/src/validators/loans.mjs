@@ -15,8 +15,10 @@ export function loanDay(value) {
 }
 /** Observación opcional de hasta 1000 caracteres. */
 function noteText(value) {
-  if (value !== undefined && (typeof value !== 'string' || value.trim().length > 1000)) throw invalid('La observación admite hasta 1000 caracteres.');
-  return (value ?? '').trim().normalize('NFC');
+  const note = typeof value === 'string' ? value.trim().normalize('NFC') : '';
+  if ((value !== undefined && typeof value !== 'string') || note.length > 1000)
+    throw invalid('La observación admite hasta 1000 caracteres.', { note: 'Usá hasta 1000 caracteres.' });
+  return note;
 }
 /** Paginación, jornada y filtro de pendientes. */
 export function loansQuery(body, projects = false) {

@@ -16,3 +16,15 @@ test('devoluciones y novedades no admiten daños superiores a lo recibido ni can
   assert.equal(returnBody({ version: 1, quantity: 0, note: 'Falta devolver una unidad del equipo.' }).quantity, 0);
   for (const body of [{ version: 1, quantity: 0 }, { version: 1, quantity: -1 }, { version: 1, quantity: 1.5 }, { version: 1, quantity: 1, damagedQuantity: 2 }, { version: 1, quantity: 1, damagedQuantity: 1 }, { version: 0, quantity: 1 }, { version: 1, quantity: 1, receivedBy: randomUUID() }]) assert.throws(() => returnBody(body));
 });
+
+test('las observaciones de entregas y devoluciones respetan el límite después de normalizar Unicode', () => {
+  const delivery = { projectId: randomUUID(), projectVersion: 1, resourceId: randomUUID(), recipientId: randomUUID(), quantity: 1, day: 1 };
+  const movement = { version: 1, quantity: 0 };
+  const boundary = '\u0344'.repeat(500), excessive = '\u0344'.repeat(501);
+  assert.equal(deliveryBody({ ...delivery, note: boundary }).note.length, 1000);
+  assert.equal(returnBody({ ...movement, note: boundary }).note.length, 1000);
+  for (const validate of [note => deliveryBody({ ...delivery, note }), note => returnBody({ ...movement, note })]) {
+    assert.throws(() => validate(excessive), error => error.status === 400 && !!error.fields?.note);
+    assert.equal(validate(`  ${'e\u0301'.repeat(1000)}  `).note, '\u00e9'.repeat(1000));
+  }
+});

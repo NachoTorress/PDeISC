@@ -60,3 +60,31 @@ test("devolver parcialmente no permite exceder el saldo; las novedades no invent
     {},
   );
 });
+
+test("entregas y novedades validan los límites de la observación normalizada", () => {
+  const project = {
+    id: "project",
+    members: [{ id: "student" }],
+    resources: [{ resourceId: "cable", deliverable: 1 }],
+  } as LendingProject;
+  const delivery = {
+    projectId: "project",
+    recipientId: "student",
+    resourceId: "cable",
+    quantity: "1",
+    note: "",
+  };
+  const loan = { quantity: 1, returned: 0 } as LoanSummary;
+  const movement = { quantity: "0", damagedQuantity: "0", note: "" };
+  for (const note of ["\u0344".repeat(500), `  ${"e\u0301".repeat(1000)}  `]) {
+    assert.deepEqual(lendingErrors({ ...delivery, note }, project), {});
+    assert.deepEqual(receivingErrors({ ...movement, note }, loan, true), {});
+  }
+  const excessive = "\u0344".repeat(501);
+  assert.ok(lendingErrors({ ...delivery, note: excessive }, project).note);
+  assert.ok(receivingErrors({ ...movement, note: excessive }, loan, true).note);
+  assert.deepEqual(
+    receivingErrors({ ...movement, note: "\u0344".repeat(5) }, loan, true),
+    {},
+  );
+});

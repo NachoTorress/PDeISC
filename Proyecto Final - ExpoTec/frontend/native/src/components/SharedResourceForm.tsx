@@ -46,7 +46,9 @@ export default function SharedResourceForm({
     input.total !== String(resource?.total ?? 0) ||
     input.unavailable !== String(resource?.unavailable ?? 0) ||
     !!input.note;
-  usePreventRemove(dirty && !saved, ({ data }) => setLeaveAction(data.action));
+  usePreventRemove((dirty || busy) && !saved, ({ data }) =>
+    setLeaveAction(data.action),
+  );
   const validation = inventoryErrors({
     ...input,
     previousUnavailable: resource?.unavailable ?? 0,
@@ -98,6 +100,27 @@ export default function SharedResourceForm({
       working.current = false;
       setBusy(false);
     }
+  }
+  async function reload() {
+    if (working.current) return;
+    working.current = true;
+    setBusy(true);
+    setError("");
+    try {
+      await onReload();
+      setConfirm(null);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "No pudimos recargar.");
+    } finally {
+      working.current = false;
+      setBusy(false);
+    }
+  }
+  function close() {
+    if (working.current) return;
+    setSaved(true);
+    if (leaveAction) navigation.dispatch(leaveAction);
+    else onClose();
   }
   return (
     <Card>
@@ -184,8 +207,9 @@ export default function SharedResourceForm({
           variant="quiet"
           disabled={busy}
           onPress={() => {
+            if (working.current) return;
             if (dirty) setConfirm("close");
-            else onClose();
+            else close();
           }}
         />
         {resource && (
@@ -199,45 +223,37 @@ export default function SharedResourceForm({
       </View>
       {confirm && (
         <InlineConfirm
+          disabled={busy}
           text={
             confirm === "reload"
               ? "¿Descartar el borrador y cargar la versión actual del elemento?"
               : "¿Descartar este borrador del elemento?"
           }
           confirmLabel={
-            confirm === "reload" ? "Descartar y recargar" : "Descartar borrador"
+            confirm === "reload"
+              ? busy
+                ? "Recargando elemento…"
+                : "Descartar y recargar"
+              : "Descartar borrador"
           }
-          onCancel={() => setConfirm(null)}
+          onCancel={() => {
+            if (!working.current) setConfirm(null);
+          }}
           onConfirm={() => {
-            if (confirm === "close") {
-              onClose();
-              return;
-            }
-            setBusy(true);
-            setError("");
-            void onReload()
-              .then(() => setConfirm(null))
-              .catch((cause) =>
-                setError(
-                  cause instanceof Error
-                    ? cause.message
-                    : "No pudimos recargar.",
-                ),
-              )
-              .finally(() => setBusy(false));
+            if (confirm === "close") close();
+            else void reload();
           }}
         />
       )}
       {leaveAction && (
         <InlineConfirm
+          disabled={busy}
           text="¿Descartar el borrador del elemento y salir?"
           confirmLabel="Descartar y salir"
-          onCancel={() => setLeaveAction(null)}
-          onConfirm={() => {
-            const action = leaveAction;
-            setLeaveAction(null);
-            navigation.dispatch(action);
+          onCancel={() => {
+            if (!working.current) setLeaveAction(null);
           }}
+          onConfirm={close}
         />
       )}
     </Card>

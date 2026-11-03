@@ -25,3 +25,16 @@ test("registro valida nombres Unicode, correo y longitud sin alterar la contrase
   );
   assert.ok(validateCredentials({ ...input, password: "" }, false).password);
 });
+
+test("el registro exige al menos una letra en nombre y apellido, conservando nombres con marcas Unicode", () => {
+  const input = {
+    email: "alumna@example.com",
+    password: "Una contraseña larga 2026",
+    firstName: "A\u0301",
+    lastName: "मुकेश",
+  };
+  assert.deepEqual(validateCredentials(input, true), {});
+  for (const key of ["firstName", "lastName"] as const)
+    for (const name of ["\u0301", "\u0301 \u0308", "\u0301'\u0308"])
+      assert.ok(validateCredentials({ ...input, [key]: name }, true)[key]);
+});

@@ -36,6 +36,7 @@ export function SocialAccess({
   const [providers, setProviders] = useState<Provider[]>([]);
   const [pending, setPending] = useState(socialBridge.pending);
   const [status, setStatus] = useState<SocialStatus | null>(null);
+  const [statusAttempt, setStatusAttempt] = useState(0);
   const [error, setError] = useState(
     hasSocialReturn && !pending
       ? "Este acceso no pertenece a esta sesión o venció. Volvé a iniciarlo."
@@ -94,6 +95,7 @@ export function SocialAccess({
   useEffect(() => {
     if (!pending) return;
     let active = true;
+    setError("");
     void client
       .query<SocialStatus>(
         `/api/auth/${Platform.OS === "web" ? "browser/" : ""}social/status`,
@@ -115,7 +117,7 @@ export function SocialAccess({
     return () => {
       active = false;
     };
-  }, [client, pending]);
+  }, [client, pending, statusAttempt]);
   /** Completa el acceso según el modo indicado por la API. */
   async function complete(access: SocialStatus) {
     if (!pending) return;
@@ -147,7 +149,15 @@ export function SocialAccess({
       );
       if (status.mode === "signup" && next.confirmation !== next.password)
         validation.confirmation = "Las contraseñas deben coincidir.";
-      setFields((current) => ({ ...current, [key]: validation[key] ?? "" }));
+      setFields((current) => ({
+        ...current,
+        [key]: validation[key] ?? "",
+        ...(key === "password" &&
+        status.mode === "signup" &&
+        (current.confirmation !== undefined || next.confirmation.length > 0)
+          ? { confirmation: validation.confirmation ?? "" }
+          : {}),
+      }));
     }
   }
   /** Limpia el flujo pendiente y cierra el formulario. */
@@ -202,10 +212,16 @@ export function SocialAccess({
                   ? "No pudimos completar el ingreso. Volvé a intentarlo."
                   : "Estamos abriendo tu cuenta…"}
               </Text>
-              {status?.mode === "login" && !!error && (
+              {!!error && (
                 <Button
-                  title="Reintentar ingreso"
-                  onPress={finish}
+                  title={status ? "Reintentar ingreso" : "Reintentar acceso"}
+                  onPress={() => {
+                    if (status) finish();
+                    else {
+                      setError("");
+                      setStatusAttempt((attempt) => attempt + 1);
+                    }
+                  }}
                   disabled={busy}
                 />
               )}

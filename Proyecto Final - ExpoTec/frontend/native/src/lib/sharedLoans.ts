@@ -66,6 +66,7 @@ export interface LendingDraft {
 /** Errores del formulario de entrega. */
 export function lendingErrors(input: LendingDraft, project?: LendingProject) {
   const fields: Record<string, string> = {};
+  const note = input.note.trim().normalize("NFC");
   const resource = project?.resources.find(
     (item) => item.resourceId === input.resourceId,
   );
@@ -78,8 +79,7 @@ export function lendingErrors(input: LendingDraft, project?: LendingProject) {
     fields.quantity = "Usá un entero de 1 a 10000.";
   else if (resource && Number(input.quantity) > resource.deliverable)
     fields.quantity = `Podés entregar hasta ${resource.deliverable} unidades con la disponibilidad actual.`;
-  if (input.note.trim().length > 1000)
-    fields.note = "Usá hasta 1000 caracteres.";
+  if (note.length > 1000) fields.note = "Usá hasta 1000 caracteres.";
   return fields;
 }
 /** Errores del formulario de devolución. */
@@ -89,6 +89,7 @@ export function receivingErrors(
   noteOnly = false,
 ) {
   const fields: Record<string, string> = {};
+  const note = input.note.trim().normalize("NFC");
   if (
     !noteOnly &&
     (!integerQuantity(input.quantity, 1, 10000) ||
@@ -102,9 +103,8 @@ export function receivingErrors(
   )
     fields.damagedQuantity = "Las dañadas deben estar entre 0 y las recibidas.";
   if (
-    input.note.trim().length > 1000 ||
-    ((noteOnly || Number(input.damagedQuantity) > 0) &&
-      input.note.trim().length < 10)
+    note.length > 1000 ||
+    ((noteOnly || Number(input.damagedQuantity) > 0) && note.length < 10)
   )
     fields.note =
       "Para una novedad o daños, explicá el motivo con 10 a 1000 caracteres.";

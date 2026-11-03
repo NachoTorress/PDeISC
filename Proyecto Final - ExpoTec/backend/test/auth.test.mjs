@@ -6,8 +6,19 @@ import assert from 'node:assert/strict';
 import { SignJWT } from 'jose';
 import { createApp } from '../src/create-app.mjs';
 import { memoryRepository, listen, testConfig } from './support.mjs';
+import { credentials } from '../src/validators/auth.mjs';
 
 const student = { email: 'Lucia@example.com', password: 'Una contraseña larga 2026', firstName: 'Lucía', lastName: 'O’Connor' };
+
+test('registro exige una letra en cada nombre y conserva marcas Unicode con letras', () => {
+  const input = { ...student, firstName: 'A\u0301', lastName: 'मुकेश' };
+  assert.equal(credentials(input, true).firstName, 'Á');
+  assert.equal(credentials(input, true).lastName, input.lastName);
+  for (const key of ['firstName', 'lastName'])
+    for (const name of ['\u0301', '\u0301 \u0308', "\u0301'\u0308"])
+      assert.throws(() => credentials({ ...input, [key]: name }, true),
+        error => error.status === 400 && Boolean(error.fields?.[key]));
+});
 
 test('API completa de cuentas: permisos, sesiones, validación y errores', async t => {
   const repository = memoryRepository();

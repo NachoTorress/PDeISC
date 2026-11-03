@@ -7,7 +7,15 @@
 import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { Button, Card, Choice, Field, PageHeading, Screen, RefreshButton } from "../components/ui";
+import {
+  Button,
+  Card,
+  Choice,
+  Field,
+  PageHeading,
+  Screen,
+  RefreshButton,
+} from "../components/ui";
 import SharedResourceForm from "../components/SharedResourceForm";
 import ContentGrid from "../components/ContentGrid";
 import { InventoryCard } from "../components/inventory/InventoryCard";
@@ -28,6 +36,8 @@ export default function SharedInventoryPage({
     ready && !!user?.roles.some((role) => role === "admin" || role === "loans");
   const canManage = canRead && !!user?.roles.includes("admin");
   const scope = `${user?.id}:${user?.roles.join(",")}`;
+  const currentContext = useRef({ scope, canManage });
+  currentContext.current = { scope, canManage };
   const [resources, setResources] = useState<InventoryResource[]>([]);
   const [loadedFor, setLoadedFor] = useState("");
   const [mode, setMode] = useState("active");
@@ -242,15 +252,24 @@ export default function SharedInventoryPage({
               `/api/inventory/${editing.resource!.id}/query`,
               {},
             );
+            if (
+              currentContext.current.scope !== scope ||
+              !currentContext.current.canManage
+            )
+              return;
             if (result.resource.archivedAt)
               throw new Error(
                 "El elemento fue dado de baja. Cancelá la edición para actualizar el inventario.",
               );
-            setEditor({
-              scope,
-              resource: result.resource,
-              revision: editing.revision + 1,
-            });
+            setEditor((current) =>
+              current === editing
+                ? {
+                    ...current,
+                    resource: result.resource,
+                    revision: current.revision + 1,
+                  }
+                : current,
+            );
           }}
         />
       )}

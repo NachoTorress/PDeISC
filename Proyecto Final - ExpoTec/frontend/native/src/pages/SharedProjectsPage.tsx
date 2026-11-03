@@ -37,7 +37,7 @@ export default function SharedProjectsPage({
   const { colors } = useTheme();
   const [mode, setMode] = useState("public");
   const privateView = ready && !!user && mode === "private";
-  const scope = privateView ? user!.id : "public";
+  const scope = privateView ? `${user!.id}:${user!.roles.join(",")}` : "public";
   const [loadedScope, setLoadedScope] = useState("");
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
   const [loading, setLoading] = useState(true);

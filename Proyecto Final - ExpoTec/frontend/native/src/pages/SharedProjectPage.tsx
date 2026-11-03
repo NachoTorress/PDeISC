@@ -49,7 +49,9 @@ export default function SharedProjectPage({
   >(null);
   const [busy, setBusy] = useState(false);
   const working = useRef(false);
-  const scope = privateView ? (user?.id ?? "anonymous") : "public";
+  const scope = privateView
+    ? `${user?.id ?? "anonymous"}:${user?.roles.join(",") ?? ""}`
+    : "public";
   const project = loadedFor === `${projectId}:${scope}` ? source : null;
   useEffect(() => {
     if (privateView && !ready) return;
@@ -113,6 +115,21 @@ export default function SharedProjectPage({
   /** Envía la revisión (`POST /api/projects/:id/reviews`) o la cancelación (`DELETE /api/projects/:id`). */
   async function review() {
     if (!confirm || !project?.version || working.current) return;
+    const reviewNote = note.trim();
+    if (
+      confirm !== "cancel" &&
+      (reviewNote.length > 2000 ||
+        ((confirm === "changes" || confirm === "reopen") &&
+          reviewNote.length < 10))
+    ) {
+      setError(
+        reviewNote.length > 2000
+          ? "El motivo de revisión puede tener hasta 2000 caracteres."
+          : "Escribí al menos 10 caracteres para solicitar cambios o reabrir.",
+      );
+      setConfirm(null);
+      return;
+    }
     working.current = true;
     setBusy(true);
     setError("");
@@ -124,7 +141,7 @@ export default function SharedProjectPage({
           : `/api/projects/${projectId}/reviews`,
         confirm === "cancel"
           ? { version: project.version }
-          : { version: project.version, action: confirm, note: note.trim() },
+          : { version: project.version, action: confirm, note: reviewNote },
         confirm === "cancel" ? "DELETE" : "POST",
       );
       setSource(result.project);
@@ -256,7 +273,7 @@ export default function SharedProjectPage({
                   onChangeText={setNote}
                   multiline
                   maxLength={2000}
-                  editable={!busy}
+                  editable={!busy && !confirm}
                   hint="Para solicitar cambios o reabrir, explicá el motivo con al menos 10 caracteres."
                   error={
                     note.length > 0 && note.trim().length < 10

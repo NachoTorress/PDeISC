@@ -37,6 +37,7 @@ La compilación disponible y sus verificaciones están en [APK de prueba](APK_PR
 - [Accesos sociales](ACCESOS_SOCIALES.md) y [Google Android](ANDROID_GOOGLE.md).
 - [Recuperación de contraseña](RECUPERACION_CONTRASENA.md).
 - [Carga de fotos](CARGA_FOTOS.md).
+- [Auditoría funcional web del 3 de noviembre de 2026](AUDITORIA_FUNCIONAL_2026-11-03.md).
 - [Revisión funcional web del 22 de octubre](PRUEBAS_FINALES.md).
 - [Diagramas del sistema](diagramas/README.md).
 - [Requisitos y decisiones](REQUISITOS.md).

@@ -59,3 +59,22 @@ test("la propuesta envía solo IDs y cantidades de recursos, sin existencias ni 
   draft.resources[0].quantity = "0.5";
   assert.ok(proposalErrors(draft, user.id).resources);
 });
+
+test("inventario valida la longitud de la observación después de normalizar Unicode", () => {
+  const input = {
+    name: "Alargue",
+    description: "",
+    total: "2",
+    unavailable: "1",
+    previousUnavailable: 0,
+  };
+  assert.deepEqual(
+    inventoryErrors({ ...input, note: "\u0344".repeat(500) }),
+    {},
+  );
+  assert.ok(inventoryErrors({ ...input, note: "\u0344".repeat(501) }).note);
+  assert.deepEqual(
+    inventoryErrors({ ...input, note: `  ${"e\u0301".repeat(1000)}  ` }),
+    {},
+  );
+});
