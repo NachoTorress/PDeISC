@@ -11,7 +11,7 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 
 ## Documentación
 
-Para entender el sistema de punta a punta: [flujo de funcionamiento completo](docs/FUNCIONAMIENTO_COMPLETO.md), con web, APK, API, base de datos, fotos, sesión, proyectos, préstamos y publicación; [once diagramas editables](docs/diagramas/README.md).
+Para entender el sistema de punta a punta: [página interactiva de los once flujos](docs/diagramas/flujo-completo.html), que se puede abrir con doble clic; [guía completa](docs/FUNCIONAMIENTO_COMPLETO.md), con web, APK, API, base de datos, fotos, sesión, proyectos, préstamos y publicación; [diagramas editables](docs/diagramas/README.md).
 
 | Documento | Markdown | PDF |
 | --- | --- | --- |

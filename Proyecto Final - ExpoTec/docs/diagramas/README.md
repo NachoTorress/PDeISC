@@ -1,6 +1,6 @@
 # Flujos de ExpoTec
 
-Para entender el sistema actual, empezar por la [guía de funcionamiento completo](../FUNCIONAMIENTO_COMPLETO.md). El original [flujo-completo.drawio](flujo-completo.drawio) contiene once páginas editables; abrirlo con draw.io/diagrams.net y elegir el recorrido desde las pestañas inferiores.
+Para recorrer los once flujos, abrir con doble clic [flujo-completo.html](flujo-completo.html) y elegir la sección en el selector. La página incluye sus datos y estilos; funciona sin servidor ni conexión a Internet. La [guía de funcionamiento completo](../FUNCIONAMIENTO_COMPLETO.md) desarrolla las explicaciones. El original [flujo-completo.drawio](flujo-completo.drawio) contiene once páginas editables; abrirlo con draw.io/diagrams.net y elegir el recorrido desde las pestañas inferiores.
 
 | Página | Qué explica | Vista vectorial |
 | --- | --- | --- |
@@ -20,13 +20,13 @@ Para entender el sistema actual, empezar por la [guía de funcionamiento complet
 
 Las vistas reflejan el código revisado el 3 de noviembre de 2026. Cada nodo del original draw.io conserva `data-source` con su archivo de referencia. La guía desarrolla los permisos, casos de error y restricciones que se simplifican en los dibujos. No son una extracción exhaustiva de tablas ni una comprobación nueva de infraestructura.
 
-El modelo de los recorridos está en [flujo-completo.json](flujo-completo.json). Se genera junto con draw.io y los SVG mediante:
+El modelo de los recorridos está en [flujo-completo.json](flujo-completo.json). Se genera junto con la página HTML, draw.io y los SVG mediante:
 
 ```powershell
 python docs/scripts/build_system_flow.py
 ```
 
-El generador comprueba identificadores, extremos de las conexiones y existencia de todos los archivos de referencia. Para mantener estos artefactos generados, editar las definiciones de `docs/scripts/build_system_flow.py` y regenerar. Un cambio manual del `.drawio` debe conservarse en una copia con otro nombre para que una regeneración no lo reemplace.
+El generador comprueba identificadores, extremos de las conexiones y existencia de todos los archivos de referencia. Para mantener estos artefactos generados, editar las definiciones de `docs/scripts/build_system_flow.py` y regenerar. Las plantillas internas tienen extensión `.html.in`; el archivo anterior `docs/scripts/system_flow_fragment.html` redirige a la página completa. Un cambio manual del `.drawio` debe conservarse en una copia con otro nombre para que una regeneración no lo reemplace.
 
 Se usaron Graphify para orientar la lectura del código y drawio-skill para el original editable y la validación estructural. La validación del documento actual informó once páginas, 77 nodos de recorrido y 80 conexiones, sin errores ni advertencias de geometría. Las vueltas de corrección, respuesta y actualización son intencionales.
 
