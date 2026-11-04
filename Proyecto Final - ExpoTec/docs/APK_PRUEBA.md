@@ -8,7 +8,19 @@ Los pasos de uso, instalación y exposición están en el [índice de documentac
 
 ## Compilación actual
 
-APK actual: **0.5.2, Android versionCode 8**. [Descargar APK](https://expo.dev/artifacts/eas/NM8NSyDKDkEx2WhevZsiOaAZrx2aPv28tKiEJghmtSM.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/b5df5f71-5dcf-4989-a028-6728a18fd352), terminada el 02/11/2026 a las 18:35:41, hora de Argentina, desde el frontend de `4de7f42b32b4640079fcb49161c53b944a876298`.
+APK actual: **0.5.3, Android versionCode 9**. [Descargar APK](https://expo.dev/artifacts/eas/pHPSd0wJPZqgZcbFK46WxwpwD0_QV4V6OqMqkLvQJ5I.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/2c2c2789-845b-495d-81eb-48f4e19b2999), terminada el 04/11/2026 a las 20:49:01, hora de Argentina, desde el frontend de `497b932dc93125264e0570ea3f7357dac6dba1eb`.
+
+Incluye las correcciones de la [auditoría funcional del 3 de noviembre](AUDITORIA_FUNCIONAL_2026-11-03.md): salida de propuestas al cerrar sesión, conservación de la imagen válida después de un reemplazo fallido, vista previa de enlaces, confirmación de revisiones, consultas según permisos, recargas de espacios e inventario, reintento de acceso social y validaciones de nombres y observaciones. Conserva **Eliminar foto** para administración sobre aportes pendientes, publicados y rechazados, las consultas por POST y la API pública 0.5.1.
+
+Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.3-9.apk`, 110.012.607 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.5.3`, código `9`, sin modo depuración. Integridad ZIP, digest de contenido y firma APK v2 correctos; certificado idéntico al de la APK 0.5.2 para instalarla como actualización. El bundle Android contiene la eliminación de fotos, el reintento de acceso, el mensaje que conserva la imagen anterior y la dirección de la API pública. SHA-256: `637bf8cd1e53d53543a4f00b070fba8f2e957da509f9bd263090b364427ce46a`. Informe local: `artifacts/android/verification-0.5.3.json`. Expo indica vencimiento del artefacto el 18/11/2026 a las 20:32, hora de Argentina; conservar la copia descargada.
+
+Antes de subir se inspeccionaron 207 archivos de fuentes, recursos y configuración del frontend: sus hashes coincidieron con el código local y no se incluyeron archivos privados ni otros proyectos. El envío se delimitó a `frontend/native` mediante `EAS_PROJECT_ROOT` y `EAS_NO_VCS`, con la lista permitida de `.easignore` y `EXPO_NO_DOTENV=1`. El listado quedó en `artifacts/android/source-manifest-0.5.3-9.json`. Pasaron 125 pruebas del frontend, revisión de tipos, análisis de estilo y exportación Android con Hermes. Las seis consultas POST publicadas de salud, disponibilidad de la base, espacios, proyectos públicos, galería y proveedores sociales respondieron HTTP 200 con JSON válido. Registro local: `artifacts/android/preflight-0.5.3.json`.
+
+EAS conserva el aviso previo de `expo doctor` sobre versiones recomendadas por el SDK (20 de 21 comprobaciones aprobadas), también presente en la 0.5.2. La compilación Android finalizó correctamente. Se verificaron el archivo y su firma; la instalación y el recorrido de esta versión en un teléfono físico siguen pendientes.
+
+## APK anteriores
+
+Octava APK de prueba: **0.5.2, Android versionCode 8**. [Descargar APK](https://expo.dev/artifacts/eas/NM8NSyDKDkEx2WhevZsiOaAZrx2aPv28tKiEJghmtSM.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/b5df5f71-5dcf-4989-a028-6728a18fd352), terminada el 02/11/2026 a las 18:35:41, hora de Argentina, desde el frontend de `4de7f42b32b4640079fcb49161c53b944a876298`.
 
 Incluye **Eliminar foto** en **Galería de la ExpoTec → Moderar fotos**, disponible para administración sobre fotos pendientes, publicadas o rechazadas. Pide confirmación antes de eliminar el aporte y sus revisiones. La opción también está disponible en la demostración. Conserva las consultas por POST y utiliza la API pública 0.5.1, que ya admite la eliminación de fotos.
 
@@ -18,7 +30,6 @@ Antes de subir se inspeccionaron 207 archivos de fuentes, recursos y configuraci
 
 EAS conserva el aviso de `expo doctor` observado también en las APK anteriores; la compilación Android finalizó correctamente. Se verificaron el archivo y su firma; la instalación y el nuevo recorrido en un teléfono físico siguen pendientes para esta versión.
 
-## APK anteriores
 
 Séptima APK de prueba: **0.5.1, Android versionCode 7**. [Descargar APK](https://expo.dev/artifacts/eas/_DrYzpt3Pc2cg8VchHXkfpwbNFUIU2ctImsTNd6F9YY.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/8b57beca-be9a-49d3-869c-4ff23ec68fd4), terminada el 29/10/2026 a las 14:15:27, hora de Argentina, desde el frontend de `8ee3a3b44f8f8168c6b5db5bd41b5bb021d13fda`.
 

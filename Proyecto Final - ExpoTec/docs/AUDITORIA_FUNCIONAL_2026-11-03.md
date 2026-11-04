@@ -50,4 +50,4 @@ Al terminar se detuvieron los servidores temporales y se eliminaron en una trans
 
 Esta revisión no equivale a probar todas las combinaciones posibles. Quedan fuera el consentimiento real de Google, Discord y GitHub, el envío real de correo, una carga real a Blob y la ejecución física en Android. El cambio dinámico de rol se revisó en código; no se pudo acreditar la actualización por foco con el navegador de pruebas.
 
-La APK 0.5.2 (código 8) generada antes de esta auditoría contiene la eliminación de fotos, pero no las correcciones de interfaz posteriores descritas aquí. Este trabajo genera la exportación web y no una nueva APK.
+La APK 0.5.2 (código 8) generada antes de esta auditoría contiene la eliminación de fotos, pero no las correcciones de interfaz posteriores descritas aquí. Este trabajo genera la exportación web y no una nueva APK. Las correcciones se incorporaron después en la [APK 0.5.3 (código 9), compilada y verificada el 4 de noviembre](APK_PRUEBA.md).

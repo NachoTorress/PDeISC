@@ -6,8 +6,8 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 | --- | --- |
 | Web | [expotec-web-gn19.vercel.app](https://expotec-web-gn19.vercel.app) |
 | API | `https://expotec-api-gn19.vercel.app` |
-| APK Android | [Descargar 0.5.2](https://expo.dev/artifacts/eas/NM8NSyDKDkEx2WhevZsiOaAZrx2aPv28tKiEJghmtSM.apk), con eliminación de fotos moderadas y publicadas. Historial y verificación en [APK de prueba](docs/APK_PRUEBA.md) |
-| Versión app / API | 0.5.2 / 0.5.1 |
+| APK Android | [Descargar 0.5.3](https://expo.dev/artifacts/eas/pHPSd0wJPZqgZcbFK46WxwpwD0_QV4V6OqMqkLvQJ5I.apk), con las correcciones de formularios, navegación y validaciones. Historial y verificación en [APK de prueba](docs/APK_PRUEBA.md) |
+| Versión app / API | 0.5.3 / 0.5.1 |
 
 ## Documentación
 
@@ -103,10 +103,15 @@ cd frontend/native;  npm run typecheck; npm run lint; npm test
 
 ```powershell
 cd frontend/native
+$env:EAS_NO_VCS = '1'
+$env:EAS_PROJECT_ROOT = (Get-Location).Path
+$env:EXPO_NO_DOTENV = '1'
 npx eas-cli build --platform android --profile preview
 ```
 
-La APK 0.5.2 publicada consulta por POST, funciona con la API actual y permite a administración eliminar fotos ya moderadas y publicadas. La APK 0.4.0 sigue funcionando gracias a una capa de compatibilidad (ver [backend/README.md](backend/README.md#compatibilidad-con-la-apk-040)); la 0.5.0 usaba GET y **no funciona** con la API 0.5.1. Los enlaces de Expo pueden vencer: conservar la descarga y adjuntarla como *Release* en GitHub para distribuirla a largo plazo.
+Estas variables delimitan el envío al frontend y permiten que `.easignore` excluya archivos privados y otros proyectos del repositorio superior. Inspeccionar el archivo de fuentes antes de enviarlo y conservar el commit de origen en el registro de la compilación.
+
+La APK 0.5.3 incorpora las correcciones de la auditoría del 3 de noviembre: formularios, navegación, recargas, imágenes y validaciones. Conserva las consultas por POST y la eliminación de fotos moderadas y publicadas. La APK 0.4.0 sigue funcionando gracias a una capa de compatibilidad (ver [backend/README.md](backend/README.md#compatibilidad-con-la-apk-040)); la 0.5.0 usaba GET y **no funciona** con la API 0.5.1. Los enlaces de Expo pueden vencer: conservar la descarga y adjuntarla como *Release* en GitHub para distribuirla a largo plazo.
 
 ## Roles
 

@@ -157,9 +157,9 @@ El administrador puede gestionar usuarios, crear espacios, habilitar mesas como 
 
 ### Instalar la APK disponible
 
-Descargá [ExpoTec 0.4.0 para Android](https://expo.dev/artifacts/eas/2PBiG--Pnz0L_bkfG5PCBe9A0grheNB3PZSQsYw94F0.apk) desde el teléfono, abrí el archivo e instalalo. El paquete es `ar.edu.expotec.organizacion`, con versionCode 5. La APK se conecta a la API publicada y funciona sin un servidor de desarrollo local.
+Descargá [ExpoTec 0.5.3 para Android](https://expo.dev/artifacts/eas/pHPSd0wJPZqgZcbFK46WxwpwD0_QV4V6OqMqkLvQJ5I.apk) desde el teléfono, abrí el archivo e instalalo. El paquete es `ar.edu.expotec.organizacion`, con versionCode 9. La APK se conecta a la API publicada y funciona sin un servidor de desarrollo local. Conserva la firma de la 0.5.2 para instalarse como actualización.
 
-La APK 0.4.0 usa las rutas anteriores de la API; el backend 0.5.1 las sigue aceptando mediante una capa de compatibilidad. La APK 0.5.0 usaba GET y no funciona con el backend 0.5.1: generá la APK 0.5.1 como se indica más abajo.
+La APK 0.4.0 usa las rutas anteriores de la API; el backend 0.5.1 las sigue aceptando mediante una capa de compatibilidad. La APK 0.5.0 usaba GET y no funciona con el backend 0.5.1: reemplazala por la actual.
 
 ### Trabajar con el código nativo
 

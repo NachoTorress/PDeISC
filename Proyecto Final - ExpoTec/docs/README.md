@@ -31,7 +31,7 @@ La demostración no acredita por sí sola llamadas al backend ni permisos del se
 
 ## APK
 
-La compilación disponible y sus verificaciones están en [APK de prueba](APK_PRUEBA.md). La API 0.5.1 mantiene compatibilidad con la APK 0.4.0 instalada; la APK 0.5.0 debe reemplazarse por la 0.5.1.
+La APK disponible es **0.5.3, código Android 9**, con las correcciones de formularios, navegación y validaciones de la auditoría del 3 de noviembre. La descarga y sus verificaciones están en [APK de prueba](APK_PRUEBA.md). La API 0.5.1 mantiene compatibilidad con la APK 0.4.0 instalada; la APK 0.5.0 debe reemplazarse por la actual.
 
 ## Documentación técnica y evidencia
 
