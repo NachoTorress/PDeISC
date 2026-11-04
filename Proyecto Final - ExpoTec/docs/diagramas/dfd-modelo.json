@@ -1,0 +1,1384 @@
+{
+  "date": "2026-11-04",
+  "notation": "Gane–Sarson",
+  "boundary": "Frontend web + APK Android + API ExpoTec",
+  "stores": {
+    "D1": [
+      "Cuentas, permisos y sesiones",
+      [
+        "users",
+        "roles",
+        "user_roles",
+        "sessions",
+        "refresh_tokens",
+        "auth_rate_limits",
+        "social_providers",
+        "social_identities",
+        "social_flows",
+        "password_resets"
+      ]
+    ],
+    "D2": [
+      "Espacios y puestos",
+      [
+        "spaces",
+        "furniture",
+        "booths"
+      ]
+    ],
+    "D3": [
+      "Proyectos y asignación de puestos",
+      [
+        "projects",
+        "project_members",
+        "project_teachers",
+        "subjects",
+        "project_subjects",
+        "project_reviews",
+        "booth_allocations"
+      ]
+    ],
+    "D4": [
+      "Inventario, pedidos y reservas",
+      [
+        "resources",
+        "project_resource_requests",
+        "resource_allocations",
+        "resource_conditions",
+        "inventory_events",
+        "inventory_condition_events"
+      ]
+    ],
+    "D5": [
+      "Préstamos y devoluciones",
+      [
+        "loans",
+        "loan_returns"
+      ]
+    ],
+    "D6": [
+      "Galería y metadatos de cargas",
+      [
+        "gallery_photos",
+        "gallery_reviews",
+        "image_uploads"
+      ]
+    ],
+    "D7": [
+      "Archivos de imágenes",
+      [
+        "Vercel Blob privado"
+      ]
+    ]
+  },
+  "views": [
+    {
+      "id": "dfd-contexto",
+      "family": "dfd",
+      "title": "DFD · Contexto (nivel 0)",
+      "note": "Un proceso representa ExpoTec completo. Las entidades externas intercambian datos con él; no se representan decisiones ni despliegues.",
+      "nodes": [
+        {
+          "id": "E1",
+          "kind": "external",
+          "name": "Visitante",
+          "detail": "Consulta pública desde web o APK"
+        },
+        {
+          "id": "E2",
+          "kind": "external",
+          "name": "Persona registrada",
+          "detail": "Alumno, invitado u operador que inicia sesión"
+        },
+        {
+          "id": "E3",
+          "kind": "external",
+          "name": "Profesor asignado",
+          "detail": "Revisión de propuestas"
+        },
+        {
+          "id": "E4",
+          "kind": "external",
+          "name": "Encargado de préstamos",
+          "detail": "Entregas y devoluciones"
+        },
+        {
+          "id": "E5",
+          "kind": "external",
+          "name": "Administración",
+          "detail": "Gestión, permisos y moderación"
+        },
+        {
+          "id": "E6",
+          "kind": "external",
+          "name": "Proveedor de identidad",
+          "detail": "Google, Discord o GitHub"
+        },
+        {
+          "id": "E7",
+          "kind": "external",
+          "name": "Servicio de correo",
+          "detail": "SMTP de recuperación y avisos"
+        },
+        {
+          "id": "P0",
+          "kind": "process",
+          "number": "0",
+          "name": "Gestionar ExpoTec",
+          "source": "backend/src/create-app.mjs"
+        }
+      ],
+      "edges": [
+        {
+          "id": "C-E1-P0",
+          "source": "E1",
+          "target": "P0",
+          "label": "Consultas públicas de planos, proyectos, fotos y TV\nB01",
+          "refs": [
+            "B01"
+          ]
+        },
+        {
+          "id": "C-P0-E1",
+          "source": "P0",
+          "target": "E1",
+          "label": "Planos y contenido publicado\nB02",
+          "refs": [
+            "B02"
+          ]
+        },
+        {
+          "id": "C-E2-P0",
+          "source": "E2",
+          "target": "P0",
+          "label": "Identidad, propuestas, imágenes y consultas de catálogo\nB03, B05, B21, B27",
+          "refs": [
+            "B03",
+            "B05",
+            "B21",
+            "B27"
+          ]
+        },
+        {
+          "id": "C-P0-E2",
+          "source": "P0",
+          "target": "E2",
+          "label": "Acceso, expediente, estado de aportes y catálogo\nB04, B06, B22, B28",
+          "refs": [
+            "B04",
+            "B06",
+            "B22",
+            "B28"
+          ]
+        },
+        {
+          "id": "C-E3-P0",
+          "source": "E3",
+          "target": "P0",
+          "label": "Consultas y dictámenes de revisión\nB07",
+          "refs": [
+            "B07"
+          ]
+        },
+        {
+          "id": "C-P0-E3",
+          "source": "P0",
+          "target": "E3",
+          "label": "Expedientes asignados y resultados\nB08",
+          "refs": [
+            "B08"
+          ]
+        },
+        {
+          "id": "C-E4-P0",
+          "source": "E4",
+          "target": "P0",
+          "label": "Datos de entrega, devolución o novedad\nB09",
+          "refs": [
+            "B09"
+          ]
+        },
+        {
+          "id": "C-P0-E4",
+          "source": "P0",
+          "target": "E4",
+          "label": "Préstamos, saldos e historial\nB10",
+          "refs": [
+            "B10"
+          ]
+        },
+        {
+          "id": "C-E5-P0",
+          "source": "E5",
+          "target": "P0",
+          "label": "Cuentas, planos, existencias, moderación y proyectos\nB11, B13, B15, B17, B19",
+          "refs": [
+            "B11",
+            "B13",
+            "B15",
+            "B17",
+            "B19"
+          ]
+        },
+        {
+          "id": "C-P0-E5",
+          "source": "P0",
+          "target": "E5",
+          "label": "Cuentas, planos, inventario, fotos y expedientes\nB12, B14, B16, B18, B20",
+          "refs": [
+            "B12",
+            "B14",
+            "B16",
+            "B18",
+            "B20"
+          ]
+        },
+        {
+          "id": "C-P0-E6",
+          "source": "P0",
+          "target": "E6",
+          "label": "Autenticación e intercambio OAuth\nB23",
+          "refs": [
+            "B23"
+          ]
+        },
+        {
+          "id": "C-E6-P0",
+          "source": "E6",
+          "target": "P0",
+          "label": "Identidad y perfil del proveedor\nB24",
+          "refs": [
+            "B24"
+          ]
+        },
+        {
+          "id": "C-P0-E7",
+          "source": "P0",
+          "target": "E7",
+          "label": "Mensajes de recuperación o cambio de contraseña\nB25",
+          "refs": [
+            "B25"
+          ]
+        },
+        {
+          "id": "C-E7-P0",
+          "source": "E7",
+          "target": "P0",
+          "label": "Resultado del envío SMTP\nB26",
+          "refs": [
+            "B26"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dfd-nivel-1",
+      "family": "dfd",
+      "title": "DFD · Nivel 1: procesos y almacenes",
+      "note": "Frontera del sistema: frontend web/APK y API. D1–D6 son almacenes lógicos en TiDB; D7 contiene archivos en Blob.",
+      "nodes": [
+        {
+          "id": "E1",
+          "kind": "external",
+          "name": "Visitante",
+          "detail": "Consulta pública desde web o APK"
+        },
+        {
+          "id": "E2",
+          "kind": "external",
+          "name": "Persona registrada",
+          "detail": "Alumno, invitado u operador que inicia sesión"
+        },
+        {
+          "id": "E3",
+          "kind": "external",
+          "name": "Profesor asignado",
+          "detail": "Revisión de propuestas"
+        },
+        {
+          "id": "E4",
+          "kind": "external",
+          "name": "Encargado de préstamos",
+          "detail": "Entregas y devoluciones"
+        },
+        {
+          "id": "E5",
+          "kind": "external",
+          "name": "Administración",
+          "detail": "Gestión, permisos y moderación"
+        },
+        {
+          "id": "E6",
+          "kind": "external",
+          "name": "Proveedor de identidad",
+          "detail": "Google, Discord o GitHub"
+        },
+        {
+          "id": "E7",
+          "kind": "external",
+          "name": "Servicio de correo",
+          "detail": "SMTP de recuperación y avisos"
+        },
+        {
+          "id": "P1",
+          "kind": "process",
+          "number": "1.0",
+          "name": "Gestionar identidad y acceso",
+          "source": "backend/src/routes/auth.mjs"
+        },
+        {
+          "id": "P2",
+          "kind": "process",
+          "number": "2.0",
+          "name": "Administrar espacios y puestos",
+          "source": "backend/src/routes/spaces.mjs"
+        },
+        {
+          "id": "P3",
+          "kind": "process",
+          "number": "3.0",
+          "name": "Gestionar propuestas y revisiones",
+          "source": "backend/src/routes/projects.mjs"
+        },
+        {
+          "id": "P4",
+          "kind": "process",
+          "number": "4.0",
+          "name": "Mantener catálogo y existencias",
+          "source": "backend/src/routes/inventory.mjs"
+        },
+        {
+          "id": "P5",
+          "kind": "process",
+          "number": "5.0",
+          "name": "Registrar préstamos y devoluciones",
+          "source": "backend/src/routes/loans.mjs"
+        },
+        {
+          "id": "P6",
+          "kind": "process",
+          "number": "6.0",
+          "name": "Gestionar imágenes y galería",
+          "source": "backend/src/routes/gallery.mjs"
+        },
+        {
+          "id": "P7",
+          "kind": "process",
+          "number": "7.0",
+          "name": "Producir consultas públicas y TV",
+          "source": "backend/src/repositories/projects.mjs"
+        },
+        {
+          "id": "D1",
+          "kind": "store",
+          "name": "Cuentas, permisos y sesiones",
+          "tables": [
+            "users",
+            "roles",
+            "user_roles",
+            "sessions",
+            "refresh_tokens",
+            "auth_rate_limits",
+            "social_providers",
+            "social_identities",
+            "social_flows",
+            "password_resets"
+          ]
+        },
+        {
+          "id": "D2",
+          "kind": "store",
+          "name": "Espacios y puestos",
+          "tables": [
+            "spaces",
+            "furniture",
+            "booths"
+          ]
+        },
+        {
+          "id": "D3",
+          "kind": "store",
+          "name": "Proyectos y asignación de puestos",
+          "tables": [
+            "projects",
+            "project_members",
+            "project_teachers",
+            "subjects",
+            "project_subjects",
+            "project_reviews",
+            "booth_allocations"
+          ]
+        },
+        {
+          "id": "D4",
+          "kind": "store",
+          "name": "Inventario, pedidos y reservas",
+          "tables": [
+            "resources",
+            "project_resource_requests",
+            "resource_allocations",
+            "resource_conditions",
+            "inventory_events",
+            "inventory_condition_events"
+          ]
+        },
+        {
+          "id": "D5",
+          "kind": "store",
+          "name": "Préstamos y devoluciones",
+          "tables": [
+            "loans",
+            "loan_returns"
+          ]
+        },
+        {
+          "id": "D6",
+          "kind": "store",
+          "name": "Galería y metadatos de cargas",
+          "tables": [
+            "gallery_photos",
+            "gallery_reviews",
+            "image_uploads"
+          ]
+        },
+        {
+          "id": "D7",
+          "kind": "store",
+          "name": "Archivos de imágenes",
+          "tables": [
+            "Vercel Blob privado"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "B01",
+          "source": "E1",
+          "target": "P7",
+          "label": "Solicitudes de espacios, proyectos, galería o TV",
+          "refs": [
+            "B01"
+          ]
+        },
+        {
+          "id": "B02",
+          "source": "P7",
+          "target": "E1",
+          "label": "Planos y contenido publicado",
+          "refs": [
+            "B02"
+          ]
+        },
+        {
+          "id": "B03",
+          "source": "E2",
+          "target": "P1",
+          "label": "Datos de registro, credenciales, renovación o recuperación",
+          "refs": [
+            "B03"
+          ]
+        },
+        {
+          "id": "B04",
+          "source": "P1",
+          "target": "E2",
+          "label": "Sesión, perfil y resultado de acceso o recuperación",
+          "refs": [
+            "B04"
+          ]
+        },
+        {
+          "id": "B05",
+          "source": "E2",
+          "target": "P3",
+          "label": "Consulta, propuesta, corrección o cancelación propia",
+          "refs": [
+            "B05"
+          ]
+        },
+        {
+          "id": "B06",
+          "source": "P3",
+          "target": "E2",
+          "label": "Expediente, estado y observaciones de su proyecto",
+          "refs": [
+            "B06"
+          ]
+        },
+        {
+          "id": "B07",
+          "source": "E3",
+          "target": "P3",
+          "label": "Consulta o dictamen de revisión, motivo y versión",
+          "refs": [
+            "B07"
+          ]
+        },
+        {
+          "id": "B08",
+          "source": "P3",
+          "target": "E3",
+          "label": "Expedientes asignados y resultados de revisión",
+          "refs": [
+            "B08"
+          ]
+        },
+        {
+          "id": "B09",
+          "source": "E4",
+          "target": "P5",
+          "label": "Datos de entrega, devolución o novedad",
+          "refs": [
+            "B09"
+          ]
+        },
+        {
+          "id": "B10",
+          "source": "P5",
+          "target": "E4",
+          "label": "Préstamos, saldos e historial de movimientos",
+          "refs": [
+            "B10"
+          ]
+        },
+        {
+          "id": "B11",
+          "source": "E5",
+          "target": "P1",
+          "label": "Consulta de usuarios y cambios de roles o estado",
+          "refs": [
+            "B11"
+          ]
+        },
+        {
+          "id": "B12",
+          "source": "P1",
+          "target": "E5",
+          "label": "Cuentas y resultado de gestión de permisos",
+          "refs": [
+            "B12"
+          ]
+        },
+        {
+          "id": "B13",
+          "source": "E5",
+          "target": "P2",
+          "label": "Datos del plano, puestos y baja de espacio",
+          "refs": [
+            "B13"
+          ]
+        },
+        {
+          "id": "B14",
+          "source": "P2",
+          "target": "E5",
+          "label": "Plano, versión y resultado de gestión",
+          "refs": [
+            "B14"
+          ]
+        },
+        {
+          "id": "B15",
+          "source": "E5",
+          "target": "P4",
+          "label": "Cambios de existencias y condición",
+          "refs": [
+            "B15"
+          ]
+        },
+        {
+          "id": "B16",
+          "source": "P4",
+          "target": "E5",
+          "label": "Inventario, disponibilidad e historial",
+          "refs": [
+            "B16"
+          ]
+        },
+        {
+          "id": "B17",
+          "source": "E5",
+          "target": "P6",
+          "label": "Dictamen de moderación o eliminación",
+          "refs": [
+            "B17"
+          ]
+        },
+        {
+          "id": "B18",
+          "source": "P6",
+          "target": "E5",
+          "label": "Fotos por estado y resultado de moderación",
+          "refs": [
+            "B18"
+          ]
+        },
+        {
+          "id": "B19",
+          "source": "E5",
+          "target": "P3",
+          "label": "Consulta, reapertura o cancelación administrativa",
+          "refs": [
+            "B19"
+          ]
+        },
+        {
+          "id": "B20",
+          "source": "P3",
+          "target": "E5",
+          "label": "Expediente y resultado administrativo",
+          "refs": [
+            "B20"
+          ]
+        },
+        {
+          "id": "B21",
+          "source": "E2",
+          "target": "P6",
+          "label": "Imagen, metadatos y aporte de galería",
+          "refs": [
+            "B21"
+          ]
+        },
+        {
+          "id": "B22",
+          "source": "P6",
+          "target": "E2",
+          "label": "Permiso de carga, URL y estado de aportes",
+          "refs": [
+            "B22"
+          ]
+        },
+        {
+          "id": "B23",
+          "source": "P1",
+          "target": "E6",
+          "label": "Solicitud de autenticación e intercambio OAuth",
+          "refs": [
+            "B23"
+          ]
+        },
+        {
+          "id": "B24",
+          "source": "E6",
+          "target": "P1",
+          "label": "Prueba de identidad y perfil del proveedor",
+          "refs": [
+            "B24"
+          ]
+        },
+        {
+          "id": "B25",
+          "source": "P1",
+          "target": "E7",
+          "label": "Mensajes de recuperación o cambio de contraseña",
+          "refs": [
+            "B25"
+          ]
+        },
+        {
+          "id": "B26",
+          "source": "E7",
+          "target": "P1",
+          "label": "Resultado del envío SMTP",
+          "refs": [
+            "B26"
+          ]
+        },
+        {
+          "id": "B27",
+          "source": "E2",
+          "target": "P4",
+          "label": "Consulta de catálogo o inventario según permiso",
+          "refs": [
+            "B27"
+          ]
+        },
+        {
+          "id": "B28",
+          "source": "P4",
+          "target": "E2",
+          "label": "Catálogo o detalle de inventario permitido",
+          "refs": [
+            "B28"
+          ]
+        },
+        {
+          "id": "S01",
+          "source": "D1",
+          "target": "P1",
+          "label": "Cuentas, permisos, sesiones y flujos de acceso",
+          "refs": [
+            "S01"
+          ]
+        },
+        {
+          "id": "S02",
+          "source": "P1",
+          "target": "D1",
+          "label": "Altas, sesiones, permisos y tokens invalidados",
+          "refs": [
+            "S02"
+          ]
+        },
+        {
+          "id": "S03",
+          "source": "D1",
+          "target": "P2",
+          "label": "Identidad y permiso de administración",
+          "refs": [
+            "S03"
+          ]
+        },
+        {
+          "id": "S04",
+          "source": "D2",
+          "target": "P2",
+          "label": "Planos, puestos y versiones actuales",
+          "refs": [
+            "S04"
+          ]
+        },
+        {
+          "id": "S05",
+          "source": "P2",
+          "target": "D2",
+          "label": "Espacios, mobiliario y puestos actualizados",
+          "refs": [
+            "S05"
+          ]
+        },
+        {
+          "id": "S06",
+          "source": "D3",
+          "target": "P2",
+          "label": "Referencias de propuestas y ocupación de puestos",
+          "refs": [
+            "S06"
+          ]
+        },
+        {
+          "id": "S07",
+          "source": "D1",
+          "target": "P3",
+          "label": "Cuentas activas y roles de participantes",
+          "refs": [
+            "S07"
+          ]
+        },
+        {
+          "id": "S08",
+          "source": "D2",
+          "target": "P3",
+          "label": "Puestos habilitados y espacios activos",
+          "refs": [
+            "S08"
+          ]
+        },
+        {
+          "id": "S09",
+          "source": "D3",
+          "target": "P3",
+          "label": "Expedientes, versiones y asignaciones vigentes",
+          "refs": [
+            "S09"
+          ]
+        },
+        {
+          "id": "S10",
+          "source": "P3",
+          "target": "D3",
+          "label": "Propuestas, relaciones, dictámenes y asignaciones",
+          "refs": [
+            "S10"
+          ]
+        },
+        {
+          "id": "S11",
+          "source": "D4",
+          "target": "P3",
+          "label": "Catálogo, pedidos, stock y reservas",
+          "refs": [
+            "S11"
+          ]
+        },
+        {
+          "id": "S12",
+          "source": "P3",
+          "target": "D4",
+          "label": "Pedidos y reservas actualizados",
+          "refs": [
+            "S12"
+          ]
+        },
+        {
+          "id": "S13",
+          "source": "D5",
+          "target": "P3",
+          "label": "Saldos de unidades sin devolver",
+          "refs": [
+            "S13"
+          ]
+        },
+        {
+          "id": "S14",
+          "source": "D1",
+          "target": "P4",
+          "label": "Identidad y permisos de inventario",
+          "refs": [
+            "S14"
+          ]
+        },
+        {
+          "id": "S15",
+          "source": "D4",
+          "target": "P4",
+          "label": "Catálogo, existencias, condición e historial",
+          "refs": [
+            "S15"
+          ]
+        },
+        {
+          "id": "S16",
+          "source": "P4",
+          "target": "D4",
+          "label": "Existencias, condición y eventos de inventario",
+          "refs": [
+            "S16"
+          ]
+        },
+        {
+          "id": "S17",
+          "source": "D1",
+          "target": "P5",
+          "label": "Operador y alumno destinatario activos",
+          "refs": [
+            "S17"
+          ]
+        },
+        {
+          "id": "S18",
+          "source": "D3",
+          "target": "P5",
+          "label": "Proyectos confirmados y sus integrantes",
+          "refs": [
+            "S18"
+          ]
+        },
+        {
+          "id": "S19",
+          "source": "D4",
+          "target": "P5",
+          "label": "Reservas, existencias y unidades no utilizables",
+          "refs": [
+            "S19"
+          ]
+        },
+        {
+          "id": "S20",
+          "source": "P5",
+          "target": "D4",
+          "label": "Condiciones y eventos por daño",
+          "refs": [
+            "S20"
+          ]
+        },
+        {
+          "id": "S21",
+          "source": "D5",
+          "target": "P5",
+          "label": "Entregas previas, saldos y versiones",
+          "refs": [
+            "S21"
+          ]
+        },
+        {
+          "id": "S22",
+          "source": "P5",
+          "target": "D5",
+          "label": "Entregas, devoluciones y novedades",
+          "refs": [
+            "S22"
+          ]
+        },
+        {
+          "id": "S23",
+          "source": "D1",
+          "target": "P6",
+          "label": "Autor activo y permisos de moderación",
+          "refs": [
+            "S23"
+          ]
+        },
+        {
+          "id": "S24",
+          "source": "D6",
+          "target": "P6",
+          "label": "Cargas, aportes y revisiones actuales",
+          "refs": [
+            "S24"
+          ]
+        },
+        {
+          "id": "S25",
+          "source": "P6",
+          "target": "D6",
+          "label": "Metadatos de cargas, aportes y moderaciones",
+          "refs": [
+            "S25"
+          ]
+        },
+        {
+          "id": "S26",
+          "source": "D7",
+          "target": "P6",
+          "label": "Bytes de imágenes cargadas",
+          "refs": [
+            "S26"
+          ]
+        },
+        {
+          "id": "S27",
+          "source": "P6",
+          "target": "D7",
+          "label": "Archivo original temporal y JPEG optimizado",
+          "refs": [
+            "S27"
+          ]
+        },
+        {
+          "id": "S28",
+          "source": "D2",
+          "target": "P7",
+          "label": "Planos y puestos consultables",
+          "refs": [
+            "S28"
+          ]
+        },
+        {
+          "id": "S29",
+          "source": "D3",
+          "target": "P7",
+          "label": "Proyectos confirmados y datos públicos",
+          "refs": [
+            "S29"
+          ]
+        },
+        {
+          "id": "S30",
+          "source": "D6",
+          "target": "P7",
+          "label": "Fotos aprobadas y referencias de imagen",
+          "refs": [
+            "S30"
+          ]
+        },
+        {
+          "id": "S31",
+          "source": "D7",
+          "target": "P7",
+          "label": "Bytes JPEG con publicación permitida",
+          "refs": [
+            "S31"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dfd-proyectos",
+      "family": "dfd",
+      "title": "DFD · Nivel 2: propuestas y revisiones (3.0)",
+      "note": "Descomposición de 3.0. Conserva B05–B08, B19–B20 y S07–S13 del nivel 1. El saldo de préstamos condiciona la liberación de asignaciones dentro de 3.5.",
+      "nodes": [
+        {
+          "id": "E2",
+          "kind": "external",
+          "name": "Persona registrada",
+          "detail": "Alumno, invitado u operador que inicia sesión"
+        },
+        {
+          "id": "E3",
+          "kind": "external",
+          "name": "Profesor asignado",
+          "detail": "Revisión de propuestas"
+        },
+        {
+          "id": "E5",
+          "kind": "external",
+          "name": "Administración",
+          "detail": "Gestión, permisos y moderación"
+        },
+        {
+          "id": "P31",
+          "kind": "process",
+          "number": "3.1",
+          "name": "Validar solicitud y participantes",
+          "source": "backend/src/repositories/projects.mjs"
+        },
+        {
+          "id": "P32",
+          "kind": "process",
+          "number": "3.2",
+          "name": "Registrar propuesta o corrección",
+          "source": "backend/src/repositories/projects.mjs"
+        },
+        {
+          "id": "P33",
+          "kind": "process",
+          "number": "3.3",
+          "name": "Componer expediente y resultado",
+          "source": "backend/src/repositories/projects.mjs"
+        },
+        {
+          "id": "P34",
+          "kind": "process",
+          "number": "3.4",
+          "name": "Registrar dictamen y confirmación",
+          "source": "backend/src/repositories/projects.mjs"
+        },
+        {
+          "id": "P35",
+          "kind": "process",
+          "number": "3.5",
+          "name": "Reabrir o cancelar proyecto",
+          "source": "backend/src/repositories/projects.mjs"
+        },
+        {
+          "id": "D1",
+          "kind": "store",
+          "name": "Cuentas, permisos y sesiones",
+          "tables": [
+            "users",
+            "roles",
+            "user_roles",
+            "sessions",
+            "refresh_tokens",
+            "auth_rate_limits",
+            "social_providers",
+            "social_identities",
+            "social_flows",
+            "password_resets"
+          ]
+        },
+        {
+          "id": "D2",
+          "kind": "store",
+          "name": "Espacios y puestos",
+          "tables": [
+            "spaces",
+            "furniture",
+            "booths"
+          ]
+        },
+        {
+          "id": "D3",
+          "kind": "store",
+          "name": "Proyectos y asignación de puestos",
+          "tables": [
+            "projects",
+            "project_members",
+            "project_teachers",
+            "subjects",
+            "project_subjects",
+            "project_reviews",
+            "booth_allocations"
+          ]
+        },
+        {
+          "id": "D4",
+          "kind": "store",
+          "name": "Inventario, pedidos y reservas",
+          "tables": [
+            "resources",
+            "project_resource_requests",
+            "resource_allocations",
+            "resource_conditions",
+            "inventory_events",
+            "inventory_condition_events"
+          ]
+        },
+        {
+          "id": "D5",
+          "kind": "store",
+          "name": "Préstamos y devoluciones",
+          "tables": [
+            "loans",
+            "loan_returns"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "L2-B05-0",
+          "source": "E2",
+          "target": "P31",
+          "label": "Consulta, propuesta, corrección o cancelación propia",
+          "refs": [
+            "B05"
+          ]
+        },
+        {
+          "id": "L2-B06-1",
+          "source": "P33",
+          "target": "E2",
+          "label": "Expediente, estado y observaciones de su proyecto",
+          "refs": [
+            "B06"
+          ]
+        },
+        {
+          "id": "L2-B07-2",
+          "source": "E3",
+          "target": "P34",
+          "label": "Consulta o dictamen de revisión, motivo y versión",
+          "refs": [
+            "B07"
+          ]
+        },
+        {
+          "id": "L2-B08-3",
+          "source": "P33",
+          "target": "E3",
+          "label": "Expedientes asignados y resultados de revisión",
+          "refs": [
+            "B08"
+          ]
+        },
+        {
+          "id": "L2-B19-4",
+          "source": "E5",
+          "target": "P35",
+          "label": "Consulta, reapertura o cancelación administrativa",
+          "refs": [
+            "B19"
+          ]
+        },
+        {
+          "id": "L2-B20-5",
+          "source": "P33",
+          "target": "E5",
+          "label": "Expediente y resultado administrativo",
+          "refs": [
+            "B20"
+          ]
+        },
+        {
+          "id": "L2-S07-6",
+          "source": "D1",
+          "target": "P31",
+          "label": "Cuentas activas y roles de participantes",
+          "refs": [
+            "S07"
+          ]
+        },
+        {
+          "id": "L2-S07-7",
+          "source": "D1",
+          "target": "P34",
+          "label": "Cuentas activas y roles de participantes",
+          "refs": [
+            "S07"
+          ]
+        },
+        {
+          "id": "L2-S07-8",
+          "source": "D1",
+          "target": "P35",
+          "label": "Cuentas activas y roles de participantes",
+          "refs": [
+            "S07"
+          ]
+        },
+        {
+          "id": "L2-S08-9",
+          "source": "D2",
+          "target": "P31",
+          "label": "Puestos habilitados y espacios activos",
+          "refs": [
+            "S08"
+          ]
+        },
+        {
+          "id": "L2-S08-10",
+          "source": "D2",
+          "target": "P34",
+          "label": "Puestos habilitados y espacios activos",
+          "refs": [
+            "S08"
+          ]
+        },
+        {
+          "id": "L2-S09-11",
+          "source": "D3",
+          "target": "P32",
+          "label": "Expedientes, versiones y asignaciones vigentes",
+          "refs": [
+            "S09"
+          ]
+        },
+        {
+          "id": "L2-S09-12",
+          "source": "D3",
+          "target": "P33",
+          "label": "Expedientes, versiones y asignaciones vigentes",
+          "refs": [
+            "S09"
+          ]
+        },
+        {
+          "id": "L2-S09-13",
+          "source": "D3",
+          "target": "P34",
+          "label": "Expedientes, versiones y asignaciones vigentes",
+          "refs": [
+            "S09"
+          ]
+        },
+        {
+          "id": "L2-S09-14",
+          "source": "D3",
+          "target": "P35",
+          "label": "Expedientes, versiones y asignaciones vigentes",
+          "refs": [
+            "S09"
+          ]
+        },
+        {
+          "id": "L2-S10-15",
+          "source": "P32",
+          "target": "D3",
+          "label": "Propuestas, relaciones, dictámenes y asignaciones",
+          "refs": [
+            "S10"
+          ]
+        },
+        {
+          "id": "L2-S10-16",
+          "source": "P34",
+          "target": "D3",
+          "label": "Propuestas, relaciones, dictámenes y asignaciones",
+          "refs": [
+            "S10"
+          ]
+        },
+        {
+          "id": "L2-S10-17",
+          "source": "P35",
+          "target": "D3",
+          "label": "Propuestas, relaciones, dictámenes y asignaciones",
+          "refs": [
+            "S10"
+          ]
+        },
+        {
+          "id": "L2-S11-18",
+          "source": "D4",
+          "target": "P32",
+          "label": "Catálogo, pedidos, stock y reservas",
+          "refs": [
+            "S11"
+          ]
+        },
+        {
+          "id": "L2-S11-19",
+          "source": "D4",
+          "target": "P34",
+          "label": "Catálogo, pedidos, stock y reservas",
+          "refs": [
+            "S11"
+          ]
+        },
+        {
+          "id": "L2-S11-20",
+          "source": "D4",
+          "target": "P35",
+          "label": "Catálogo, pedidos, stock y reservas",
+          "refs": [
+            "S11"
+          ]
+        },
+        {
+          "id": "L2-S12-21",
+          "source": "P32",
+          "target": "D4",
+          "label": "Pedidos y reservas actualizados",
+          "refs": [
+            "S12"
+          ]
+        },
+        {
+          "id": "L2-S12-22",
+          "source": "P34",
+          "target": "D4",
+          "label": "Pedidos y reservas actualizados",
+          "refs": [
+            "S12"
+          ]
+        },
+        {
+          "id": "L2-S12-23",
+          "source": "P35",
+          "target": "D4",
+          "label": "Pedidos y reservas actualizados",
+          "refs": [
+            "S12"
+          ]
+        },
+        {
+          "id": "L2-S13-24",
+          "source": "D5",
+          "target": "P35",
+          "label": "Saldos de unidades sin devolver",
+          "refs": [
+            "S13"
+          ]
+        },
+        {
+          "id": "I31",
+          "source": "P31",
+          "target": "P32",
+          "label": "Propuesta y participantes validados",
+          "refs": [
+            "I31"
+          ]
+        },
+        {
+          "id": "I32",
+          "source": "P31",
+          "target": "P35",
+          "label": "Cancelación propia y actor validados",
+          "refs": [
+            "I32"
+          ]
+        },
+        {
+          "id": "I33",
+          "source": "P32",
+          "target": "P33",
+          "label": "Identificador y versión de propuesta",
+          "refs": [
+            "I33"
+          ]
+        },
+        {
+          "id": "I34",
+          "source": "P34",
+          "target": "P33",
+          "label": "Proyecto, dictamen y versión resultantes",
+          "refs": [
+            "I34"
+          ]
+        },
+        {
+          "id": "I35",
+          "source": "P35",
+          "target": "P33",
+          "label": "Estado final y referencias liberadas",
+          "refs": [
+            "I35"
+          ]
+        }
+      ]
+    }
+  ]
+}

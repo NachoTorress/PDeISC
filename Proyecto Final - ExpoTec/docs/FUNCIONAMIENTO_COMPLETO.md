@@ -1,6 +1,6 @@
 # Cómo funciona ExpoTec, de la pantalla a la base de datos
 
-Guía del código actual, revisada el 3 de noviembre de 2026. Para recorrer el sistema visualmente, abrir con doble clic [la página de los once flujos](diagramas/flujo-completo.html): incluye todos los datos y funciona sin servidor ni conexión. También está [el flujo editable en draw.io](diagramas/flujo-completo.drawio). Los once recorridos siguen el orden de esta guía. La [vista general en SVG](diagramas/flujo-general.svg) se puede abrir sin draw.io.
+Guía del código revisada el 3 de noviembre de 2026. Los modelos técnicos actualizados son el [DFD y DER](DFD_Y_DER.md), disponibles en [el visor de diagramas](diagramas/modelos-datos.html). Los once recorridos de esta guía son explicaciones de funcionamiento; sus esquemas anteriores se conservan como material complementario.
 
 ## 1. El mapa general
 

@@ -20,7 +20,7 @@ Las capturas del manual están en `capturas/` y se regeneran con `npm run captur
 
 ## Recorrido recomendado para evaluar
 
-Para entender cómo se conectan frontend, backend, APK, base de datos y servicios, empezar por [Funcionamiento completo de ExpoTec](FUNCIONAMIENTO_COMPLETO.md), con once recorridos y sus [diagramas editables](diagramas/README.md).
+Para estudiar los datos del sistema, abrir el [DFD y DER](DFD_Y_DER.md), con contexto, descomposición de procesos, entidades, claves y cardinalidades. La [guía de funcionamiento](FUNCIONAMIENTO_COMPLETO.md) explica los recorridos de web, API y APK.
 
 1. Leer el manual para conocer las tareas por perfil.
 2. Seguir la guía de demostración para mostrar los cinco perfiles con datos locales.

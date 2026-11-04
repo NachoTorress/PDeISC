@@ -1,0 +1,2412 @@
+{
+  "date": "2026-11-04",
+  "basis": "Migraciones 001–010 más schema_migrations en el motor; sin introspección de la base privada.",
+  "tables": [
+    {
+      "name": "users",
+      "source": "backend/sql/001_auth.sql",
+      "line": 1,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(254)",
+          "nullable": false,
+          "declaration": "email VARCHAR(254) CHARACTER SET ascii COLLATE ascii_bin NOT NULL UNIQUE"
+        },
+        {
+          "name": "first_name",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "declaration": "first_name VARCHAR(80) NOT NULL"
+        },
+        {
+          "name": "last_name",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "declaration": "last_name VARCHAR(80) NOT NULL"
+        },
+        {
+          "name": "password_hash",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "declaration": "password_hash VARCHAR(255) CHARACTER SET ascii NOT NULL"
+        },
+        {
+          "name": "active",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "declaration": "active BOOLEAN NOT NULL DEFAULT TRUE"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        [
+          "email"
+        ]
+      ],
+      "foreignKeys": []
+    },
+    {
+      "name": "roles",
+      "source": "backend/sql/001_auth.sql",
+      "line": 11,
+      "columns": [
+        {
+          "name": "code",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "code VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        }
+      ],
+      "pk": [
+        "code"
+      ],
+      "unique": [],
+      "foreignKeys": []
+    },
+    {
+      "name": "user_roles",
+      "source": "backend/sql/001_auth.sql",
+      "line": 17,
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "role_code",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "role_code VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        }
+      ],
+      "pk": [
+        "user_id",
+        "role_code"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "role_code"
+          ],
+          "parent": "roles",
+          "parentColumns": [
+            "code"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sessions",
+      "source": "backend/sql/001_auth.sql",
+      "line": 25,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "user_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "expires_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "expires_at DATETIME(3) NOT NULL"
+        },
+        {
+          "name": "revoked_at",
+          "type": "DATETIME(3)",
+          "nullable": true,
+          "declaration": "revoked_at DATETIME(3) NULL"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "refresh_tokens",
+      "source": "backend/sql/001_auth.sql",
+      "line": 35,
+      "columns": [
+        {
+          "name": "token_hash",
+          "type": "CHAR(64)",
+          "nullable": false,
+          "declaration": "token_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "session_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "session_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "used_at",
+          "type": "DATETIME(3)",
+          "nullable": true,
+          "declaration": "used_at DATETIME(3) NULL"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "token_hash"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "session_id"
+          ],
+          "parent": "sessions",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "auth_rate_limits",
+      "source": "backend/sql/001_auth.sql",
+      "line": 44,
+      "columns": [
+        {
+          "name": "bucket",
+          "type": "CHAR(64)",
+          "nullable": false,
+          "declaration": "bucket CHAR(64) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "attempts",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "attempts INT UNSIGNED NOT NULL"
+        },
+        {
+          "name": "expires_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "expires_at DATETIME(3) NOT NULL"
+        }
+      ],
+      "pk": [
+        "bucket"
+      ],
+      "unique": [],
+      "foreignKeys": []
+    },
+    {
+      "name": "spaces",
+      "source": "backend/sql/002_spaces.sql",
+      "line": 1,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "declaration": "name VARCHAR(80) NOT NULL"
+        },
+        {
+          "name": "description",
+          "type": "VARCHAR(150)",
+          "nullable": false,
+          "declaration": "description VARCHAR(150) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "version",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "version INT UNSIGNED NOT NULL DEFAULT 1"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        },
+        {
+          "name": "archived_at",
+          "type": "DATETIME(3)",
+          "nullable": true,
+          "declaration": "archived_at DATETIME(3) NULL"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": []
+    },
+    {
+      "name": "furniture",
+      "source": "backend/sql/002_spaces.sql",
+      "line": 11,
+      "columns": [
+        {
+          "name": "space_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "space_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "code",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "declaration": "code VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(8)",
+          "nullable": false,
+          "declaration": "type VARCHAR(8) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "x",
+          "type": "DOUBLE",
+          "nullable": false,
+          "declaration": "x DOUBLE NOT NULL"
+        },
+        {
+          "name": "y",
+          "type": "DOUBLE",
+          "nullable": false,
+          "declaration": "y DOUBLE NOT NULL"
+        },
+        {
+          "name": "rotation",
+          "type": "SMALLINT UNSIGNED",
+          "nullable": false,
+          "declaration": "rotation SMALLINT UNSIGNED NOT NULL"
+        },
+        {
+          "name": "width",
+          "type": "DOUBLE",
+          "nullable": true,
+          "declaration": "width DOUBLE NULL"
+        },
+        {
+          "name": "height",
+          "type": "DOUBLE",
+          "nullable": true,
+          "declaration": "height DOUBLE NULL"
+        },
+        {
+          "name": "text",
+          "type": "VARCHAR(60)",
+          "nullable": true,
+          "declaration": "text VARCHAR(60) NULL"
+        },
+        {
+          "name": "sort_order",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "sort_order INT UNSIGNED NOT NULL"
+        },
+        {
+          "name": "active",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "declaration": "active BOOLEAN NOT NULL DEFAULT TRUE"
+        }
+      ],
+      "pk": [
+        "space_id",
+        "code"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "space_id"
+          ],
+          "parent": "spaces",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "booths",
+      "source": "backend/sql/002_spaces.sql",
+      "line": 27,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "space_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "space_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "furniture_code",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "declaration": "furniture_code VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "active",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "declaration": "active BOOLEAN NOT NULL DEFAULT TRUE"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        [
+          "space_id",
+          "furniture_code"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "space_id",
+            "furniture_code"
+          ],
+          "parent": "furniture",
+          "parentColumns": [
+            "space_id",
+            "code"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "projects",
+      "source": "backend/sql/003_projects.sql",
+      "line": 1,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "creator_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "creator_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "requested_booth_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "requested_booth_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "declaration": "name VARCHAR(120) NOT NULL"
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "nullable": false,
+          "declaration": "description TEXT NOT NULL"
+        },
+        {
+          "name": "course",
+          "type": "VARCHAR(100)",
+          "nullable": false,
+          "declaration": "course VARCHAR(100) NOT NULL"
+        },
+        {
+          "name": "image_url",
+          "type": "VARCHAR(2048)",
+          "nullable": false,
+          "declaration": "image_url VARCHAR(2048) NOT NULL"
+        },
+        {
+          "name": "video_url",
+          "type": "VARCHAR(2048)",
+          "nullable": false,
+          "declaration": "video_url VARCHAR(2048) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "is_software",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "declaration": "is_software BOOLEAN NOT NULL DEFAULT FALSE"
+        },
+        {
+          "name": "github_url",
+          "type": "VARCHAR(2048)",
+          "nullable": false,
+          "declaration": "github_url VARCHAR(2048) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "website_url",
+          "type": "VARCHAR(2048)",
+          "nullable": false,
+          "declaration": "website_url VARCHAR(2048) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "status VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'pending'"
+        },
+        {
+          "name": "feedback",
+          "type": "VARCHAR(2000)",
+          "nullable": false,
+          "declaration": "feedback VARCHAR(2000) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "version",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "version INT UNSIGNED NOT NULL DEFAULT 1"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "creator_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "requested_booth_id"
+          ],
+          "parent": "booths",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "project_members",
+      "source": "backend/sql/003_projects.sql",
+      "line": 24,
+      "columns": [
+        {
+          "name": "project_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "project_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "user_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        }
+      ],
+      "pk": [
+        "project_id",
+        "user_id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "project_id"
+          ],
+          "parent": "projects",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "project_teachers",
+      "source": "backend/sql/003_projects.sql",
+      "line": 33,
+      "columns": [
+        {
+          "name": "project_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "project_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "user_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        }
+      ],
+      "pk": [
+        "project_id",
+        "user_id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "project_id"
+          ],
+          "parent": "projects",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "subjects",
+      "source": "backend/sql/003_projects.sql",
+      "line": 42,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(80)",
+          "nullable": false,
+          "declaration": "name VARCHAR(80) NOT NULL UNIQUE"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        [
+          "name"
+        ]
+      ],
+      "foreignKeys": []
+    },
+    {
+      "name": "project_subjects",
+      "source": "backend/sql/003_projects.sql",
+      "line": 47,
+      "columns": [
+        {
+          "name": "project_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "project_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "subject_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "subject_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        }
+      ],
+      "pk": [
+        "project_id",
+        "subject_id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "project_id"
+          ],
+          "parent": "projects",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "subject_id"
+          ],
+          "parent": "subjects",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "booth_allocations",
+      "source": "backend/sql/003_projects.sql",
+      "line": 55,
+      "columns": [
+        {
+          "name": "booth_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "booth_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "project_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "project_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL UNIQUE"
+        }
+      ],
+      "pk": [
+        "booth_id"
+      ],
+      "unique": [
+        [
+          "project_id"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "booth_id"
+          ],
+          "parent": "booths",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "project_id"
+          ],
+          "parent": "projects",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "project_reviews",
+      "source": "backend/sql/003_projects.sql",
+      "line": 62,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "project_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "project_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "actor_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "actor_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "action",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "action VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "note",
+          "type": "VARCHAR(2000)",
+          "nullable": false,
+          "declaration": "note VARCHAR(2000) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "project_id"
+          ],
+          "parent": "projects",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "actor_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resources",
+      "source": "backend/sql/004_inventory.sql",
+      "line": 1,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(100)",
+          "nullable": false,
+          "declaration": "name VARCHAR(100) NOT NULL UNIQUE"
+        },
+        {
+          "name": "description",
+          "type": "VARCHAR(250)",
+          "nullable": false,
+          "declaration": "description VARCHAR(250) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "total",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "total INT UNSIGNED NOT NULL DEFAULT 0"
+        },
+        {
+          "name": "version",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "version INT UNSIGNED NOT NULL DEFAULT 1"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        },
+        {
+          "name": "archived_at",
+          "type": "DATETIME(3)",
+          "nullable": true,
+          "declaration": "archived_at DATETIME(3) NULL"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        [
+          "name"
+        ]
+      ],
+      "foreignKeys": []
+    },
+    {
+      "name": "project_resource_requests",
+      "source": "backend/sql/004_inventory.sql",
+      "line": 13,
+      "columns": [
+        {
+          "name": "project_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "project_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "resource_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "resource_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "quantity",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "quantity INT UNSIGNED NOT NULL"
+        }
+      ],
+      "pk": [
+        "project_id",
+        "resource_id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "project_id"
+          ],
+          "parent": "projects",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "resource_id"
+          ],
+          "parent": "resources",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resource_allocations",
+      "source": "backend/sql/004_inventory.sql",
+      "line": 22,
+      "columns": [
+        {
+          "name": "project_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "project_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "resource_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "resource_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "quantity",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "quantity INT UNSIGNED NOT NULL"
+        }
+      ],
+      "pk": [
+        "project_id",
+        "resource_id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "project_id",
+            "resource_id"
+          ],
+          "parent": "project_resource_requests",
+          "parentColumns": [
+            "project_id",
+            "resource_id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inventory_events",
+      "source": "backend/sql/004_inventory.sql",
+      "line": 31,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "resource_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "resource_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "actor_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "actor_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "action",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "action VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "previous_total",
+          "type": "INT UNSIGNED",
+          "nullable": true,
+          "declaration": "previous_total INT UNSIGNED NULL"
+        },
+        {
+          "name": "total",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "total INT UNSIGNED NOT NULL"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "resource_id"
+          ],
+          "parent": "resources",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "actor_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "loans",
+      "source": "backend/sql/005_loans.sql",
+      "line": 1,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "project_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "project_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "resource_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "resource_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "day",
+          "type": "TINYINT UNSIGNED",
+          "nullable": false,
+          "declaration": "day TINYINT UNSIGNED NOT NULL"
+        },
+        {
+          "name": "quantity",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "quantity INT UNSIGNED NOT NULL"
+        },
+        {
+          "name": "returned_quantity",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "returned_quantity INT UNSIGNED NOT NULL DEFAULT 0"
+        },
+        {
+          "name": "version",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "version INT UNSIGNED NOT NULL DEFAULT 1"
+        },
+        {
+          "name": "recipient_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "recipient_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "delivered_by",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "delivered_by CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "note",
+          "type": "VARCHAR(1000)",
+          "nullable": false,
+          "declaration": "note VARCHAR(1000) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        [
+          "project_id",
+          "resource_id",
+          "day"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "project_id"
+          ],
+          "parent": "projects",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "resource_id"
+          ],
+          "parent": "resources",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "recipient_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "delivered_by"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "loan_returns",
+      "source": "backend/sql/005_loans.sql",
+      "line": 22,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "loan_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "loan_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "quantity",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "quantity INT UNSIGNED NOT NULL"
+        },
+        {
+          "name": "damaged_quantity",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "damaged_quantity INT UNSIGNED NOT NULL DEFAULT 0"
+        },
+        {
+          "name": "note",
+          "type": "VARCHAR(1000)",
+          "nullable": false,
+          "declaration": "note VARCHAR(1000) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "received_by",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "received_by CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "loan_id"
+          ],
+          "parent": "loans",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "received_by"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resource_conditions",
+      "source": "backend/sql/005_loans.sql",
+      "line": 35,
+      "columns": [
+        {
+          "name": "resource_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "resource_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "unavailable",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "unavailable INT UNSIGNED NOT NULL DEFAULT 0"
+        }
+      ],
+      "pk": [
+        "resource_id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "resource_id"
+          ],
+          "parent": "resources",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inventory_condition_events",
+      "source": "backend/sql/005_loans.sql",
+      "line": 41,
+      "columns": [
+        {
+          "name": "event_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "event_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "previous_unavailable",
+          "type": "INT UNSIGNED",
+          "nullable": true,
+          "declaration": "previous_unavailable INT UNSIGNED NULL"
+        },
+        {
+          "name": "unavailable",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "unavailable INT UNSIGNED NOT NULL DEFAULT 0"
+        },
+        {
+          "name": "note",
+          "type": "VARCHAR(1000)",
+          "nullable": false,
+          "declaration": "note VARCHAR(1000) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "loan_return_id",
+          "type": "CHAR(36)",
+          "nullable": true,
+          "declaration": "loan_return_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL"
+        }
+      ],
+      "pk": [
+        "event_id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "event_id"
+          ],
+          "parent": "inventory_events",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "loan_return_id"
+          ],
+          "parent": "loan_returns",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gallery_photos",
+      "source": "backend/sql/006_gallery.sql",
+      "line": 3,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "author_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "author_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "image_url",
+          "type": "VARCHAR(2048)",
+          "nullable": false,
+          "declaration": "image_url VARCHAR(2048) NOT NULL"
+        },
+        {
+          "name": "caption",
+          "type": "VARCHAR(400)",
+          "nullable": false,
+          "declaration": "caption VARCHAR(400) NOT NULL"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "status VARCHAR(16) CHARACTER SET ascii NOT NULL DEFAULT 'pending'"
+        },
+        {
+          "name": "version",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "version INT UNSIGNED NOT NULL DEFAULT 1"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "author_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gallery_reviews",
+      "source": "backend/sql/006_gallery.sql",
+      "line": 17,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "photo_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "photo_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "actor_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "actor_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "photo_version",
+          "type": "INT UNSIGNED",
+          "nullable": false,
+          "declaration": "photo_version INT UNSIGNED NOT NULL"
+        },
+        {
+          "name": "decision",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "decision VARCHAR(16) CHARACTER SET ascii NOT NULL"
+        },
+        {
+          "name": "note",
+          "type": "VARCHAR(1000)",
+          "nullable": false,
+          "declaration": "note VARCHAR(1000) NOT NULL DEFAULT ''"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        [
+          "photo_id",
+          "photo_version"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "photo_id"
+          ],
+          "parent": "gallery_photos",
+          "parentColumns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "actor_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "social_providers",
+      "source": "backend/sql/007_social.sql",
+      "line": 1,
+      "columns": [
+        {
+          "name": "code",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "code VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        }
+      ],
+      "pk": [
+        "code"
+      ],
+      "unique": [],
+      "foreignKeys": []
+    },
+    {
+      "name": "social_identities",
+      "source": "backend/sql/007_social.sql",
+      "line": 6,
+      "columns": [
+        {
+          "name": "provider",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "provider VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "subject",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "declaration": "subject VARCHAR(128) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "user_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "provider",
+        "subject"
+      ],
+      "unique": [
+        [
+          "user_id",
+          "provider"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "provider"
+          ],
+          "parent": "social_providers",
+          "parentColumns": [
+            "code"
+          ]
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "social_flows",
+      "source": "backend/sql/007_social.sql",
+      "line": 17,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "provider",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "provider VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "state_hash",
+          "type": "CHAR(64)",
+          "nullable": false,
+          "declaration": "state_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL UNIQUE"
+        },
+        {
+          "name": "proof_hash",
+          "type": "CHAR(64)",
+          "nullable": false,
+          "declaration": "proof_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "binding_hash",
+          "type": "CHAR(64)",
+          "nullable": true,
+          "declaration": "binding_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NULL",
+          "source": "backend/sql/008_social_browser.sql"
+        },
+        {
+          "name": "verifier",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "declaration": "verifier VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NULL"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "status VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'started'"
+        },
+        {
+          "name": "subject",
+          "type": "VARCHAR(128)",
+          "nullable": true,
+          "declaration": "subject VARCHAR(128) CHARACTER SET ascii COLLATE ascii_bin NULL"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(254)",
+          "nullable": true,
+          "declaration": "email VARCHAR(254) CHARACTER SET ascii COLLATE ascii_bin NULL"
+        },
+        {
+          "name": "expires_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "expires_at DATETIME(3) NOT NULL"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        [
+          "state_hash"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "provider"
+          ],
+          "parent": "social_providers",
+          "parentColumns": [
+            "code"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "image_uploads",
+      "source": "backend/sql/009_uploads.sql",
+      "line": 1,
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "owner_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "owner_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "purpose",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "purpose VARCHAR(16) CHARACTER SET ascii NOT NULL"
+        },
+        {
+          "name": "raw_path",
+          "type": "VARCHAR(256)",
+          "nullable": false,
+          "declaration": "raw_path VARCHAR(256) CHARACTER SET ascii NOT NULL"
+        },
+        {
+          "name": "image_path",
+          "type": "VARCHAR(256)",
+          "nullable": false,
+          "declaration": "image_path VARCHAR(256) CHARACTER SET ascii NOT NULL"
+        },
+        {
+          "name": "image_url",
+          "type": "VARCHAR(512)",
+          "nullable": false,
+          "declaration": "image_url VARCHAR(512) NOT NULL"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "declaration": "status VARCHAR(16) CHARACTER SET ascii NOT NULL DEFAULT 'started'"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        [
+          "image_url"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "owner_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "password_resets",
+      "source": "backend/sql/010_password_recovery.sql",
+      "line": 1,
+      "columns": [
+        {
+          "name": "token_hash",
+          "type": "CHAR(64)",
+          "nullable": false,
+          "declaration": "token_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "user_id",
+          "type": "CHAR(36)",
+          "nullable": false,
+          "declaration": "user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"
+        },
+        {
+          "name": "expires_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "expires_at DATETIME(3) NOT NULL"
+        },
+        {
+          "name": "used_at",
+          "type": "DATETIME(3)",
+          "nullable": true,
+          "declaration": "used_at DATETIME(3) NULL"
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "token_hash"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "parent": "users",
+          "parentColumns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "schema_migrations",
+      "source": "backend/scripts/migrations.mjs",
+      "line": 7,
+      "columns": [
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "declaration": "name VARCHAR(128) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY"
+        },
+        {
+          "name": "checksum",
+          "type": "CHAR(64)",
+          "nullable": false,
+          "declaration": "checksum CHAR(64) CHARACTER SET ascii NOT NULL"
+        },
+        {
+          "name": "applied_at",
+          "type": "DATETIME(3)",
+          "nullable": false,
+          "declaration": "applied_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)"
+        }
+      ],
+      "pk": [
+        "name"
+      ],
+      "unique": [],
+      "foreignKeys": []
+    }
+  ],
+  "relations": [
+    {
+      "id": "user_roles-fk-1",
+      "child": "user_roles",
+      "columns": [
+        "user_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "user_roles-fk-2",
+      "child": "user_roles",
+      "columns": [
+        "role_code"
+      ],
+      "parent": "roles",
+      "parentColumns": [
+        "code"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "sessions-fk-1",
+      "child": "sessions",
+      "columns": [
+        "user_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "refresh_tokens-fk-1",
+      "child": "refresh_tokens",
+      "columns": [
+        "session_id"
+      ],
+      "parent": "sessions",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "furniture-fk-1",
+      "child": "furniture",
+      "columns": [
+        "space_id"
+      ],
+      "parent": "spaces",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "booths-fk-1",
+      "child": "booths",
+      "columns": [
+        "space_id",
+        "furniture_code"
+      ],
+      "parent": "furniture",
+      "parentColumns": [
+        "space_id",
+        "code"
+      ],
+      "parentCard": "1",
+      "childCard": "0..1",
+      "identifying": false
+    },
+    {
+      "id": "projects-fk-1",
+      "child": "projects",
+      "columns": [
+        "creator_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "projects-fk-2",
+      "child": "projects",
+      "columns": [
+        "requested_booth_id"
+      ],
+      "parent": "booths",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "project_members-fk-1",
+      "child": "project_members",
+      "columns": [
+        "project_id"
+      ],
+      "parent": "projects",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "project_members-fk-2",
+      "child": "project_members",
+      "columns": [
+        "user_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "project_teachers-fk-1",
+      "child": "project_teachers",
+      "columns": [
+        "project_id"
+      ],
+      "parent": "projects",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "project_teachers-fk-2",
+      "child": "project_teachers",
+      "columns": [
+        "user_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "project_subjects-fk-1",
+      "child": "project_subjects",
+      "columns": [
+        "project_id"
+      ],
+      "parent": "projects",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "project_subjects-fk-2",
+      "child": "project_subjects",
+      "columns": [
+        "subject_id"
+      ],
+      "parent": "subjects",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "booth_allocations-fk-1",
+      "child": "booth_allocations",
+      "columns": [
+        "booth_id"
+      ],
+      "parent": "booths",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..1",
+      "identifying": true
+    },
+    {
+      "id": "booth_allocations-fk-2",
+      "child": "booth_allocations",
+      "columns": [
+        "project_id"
+      ],
+      "parent": "projects",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..1",
+      "identifying": false
+    },
+    {
+      "id": "project_reviews-fk-1",
+      "child": "project_reviews",
+      "columns": [
+        "project_id"
+      ],
+      "parent": "projects",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "project_reviews-fk-2",
+      "child": "project_reviews",
+      "columns": [
+        "actor_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "project_resource_requests-fk-1",
+      "child": "project_resource_requests",
+      "columns": [
+        "project_id"
+      ],
+      "parent": "projects",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "project_resource_requests-fk-2",
+      "child": "project_resource_requests",
+      "columns": [
+        "resource_id"
+      ],
+      "parent": "resources",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "resource_allocations-fk-1",
+      "child": "resource_allocations",
+      "columns": [
+        "project_id",
+        "resource_id"
+      ],
+      "parent": "project_resource_requests",
+      "parentColumns": [
+        "project_id",
+        "resource_id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..1",
+      "identifying": true
+    },
+    {
+      "id": "inventory_events-fk-1",
+      "child": "inventory_events",
+      "columns": [
+        "resource_id"
+      ],
+      "parent": "resources",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "inventory_events-fk-2",
+      "child": "inventory_events",
+      "columns": [
+        "actor_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "loans-fk-1",
+      "child": "loans",
+      "columns": [
+        "project_id"
+      ],
+      "parent": "projects",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "loans-fk-2",
+      "child": "loans",
+      "columns": [
+        "resource_id"
+      ],
+      "parent": "resources",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "loans-fk-3",
+      "child": "loans",
+      "columns": [
+        "recipient_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "loans-fk-4",
+      "child": "loans",
+      "columns": [
+        "delivered_by"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "loan_returns-fk-1",
+      "child": "loan_returns",
+      "columns": [
+        "loan_id"
+      ],
+      "parent": "loans",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "loan_returns-fk-2",
+      "child": "loan_returns",
+      "columns": [
+        "received_by"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "resource_conditions-fk-1",
+      "child": "resource_conditions",
+      "columns": [
+        "resource_id"
+      ],
+      "parent": "resources",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..1",
+      "identifying": true
+    },
+    {
+      "id": "inventory_condition_events-fk-1",
+      "child": "inventory_condition_events",
+      "columns": [
+        "event_id"
+      ],
+      "parent": "inventory_events",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..1",
+      "identifying": true
+    },
+    {
+      "id": "inventory_condition_events-fk-2",
+      "child": "inventory_condition_events",
+      "columns": [
+        "loan_return_id"
+      ],
+      "parent": "loan_returns",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "0..1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "gallery_photos-fk-1",
+      "child": "gallery_photos",
+      "columns": [
+        "author_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "gallery_reviews-fk-1",
+      "child": "gallery_reviews",
+      "columns": [
+        "photo_id"
+      ],
+      "parent": "gallery_photos",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "gallery_reviews-fk-2",
+      "child": "gallery_reviews",
+      "columns": [
+        "actor_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "social_identities-fk-1",
+      "child": "social_identities",
+      "columns": [
+        "provider"
+      ],
+      "parent": "social_providers",
+      "parentColumns": [
+        "code"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": true
+    },
+    {
+      "id": "social_identities-fk-2",
+      "child": "social_identities",
+      "columns": [
+        "user_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "social_flows-fk-1",
+      "child": "social_flows",
+      "columns": [
+        "provider"
+      ],
+      "parent": "social_providers",
+      "parentColumns": [
+        "code"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "image_uploads-fk-1",
+      "child": "image_uploads",
+      "columns": [
+        "owner_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    },
+    {
+      "id": "password_resets-fk-1",
+      "child": "password_resets",
+      "columns": [
+        "user_id"
+      ],
+      "parent": "users",
+      "parentColumns": [
+        "id"
+      ],
+      "parentCard": "1",
+      "childCard": "0..N",
+      "identifying": false
+    }
+  ]
+}

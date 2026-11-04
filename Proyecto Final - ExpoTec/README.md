@@ -11,7 +11,7 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 
 ## Documentación
 
-Para entender el sistema de punta a punta: [página interactiva de los once flujos](docs/diagramas/flujo-completo.html), que se puede abrir con doble clic; [guía completa](docs/FUNCIONAMIENTO_COMPLETO.md), con web, APK, API, base de datos, fotos, sesión, proyectos, préstamos y publicación; [diagramas editables](docs/diagramas/README.md).
+Modelos técnicos del sistema: [visor del DFD y DER](docs/diagramas/modelos-datos.html), que se puede abrir con doble clic; [notación, restricciones y diccionarios](docs/DFD_Y_DER.md); [editables y vistas por dominio](docs/diagramas/README.md). La [guía de funcionamiento](docs/FUNCIONAMIENTO_COMPLETO.md) desarrolla los recorridos de la aplicación.
 
 | Documento | Markdown | PDF |
 | --- | --- | --- |

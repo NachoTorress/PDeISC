@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'">
+  <title>ExpoTec · DFD y DER</title>
+  <style>
+    :root{font-family:Segoe UI,Arial,sans-serif;color:#24313c;background:#edf0f2;font-size:14px;color-scheme:light}
+    *{box-sizing:border-box}body{margin:0}button,select,a{font:inherit}button,select{min-height:36px;border:1px solid #bcc7cf;border-radius:5px;background:white;color:inherit;padding:7px 11px}button{cursor:pointer}button:hover{background:#edf2f7}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #5b8bc8;outline-offset:2px}a{color:#225b8e}header{padding:20px 28px 16px;border-bottom:1px solid #cdd5db;background:#fff}h1{font-size:23px;margin:0 0 5px;font-weight:600}header p{margin:0;color:#566573}main{padding:16px 24px 24px;display:grid;gap:12px}.toolbar{display:flex;align-items:end;gap:14px;flex-wrap:wrap}.families{display:flex;gap:0}.families button{border-radius:0;min-width:105px}.families button:first-child{border-radius:5px 0 0 5px}.families button:last-child{border-radius:0 5px 5px 0}.families button[aria-pressed=true]{background:#244b6c;color:white;border-color:#244b6c}label{display:grid;gap:5px;min-width:260px;flex:1}label span{font-size:12px;color:#526170}select{max-width:100%;width:100%}.zoom{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.zoom output{min-width:48px;text-align:center;font-variant-numeric:tabular-nums}.download{display:inline-flex;align-items:center;min-height:36px;padding:7px 12px;border:1px solid #bcc7cf;border-radius:5px;background:#fff;text-decoration:none}.diagram-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.diagram-heading h2{font-size:17px;margin:0;font-weight:600}.diagram-heading span{font-size:12px;color:#566573}.note{margin:0;color:#526170;max-width:1300px;line-height:1.5}.viewport{height:calc(100vh - 284px);min-height:420px;overflow:auto;background:white;border:1px solid #c7d0d8;position:relative;touch-action:none;cursor:grab}.viewport:active{cursor:grabbing}.stage{padding:24px;min-width:100%;min-height:100%;width:max-content;display:flex;align-items:flex-start;justify-content:flex-start}.stage svg{display:block;max-width:none;flex:none;user-select:none}footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#526170;font-size:12px;line-height:1.6}.legend{max-width:1000px}footer p{margin:0}noscript{display:block;margin:24px;padding:20px;background:white}.hint{font-size:12px;color:#526170;margin:0}details{font-size:13px;color:#435360}summary{cursor:pointer}details p{max-width:1100px;line-height:1.6} @media(max-width:650px){header{padding:16px}main{padding:12px}.toolbar{gap:10px}label{min-width:100%;order:2}.zoom{order:3}.families{order:1}.viewport{height:65vh;min-height:360px}.stage{padding:16px}.diagram-heading span{display:block}h1{font-size:20px}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ExpoTec · Modelos de datos del sistema</h1>
+    <p>DFD lógico y DER físico · Fuentes: procesos del backend y migraciones 001–010 · 4 de noviembre de 2026</p>
+  </header>
+  <main>
+    <div class="toolbar">
+      <div class="families" role="group" aria-label="Tipo de modelo">
+        <button type="button" data-family="dfd" aria-pressed="true">DFD</button>
+        <button type="button" data-family="der" aria-pressed="false">DER</button>
+      </div>
+      <label><span>Vista del modelo</span><select id="view" aria-label="Vista del modelo"></select></label>
+      <div class="zoom" role="group" aria-label="Escala del diagrama">
+        <button type="button" id="minus" aria-label="Reducir zoom">−</button>
+        <output id="zoom" aria-live="polite">100%</output>
+        <button type="button" id="plus" aria-label="Aumentar zoom">+</button>
+        <button type="button" id="fit">Ajustar ancho</button>
+        <button type="button" id="overview">Ver completo</button>
+        <button type="button" id="actual">100%</button>
+        <a class="download" id="download">Descargar SVG</a>
+      </div>
+    </div>
+    <div class="diagram-heading"><h2 id="title"></h2><span id="counts"></span></div>
+    <p class="note" id="note"></p>
+    <div class="viewport" id="viewport" role="region" aria-label="Diagrama ampliable" tabindex="0"><div class="stage" id="stage"></div></div>
+    <p class="hint">Arrastrá o desplazate para recorrer el dibujo. Usá + / −, Ajustar ancho o Ctrl + rueda para cambiar la escala. Las exportaciones SVG conservan el detalle al ampliar.</p>
+    <footer><p class="legend" id="legend"></p><p><a id="dictionary" href="DICCIONARIO_DFD.md">Diccionario y correspondencia</a> · <a href="../DFD_Y_DER.md">Criterios y restricciones</a></p></footer>
+    <details><summary>Alcance y lectura de las relaciones</summary><p>El DFD incluye la web, la APK y la API dentro de la frontera de ExpoTec. D1–D6 agrupan tablas en TiDB y D7 representa los archivos de imágenes. El DER muestra restricciones del SQL: una línea no implica por sí sola una regla de autorización o de estado del programa. El modelo general permite ubicar las entidades; las vistas por dominio y el modelo físico completo incluyen todos los atributos.</p></details>
+  </main>
+  <noscript>Para usar el selector, activá JavaScript. También podés abrir directamente <a href="dfd-nivel-1.svg">el DFD</a> y <a href="der-completo.svg">el DER físico completo</a>.</noscript>
+  <script>
+    (()=>{
+      const diagrams=__DIAGRAMS__;
+      const select=document.getElementById('view'),stage=document.getElementById('stage'),viewport=document.getElementById('viewport');
+      const status=document.getElementById('zoom'),download=document.getElementById('download');
+      let family='dfd',currentId='dfd-contexto',current,baseWidth=1,baseHeight=1,scale=1,autoFit=true,downloadUrl;
+      function setScale(next,fit=false){
+        const svg=stage.querySelector('svg');if(!svg)return;
+        const centerX=(viewport.scrollLeft+viewport.clientWidth/2)/scale,centerY=(viewport.scrollTop+viewport.clientHeight/2)/scale;
+        scale=Math.max(.08,Math.min(4,next));autoFit=fit;
+        svg.style.width=`${baseWidth*scale}px`;svg.style.height=`${baseHeight*scale}px`;
+        status.value=`${Math.round(scale*100)}%`;status.textContent=status.value;
+        if(fit){viewport.scrollLeft=0;viewport.scrollTop=0;}else{viewport.scrollLeft=Math.max(0,centerX*scale-viewport.clientWidth/2);viewport.scrollTop=Math.max(0,centerY*scale-viewport.clientHeight/2);}
+      }
+      function fit(){setScale(Math.min(1,(viewport.clientWidth-48)/baseWidth),'width');}
+      function overview(){setScale(Math.min(1,(viewport.clientWidth-48)/baseWidth,(viewport.clientHeight-48)/baseHeight),'all');}
+      function show(id){
+        current=diagrams.find(d=>d.id===id);if(!current)return;currentId=id;select.value=id;
+        stage.innerHTML=current.svg;
+        const svg=stage.querySelector('svg'),box=svg.getAttribute('viewBox').split(/[ ,]+/).map(Number);
+        baseWidth=box[2];baseHeight=box[3];svg.setAttribute('role','img');svg.setAttribute('aria-label',current.title);svg.removeAttribute('width');svg.removeAttribute('height');
+        document.getElementById('title').textContent=current.title;document.getElementById('note').textContent=current.note;
+        document.getElementById('counts').textContent=`${current.nodes} ${family==='der'?'entidades':'símbolos'} · ${current.edges} ${family==='der'?'relaciones FK':'flujos de datos'}`;
+        document.getElementById('legend').textContent=family==='der'?'PK: clave primaria · FK: clave foránea · U1/U2: grupo UNIQUE · NULL: atributo opcional · Extremos: 1, 0..1 y 0..N · Continua: identificante; discontinua: no identificante.':'Rectángulo: entidad externa · Proceso numerado: transformación de datos · Almacén abierto: persistencia · Flecha rotulada: datos transmitidos · B: frontera; S: intercambio con almacén.';
+        const dictionary=document.getElementById('dictionary');dictionary.href=family==='der'?'DICCIONARIO_DER.md':'DICCIONARIO_DFD.md';
+        if(downloadUrl)URL.revokeObjectURL(downloadUrl);downloadUrl=URL.createObjectURL(new Blob([current.svg],{type:'image/svg+xml;charset=utf-8'}));download.href=downloadUrl;download.download=`${current.id}.svg`;
+        if(id==='dfd-contexto')overview();else fit();
+      }
+      function chooseFamily(next){family=next;select.replaceChildren();for(const d of diagrams.filter(d=>d.family===family)){const option=document.createElement('option');option.value=d.id;option.textContent=d.title;select.append(option);}for(const button of document.querySelectorAll('[data-family]'))button.setAttribute('aria-pressed',String(button.dataset.family===family));show(family==='dfd'?'dfd-contexto':'der-general');}
+      for(const button of document.querySelectorAll('[data-family]'))button.addEventListener('click',()=>chooseFamily(button.dataset.family));
+      select.addEventListener('change',()=>show(select.value));
+      document.getElementById('plus').addEventListener('click',()=>setScale(scale*1.25));document.getElementById('minus').addEventListener('click',()=>setScale(scale/1.25));document.getElementById('actual').addEventListener('click',()=>setScale(1));document.getElementById('fit').addEventListener('click',fit);
+      document.getElementById('overview').addEventListener('click',overview);
+      viewport.addEventListener('wheel',event=>{if(!event.ctrlKey)return;event.preventDefault();setScale(scale*(event.deltaY<0?1.1:1/1.1));},{passive:false});
+      let drag=null;
+      viewport.addEventListener('pointerdown',event=>{if(event.button!==0)return;drag={x:event.clientX,y:event.clientY,left:viewport.scrollLeft,top:viewport.scrollTop};viewport.setPointerCapture(event.pointerId);});
+      viewport.addEventListener('pointermove',event=>{if(!drag)return;viewport.scrollLeft=drag.left-(event.clientX-drag.x);viewport.scrollTop=drag.top-(event.clientY-drag.y);});
+      for(const type of ['pointerup','pointercancel','lostpointercapture'])viewport.addEventListener(type,()=>{drag=null;});
+      viewport.addEventListener('keydown',event=>{if(event.key==='+'||event.key==='='){event.preventDefault();setScale(scale*1.25);}else if(event.key==='-'){event.preventDefault();setScale(scale/1.25);}});
+      new ResizeObserver(()=>{if(autoFit==='all')overview();else if(autoFit)fit();}).observe(viewport);
+      chooseFamily('dfd');
+    })();
+  </script>
+</body>
+</html>

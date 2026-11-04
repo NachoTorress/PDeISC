@@ -238,11 +238,8 @@ def main():
     templates = Path(__file__).parent
     template = (templates / "system_flow_fragment.html.in").read_text(encoding="utf-8")
     content = template.replace("__FLOW_DATA__", json.dumps(VIEWS, ensure_ascii=False).replace("</", "<\\/"))
-    shell = (templates / "system_flow_shell.html.in").read_text(encoding="utf-8")
-    marker = "__EXPO_FLOW_CONTENT__"
-    assert shell.count(marker) == 1, "La página debe contener un único lugar para el flujo."
-    # El exportador guarda el documento del visor dentro de un atributo data-srcdoc.
-    (OUT / "flujo-completo.html").write_text(shell.replace(marker, html.escape(content, quote=True)), encoding="utf-8")
+    # Mantiene el acceso anterior dirigido al visor técnico aunque se regeneren los esquemas históricos.
+    (OUT / "flujo-completo.html").write_text((templates / "data_models_redirect.html.in").read_text(encoding="utf-8"), encoding="utf-8")
     if args.inline_output:
         args.inline_output.write_text(content, encoding="utf-8")
     print(json.dumps(dict(views=len(VIEWS), nodes=sum(len(v["nodes"]) for v in VIEWS), edges=sum(len(v["edges"]) for v in VIEWS), source_paths="verified")))
