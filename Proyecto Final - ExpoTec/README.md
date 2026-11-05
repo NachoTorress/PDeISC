@@ -13,6 +13,8 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 
 Modelos técnicos del sistema: [visor del DFD y DER](docs/diagramas/modelos-datos.html), que se puede abrir con doble clic; [notación, restricciones y diccionarios](docs/DFD_Y_DER.md); [editables y vistas por dominio](docs/diagramas/README.md). La [guía de funcionamiento](docs/FUNCIONAMIENTO_COMPLETO.md) desarrolla los recorridos de la aplicación.
 
+Para ubicar el código: [mapa interactivo de carpetas y archivos](docs/diagramas/mapa-codigo.html), con cinco diagramas, buscador y función de cada ubicación; [guía escrita](docs/MAPA_DEL_CODIGO.md) y [original editable](docs/diagramas/Mapa-del-codigo-ExpoTec.drawio).
+
 | Documento | Markdown | PDF |
 | --- | --- | --- |
 | Manual de usuario | [docs/MANUAL_USUARIO.md](docs/MANUAL_USUARIO.md) | [PDF](output/pdf/ExpoTec_MANUAL_USUARIO.pdf) |

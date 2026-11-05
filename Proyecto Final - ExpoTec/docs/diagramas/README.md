@@ -1,4 +1,17 @@
-# DFD y DER de ExpoTec
+# Diagramas de ExpoTec
+
+## Carpetas, archivos y compilación
+
+Abrir [mapa-codigo.html](mapa-codigo.html) con doble clic. Tiene cinco diagramas seleccionables (general, frontend, backend, compilación y documentación), explorador de archivos, buscador y fichas de función. Incluye código actual, prototipo anterior, ubicaciones privadas sin valores y salidas locales.
+
+- [Guía de carpetas y puntos de cambio](../MAPA_DEL_CODIGO.md).
+- [Original editable draw.io de cinco páginas](Mapa-del-codigo-ExpoTec.drawio).
+- [Inventario de rutas y roles en JSON](mapa-codigo.json).
+- SVG: [general](mapa-general.svg), [frontend](mapa-frontend.svg), [backend](mapa-backend.svg), [compilación](mapa-compilacion.svg) y [documentación](mapa-documentacion.svg).
+
+Se regenera con `node docs/scripts/build_code_map.mjs`, usando la misma dependencia Graphviz/WASM indicada abajo.
+
+## DFD y DER
 
 Abrir [modelos-datos.html](modelos-datos.html) con doble clic. El visor incluye los dibujos, permite ampliar y desplazar, y funciona sin conexión. Los accesos anteriores `flujo-completo.html` y `docs/scripts/system_flow_fragment.html` llevan al visor actualizado.
 

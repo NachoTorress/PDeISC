@@ -22,6 +22,8 @@ Las capturas del manual están en `capturas/` y se regeneran con `npm run captur
 
 Para estudiar los datos del sistema, abrir el [DFD y DER](DFD_Y_DER.md), con contexto, descomposición de procesos, entidades, claves y cardinalidades. La [guía de funcionamiento](FUNCIONAMIENTO_COMPLETO.md) explica los recorridos de web, API y APK.
 
+Para encontrar archivos y entender las carpetas, abrir el [mapa interactivo del código](diagramas/mapa-codigo.html). Incluye cinco vistas, explorador, buscador y explicación de cada ubicación, además de una [guía escrita](MAPA_DEL_CODIGO.md) y un [original draw.io editable](diagramas/Mapa-del-codigo-ExpoTec.drawio).
+
 1. Leer el manual para conocer las tareas por perfil.
 2. Seguir la guía de demostración para mostrar los cinco perfiles con datos locales.
 3. Mostrar el acceso real y una consulta compartida para completar la evidencia de API y base de datos.
