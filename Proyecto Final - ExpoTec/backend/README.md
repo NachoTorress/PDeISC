@@ -208,6 +208,8 @@ En las tablas, **Acceso** indica quién puede usar la operación: *Público* (si
 | Método | Ruta | Acceso | Cuerpo / parámetros | Respuesta |
 | --- | --- | --- | --- | --- |
 | POST | `/api/auth/register` | Público | `firstName`, `lastName`, `email`, `password` (12–128), `accountType` opcional (`student` o `guest`) | 201 sesión; 409 `EMAIL_REGISTERED` |
+| POST | `/api/auth/register/request` | Público (Android) | igual que register | 202 código enviado al correo, sin cuenta ni sesión |
+| POST | `/api/auth/register/verify` | Público (Android) | `verificationToken`, `code` (8 números, válido por 20 minutos) | 201 cuenta y tokens; 400 código incorrecto o vencido; 409 correo ya registrado |
 | POST | `/api/auth/login` | Público | `email`, `password` | 200 sesión; 401 `INVALID_CREDENTIALS` |
 | POST | `/api/auth/refresh` | Token de renovación | `refreshToken` | 200 sesión nueva; 401 `SESSION_INVALID` |
 | POST | `/api/auth/logout` | Token de renovación | `refreshToken` | 204 |

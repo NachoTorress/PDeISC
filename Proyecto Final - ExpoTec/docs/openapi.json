@@ -172,6 +172,117 @@
         }
       }
     },
+    "/api/auth/register/request": {
+      "post": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Enviar código para el registro de Android",
+        "description": "**Acceso:** Público.\n\nEnvía un código al correo sin crear la cuenta ni abrir una sesión. Vence en 20 minutos.\n\n**Códigos de error propios:** 409 `EMAIL_REGISTERED`, 503 `EMAIL_SEND_FAILED` o `EMAIL_UNAVAILABLE`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "202": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "verificationToken": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/auth/register/verify": {
+      "post": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Confirmar correo y crear la cuenta Android",
+        "description": "**Acceso:** Público.\n\nConfirma el código, crea la cuenta una sola vez y entrega los tokens para el almacenamiento seguro de Android.\n\n**Códigos de error propios:** 400 `EMAIL_CODE_INVALID`, 409 `EMAIL_REGISTERED`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "verificationToken": {
+                    "type": "string",
+                    "maxLength": 4000
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[0-9]{8}$"
+                  }
+                },
+                "required": [
+                  "verificationToken",
+                  "code"
+                ]
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "201": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
     "/api/auth/login": {
       "post": {
         "tags": [
