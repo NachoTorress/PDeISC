@@ -8,7 +8,17 @@ Los pasos de uso, instalación y exposición están en el [índice de documentac
 
 ## Compilación actual
 
-APK actual: **0.5.3, Android versionCode 9**. [Descargar APK](https://expo.dev/artifacts/eas/pHPSd0wJPZqgZcbFK46WxwpwD0_QV4V6OqMqkLvQJ5I.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/2c2c2789-845b-495d-81eb-48f4e19b2999), terminada el 04/11/2026 a las 20:49:01, hora de Argentina, desde el frontend de `497b932dc93125264e0570ea3f7357dac6dba1eb`.
+APK actual: **0.5.4, Android versionCode 10**. [Descargar APK](https://expo.dev/artifacts/eas/ccLZbYnGK1ko9zTXOTepEfGWjF5VzC6QbQ4Z8FSYDNc.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/aee16978-5142-4959-ba28-759197c82a86), terminada el 06/11/2026 a las 10:13:00, hora de Argentina, desde el frontend de `30f06cf4209f2d9987c7758f4a1ecef73b676b98`.
+
+Incluye el acceso superior con ícono de login, puestos libres azules y ocupados verdes en modo oscuro, Google en una fila completa con Discord y GitHub juntos en celular y los ajustes suaves de bordes, cabeceras y acciones descritos en la [revisión visual del 6 de noviembre](REVISION_VISUAL_2026-11-06.md). Conserva las correcciones funcionales de la 0.5.3 y la API pública existente.
+
+Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.4-10.apk`, 110,014,275 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.5.4`, código `10`, sin modo depuración. Integridad ZIP, digest de contenido y firma APK v2 correctos; certificado idéntico al de la APK 0.5.3. El bundle Android contiene los nuevos colores de puestos y el ícono de login. SHA-256: `6b4ceb3fc4feec0b955734adc6074b996058c593b7983b074487e9445b281134`. Informe local: `artifacts/android/verification-0.5.4.json`.
+
+Se inspeccionaron los 207 archivos enviados a EAS y sus hashes coincidieron con las fuentes locales, sin archivos privados ni otros proyectos. Registro: `artifacts/android/source-manifest-0.5.4-10.json`. Pasaron revisión de tipos, análisis de código y exportación web. Se verificaron 50 capturas en navegador con datos ficticios, ambos temas y tamaños de celular y escritorio, sin desbordes horizontales del documento ni errores de ejecución. La instalación y el uso de esta versión en un teléfono físico siguen pendientes.
+
+## APK anteriores
+
+Novena APK de prueba: **0.5.3, Android versionCode 9**. [Descargar APK](https://expo.dev/artifacts/eas/pHPSd0wJPZqgZcbFK46WxwpwD0_QV4V6OqMqkLvQJ5I.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/2c2c2789-845b-495d-81eb-48f4e19b2999), terminada el 04/11/2026 a las 20:49:01, hora de Argentina, desde el frontend de `497b932dc93125264e0570ea3f7357dac6dba1eb`.
 
 Incluye las correcciones de la [auditoría funcional del 3 de noviembre](AUDITORIA_FUNCIONAL_2026-11-03.md): salida de propuestas al cerrar sesión, conservación de la imagen válida después de un reemplazo fallido, vista previa de enlaces, confirmación de revisiones, consultas según permisos, recargas de espacios e inventario, reintento de acceso social y validaciones de nombres y observaciones. Conserva **Eliminar foto** para administración sobre aportes pendientes, publicados y rechazados, las consultas por POST y la API pública 0.5.1.
 
@@ -17,8 +27,6 @@ Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.3-9.apk`, 110.012.
 Antes de subir se inspeccionaron 207 archivos de fuentes, recursos y configuración del frontend: sus hashes coincidieron con el código local y no se incluyeron archivos privados ni otros proyectos. El envío se delimitó a `frontend/native` mediante `EAS_PROJECT_ROOT` y `EAS_NO_VCS`, con la lista permitida de `.easignore` y `EXPO_NO_DOTENV=1`. El listado quedó en `artifacts/android/source-manifest-0.5.3-9.json`. Pasaron 125 pruebas del frontend, revisión de tipos, análisis de estilo y exportación Android con Hermes. Las seis consultas POST publicadas de salud, disponibilidad de la base, espacios, proyectos públicos, galería y proveedores sociales respondieron HTTP 200 con JSON válido. Registro local: `artifacts/android/preflight-0.5.3.json`.
 
 EAS conserva el aviso previo de `expo doctor` sobre versiones recomendadas por el SDK (20 de 21 comprobaciones aprobadas), también presente en la 0.5.2. La compilación Android finalizó correctamente. Se verificaron el archivo y su firma; la instalación y el recorrido de esta versión en un teléfono físico siguen pendientes.
-
-## APK anteriores
 
 Octava APK de prueba: **0.5.2, Android versionCode 8**. [Descargar APK](https://expo.dev/artifacts/eas/NM8NSyDKDkEx2WhevZsiOaAZrx2aPv28tKiEJghmtSM.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/b5df5f71-5dcf-4989-a028-6728a18fd352), terminada el 02/11/2026 a las 18:35:41, hora de Argentina, desde el frontend de `4de7f42b32b4640079fcb49161c53b944a876298`.
 
