@@ -177,7 +177,10 @@ export function MoveableItem({
                 <Text
                   selectable={false}
                   numberOfLines={1}
-                  style={{ color: colors.muted, fontSize: 10 }}
+                  style={{
+                    color: project && colors.dark ? colors.text : colors.muted,
+                    fontSize: 10,
+                  }}
                 >
                   {booth
                     ? (project?.name ?? (pending ? "Solicitado" : "Disponible"))

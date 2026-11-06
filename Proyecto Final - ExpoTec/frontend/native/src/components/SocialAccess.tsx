@@ -178,6 +178,22 @@ export function SocialAccess({
   }
   if (!ready || (!pending && user) || (!providers.length && !pending && !error))
     return null;
+  const providerButton = (provider: Provider, compact = false) => (
+    <ProviderButton
+      key={provider.id}
+      provider={provider}
+      compact={compact}
+      disabled={busy || disabled}
+      busy={busy && activeProvider === provider.id}
+      onPress={() => {
+        setActiveProvider(provider.id);
+        void run(async () => {
+          await socialBridge.start(provider.id, client.query);
+          setPending(socialBridge.pending());
+        });
+      }}
+    />
+  );
   return (
     <View
       style={{
@@ -258,21 +274,20 @@ export function SocialAccess({
         </>
       ) : (
         <View style={{ gap: 8 }}>
-          {providers.map((provider) => (
-            <ProviderButton
-              key={provider.id}
-              provider={provider}
-              disabled={busy || disabled}
-              busy={busy && activeProvider === provider.id}
-              onPress={() => {
-                setActiveProvider(provider.id);
-                void run(async () => {
-                  await socialBridge.start(provider.id, client.query);
-                  setPending(socialBridge.pending());
-                });
-              }}
-            />
-          ))}
+          {sideBySide ? (
+            providers.map((provider) => providerButton(provider))
+          ) : (
+            <>
+              {providers
+                .filter((provider) => provider.id === "google")
+                .map((provider) => providerButton(provider))}
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                {providers
+                  .filter((provider) => provider.id !== "google")
+                  .map((provider) => providerButton(provider, true))}
+              </View>
+            </>
+          )}
         </View>
       )}
     </View>

@@ -32,7 +32,7 @@ export const dark: Palette = {
   error: "#ffb6af",
   errorContainer: "#402b2d",
   canvas: "#1b1d20",
-  table: "#303237",
-  tableOccupied: "#38443e",
+  table: "#26364f",
+  tableOccupied: "#426b4a",
   tableEdge: "#8d9098",
 };

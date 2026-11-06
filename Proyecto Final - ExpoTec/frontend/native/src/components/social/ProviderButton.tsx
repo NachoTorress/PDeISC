@@ -11,11 +11,13 @@ export function ProviderButton({
   disabled,
   busy,
   onPress,
+  compact = false,
 }: {
   provider: Provider;
   disabled: boolean;
   busy: boolean;
   onPress: () => void;
+  compact?: boolean;
 }) {
   const { colors } = useTheme();
   const [hovered, setHovered] = useState(false);
@@ -33,6 +35,8 @@ export function ProviderButton({
       onBlur={() => setFocused(false)}
       style={({ pressed }) => ({
         minHeight: 50,
+        flex: compact ? 1 : undefined,
+        minWidth: 0,
         paddingHorizontal: 16,
         paddingVertical: 12,
         borderRadius: 12,
@@ -70,7 +74,7 @@ export function ProviderButton({
           textAlign: "center",
         }}
       >
-        Continuar con {provider.name}
+        {compact ? provider.name : `Continuar con ${provider.name}`}
       </Text>
     </Pressable>
   );
