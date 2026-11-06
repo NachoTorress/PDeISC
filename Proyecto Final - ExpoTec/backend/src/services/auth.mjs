@@ -3,6 +3,7 @@
  * de acceso y cierre de sesión. Usa JWT firmados (HS256) y rotación de tokens de renovación.
  */
 import { HttpError, unauthorized } from '../lib/errors.mjs';
+import { createEmailRegistration } from './email-registration.mjs';
 import { hashPassword, verifyPassword, dummyPasswordHash, newRefreshToken, tokenHash, accessToken, verifyAccessToken, verifyRefreshToken } from './crypto.mjs';
 
 /**
@@ -10,7 +11,8 @@ import { hashPassword, verifyPassword, dummyPasswordHash, newRefreshToken, token
  * @param {object} repository Repositorio de cuentas y sesiones.
  * @param {object} config Configuración (secreto y duraciones de los tokens).
  */
-export function createAuthService(repository, config) {
+export function createAuthService(repository, config, mailer) {
+  const registration = createEmailRegistration(repository, config, mailer);
   /** Respuesta estándar de sesión: cuenta, token de acceso, renovación y vencimiento. */
   async function response(result, refreshToken) {
     return {
@@ -24,6 +26,12 @@ export function createAuthService(repository, config) {
     try { await verifyRefreshToken(config, token); } catch { throw unauthorized(); }
   }
   return {
+    requestRegistration: input => registration.request(input),
+    async verifyRegistration(input) {
+      const account = await registration.verify(input);
+      const token = await newRefreshToken(config);
+      return response(await repository.register(account, tokenHash(token), expiration()), token);
+    },
     /** Crea la cuenta guardando solo el hash scrypt de la contraseña. */
     async register(input) {
       const token = await newRefreshToken(config);

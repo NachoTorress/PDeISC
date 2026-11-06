@@ -7,11 +7,30 @@ import { memoryRepository, listen, testConfig } from './support.mjs';
 const account = { email: 'web@example.com', password: 'Contraseña de prueba 2026', firstName: 'Lucía', lastName: 'Fernández' };
 const headers = { Origin: testConfig.origins[0] };
 const cookie = result => result.headers.get('set-cookie').split(';')[0];
+async function verifiedAccount(t, overrides = {}) {
+  const repository = memoryRepository();
+  let code;
+  const args = [repository, { ...testConfig, recovery: {}, ...overrides }];
+  args[14] = { registration: async (_email, value) => { code = value; } };
+  const api = await listen(createApp(...args));
+  t.after(api.close);
+  const pending = await api.request('/api/auth/browser/register', account, null, { headers });
+  assert.equal(pending.status, 202);
+  assert.equal(pending.headers.get('set-cookie'), null);
+  assert.equal(repository.users.size, 0);
+  assert.equal(repository.sessions.size, 0);
+  assert.equal(pending.body.accessToken, undefined);
+  assert.equal(pending.body.code, undefined);
+  const input = { verificationToken: pending.body.verificationToken, code };
+  assert.equal((await api.request('/api/auth/browser/register/verify', { ...input, code: code === '00000000' ? '11111111' : '00000000' }, null, { headers })).status, 400);
+  assert.equal(repository.users.size, 0);
+  const result = await api.request('/api/auth/browser/register/verify', input, null, { headers });
+  assert.equal((await api.request('/api/auth/browser/register/verify', input, null, { headers })).status, 409);
+  return { api, result };
+}
 
 test('sesión web protegida: cookie, rotación, revocación y CSRF', async t => {
-  const api = await listen(createApp(memoryRepository(), testConfig));
-  t.after(api.close);
-  const register = await api.request('/api/auth/browser/register', account, null, { headers });
+  const { api, result: register } = await verifiedAccount(t);
   assert.equal(register.status, 201);
   assert.equal(register.body.refreshToken, undefined);
   assert.deepEqual(register.body.user.roles, ['student']);
@@ -45,11 +64,23 @@ test('sesión web protegida: cookie, rotación, revocación y CSRF', async t => 
 });
 
 test('cookie de producción exige HTTPS y no comparte dominio', async t => {
-  const api = await listen(createApp(memoryRepository(), { ...testConfig, production: true }));
-  t.after(api.close);
-  const result = await api.request('/api/auth/browser/register', account, null, { headers });
+  const { result } = await verifiedAccount(t, { production: true });
   assert.equal(result.status, 201);
   assert.match(result.headers.get('set-cookie'), /^__Secure-expotec-refresh=/);
   assert.match(result.headers.get('set-cookie'), /; Secure;/);
   assert.doesNotMatch(result.headers.get('set-cookie'), /Domain=/);
+});
+
+test('sin correo o con un fallo SMTP no se crea una cuenta ni sesión', async t => {
+  for (const fail of [false, true]) {
+    const repository = memoryRepository();
+    const args = [repository, { ...testConfig, ...(fail ? { recovery: {} } : {}) }];
+    if (fail) args[14] = { registration: async () => { throw Error('SMTP caído'); } };
+    const api = await listen(createApp(...args));
+    t.after(api.close);
+    const result = await api.request('/api/auth/browser/register', account, null, { headers });
+    assert.equal(result.status, 503);
+    assert.equal(repository.users.size, 0);
+    assert.equal(repository.sessions.size, 0);
+  }
 });

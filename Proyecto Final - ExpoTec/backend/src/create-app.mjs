@@ -101,9 +101,10 @@ export function createApp(repository, config, logger = console, app = express(),
   // Documentación interactiva (Swagger UI) y especificación OpenAPI.
   app.use('/api/docs', docsRoutes());
 
-  const service = createAuthService(repository, config);
+  const mailer = config.recovery ? recoveryMailer ?? createRecoveryMailer(config.recovery) : undefined;
+  const service = createAuthService(repository, config, mailer);
   const recovery = recoveryRepository && config.recovery
-    ? createRecoveryService(recoveryRepository, recoveryMailer ?? createRecoveryMailer(config.recovery), config.recovery, logger)
+    ? createRecoveryService(recoveryRepository, mailer, config.recovery, logger)
     : null;
   app.use('/api/auth/recovery', recoveryRoutes(repository, recovery, config));
   const social = socialRepository ? createSocialService(socialRepository, repository, config, providerExchange) : undefined;

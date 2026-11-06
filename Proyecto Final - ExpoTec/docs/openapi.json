@@ -345,14 +345,87 @@
         "tags": [
           "Autenticación web"
         ],
-        "summary": "Registrar (web)",
-        "description": "**Acceso:** Público, solo desde un origen web autorizado.\n\nEl token de renovación se envía en una cookie HttpOnly; no se puede probar desde esta página porque exige el `Origin` de la web.\n\n**Códigos de error propios:** 403 `ORIGIN_FORBIDDEN`, 409 `EMAIL_REGISTERED`.",
+        "summary": "Enviar código de verificación para crear una cuenta web",
+        "description": "**Acceso:** Público, solo desde un origen web autorizado.\n\nEnvía un código al correo. Todavía no crea la cuenta ni abre una sesión. El código vence en 20 minutos.\n\n**Códigos de error propios:** 409 `EMAIL_REGISTERED`, 503 `EMAIL_SEND_FAILED` o `EMAIL_UNAVAILABLE`.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Register"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "202": {
+            "description": "Operación realizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "verificationToken": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/auth/browser/register/verify": {
+      "post": {
+        "tags": [
+          "Autenticación web"
+        ],
+        "summary": "Confirmar correo y crear la cuenta web",
+        "description": "**Acceso:** Público, solo desde un origen web autorizado.\n\nExige el código de ocho números y el token cifrado del paso anterior. Crea una sola cuenta y devuelve la sesión con cookie HttpOnly.\n\n**Códigos de error propios:** 400 `EMAIL_CODE_INVALID`, 409 `EMAIL_REGISTERED`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "verificationToken": {
+                    "type": "string",
+                    "maxLength": 4000
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[0-9]{8}$"
+                  }
+                },
+                "required": [
+                  "verificationToken",
+                  "code"
+                ]
               }
             }
           }

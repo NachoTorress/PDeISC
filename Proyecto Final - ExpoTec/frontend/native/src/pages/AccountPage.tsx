@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Platform,
   Text,
   View,
   useWindowDimensions,
@@ -72,6 +73,8 @@ export default function AccountPage({
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [verification, setVerification] = useState<{ verificationToken: string; email: string } | null>(null);
+  const [code, setCode] = useState("");
   const working = useRef(false);
   useEffect(() => {
     if (user && !socialPending && resetToken === null && !recovering)
@@ -134,19 +137,25 @@ export default function AccountPage({
       });
     void run(
       async () => {
-        await client.signIn(credentials, register);
+        if (register && Platform.OS === "web") {
+          const pending = await client.query<{ verificationToken: string; email: string }>("/api/auth/browser/register", credentials);
+          setVerification(pending);
+          setCode("");
+        } else await client.signIn(credentials, register);
         setInput(empty);
         setConfirmation("");
         setTouched({});
         setShowPassword(false);
       },
       register
-        ? `Tu cuenta de ${accountType === "guest" ? "invitado" : "alumno"} está creada.`
+        ? Platform.OS === "web" ? "Enviamos un código a tu correo. Revisá también Spam y confirmalo para crear tu cuenta." : `Tu cuenta de ${accountType === "guest" ? "invitado" : "alumno"} está creada.`
         : "Iniciaste sesión.",
     );
   }
   /** Cambia entre ingreso y registro, limpiando el formulario. */
   function switchMode() {
+    setVerification(null);
+    setCode("");
     setRegister(!register);
     setInput(empty);
     setConfirmation("");
@@ -163,6 +172,7 @@ export default function AccountPage({
     !user &&
     !sessionError &&
     !socialPending &&
+    !verification &&
     hasSocialProviders;
   if (resetToken !== null || recovering)
     return (
@@ -234,7 +244,15 @@ export default function AccountPage({
                 }}
               />
             </View>
-          ) : socialPending ? null : (
+          ) : socialPending ? null : verification ? (
+            <View style={{ gap: 14, flex: 1 }}>
+              <Text accessibilityRole="header" style={{ color: colors.text, fontSize: 24, fontWeight: "700" }}>Confirmá tu correo</Text>
+              <Text style={paragraph}>Enviamos un código de 8 números a {verification.email}. Ingresalo para crear tu cuenta e iniciar sesión. Vence en 20 minutos.</Text>
+              <Field label="Código de verificación" value={code} onChangeText={(value) => { setCode(value.replace(/\D/g, "").slice(0, 8)); setError(""); }} keyboardType="number-pad" autoComplete="one-time-code" maxLength={8} editable={!busy} autoFocus />
+              <Button title={busy ? "Verificando…" : "Confirmar correo y crear cuenta"} disabled={busy || code.length !== 8} onPress={() => { void run(async () => { await client.completeRegistration({ verificationToken: verification.verificationToken, code }); setVerification(null); setCode(""); }, "Correo confirmado. Tu cuenta está creada."); }} />
+              <Button title="Cambiar correo o solicitar otro código" variant="quiet" disabled={busy} onPress={() => { setVerification(null); setCode(""); setError(""); setMessage(""); }} />
+            </View>
+          ) : (
             <View
               style={{ gap: 14, flex: sideBySide ? 1 : undefined, minWidth: 0 }}
             >
@@ -299,7 +317,7 @@ export default function AccountPage({
                 title={
                   busy
                     ? register
-                      ? "Creando cuenta…"
+                      ? Platform.OS === "web" ? "Enviando código…" : "Creando cuenta…"
                       : "Ingresando…"
                     : register
                       ? "Crear cuenta"
@@ -329,12 +347,12 @@ export default function AccountPage({
               />
             </View>
           )}
-          <SocialAccess
+          {!verification && <SocialAccess
             onPendingChange={setSocialPending}
             onAvailableChange={setHasSocialProviders}
             sideBySide={sideBySide}
             disabled={busy}
-          />
+          />}
         </Card>
       </View>
     </Screen>

@@ -212,7 +212,8 @@ En las tablas, **Acceso** indica quién puede usar la operación: *Público* (si
 | POST | `/api/auth/refresh` | Token de renovación | `refreshToken` | 200 sesión nueva; 401 `SESSION_INVALID` |
 | POST | `/api/auth/logout` | Token de renovación | `refreshToken` | 204 |
 | POST | `/api/auth/session` | Sesión | — | 200 `{ user }` con roles actuales |
-| POST | `/api/auth/browser/register` | Público (web) | igual que register | 201 sesión + cookie |
+| POST | `/api/auth/browser/register` | Público (web) | igual que register | 202 código enviado al correo; devuelve `verificationToken`, sin cuenta ni sesión |
+| POST | `/api/auth/browser/register/verify` | Público (web) | `verificationToken`, `code` (8 números, válido por 20 minutos) | 201 cuenta y sesión + cookie; 400 código incorrecto o vencido; 409 correo ya registrado |
 | POST | `/api/auth/browser/login` | Público (web) | `email`, `password` | 200 sesión + cookie |
 | POST | `/api/auth/browser/refresh` | Cookie | `{}` | 200 sesión + cookie rotada |
 | POST | `/api/auth/browser/logout` | Cookie | `{}` | 204, borra la cookie |

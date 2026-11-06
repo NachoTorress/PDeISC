@@ -63,6 +63,8 @@ export function authRoutes(repository, service, config, social) {
   // Límites contra fuerza bruta: por IP para todo el bloque y por correo para el ingreso.
   const ipLimit = rateLimit(repository, config, { scope: 'auth-ip', limit: 40, seconds: 900 });
   const loginLimit = rateLimit(repository, config, { scope: 'login-email', limit: 10, seconds: 900, byEmail: true });
+  const registrationLimit = rateLimit(repository, config, { scope: 'registration-email', limit: 4, seconds: 900, byEmail: true });
+  const codeLimit = rateLimit(repository, config, { scope: 'registration-code-ip', limit: 10, seconds: 900 });
   // En producción el prefijo __Secure- obliga al navegador a aceptar la cookie solo por HTTPS.
   const cookieName = config.production ? '__Secure-expotec-refresh' : 'expotec-refresh';
   const cookieOptions = { httpOnly: true, secure: config.production, sameSite: 'strict', path: '/api/auth/browser' };
@@ -86,8 +88,11 @@ export function authRoutes(repository, service, config, social) {
     objectBody(req.body, []);
     return refreshToken({ refreshToken: readCookie(req, cookieName) });
   }
-  browser.post('/register', ipLimit, async (req, res) => {
-    browserResponse(res, await service.register(credentials(req.body, true)), 201);
+  browser.post('/register', ipLimit, registrationLimit, async (req, res) => {
+    res.status(202).json(await service.requestRegistration(credentials(req.body, true)));
+  });
+  browser.post('/register/verify', ipLimit, codeLimit, async (req, res) => {
+    browserResponse(res, await service.verifyRegistration(req.body), 201);
   });
   browser.post('/login', ipLimit, loginLimit, async (req, res) => {
     browserResponse(res, await service.login(credentials(req.body)));

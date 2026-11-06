@@ -138,6 +138,11 @@ export function createAuthClient(
           await request<AccountSession>(path("social/complete"), input),
         );
       }),
+    /** Crea la sesión web después de confirmar el código recibido por correo. */
+    completeRegistration: (input: { verificationToken: string; code: string }) =>
+      serial(async () => {
+        await remember(await request<AccountSession>(path("register/verify"), input));
+      }),
     /** Registro (`register` true) o ingreso con correo y contraseña. */
     signIn: (input: Credentials, register: boolean) =>
       serial(async () => {
