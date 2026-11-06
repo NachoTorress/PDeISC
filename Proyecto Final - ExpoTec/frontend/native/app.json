@@ -3,13 +3,13 @@
     "name": "ExpoTec",
     "slug": "expotec-organizacion",
     "scheme": "expotec",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "icon": "./assets/brand/expotec-icon-v1.png",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
     "android": {
       "package": "ar.edu.expotec.organizacion",
-      "versionCode": 10,
+      "versionCode": 11,
       "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
         "foregroundImage": "./assets/brand/expotec-icon-v1.png",
