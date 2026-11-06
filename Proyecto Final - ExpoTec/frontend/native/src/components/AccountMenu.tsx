@@ -76,14 +76,26 @@ export default function AccountMenu({ onSignIn }: { onSignIn: () => void }) {
   }
   if (!user)
     return (
-      <Button
-        title="Ingresar"
-        icon={width >= 400 ? "users" : undefined}
-        variant="secondary"
-        style={{ minWidth: width >= 400 ? 100 : 88, paddingHorizontal: 10 }}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Iniciar sesión"
+        accessibilityState={{ disabled: !ready }}
         disabled={!ready}
         onPress={onSignIn}
-      />
+        style={({ pressed }) => ({
+          width: 48,
+          height: 48,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: colors.controlOutline,
+          backgroundColor: pressed ? colors.surfaceVariant : colors.secondaryContainer,
+          alignItems: "center",
+          justifyContent: "center",
+          opacity: ready ? 1 : 0.45,
+        })}
+      >
+        <Icon name="login" color={colors.onSecondaryContainer} size={24} />
+      </Pressable>
     );
   return (
     <>

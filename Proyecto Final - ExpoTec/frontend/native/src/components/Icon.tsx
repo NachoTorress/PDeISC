@@ -48,6 +48,7 @@ const paths = {
   chevronDown: "M6 9l6 6 6-6",
   chevronUp: "M6 15l6-6 6 6",
   logout: "M9 3H3v18h6M9 12h12M16 7l5 5-5 5",
+  login: "M15 3h6v18h-6M3 12h12M10 7l5 5-5 5",
   image: "M3 4h18v16H3V4M3 16l5-5 4 4 4-6 5 7",
   fullscreen: "M3 9V3h6M15 3h6v6M21 15v6h-6M9 21H3v-6",
   download: "M12 3v12M7 10l5 5 5-5M3 15v6h18v-6",
