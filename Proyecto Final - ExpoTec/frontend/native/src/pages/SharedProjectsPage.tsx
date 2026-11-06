@@ -113,6 +113,15 @@ export default function SharedProjectsPage({
         {ready && user?.roles.includes("student") && (
           <Button title="Presentar proyecto" icon="plus" onPress={onCreate} />
         )}
+        {ready && !user && (
+          <Button
+            title="Presentar o revisar"
+            accessibilityLabel="Iniciar sesión para presentar o revisar proyectos"
+            icon="login"
+            variant="secondary"
+            onPress={onAccount}
+          />
+        )}
         <RefreshButton
           label="Actualizar proyectos"
           loading={loading}
@@ -137,13 +146,7 @@ export default function SharedProjectsPage({
           ]}
           onChange={setMode}
         />
-      ) : (
-        <Button
-          title="Ingresar para presentar o revisar"
-          variant="quiet"
-          onPress={onAccount}
-        />
-      )}
+      ) : null}
       {!!error && (
         <Text
           accessibilityRole="alert"

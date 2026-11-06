@@ -10,10 +10,10 @@ export function AccountIntro({ register }: { register: boolean }) {
   return (
     <View
       style={{
-        gap: 10,
+        gap: 8,
         marginBottom: 4,
         backgroundColor: colors.selectedContainer,
-        padding: 20,
+        padding: width < 600 ? 16 : 20,
         borderRadius: 12,
       }}
     >
@@ -33,8 +33,8 @@ export function AccountIntro({ register }: { register: boolean }) {
         accessibilityRole="header"
         style={{
           color: colors.text,
-          fontSize: 30,
-          lineHeight: 36,
+          fontSize: width < 600 ? 26 : 30,
+          lineHeight: width < 600 ? 32 : 36,
           fontWeight: "700",
           letterSpacing: -0.9,
         }}

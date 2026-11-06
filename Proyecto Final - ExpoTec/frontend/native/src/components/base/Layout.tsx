@@ -121,7 +121,7 @@ export function PageHeading({
   return (
     <View
       style={{
-        backgroundColor: colors.dark ? colors.surface : fill,
+        backgroundColor: fill,
         padding: 16,
         borderRadius: layout.cardRadius,
         flexDirection: "row",
@@ -134,7 +134,7 @@ export function PageHeading({
           width: 40,
           height: 40,
           borderRadius: 12,
-          backgroundColor: colors.surface,
+          backgroundColor: colors.dark ? colors.surfaceVariant : colors.surface,
           alignItems: "center",
           justifyContent: "center",
         }}

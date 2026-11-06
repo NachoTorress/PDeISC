@@ -40,6 +40,8 @@ export default function AccountMenu({ onSignIn }: { onSignIn: () => void }) {
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [loginFocused, setLoginFocused] = useState(false);
+  const [loginHovered, setLoginHovered] = useState(false);
   const working = useRef(false);
   useEffect(() => {
     setOpen(false);
@@ -82,13 +84,18 @@ export default function AccountMenu({ onSignIn }: { onSignIn: () => void }) {
         accessibilityState={{ disabled: !ready }}
         disabled={!ready}
         onPress={onSignIn}
+        onFocus={() => setLoginFocused(true)}
+        onBlur={() => setLoginFocused(false)}
+        onHoverIn={() => setLoginHovered(true)}
+        onHoverOut={() => setLoginHovered(false)}
         style={({ pressed }) => ({
           width: 48,
           height: 48,
-          borderRadius: 12,
+          borderRadius: 10,
           borderWidth: 1,
-          borderColor: colors.controlOutline,
-          backgroundColor: pressed ? colors.surfaceVariant : colors.secondaryContainer,
+          borderColor: loginFocused ? colors.primary : "transparent",
+          backgroundColor:
+            pressed || loginHovered ? colors.surfaceVariant : colors.secondaryContainer,
           alignItems: "center",
           justifyContent: "center",
           opacity: ready ? 1 : 0.45,

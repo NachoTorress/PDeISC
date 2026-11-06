@@ -96,7 +96,8 @@ export function Field({
               : focused
                 ? colors.primary
                 : colors.controlOutline,
-            borderWidth: 2,
+            borderWidth: 1,
+            boxShadow: focused ? `0 0 0 1px ${colors.primary}` : undefined,
             minHeight: multiline ? 112 : layout.controlHeight,
             textAlignVertical: multiline ? "top" : "center",
             opacity: editable ? 1 : 0.65,

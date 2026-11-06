@@ -88,7 +88,7 @@ export function Button({
             : variant === "secondary"
               ? colors.controlOutline
               : "transparent",
-          borderWidth: 2,
+          borderWidth: 1,
           ...(Platform.OS === "web" && focused
             ? {
                 outlineColor: colors.primary,
@@ -156,7 +156,7 @@ export function RefreshButton({
         alignItems: "center",
         justifyContent: "center",
         borderRadius: layout.controlRadius,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: focused ? colors.primary : colors.outline,
         backgroundColor:
           pressed || hovered ? colors.surfaceVariant : colors.surface,
