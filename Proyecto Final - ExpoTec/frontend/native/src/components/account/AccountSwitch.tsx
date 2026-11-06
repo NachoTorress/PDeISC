@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { Button } from "../ui";
 import { useTheme } from "../../contexts/ThemeContext";
 
+/** Permite alternar entre ingreso y creación de cuenta. */
 export function AccountSwitch({
   register,
   busy,

@@ -1,3 +1,4 @@
+/** Proveedor del estado local de demostración y su persistencia. */
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { DemoState, Mutation, Role } from '../lib/types';
@@ -23,6 +24,7 @@ function loadState(): DemoState {
   return structuredClone(seed);
 }
 
+/** Restaura el estado local y expone las operaciones de la demostración. */
 export function DemoProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState(loadState);
   const [role, setRole] = useState<Role>('admin');

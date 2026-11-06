@@ -10,6 +10,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { formatMoment } from "../../lib/format";
 import type { LoanSummary } from "../../lib/sharedLoans";
 
+/** Presenta el préstamo, su saldo y las acciones disponibles. */
 export function LoanCard({
   loan,
   locked,

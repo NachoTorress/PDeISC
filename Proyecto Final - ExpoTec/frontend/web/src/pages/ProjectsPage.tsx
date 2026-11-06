@@ -1,3 +1,4 @@
+/** Gestiona las propuestas y su revisión en el prototipo de demostración. */
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import {
@@ -17,11 +18,13 @@ import { formatDate, statusLabel, teacherNames } from '../lib/format';
 import { isProjectMember, projectMembers, teamErrors } from '../lib/team';
 import type { DemoState, Project, ProjectStatus } from '../lib/types';
 
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 type Props = {
   onSelect: (id: string) => void;
   creating: boolean;
   onCreatingChange: (value: boolean) => void;
 };
+/** Valores editables del formulario antes de la validación. */
 type Draft = Omit<
   Project,
   'id' | 'student' | 'status' | 'feedback' | 'createdAt' | 'subjects' | 'resources'
@@ -29,6 +32,7 @@ type Draft = Omit<
   subjects: string;
   resources: Record<string, string>;
 };
+/** Mensajes de validación asociados a los campos del formulario. */
 type Errors = Record<string, string>;
 const studentName = 'Lucía Fernández';
 
@@ -47,6 +51,7 @@ function freeTables(state: DemoState, spaceId: string, projectId?: string) {
   );
 }
 
+/** Construye los valores editables de un proyecto nuevo o existente. */
 function makeDraft(state: DemoState, project?: Project): Draft {
   const spaceId =
     project?.spaceId ?? state.spaces.find((space) => freeTables(state, space.id).length)?.id ?? '';
@@ -71,6 +76,7 @@ function makeDraft(state: DemoState, project?: Project): Draft {
   };
 }
 
+/** Devuelve los errores del borrador antes de enviarlo al modelo local. */
 function validateDraft(draft: Draft, state: DemoState, editing?: Project): Errors {
   const errors: Errors = {};
   for (const [index, error] of Object.entries(teamErrors(draft.members)))
@@ -114,6 +120,7 @@ function validateDraft(draft: Draft, state: DemoState, editing?: Project): Error
   return errors;
 }
 
+/** Edita la propuesta local y muestra los errores antes de guardarla. */
 function ProjectForm({ editing, onClose }: { editing?: Project; onClose: () => void }) {
   const { state, role, mutate, notify } = useDemo();
   const [draft, setDraft] = useState(() => makeDraft(state, editing));

@@ -4,7 +4,9 @@ import { TABLE_SIZE } from "./layout";
 
 /** Coordenada en píxeles. */
 export type Point = { x: number; y: number };
+/** Posición y tamaño de un elemento medidos en la ventana. */
 export type WindowRect = Point & { width: number; height: number };
+/** Estado del arrastre de mobiliario desde la paleta al plano. */
 export type PaletteDrag = { type: Furniture["type"]; start: Point; end: Point };
 const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));

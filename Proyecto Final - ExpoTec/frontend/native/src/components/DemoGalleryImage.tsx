@@ -3,6 +3,7 @@ import PhotoImage from "./PhotoImage";
 import robot from "../../assets/demo-gallery/robot.jpg";
 import electronics from "../../assets/demo-gallery/electronics.jpg";
 
+/** Muestra una imagen de la galería local de demostración. */
 export default function DemoGalleryImage({
   uri,
   caption,

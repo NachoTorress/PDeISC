@@ -60,6 +60,7 @@ test("el acceso social web adopta la sesión en memoria sin guardar tokens en el
   assert.deepEqual(app.user(), user);
   assert.equal(app.saved(), "previous");
 });
+/** Prepara el cliente y las dependencias simuladas de autenticación para cada prueba. */
 function setup(
   handler: (
     path: string,

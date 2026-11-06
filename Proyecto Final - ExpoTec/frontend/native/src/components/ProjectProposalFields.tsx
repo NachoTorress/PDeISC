@@ -12,6 +12,7 @@ export type DraftUpdate = <K extends keyof ProjectDraft>(
   key: K,
   value: ProjectDraft[K],
 ) => void;
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 type Props = {
   draft: ProjectDraft;
   update: DraftUpdate;

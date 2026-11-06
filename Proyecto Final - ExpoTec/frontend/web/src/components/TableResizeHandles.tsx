@@ -1,3 +1,4 @@
+/** Muestra los controles y coordina el gesto de tamaño de una mesa. */
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import type { PointerEvent, RefObject } from 'react';
 import type { Furniture } from '../lib/types';
@@ -5,7 +6,9 @@ import { TABLE_SIZE } from '../lib/layout';
 import { resizeTable } from '../lib/resizeTable';
 import type { ResizeHandle } from '../lib/resizeTable';
 
+/** Posición y dimensiones utilizadas por los controles del plano. */
 type Geometry = { x: number; y: number; width: number; height: number };
+/** Datos del gesto de redimensionado desde su inicio hasta su confirmación. */
 type Session = {
   original: Furniture;
   startX: number;
@@ -39,6 +42,7 @@ const directions = [
 ];
 const cursors = ['ew-resize', 'nwse-resize', 'ns-resize', 'nesw-resize'];
 
+/** Extrae posición y dimensiones de una mesa para iniciar el gesto. */
 function geometryOf(item: Furniture): Geometry {
   return {
     x: item.x,
@@ -59,6 +63,7 @@ function paint(session: Session, value: Geometry) {
   session.table.classList.toggle('is-compact', value.width < 12 || value.height < 8);
 }
 
+/** Muestra los controles y coordina el gesto de tamaño de una mesa. */
 export default function TableResizeHandles({
   item,
   stage,

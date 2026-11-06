@@ -5,6 +5,7 @@ import { transaction, createDatabase } from '../src/config/database.mjs';
 import { readDatabaseConfig, readConfig } from '../src/config/env.mjs';
 import { createAuthRepository } from '../src/repositories/auth.mjs';
 
+/** Simula respuestas y transacciones SQL sin conectarse a la base real. */
 function scriptedPool(responses = []) {
   const events = [];
   const db = {

@@ -26,6 +26,7 @@ import { SelectionStepper } from "./floorplan/SelectionStepper";
 import { FloorplanLegend } from "./floorplan/FloorplanLegend";
 import { styles } from "./floorplan/styles";
 
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 interface Props {
   space: Space;
   projects: Project[];

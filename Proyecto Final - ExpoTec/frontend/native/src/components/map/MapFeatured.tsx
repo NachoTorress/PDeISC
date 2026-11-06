@@ -6,6 +6,7 @@ import ProjectArt from "../ProjectArt";
 import { useTheme } from "../../contexts/ThemeContext";
 import type { Project, Space } from "../../lib/types";
 
+/** Destaca el espacio o proyecto seleccionado en el mapa. */
 export function MapFeatured({
   projects,
   spaces,

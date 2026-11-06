@@ -1,3 +1,4 @@
+/** Vincula el acceso social del navegador con el retorno a la aplicación móvil. */
 (async () => {
   const key = "expotec-mobile-flow";
   const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;

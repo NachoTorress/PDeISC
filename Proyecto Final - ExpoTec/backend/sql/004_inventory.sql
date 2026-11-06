@@ -1,3 +1,4 @@
+-- Crea inventario, pedidos y reservas de recursos.
 CREATE TABLE IF NOT EXISTS resources (
   id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE,

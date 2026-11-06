@@ -17,6 +17,7 @@ const actionNames: Record<string, string> = {
   damage: "Devolución con daños",
 };
 
+/** Lista los movimientos históricos de un recurso del inventario. */
 export function InventoryHistory({
   resource,
   onClose,

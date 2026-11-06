@@ -24,6 +24,7 @@ import {
 } from "../components/ui";
 import { STUDENT } from "../components/projectFormModel";
 
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 type Props = {
   onSelect: (id: string) => void;
   onCreate: () => void;

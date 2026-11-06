@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { Image } from "react-native";
 import type { ImageProps } from "react-native";
 
+/** Muestra una foto con los estados de carga y error de la imagen. */
 export default function PhotoImage({
   source,
   caption,

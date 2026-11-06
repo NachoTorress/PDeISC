@@ -1,3 +1,4 @@
+/** Construye los datos iniciales ficticios de la demostración local. */
 import type { DemoState, Furniture } from './types';
 
 const tables = (prefix: string): Furniture[] =>

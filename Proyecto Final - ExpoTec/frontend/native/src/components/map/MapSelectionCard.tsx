@@ -27,6 +27,7 @@ function itemText(item: Furniture) {
   return "Mobiliario del espacio. No es un puesto de inscripción.";
 }
 
+/** Muestra el elemento seleccionado y sus acciones en el plano. */
 export function MapSelectionCard({
   project,
   item,

@@ -7,6 +7,7 @@ export type LocalPhoto = {
   dispose: () => void;
 };
 
+/** Contenido y metadatos del archivo preparado para subir una fotografía. */
 export type PhotoBody = Blob | LocalPhoto;
 
 /** Indica si el archivo es un temporal de Android. */

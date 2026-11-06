@@ -15,6 +15,7 @@ const actionNames: Record<string, string> = {
   cancel: "Cancelación",
 };
 
+/** Muestra las revisiones y cambios de estado del proyecto. */
 export function ProjectReviewHistory({
   reviews,
 }: {

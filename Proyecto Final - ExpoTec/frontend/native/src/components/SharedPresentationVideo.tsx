@@ -4,6 +4,7 @@
 import { useEffect } from "react";
 import { VideoView, useVideoPlayer } from "expo-video";
 
+/** Reproduce el video del proyecto en la presentación de esta plataforma. */
 export function SharedPresentationVideo({
   uri,
   playing,

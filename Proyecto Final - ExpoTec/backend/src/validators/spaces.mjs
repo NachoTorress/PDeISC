@@ -2,6 +2,7 @@
 import { HttpError } from '../lib/errors.mjs';
 import { objectBody } from './auth.mjs';
 
+/** Lanza el error de validación con los campos inválidos de la solicitud. */
 function invalid(fields) {
   if (Object.keys(fields).length)
     throw new HttpError(400, 'VALIDATION_ERROR', 'Revisá los datos del espacio.', fields);

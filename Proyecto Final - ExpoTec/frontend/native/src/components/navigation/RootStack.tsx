@@ -24,6 +24,7 @@ import type { RootRoutes } from "./routes";
 
 const Stack = createNativeStackNavigator<RootRoutes>();
 
+/** Relaciona las rutas de la pila con sus pantallas y opciones de navegación. */
 export function RootStack({
   role,
   initialRouteName,

@@ -1,7 +1,9 @@
+/** Presenta el formulario de proyecto en un diálogo con cierre controlado. */
 import { useEffect, useRef } from 'react';
 import type { Project } from '../lib/types';
 import ProjectDetail from './ProjectDetail';
 
+/** Presenta el formulario de proyecto en un diálogo con cierre controlado. */
 export default function ProjectDialog({
   project,
   onClose,

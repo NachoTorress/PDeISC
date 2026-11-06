@@ -17,6 +17,7 @@ const bootstrap = readFileSync(
   "utf8",
 );
 
+/** Prepara el navegador simulado para verificar el retorno social móvil. */
 async function browserPage(
   hash: string,
   records: Map<string, string>,

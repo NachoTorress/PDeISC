@@ -8,6 +8,7 @@ import { projectImageFromBase64 } from "./projectImage";
 import { Button, Field, Section } from "./ui";
 import PhotoImage from "./PhotoImage";
 
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 type Props = {
   image: string;
   video: string;

@@ -4,6 +4,7 @@ import { AppState, Keyboard, Platform } from "react-native";
 import { NavigationBar, setVisibilityAsync } from "expo-navigation-bar";
 import { useTheme } from "../contexts/ThemeContext";
 
+/** Sincroniza la barra de navegación de Android con el tema activo. */
 export function SystemNavigation() {
   const { colors } = useTheme();
   useEffect(() => {

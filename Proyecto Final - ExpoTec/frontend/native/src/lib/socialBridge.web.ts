@@ -1,6 +1,7 @@
 /** Acceso social en la web: redirige al proveedor y recupera el flujo al volver. */
 import { browserMobileReturn } from "./mobileSocial";
 const key = "expotec-social-flow";
+/** Datos del flujo social pendiente de completarse en el navegador. */
 type Pending = {
   id?: string;
   proof: string;
@@ -26,6 +27,7 @@ function read(): Pending | null {
   }
 }
 // Solo el identificador vuelve en la URL; la prueba permanece en esta pestaña.
+/** Recupera el retorno social de la URL para continuar el ingreso web. */
 function captureReturn() {
   if (typeof window === "undefined") return false;
   const hash = new URLSearchParams(window.location.hash.slice(1));

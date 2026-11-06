@@ -23,7 +23,9 @@ Convenciones de los Markdown de origen:
 
 Uso, desde cualquier carpeta (requiere Python 3 y reportlab):
     python docs/scripts/export_manuals.py
-    python docs/scripts/export_manuals.py --font-dir C:/Windows/Fonts --output-dir output/pdf
+    python docs/scripts/export_manuals.py --font-dir C:/Windows/Fonts
+
+La opción --output-dir permite elegir la carpeta de destino.
 
 Si no encuentra Arial, usa Liberation Sans, que tiene las mismas métricas.
 """
@@ -44,8 +46,16 @@ from reportlab.lib.units import cm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
-    BaseDocTemplate, Frame, Image, LongTable, PageBreak,
-    PageTemplate, Paragraph, Preformatted, Spacer, TableStyle,
+    BaseDocTemplate,
+    Frame,
+    Image,
+    LongTable,
+    PageBreak,
+    PageTemplate,
+    Paragraph,
+    Preformatted,
+    Spacer,
+    TableStyle,
 )
 from reportlab.platypus.tableofcontents import TableOfContents
 
@@ -62,35 +72,57 @@ DOCUMENTS = [
 
 BLACK = colors.black
 FONT_SIZE = 11
-# Interlineado 1,5 para Arial 11 (equivale al "1,5 líneas" de un procesador de texto).
+# Interlineado 1,5 para Arial 11 (equivale al "1,5 líneas" de un
+# procesador de texto).
 BODY_LEADING = 19
 
 # Juegos de archivos aceptados: Arial (Windows) o Liberation Sans (Linux).
 FONT_SETS = [
     ("arial.ttf", "arialbd.ttf", "ariali.ttf", "arialbi.ttf"),
-    ("LiberationSans-Regular.ttf", "LiberationSans-Bold.ttf",
-     "LiberationSans-Italic.ttf", "LiberationSans-BoldItalic.ttf"),
+    (
+        "LiberationSans-Regular.ttf",
+        "LiberationSans-Bold.ttf",
+        "LiberationSans-Italic.ttf",
+        "LiberationSans-BoldItalic.ttf",
+    ),
 ]
-FONT_DIRS = [Path("C:/Windows/Fonts"), Path("/usr/share/fonts/truetype/liberation")]
+FONT_DIRS = [
+    Path("C:/Windows/Fonts"),
+    Path("/usr/share/fonts/truetype/liberation"),
+]
 
 
 def register_fonts(font_dir: Path | None) -> str:
-    """Registra la familia tipográfica "Manual" y devuelve qué fuente se usó."""
+    (
+        'Registra la familia tipográfica "Manual" y devue'
+        "lve qué fuente se usó."
+    )
     candidates = [font_dir] if font_dir else FONT_DIRS
     for folder in candidates:
         for files in FONT_SETS:
             paths = [folder / name for name in files]
             if all(path.exists() for path in paths):
                 for alias, path in zip(
-                    ("Manual", "ManualBold", "ManualItalic", "ManualBoldItalic"), paths
+                    (
+                        "Manual",
+                        "ManualBold",
+                        "ManualItalic",
+                        "ManualBoldItalic",
+                    ),
+                    paths,
                 ):
                     pdfmetrics.registerFont(TTFont(alias, str(path)))
                 pdfmetrics.registerFontFamily(
-                    "Manual", normal="Manual", bold="ManualBold",
-                    italic="ManualItalic", boldItalic="ManualBoldItalic",
+                    "Manual",
+                    normal="Manual",
+                    bold="ManualBold",
+                    italic="ManualItalic",
+                    boldItalic="ManualBoldItalic",
                 )
                 return files[0]
-    raise SystemExit("No se encontró Arial ni Liberation Sans. Indicá --font-dir.")
+    raise SystemExit(
+        "No se encontró Arial ni Liberation Sans. Indicá --font-dir."
+    )
 
 
 # Tamaño del código dentro de las tablas (un poco menor que el del texto).
@@ -98,40 +130,64 @@ CODE_CELL_SIZE = 8.5
 
 
 def inline(text: str, code_size: float = 10) -> str:
-    """Convierte el Markdown en línea (enlaces, código, negrita) a marcado de reportlab.
+    """Convierte enlaces, código y negrita a marcado de ReportLab.
 
     Todo queda en negro: los enlaces solo se distinguen por el subrayado.
     """
     text = html.escape(text.strip())
     text = re.sub(
         r"\[([^\]]+)\]\((https?://[^)]+)\)",
-        r'<link href="\2" color="black"><u>\1</u></link>', text,
+        r'<link href="\2" color="black"><u>\1</u></link>',
+        text,
     )
-    text = re.sub(r"`([^`]+)`", rf'<font name="Courier" size="{code_size}">\1</font>', text)
+    text = re.sub(
+        r"`([^`]+)`",
+        rf'<font name="Courier" size="{code_size}">\1</font>',
+        text,
+    )
     return re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", text)
 
 
 class ManualTemplate(BaseDocTemplate):
-    """Plantilla de página con encabezado (título + número) e índice enlazado."""
+    (
+        "Plantilla de página con encabezado (título + núm"
+        "ero) e índice enlazado."
+    )
 
     def __init__(self, filename: str, header: str, **kwargs):
+        """Configura la página A4 y transmite los márgenes a ReportLab."""
         super().__init__(filename, pagesize=A4, **kwargs)
         self.header = header
         frame = Frame(
-            self.leftMargin, self.bottomMargin, self.width, self.height,
-            leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0,
+            self.leftMargin,
+            self.bottomMargin,
+            self.width,
+            self.height,
+            leftPadding=0,
+            rightPadding=0,
+            topPadding=0,
+            bottomPadding=0,
         )
-        self.addPageTemplates(PageTemplate(id="manual", frames=frame, onPage=self.draw_header))
+        self.addPageTemplates(
+            PageTemplate(id="manual", frames=frame, onPage=self.draw_header)
+        )
 
     def beforeDocument(self):
-        # multiBuild recorre el documento varias veces: el contador se reinicia en cada pasada.
+        """Reinicia el índice y define los metadatos en cada pasada del PDF."""
+        # multiBuild recorre el documento varias veces: el contador se reinicia
+        # en cada pasada.
         self.section_count = 0
         self.canv.setTitle(self.header)
-        self.canv.setAuthor("Proyecto ExpoTec - E.E.S.T. N° 5 Amancio Williams")
+        self.canv.setAuthor(
+            "Proyecto ExpoTec - E.E.S.T. N° 5 Amancio Williams"
+        )
         self.canv.setSubject("Documentación de ExpoTec 0.4.0")
 
     def draw_header(self, canvas, doc):
-        """Dibuja el título del documento a la izquierda y el número de página a la derecha."""
+        (
+            "Dibuja el título del documento a la izquierda y "
+            "el número de página a la derecha."
+        )
         canvas.saveState()
         canvas.setFont("Manual", 10)
         canvas.setFillColor(BLACK)
@@ -141,10 +197,15 @@ class ManualTemplate(BaseDocTemplate):
         canvas.restoreState()
 
     def afterFlowable(self, flowable):
-        """Registra cada título numerado en el índice y en los marcadores del PDF."""
+        (
+            "Registra cada título numerado en el índice y en "
+            "los marcadores del PDF."
+        )
         if not isinstance(flowable, Paragraph):
             return
-        level = {"Heading1": 0, "Heading2": 1, "Heading3": 2}.get(flowable.style.name)
+        level = {"Heading1": 0, "Heading2": 1, "Heading3": 2}.get(
+            flowable.style.name
+        )
         if level is None:
             return
         self.section_count += 1
@@ -158,76 +219,169 @@ class ManualTemplate(BaseDocTemplate):
 def make_styles():
     """Estilos del documento: cuerpo justificado a 1,5 y títulos en negrita."""
     body = ParagraphStyle(
-        "Body", fontName="Manual", fontSize=FONT_SIZE, leading=BODY_LEADING,
-        textColor=BLACK, alignment=TA_JUSTIFY, spaceAfter=6,
-        splitLongWords=True, allowWidows=0, allowOrphans=0,
+        "Body",
+        fontName="Manual",
+        fontSize=FONT_SIZE,
+        leading=BODY_LEADING,
+        textColor=BLACK,
+        alignment=TA_JUSTIFY,
+        spaceAfter=6,
+        splitLongWords=True,
+        allowWidows=0,
+        allowOrphans=0,
     )
-    heading = dict(parent=body, fontName="ManualBold", alignment=TA_LEFT, keepWithNext=True)
+    heading = dict(
+        parent=body,
+        fontName="ManualBold",
+        alignment=TA_LEFT,
+        keepWithNext=True,
+    )
     centered = dict(parent=body, alignment=TA_CENTER)
     return {
         "body": body,
-        "cover_title": ParagraphStyle("CoverTitle", fontName="ManualBold", fontSize=16,
-                                      leading=24, alignment=TA_CENTER, spaceAfter=24),
+        "cover_title": ParagraphStyle(
+            "CoverTitle",
+            fontName="ManualBold",
+            fontSize=16,
+            leading=24,
+            alignment=TA_CENTER,
+            spaceAfter=24,
+        ),
         "cover": ParagraphStyle("Cover", **centered),
-        "toc_title": ParagraphStyle("TocTitle", fontName="ManualBold", fontSize=13,
-                                    leading=BODY_LEADING, alignment=TA_CENTER, spaceAfter=12),
-        "h1": ParagraphStyle("Heading1", fontSize=13, spaceBefore=14, spaceAfter=6, **heading),
-        "h2": ParagraphStyle("Heading2", fontSize=12, spaceBefore=10, spaceAfter=4, **heading),
-        "h3": ParagraphStyle("Heading3", fontSize=11, spaceBefore=8, spaceAfter=4, **heading),
-        "list": ParagraphStyle("List", parent=body, leftIndent=18, bulletIndent=2, spaceAfter=3,
-                               bulletFontName="Manual"),
-        "caption_number": ParagraphStyle("CaptionNumber", fontName="ManualBold", fontSize=FONT_SIZE,
-                                         leading=BODY_LEADING, alignment=TA_LEFT, keepWithNext=True),
-        "caption_title": ParagraphStyle("CaptionTitle", fontName="ManualItalic", fontSize=FONT_SIZE,
-                                        leading=BODY_LEADING, alignment=TA_LEFT, spaceAfter=4,
-                                        keepWithNext=True),
-        # Las tablas usan interlineado simple, permitido por APA para mejorar la lectura.
-        "cell": ParagraphStyle("Cell", fontName="Manual", fontSize=10, leading=13, alignment=TA_LEFT),
-        "cellhead": ParagraphStyle("CellHead", fontName="ManualBold", fontSize=10, leading=13,
-                                   alignment=TA_LEFT),
-        "code": ParagraphStyle("Code", fontName="Courier", fontSize=9, leading=12,
-                               leftIndent=14, spaceBefore=4, spaceAfter=10),
+        "toc_title": ParagraphStyle(
+            "TocTitle",
+            fontName="ManualBold",
+            fontSize=13,
+            leading=BODY_LEADING,
+            alignment=TA_CENTER,
+            spaceAfter=12,
+        ),
+        "h1": ParagraphStyle(
+            "Heading1", fontSize=13, spaceBefore=14, spaceAfter=6, **heading
+        ),
+        "h2": ParagraphStyle(
+            "Heading2", fontSize=12, spaceBefore=10, spaceAfter=4, **heading
+        ),
+        "h3": ParagraphStyle(
+            "Heading3", fontSize=11, spaceBefore=8, spaceAfter=4, **heading
+        ),
+        "list": ParagraphStyle(
+            "List",
+            parent=body,
+            leftIndent=18,
+            bulletIndent=2,
+            spaceAfter=3,
+            bulletFontName="Manual",
+        ),
+        "caption_number": ParagraphStyle(
+            "CaptionNumber",
+            fontName="ManualBold",
+            fontSize=FONT_SIZE,
+            leading=BODY_LEADING,
+            alignment=TA_LEFT,
+            keepWithNext=True,
+        ),
+        "caption_title": ParagraphStyle(
+            "CaptionTitle",
+            fontName="ManualItalic",
+            fontSize=FONT_SIZE,
+            leading=BODY_LEADING,
+            alignment=TA_LEFT,
+            spaceAfter=4,
+            keepWithNext=True,
+        ),
+        # Las tablas usan interlineado simple, permitido por APA para mejorar
+        # la lectura.
+        "cell": ParagraphStyle(
+            "Cell",
+            fontName="Manual",
+            fontSize=10,
+            leading=13,
+            alignment=TA_LEFT,
+        ),
+        "cellhead": ParagraphStyle(
+            "CellHead",
+            fontName="ManualBold",
+            fontSize=10,
+            leading=13,
+            alignment=TA_LEFT,
+        ),
+        "code": ParagraphStyle(
+            "Code",
+            fontName="Courier",
+            fontSize=9,
+            leading=12,
+            leftIndent=14,
+            spaceBefore=4,
+            spaceAfter=10,
+        ),
     }
 
 
 class JustifiedParagraph(Paragraph):
-    """Párrafo justificado que se alinea a la izquierda si el justificado deja huecos.
+    """Alinea a la izquierda los párrafos con huecos excesivos.
 
     Las rutas y nombres de variables largos no se pueden cortar; cuando caen al
-    final de una línea, justificar separaría demasiado las palabras. En ese caso
+    final de una línea, justificar separaría demasiado las palabras. Entonces
     (y solo en ese) el párrafo se reacomoda alineado a la izquierda.
     """
 
-    MAX_GAP = 7  # puntos extra permitidos entre palabras de una línea justificada
+    MAX_GAP = (
+        7  # puntos extra permitidos entre palabras de una línea justificada
+    )
 
     def wrap(self, availWidth, availHeight):
+        (
+            "Calcula el tamaño y evita huecos excesivos en lí"
+            "neas justificadas."
+        )
         result = super().wrap(availWidth, availHeight)
         lines = getattr(self.blPara, "lines", [])
         for line in lines[:-1]:
-            words = getattr(line, "words", None) or (line[1] if isinstance(line, tuple) else [])
+            words = getattr(line, "words", None) or (
+                line[1] if isinstance(line, tuple) else []
+            )
             gaps = max(1, len(words) - 1)
-            extra = getattr(line, "extraSpace", line[0] if isinstance(line, tuple) else 0)
+            extra = getattr(
+                line, "extraSpace", line[0] if isinstance(line, tuple) else 0
+            )
             if extra / gaps > self.MAX_GAP:
-                self.style = ParagraphStyle("BodyLeft", parent=self.style, alignment=TA_LEFT)
+                self.style = ParagraphStyle(
+                    "BodyLeft", parent=self.style, alignment=TA_LEFT
+                )
                 return super().wrap(availWidth, availHeight)
         return result
 
 
 def make_toc():
-    """Índice de tres niveles con puntos guía; cada entrada es un enlace a la sección."""
+    (
+        "Índice de tres niveles con puntos guía; cada ent"
+        "rada es un enlace a la sección."
+    )
     toc = TableOfContents(dotsMinLevel=0)
     indents = [0, 16, 32]
     toc.levelStyles = [
-        ParagraphStyle(f"Toc{level}", fontName="ManualBold" if level == 0 else "Manual",
-                       fontSize=FONT_SIZE, leading=15, leftIndent=indents[level],
-                       firstLineIndent=0, rightIndent=24, spaceBefore=0, textColor=BLACK)
+        ParagraphStyle(
+            f"Toc{level}",
+            fontName="ManualBold" if level == 0 else "Manual",
+            fontSize=FONT_SIZE,
+            leading=15,
+            leftIndent=indents[level],
+            firstLineIndent=0,
+            rightIndent=24,
+            spaceBefore=0,
+            textColor=BLACK,
+        )
         for level in range(3)
     ]
     return toc
 
 
 def caption(kind: str, number: int, description: str, styles) -> list:
-    """Rótulo APA: número en negrita y descripción en cursiva, ambos arriba del elemento."""
+    (
+        "Rótulo APA: número en negrita y descripción en c"
+        "ursiva, ambos arriba del elemento."
+    )
     return [
         Paragraph(f"{kind} {number}", styles["caption_number"]),
         Paragraph(inline(description), styles["caption_title"]),
@@ -247,57 +401,95 @@ def column_widths(rows: list[list[str]], width: float) -> list[float]:
     padding = 14
     minimums, averages = [], []
     for index in range(len(rows[0])):
-        cells = [row[index].strip() if index < len(row) else "" for row in rows]
+        cells = [
+            row[index].strip() if index < len(row) else "" for row in rows
+        ]
         longest = 0.0
         for row_number, cell in enumerate(cells):
             for code in re.findall(r"`([^`]+)`", cell):
                 for token in code.split():
-                    longest = max(longest, pdfmetrics.stringWidth(token, "Courier", CODE_CELL_SIZE))
+                    longest = max(
+                        longest,
+                        pdfmetrics.stringWidth(
+                            token, "Courier", CODE_CELL_SIZE
+                        ),
+                    )
             plain = re.sub(r"`[^`]+`", " ", cell).replace("**", "")
             font = "ManualBold" if row_number == 0 else "Manual"
             for word in plain.split():
                 longest = max(longest, pdfmetrics.stringWidth(word, font, 10))
         minimums.append(longest + padding)
-        averages.append(max(4.0, sum(len(cell) for cell in cells[1:]) / max(1, len(cells) - 1)))
+        averages.append(
+            max(
+                4.0,
+                sum(len(cell) for cell in cells[1:]) / max(1, len(cells) - 1),
+            )
+        )
     # Un código muy largo (una ruta) no puede quitarle el espacio a las demás
     # columnas: su mínimo se limita al 26 % del ancho y pasa de línea.
     minimums = [min(minimum, width * 0.26) for minimum in minimums]
     total_min = sum(minimums)
     if total_min >= width:
-        # Achica solo las columnas anchas (código largo); las cortas no se parten.
-        wide = [i for i, minimum in enumerate(minimums) if minimum > width * 0.2]
+        # Achica solo las columnas anchas (código largo); las cortas no se
+        # parten.
+        wide = [
+            i for i, minimum in enumerate(minimums) if minimum > width * 0.2
+        ]
         excess = total_min - width + 1
         wide_total = sum(minimums[i] for i in wide) or 1
-        minimums = [m - excess * m / wide_total if i in wide else m for i, m in enumerate(minimums)]
+        minimums = [
+            m - excess * m / wide_total if i in wide else m
+            for i, m in enumerate(minimums)
+        ]
         return minimums
     spare = width - total_min
     weight = sum(averages)
-    return [minimum + spare * average / weight for minimum, average in zip(minimums, averages)]
+    return [
+        minimum + spare * average / weight
+        for minimum, average in zip(minimums, averages)
+    ]
 
 
 def make_table(lines: list[str], width: float, styles) -> LongTable:
-    """Arma una tabla APA: sin líneas verticales, con regla superior, bajo el encabezado e inferior."""
+    (
+        "Arma una tabla APA: sin líneas verticales, con r"
+        "egla superior, bajo el encabezado e inferior."
+    )
     rows = [line.strip().strip("|").split("|") for line in lines]
-    rows = [r for r in rows if not all(re.fullmatch(r"\s*:?-+:?\s*", c) for c in r)]
-    cells = [[Paragraph(inline(cell, CODE_CELL_SIZE), styles["cellhead"] if i == 0 else styles["cell"])
-              for cell in row] for i, row in enumerate(rows)]
+    rows = [
+        r for r in rows if not all(re.fullmatch(r"\s*:?-+:?\s*", c) for c in r)
+    ]
+    cells = [
+        [
+            Paragraph(
+                inline(cell, CODE_CELL_SIZE),
+                styles["cellhead"] if i == 0 else styles["cell"],
+            )
+            for cell in row
+        ]
+        for i, row in enumerate(rows)
+    ]
     widths = column_widths(rows, width)
     table = LongTable(cells, colWidths=widths, repeatRows=1, hAlign="LEFT")
-    table.setStyle(TableStyle([
-        ("LINEABOVE", (0, 0), (-1, 0), 1, BLACK),
-        ("LINEBELOW", (0, 0), (-1, 0), 0.6, BLACK),
-        ("LINEBELOW", (0, -1), (-1, -1), 1, BLACK),
-        ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("LEFTPADDING", (0, 0), (-1, -1), 4),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 8),
-        ("TOPPADDING", (0, 0), (-1, -1), 5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
-    ]))
+    table.setStyle(
+        TableStyle(
+            [
+                ("LINEABOVE", (0, 0), (-1, 0), 1, BLACK),
+                ("LINEBELOW", (0, 0), (-1, 0), 0.6, BLACK),
+                ("LINEBELOW", (0, -1), (-1, -1), 1, BLACK),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 4),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+                ("TOPPADDING", (0, 0), (-1, -1), 5),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ]
+        )
+    )
     return table
 
 
 def make_image(path: Path, width: float) -> Image:
-    """Inserta una captura en escala de grises (el documento es solo blanco y negro).
+    """Inserta una captura en escala de grises sin modificar el original.
 
     La imagen se escala al ancho disponible y a 12 cm de alto como máximo,
     conservando su proporción. El archivo original en color no se modifica.
@@ -310,42 +502,78 @@ def make_image(path: Path, width: float) -> Image:
     buffer.seek(0)
     image = Image(buffer)
     scale = min(1.0, width / image.imageWidth, (12 * cm) / image.imageHeight)
-    image.drawWidth, image.drawHeight = image.imageWidth * scale, image.imageHeight * scale
+    image.drawWidth, image.drawHeight = (
+        image.imageWidth * scale,
+        image.imageHeight * scale,
+    )
     image.hAlign = "CENTER"
     return image
 
 
 def export(source: Path, target: Path, header: str) -> None:
-    """Convierte un Markdown en PDF con portada, índice y contenido numerado."""
+    (
+        "Convierte un Markdown en PDF con portada, índice"
+        " y contenido numerado."
+    )
     styles = make_styles()
     document = ManualTemplate(
-        str(target), header=header, leftMargin=2.54 * cm, rightMargin=2.54 * cm,
-        topMargin=2.54 * cm, bottomMargin=2.54 * cm,
+        str(target),
+        header=header,
+        leftMargin=2.54 * cm,
+        rightMargin=2.54 * cm,
+        topMargin=2.54 * cm,
+        bottomMargin=2.54 * cm,
     )
     lines = source.read_text(encoding="utf-8").splitlines()
-    first_heading = next(i for i, line in enumerate(lines) if line.startswith("## "))
+    first_heading = next(
+        i for i, line in enumerate(lines) if line.startswith("## ")
+    )
 
     # Portada centrada: título y las líneas de identificación del Markdown.
-    story = [Spacer(1, 6 * cm), Paragraph(inline(lines[0][2:]), styles["cover_title"])]
-    story += [Paragraph(inline(line), styles["cover"])
-              for line in lines[1:first_heading] if line.strip()]
-    story += [PageBreak(), Paragraph("Índice", styles["toc_title"]), make_toc(), PageBreak()]
+    story = [
+        Spacer(1, 6 * cm),
+        Paragraph(inline(lines[0][2:]), styles["cover_title"]),
+    ]
+    story += [
+        Paragraph(inline(line), styles["cover"])
+        for line in lines[1:first_heading]
+        if line.strip()
+    ]
+    story += [
+        PageBreak(),
+        Paragraph("Índice", styles["toc_title"]),
+        make_toc(),
+        PageBreak(),
+    ]
 
-    numbers = [0, 0, 0]          # contadores de los niveles 1, 1.1 y 1.1.1
+    numbers = [0, 0, 0]  # contadores de los niveles 1, 1.1 y 1.1.1
     counters = {"Tabla": 0, "Imagen": 0}
-    pending_table_title = None   # descripción leída de la línea "Tabla: ..."
+    pending_table_title = None  # descripción leída de la línea "Tabla: ..."
 
     def heading(level: int, text: str):
+        (
+            "Numera el nivel indicado, reinicia los inferiore"
+            "s y agrega el título."
+        )
         numbers[level] += 1
         for deeper in range(level + 1, 3):
             numbers[deeper] = 0
-        label = ".".join(str(n) for n in numbers[: level + 1]) + ("." if level == 0 else "")
-        story.append(Paragraph(f"{label} {inline(text)}", styles[f"h{level + 1}"]))
+        label = ".".join(str(n) for n in numbers[: level + 1]) + (
+            "." if level == 0 else ""
+        )
+        story.append(
+            Paragraph(f"{label} {inline(text)}", styles[f"h{level + 1}"])
+        )
 
     def take_heading() -> list:
-        """Si el último elemento es un título, lo retira para que viaje junto a la tabla o imagen."""
+        (
+            "Si el último elemento es un título, lo retira pa"
+            "ra que viaje junto a la tabla o imagen."
+        )
         last = story[-1] if story else None
-        if isinstance(last, Paragraph) and last.style.name.startswith("Heading"):
+        if isinstance(last, Paragraph) and last.style.name.startswith(
+            "Heading"
+        ):
             return [story.pop()]
         return []
 
@@ -361,7 +589,9 @@ def export(source: Path, target: Path, header: str) -> None:
             while i < len(lines) and not lines[i].startswith("```"):
                 code.append(lines[i])
                 i += 1
-            story.append(Preformatted("\n".join(code), styles["code"], maxLineLength=90))
+            story.append(
+                Preformatted("\n".join(code), styles["code"], maxLineLength=90)
+            )
             i += 1
             continue
         if line.startswith("Tabla:"):
@@ -377,13 +607,17 @@ def export(source: Path, target: Path, header: str) -> None:
             title = pending_table_title or "Tabla sin descripción"
             pending_table_title = None
             table = make_table(table_lines, document.width, styles)
-            block = caption("Tabla", counters["Tabla"], title, styles) + [table]
+            block = caption("Tabla", counters["Tabla"], title, styles) + [
+                table
+            ]
             story += take_heading() + block + [Spacer(1, 10)]
             continue
         if match := re.match(r"^!\[([^\]]+)\]\(([^)]+)\)$", line):
             counters["Imagen"] += 1
             image = make_image(source.parent / match[2], document.width)
-            block = caption("Imagen", counters["Imagen"], match[1], styles) + [image]
+            block = caption("Imagen", counters["Imagen"], match[1], styles) + [
+                image
+            ]
             story += take_heading() + block + [Spacer(1, 10)]
             i += 1
             continue
@@ -394,14 +628,24 @@ def export(source: Path, target: Path, header: str) -> None:
         elif line.startswith("## "):
             heading(0, line[3:])
         elif match := re.match(r"^(\d+)\.\s+(.+)$", line):
-            story.append(Paragraph(inline(match[2]), styles["list"], bulletText=match[1] + "."))
+            story.append(
+                Paragraph(
+                    inline(match[2]), styles["list"], bulletText=match[1] + "."
+                )
+            )
         elif line.startswith("- "):
-            story.append(Paragraph(inline(line[2:]), styles["list"], bulletText="•"))
+            story.append(
+                Paragraph(inline(line[2:]), styles["list"], bulletText="•")
+            )
         else:
             # Une las líneas consecutivas de un mismo párrafo.
             paragraph = [line]
-            while i + 1 < len(lines) and lines[i + 1].strip() and not re.match(
-                r"^(#|\||```|\d+\.\s|-\s|!\[|Tabla:)", lines[i + 1]
+            while (
+                i + 1 < len(lines)
+                and lines[i + 1].strip()
+                and not re.match(
+                    r"^(#|\||```|\d+\.\s|-\s|!\[|Tabla:)", lines[i + 1]
+                )
             ):
                 i += 1
                 paragraph.append(lines[i].strip())
@@ -413,15 +657,29 @@ def export(source: Path, target: Path, header: str) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Exporta los manuales de ExpoTec a PDF.")
-    parser.add_argument("--font-dir", type=Path, default=None,
-                        help="Carpeta con Arial o Liberation Sans (por defecto se busca sola).")
+    """Lee las opciones, registra fuentes y exporta los cuatro manuales."""
+    parser = argparse.ArgumentParser(
+        description="Exporta los manuales de ExpoTec a PDF."
+    )
+    parser.add_argument(
+        "--font-dir",
+        type=Path,
+        default=None,
+        help=(
+            "Carpeta con Arial o Liberation Sans (por defecto"
+            " se busca sola)."
+        ),
+    )
     parser.add_argument("--output-dir", type=Path, default=ROOT / "output/pdf")
     args = parser.parse_args()
     print("Fuente:", register_fonts(args.font_dir))
     args.output_dir.mkdir(parents=True, exist_ok=True)
     for stem, header in DOCUMENTS:
-        export(ROOT / "docs" / f"{stem}.md", args.output_dir / f"ExpoTec_{stem}.pdf", header)
+        export(
+            ROOT / "docs" / f"{stem}.md",
+            args.output_dir / f"ExpoTec_{stem}.pdf",
+            header,
+        )
 
 
 if __name__ == "__main__":

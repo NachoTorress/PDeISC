@@ -10,6 +10,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { providerNames } from "./types";
 import type { SocialInput, SocialStatus } from "./types";
 
+/** Recoge los datos faltantes del perfil para completar el acceso social. */
 export function SocialCompleteForm({
   status,
   input,

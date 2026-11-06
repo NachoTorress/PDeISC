@@ -1,3 +1,4 @@
+-- Crea proyectos, equipos y registros de revisión.
 CREATE TABLE IF NOT EXISTS projects (
   id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
   creator_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,

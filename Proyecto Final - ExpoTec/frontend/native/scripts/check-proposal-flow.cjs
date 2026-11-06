@@ -20,6 +20,7 @@ const resource = { id: "proposal-resource", name: "Proyector", description: "Fix
 const fields = { name: "Huerta de prueba", description: "Este proyecto ficticio permite comprobar el recorrido completo sin guardar datos reales.", course: "6° 1° · Informática", imageUrl: photo, videoUrl: "https://video-fixture.invalid/demo.mp4", isSoftwareProject: true, githubUrl: "https://github.com/equipo/prueba", websiteUrl: "https://project-fixture.invalid/" };
 const initialProject = { id: "proposal-project", ...fields, name: "Propuesta para corregir", createdAt: "2026-10-23", status: "changes", creatorId: creator.id, members: [creator, actor, pupil], teachers: [teacher], subjects: ["Programación"], version: 7, feedback: "Aclarar cómo se usa el sensor y conservar los integrantes del equipo.", booth: { id: "proposal-booth", spaceId: space.id, spaceName: space.name, furnitureId: "M01" }, resources: [{ resourceId: resource.id, name: resource.name, quantity: 2, reservedQuantity: 0, total: 6, available: 6, archivedAt: null, unavailable: 0, outstanding: 0 }], reviews: [] };
 
+/** Ejecuta las comprobaciones de interfaz del flujo y comunica sus resultados. */
 async function run() {
   await fs.mkdir(output, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE });

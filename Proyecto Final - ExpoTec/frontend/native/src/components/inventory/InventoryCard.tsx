@@ -10,6 +10,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { formatDate } from "../../lib/format";
 import type { InventoryResource } from "../../lib/sharedInventory";
 
+/** Presenta cantidades y acciones disponibles para un recurso. */
 export function InventoryCard({
   resource,
   canManage,

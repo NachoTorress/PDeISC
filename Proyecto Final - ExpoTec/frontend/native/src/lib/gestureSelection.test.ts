@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { lockGestureSelection } from "./gestureSelection.web";
 
+/** Simula los eventos de un elemento para probar la selección por gestos. */
 class FakeElement extends EventTarget {
   constructor(readonly editable = false) {
     super();

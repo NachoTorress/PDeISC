@@ -7,6 +7,7 @@ import { Heading } from "../ui";
 import { useTheme } from "../../contexts/ThemeContext";
 import type { SocialStatus } from "./types";
 
+/** Presenta el título y la explicación del acceso mediante proveedores. */
 export function SocialHeading({
   pending,
   status,

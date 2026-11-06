@@ -1,3 +1,4 @@
+/** Monta la interfaz web en el elemento raíz del documento. */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';

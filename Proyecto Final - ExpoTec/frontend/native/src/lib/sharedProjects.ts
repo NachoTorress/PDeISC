@@ -8,9 +8,11 @@ export interface ProjectPerson {
   firstName: string;
   lastName: string;
 }
+/** Datos públicos de una persona vinculada al proyecto. */
 export interface ProjectParticipant extends ProjectPerson {
   id: string;
 }
+/** Estados que devuelve la API para una propuesta compartida. */
 export type SharedProjectStatus =
   "pending" | "changes" | "approved" | "cancelled";
 /** Proyecto de la lista. */

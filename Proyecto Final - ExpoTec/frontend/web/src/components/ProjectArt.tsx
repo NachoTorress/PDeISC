@@ -1,8 +1,10 @@
+/** Representa la imagen o ilustración de un proyecto. */
 import { RobotIcon, PlantIcon, LightningIcon, CloudSunIcon } from '@phosphor-icons/react';
 import type { Project } from '../lib/types';
 
 const icons = { robot: RobotIcon, plant: PlantIcon, energy: LightningIcon, weather: CloudSunIcon };
 
+/** Representa la imagen o ilustración de un proyecto. */
 export default function ProjectArt({
   project,
   compact = false,

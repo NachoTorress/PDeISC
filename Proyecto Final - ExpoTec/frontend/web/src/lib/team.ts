@@ -1,5 +1,7 @@
+/** Normalización, pertenencia y validación de equipos de proyectos. */
 import type { DemoState, Project } from './types';
 
+/** Datos mínimos de un proyecto necesarios para consultar sus integrantes. */
 type ProjectTeam = Pick<Project, 'student'> & Partial<Pick<Project, 'members'>>;
 
 const cleanName = (name: string) => name.normalize('NFC').trim().replace(/\s+/gu, ' ');
@@ -12,6 +14,7 @@ export function projectMembers(project: ProjectTeam): string[] {
   return Array.isArray(project.members) ? [...project.members] : [project.student];
 }
 
+/** Comprueba pertenencia al equipo normalizando espacios y mayúsculas. */
 export function isProjectMember(project: ProjectTeam, name: string): boolean {
   return projectMembers(project).some((member) => memberKey(member) === memberKey(name));
 }

@@ -19,7 +19,9 @@ import { createAuthRequest } from "../lib/authRequest";
 import { sessionStorage } from "../lib/sessionStorage";
 import type { AccountUser } from "../lib/authTypes";
 
+/** Contrato del cliente de API requerido por este módulo. */
 type Client = ReturnType<typeof createAuthClient>;
+/** Cuenta, sesión y operaciones de acceso compartidas con las pantallas. */
 interface AuthValue {
   user: AccountUser | null;
   ready: boolean;

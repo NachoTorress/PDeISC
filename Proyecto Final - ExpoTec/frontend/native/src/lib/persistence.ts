@@ -10,18 +10,21 @@ function invalid(path: string): never {
   throw new Error(`Los datos guardados no son válidos: ${path}.`);
 }
 
+/** Exige un objeto de datos y señala la ruta del valor inválido. */
 function record(value: unknown, path: string): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value))
     invalid(path);
   return value as Record<string, unknown>;
 }
 
+/** Exige texto y permite vacío únicamente cuando se solicita. */
 function text(value: unknown, path: string, allowEmpty = false): string {
   if (typeof value !== "string" || (!allowEmpty && !value.trim()))
     invalid(path);
   return value;
 }
 
+/** Exige un número finito comprendido entre los límites indicados. */
 function number(
   value: unknown,
   path: string,
@@ -38,6 +41,7 @@ function number(
   return value;
 }
 
+/** Exige un entero seguro comprendido entre los límites indicados. */
 function integer(
   value: unknown,
   path: string,
@@ -49,6 +53,7 @@ function integer(
   return result;
 }
 
+/** Comprueba que el texto represente un día real en formato AAAA-MM-DD. */
 function date(value: unknown, path: string) {
   const iso = text(value, path);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) invalid(path);
@@ -60,17 +65,20 @@ function date(value: unknown, path: string) {
     invalid(path);
 }
 
+/** Exige un arreglo e informa su ruta si el valor no es válido. */
 function list(value: unknown, path: string): unknown[] {
   if (!Array.isArray(value)) invalid(path);
   return value;
 }
 
+/** Lee una lista no vacía cuyos elementos deben ser textos no vacíos. */
 function names(value: unknown, path: string): string[] {
   const values = list(value, path);
   if (!values.length) invalid(path);
   return values.map((item, index) => text(item, `${path}[${index}]`));
 }
 
+/** Lee una lista de objetos y rechaza identificadores duplicados. */
 function records(value: unknown, path: string): Record<string, unknown>[] {
   const ids = new Set<string>();
   return list(value, path).map((item, index) => {

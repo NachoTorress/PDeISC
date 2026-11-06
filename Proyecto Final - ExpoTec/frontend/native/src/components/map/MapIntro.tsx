@@ -9,6 +9,7 @@ import { NewDemoSpaceForm } from "./NewDemoSpaceForm";
 import { useDemo } from "../../hooks/useDemo";
 import type { Role } from "../../lib/types";
 
+/** Introduce las opciones de consulta y uso del plano. */
 export function MapIntro({
   role,
   adding,

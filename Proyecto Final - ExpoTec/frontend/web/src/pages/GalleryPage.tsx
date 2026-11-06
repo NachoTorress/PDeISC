@@ -1,3 +1,4 @@
+/** Muestra la galería de imágenes de la demostración. */
 import { useState } from 'react';
 import {
   MagnifyingGlassIcon,
@@ -10,6 +11,7 @@ import ProjectArt from '../components/ProjectArt';
 import { formatDate } from '../lib/format';
 import { projectMembers } from '../lib/team';
 
+/** Muestra la galería de imágenes de la demostración. */
 export default function GalleryPage({
   onSelect,
   onPresentation,
@@ -118,6 +120,7 @@ export default function GalleryPage({
   );
 }
 
+/** Dibuja el motivo de reemplazo cuando no se usa una fotografía. */
 function PlantIconFallback() {
   return (
     <>

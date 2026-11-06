@@ -12,6 +12,7 @@ export type PhotoUploadOptions = {
 };
 
 // Protocolo PUT del SDK oficial @vercel/blob 2.8: sólo usa el permiso temporal de esta foto.
+/** Valida ruta y token temporal y construye URL y cabeceras para Blob privado. */
 export function photoUploadRequest(
   pathname: string,
   token: string,

@@ -1,6 +1,10 @@
+/** Perfiles disponibles para aplicar permisos en la demostración local. */
 export type Role = 'student' | 'teacher' | 'loans' | 'admin' | 'guest';
+/** Identificadores de las secciones que admite la navegación. */
 export type Page = 'map' | 'projects' | 'loans' | 'inventory' | 'gallery' | 'tv';
+/** Estados posibles del ciclo de revisión de una propuesta. */
 export type ProjectStatus = 'pending' | 'approved' | 'changes';
+/** Elemento del plano con posición, dimensiones y propiedades visuales. */
 export interface Furniture {
   id: string;
   type: 'table' | 'bench' | 'power' | 'label';
@@ -13,6 +17,7 @@ export interface Furniture {
   /** Texto visible de una etiqueta de orientación. */
   text?: string;
 }
+/** Espacio de la exposición y mobiliario que contiene. */
 export interface Space {
   id: string;
   name: string;
@@ -20,12 +25,14 @@ export interface Space {
   createdAt: string;
   furniture: Furniture[];
 }
+/** Recurso del inventario con sus cantidades y condición. */
 export interface Resource {
   id: string;
   name: string;
   total: number;
   createdAt: string;
 }
+/** Propuesta local con equipo, ubicación, estado y recursos solicitados. */
 export interface Project {
   id: string;
   name: string;
@@ -51,6 +58,7 @@ export interface Project {
   feedback: string;
   createdAt: string;
 }
+/** Entrega de recursos y cantidades devueltas en la demostración. */
 export interface Loan {
   id: string;
   projectId: string;
@@ -61,12 +69,14 @@ export interface Loan {
   notes: string;
   createdAt: string;
 }
+/** Estado completo de la demostración guardado en el dispositivo. */
 export interface DemoState {
   spaces: Space[];
   projects: Project[];
   resources: Resource[];
   loans: Loan[];
 }
+/** Operaciones admitidas para modificar el estado local de demostración. */
 export type Mutation =
   | { type: 'saveProject'; project: Project }
   | { type: 'review'; id: string; action: 'approve' | 'changes' | 'reopen'; feedback?: string }

@@ -5,6 +5,7 @@ import type { ImagePickerAsset } from "expo-image-picker";
 import { selectedPhoto } from "./photoUpload";
 import type { PhotoBody } from "./photoUploadBody";
 
+/** Prepara el archivo seleccionado y rechaza fotos de más de 40 megapíxeles. */
 export async function preparePhoto(
   asset: ImagePickerAsset,
 ): Promise<PhotoBody> {

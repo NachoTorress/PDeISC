@@ -1,3 +1,4 @@
+/** Muestra existencias, reservas y edición de recursos locales. */
 import { Fragment, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Cube, MagnifyingGlass, PencilSimple, Plus, Trash, X } from '@phosphor-icons/react';
@@ -154,6 +155,7 @@ function ResourceForm({ resource, onClose }: { resource?: Resource; onClose: () 
   );
 }
 
+/** Muestra existencias, reservas y edición de recursos locales. */
 export default function InventoryPage() {
   const { state, role, mutate, notify } = useDemo();
   const [search, setSearch] = useState('');

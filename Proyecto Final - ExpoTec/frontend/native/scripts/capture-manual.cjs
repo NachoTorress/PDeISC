@@ -149,6 +149,7 @@ function answer(endpoint, body, signedIn) {
   return [400, { error: { message: `Operación no preparada para las capturas: ${endpoint}` } }];
 }
 
+/** Genera las capturas de pantallas utilizadas en el manual. */
 async function main() {
   await fs.mkdir(output, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE });

@@ -1,3 +1,4 @@
+/** Define la paleta del tema oscuro. */
 [data-theme='dark'] {
   color-scheme: dark;
   --page: #19221e;

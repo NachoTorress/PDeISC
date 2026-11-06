@@ -1,3 +1,4 @@
+/** Ofrece las acciones de administración del espacio seleccionado. */
 import { useState } from 'react';
 import {
   PlusIcon,
@@ -12,6 +13,7 @@ import { useDemo } from '../hooks/useDemo';
 import { TABLE_SIZE } from '../lib/layout';
 import type { Furniture, Space } from '../lib/types';
 
+/** Ofrece las acciones de administración del espacio seleccionado. */
 export default function SpaceTools({
   space,
   selected,

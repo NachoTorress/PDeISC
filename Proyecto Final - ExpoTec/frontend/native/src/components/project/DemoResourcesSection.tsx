@@ -4,6 +4,7 @@ import { Section } from "../ui";
 import { useTheme } from "../../contexts/ThemeContext";
 import type { Project, Resource } from "../../lib/types";
 
+/** Muestra la asignación de recursos del proyecto de demostración. */
 export function DemoResourcesSection({
   project,
   resources,

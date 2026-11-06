@@ -1,3 +1,4 @@
+-- Crea espacios, mobiliario, puestos y asignaciones.
 CREATE TABLE IF NOT EXISTS spaces (
   id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
   name VARCHAR(80) NOT NULL,

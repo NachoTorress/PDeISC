@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Button, Card, Field } from "../ui";
 
+/** Recoge nombre y medidas para crear un espacio en la demostración. */
 export function NewDemoSpaceForm({
   onCreate,
   onCancel,

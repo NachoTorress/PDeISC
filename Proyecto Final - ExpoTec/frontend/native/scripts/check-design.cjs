@@ -116,6 +116,7 @@ const loans = projects.slice(0, 3).map((project, index) => ({
   returns: [],
 }));
 
+/** Ejecuta la revisión visual de las pantallas de la aplicación. */
 async function main() {
   await fs.mkdir(output, { recursive: true });
   const browser = await chromium.launch({

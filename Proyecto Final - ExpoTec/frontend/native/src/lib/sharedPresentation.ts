@@ -14,10 +14,12 @@ export interface PresentationProject {
   teachers: { firstName: string; lastName: string }[];
   subjects: string[];
 }
+/** Página de resultados de la presentación pública. */
 export interface PresentationPage {
   projects: PresentationProject[];
   nextCursor: string | null;
 }
+/** Filtros de consulta de proyectos para la presentación pública. */
 type PublicQuery = ApiCall;
 
 /** Recorre todas las páginas de `POST /api/projects/presentation/query`. */

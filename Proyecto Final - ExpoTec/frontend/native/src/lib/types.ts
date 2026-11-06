@@ -3,8 +3,10 @@ import type { DemoGalleryPhoto } from "./demoGallery";
 
 /** Perfil de la demostración. */
 export type Role = "student" | "teacher" | "loans" | "admin" | "guest";
+/** Identificadores de las secciones que admite la navegación. */
 export type Page =
   "map" | "projects" | "loans" | "inventory" | "gallery" | "photos" | "tv";
+/** Estados posibles del ciclo de revisión de una propuesta. */
 export type ProjectStatus = "pending" | "approved" | "changes";
 /** Pieza del plano: mesa, banco, punto eléctrico o rótulo. */
 export interface Furniture {

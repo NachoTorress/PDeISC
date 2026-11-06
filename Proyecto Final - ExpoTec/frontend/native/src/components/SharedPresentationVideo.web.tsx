@@ -1,6 +1,7 @@
 /** Video de la presentación TV en el navegador (respeta las reglas de reproducción automática). */
 import { useEffect, useRef } from "react";
 
+/** Reproduce el video del proyecto en la presentación de esta plataforma. */
 export function SharedPresentationVideo({
   uri,
   playing,

@@ -1,3 +1,4 @@
+/** Muestra los proyectos de demostración en la presentación rotativa. */
 import { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeftIcon,
@@ -12,6 +13,7 @@ import { useDemo } from '../hooks/useDemo';
 import ProjectArt from '../components/ProjectArt';
 import { projectMembers } from '../lib/team';
 
+/** Muestra los proyectos de demostración en la presentación rotativa. */
 export default function PresentationPage({ onBack }: { onBack: () => void }) {
   const { state, notify } = useDemo();
   const projects = state.projects.filter((p) => p.status === 'approved');

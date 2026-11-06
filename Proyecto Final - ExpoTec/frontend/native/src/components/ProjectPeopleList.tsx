@@ -6,6 +6,7 @@ import type { ProjectParticipant } from "../lib/sharedProjects";
 import type { ProjectPeopleRole } from "../lib/projectPeople";
 import { Button, InlineConfirm } from "./ui";
 
+/** Lista los integrantes o docentes vinculados al proyecto. */
 export default function ProjectPeopleList({
   role,
   people,

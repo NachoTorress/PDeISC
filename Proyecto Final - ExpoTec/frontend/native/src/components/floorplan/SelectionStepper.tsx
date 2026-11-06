@@ -16,6 +16,7 @@ const typeNames = {
   label: "Zona",
 };
 
+/** Permite recorrer los elementos seleccionables del plano. */
 export function SelectionStepper({
   furniture,
   selectedId,

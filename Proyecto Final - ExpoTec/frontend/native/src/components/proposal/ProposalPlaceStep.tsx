@@ -10,6 +10,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import type { ProposalDraft } from "../../lib/sharedProjects";
 import type { SharedSpace, SpaceSummary } from "../../lib/sharedSpaces";
 
+/** Permite elegir espacio y puesto para la propuesta. */
 export function ProposalPlaceStep({
   visible,
   draft,

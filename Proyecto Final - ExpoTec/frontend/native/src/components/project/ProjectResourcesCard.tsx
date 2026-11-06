@@ -7,6 +7,7 @@ import { Card, Heading } from "../ui";
 import { useTheme } from "../../contexts/ThemeContext";
 import type { SharedProject } from "../../lib/sharedProjects";
 
+/** Presenta los recursos solicitados o asignados al proyecto. */
 export function ProjectResourcesCard({
   project,
 }: {

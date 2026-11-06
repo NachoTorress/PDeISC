@@ -182,6 +182,7 @@ const near = (actual: number, expected: number) =>
     `${actual} debe aproximarse a ${expected}`,
   );
 
+/** Calcula el anclaje opuesto para verificar que el redimensionado lo conserve. */
 function oppositeAnchor(item: Furniture, handle: ResizeHandle) {
   const angle = (item.rotation * Math.PI) / 180;
   const x = handle.includes("e") ? -1 : handle.includes("w") ? 1 : 0;

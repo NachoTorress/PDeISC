@@ -1,3 +1,4 @@
+/** Verifica permisos, estados y geometría del modelo de demostración. */
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { applyMutation, resourceOut, resourceUsed } from './model';
@@ -159,6 +160,7 @@ const drawingTable: Furniture = {
 const near = (actual: number, expected: number) =>
   assert.ok(Math.abs(actual - expected) < 1e-7, `${actual} debe aproximarse a ${expected}`);
 
+/** Calcula el anclaje opuesto para verificar que el redimensionado lo conserve. */
 function oppositeAnchor(item: Furniture, handle: ResizeHandle) {
   const angle = (item.rotation * Math.PI) / 180;
   const x = handle.includes('e') ? -1 : handle.includes('w') ? 1 : 0;

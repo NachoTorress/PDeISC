@@ -13,6 +13,7 @@ const viz = await instance();
 const esc = s => String(s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 const q = JSON.stringify;
 const definitions = new Map();
+/** Registra la descripción, las notas y el estado de una ruta del mapa. */
 function describe(p, summary, note = '', status = 'source') { definitions.set(p, { summary, note, status }); }
 describe('.', 'Proyecto Final - ExpoTec', 'Este proyecto vive dentro del repositorio PDelSC. Las rutas de este mapa empiezan aquí; los demás proyectos del repositorio quedan fuera.');
 describe('frontend', 'Interfaces de usuario: aplicación actual y prototipo anterior.');
@@ -119,6 +120,7 @@ describe('artifacts/android/ExpoTec-0.5.3-9.apk', 'Instalador Android 0.5.3, có
 
 const palette = { source: ['#eef6ff', '#3872a8'], legacy: ['#fff3dd', '#a77925'], output: ['#eaf7ee', '#3e7954'], generated: ['#f0f1f4', '#747c88'], local: ['#f0f1f4', '#747c88'], private: ['#ffeded', '#b25a5a'], external: ['#f1ecff', '#7459a4'] };
 const views = [];
+/** Construye los nodos jerárquicos del inventario de archivos. */
 function tree(id, title, note, paths, direction = 'LR') {
   const nodes = paths.map(p => ({ id: p, path: p, label: p === '.' ? 'ExpoTec/' : path.posix.basename(p) + (p.includes('.') && !definitions.has(p + '/x') ? '' : '/'), ...definitions.get(p) }));
   const edges = [];
@@ -147,6 +149,7 @@ const tracked = execFileSync('git', ['ls-files', '-z', '--', '.'], {cwd:root,enc
 const products = ['docs/MAPA_DEL_CODIGO.md','docs/scripts/build_code_map.mjs','docs/scripts/code_map_viewer.html.in','docs/diagramas/mapa-codigo.html','docs/diagramas/mapa-codigo.json','docs/diagramas/Mapa-del-codigo-ExpoTec.drawio',...views.map(v=>`docs/diagramas/${v.id}.svg`)];
 const files = [...new Set([...tracked,...products])].filter(p=> !/(^|\/)\.env(?:\.|$)/.test(p) || /\.example$/.test(p)).sort((a,b)=>a.localeCompare(b,'es'));
 const all = new Map();
+/** Incorpora una ruta y sus directorios al inventario del mapa. */
 function addPath(p, type) { if (!all.has(p)) all.set(p,{path:p,type}); }
 addPath('.', 'directory');
 for (const p of files) { addPath(p,'file'); for(let parent=path.posix.dirname(p);parent!=='.';parent=path.posix.dirname(parent))addPath(parent,'directory'); }
@@ -181,6 +184,7 @@ for (const v of views) for(const n of v.nodes) if(!n.path.startsWith('@')) {
   n.label=(n.id==='.'?'ExpoTec':(v.id==='mapa-compilacion'?n.label.replace(/\/$/,''):path.posix.basename(n.path)))+(entry.type==='directory'?'/':'');
 }
 const wrap=(text,limit=34)=>{const lines=[''];for(const word of text.split(/\s+/)){if((lines.at(-1)+' '+word).length>limit&&lines.at(-1))lines.push(word);else lines[lines.length-1]+=(lines.at(-1)?' ':'')+word;}return lines;};
+/** Genera la representación del mapa de código para su visualización. */
 function graph(v) {
   return `digraph G { graph [rankdir=${v.direction} bgcolor="transparent" nodesep=0.20 ranksep=0.60 pad=0.25 splines=${v.id==='mapa-compilacion'?'polyline':'ortho'} ordering=out]; node [shape=box style="rounded,filled" fontname="Arial" margin="0.15,0.12" penwidth=1.1]; edge [color="#8a9aaa" arrowsize=0.55 fontname="Arial" fontsize=11];\n`+
   v.nodes.map((n,i)=>{const [fill,stroke]=palette[n.status??'source'];const lines=wrap(n.summary,v.direction==='TB'?29:35);return `${q(n.id)} [id="mapnode${i}" fillcolor=${q(fill)} color=${q(stroke)} label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="13"><B>${esc(n.label)}</B></FONT></TD></TR>${lines.map(l=>`<TR><TD ALIGN="LEFT"><FONT POINT-SIZE="11">${esc(l)}</FONT></TD></TR>`).join('')}</TABLE>>];`;}).join('\n')+'\n'+

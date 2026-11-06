@@ -25,6 +25,7 @@ import { galleryStatusLabel } from "../lib/gallery";
 import type { GalleryPhoto } from "../lib/gallery";
 import { formatDate } from "../lib/format";
 
+/** Valores editables del formulario de la galería compartida. */
 type Form =
   | { actorId: string; type: "submit" }
   | {

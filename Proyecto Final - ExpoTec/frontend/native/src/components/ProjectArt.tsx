@@ -4,6 +4,7 @@ import type { Project } from "../lib/types";
 import { Icon } from "./Icon";
 import { useTheme } from "../contexts/ThemeContext";
 import PhotoImage from "./PhotoImage";
+/** Representa la imagen o ilustración de un proyecto. */
 export default function ProjectArt({
   project,
   compact = false,

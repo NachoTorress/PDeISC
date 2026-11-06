@@ -5,6 +5,7 @@ import { SocialProviderIcon } from "../SocialProviderIcon";
 import { useTheme } from "../../contexts/ThemeContext";
 import type { Provider } from "./types";
 
+/** Presenta la acción de ingreso con un proveedor y su estado disponible. */
 export function ProviderButton({
   provider,
   disabled,

@@ -1,3 +1,4 @@
+-- Crea cuentas, roles y sesiones de autenticación.
 CREATE TABLE IF NOT EXISTS users (
   id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
   email VARCHAR(254) CHARACTER SET ascii COLLATE ascii_bin NOT NULL UNIQUE,

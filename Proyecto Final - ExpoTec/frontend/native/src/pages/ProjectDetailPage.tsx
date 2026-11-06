@@ -26,6 +26,7 @@ import {
   Section,
 } from "../components/ui";
 
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 type Props = {
   projectId: string;
   onBack: () => void;

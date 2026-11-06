@@ -42,6 +42,7 @@ function summary(space: SharedSpace): SpaceSummary {
   };
 }
 
+/** Coordina la carga y las operaciones de los espacios compartidos. */
 export function useSharedSpaces() {
   const { client, user, ready } = useAuth();
   const [spaces, setSpaces] = useState<SpaceSummary[] | null>(null);

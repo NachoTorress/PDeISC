@@ -3,6 +3,7 @@
  * y error de la API con su código HTTP y los mensajes por campo.
  */
 export type AccountRole = "student" | "teacher" | "loans" | "admin" | "guest";
+/** Datos de la cuenta autenticada y roles informados por la API. */
 export interface AccountUser {
   id: string;
   email: string;
@@ -11,6 +12,7 @@ export interface AccountUser {
   roles: AccountRole[];
   createdAt: string;
 }
+/** Correo y contraseña utilizados al iniciar sesión. */
 export interface Credentials {
   email: string;
   password: string;
@@ -18,12 +20,14 @@ export interface Credentials {
   lastName?: string;
   accountType?: "student" | "guest";
 }
+/** Respuesta de sesión con cuenta, tokens y vencimiento. */
 export interface AccountSession {
   user: AccountUser;
   accessToken: string;
   refreshToken?: string;
   expiresIn: number;
 }
+/** Contrato de almacenamiento de la sesión según la plataforma. */
 export interface SessionStorage {
   browser: boolean;
   read(): Promise<string | null>;

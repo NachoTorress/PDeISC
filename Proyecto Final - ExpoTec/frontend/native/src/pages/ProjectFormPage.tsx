@@ -23,6 +23,7 @@ import {
 import type { ProjectDraft } from "../components/projectFormModel";
 import { Button, Heading, Screen } from "../components/ui";
 
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 type Props = { projectId?: string; onDone: () => void };
 
 /** La clave crea un borrador nuevo cuando cambia el proyecto elegido. */

@@ -7,6 +7,7 @@ import type {
   RefAttributes,
 } from "react";
 import type { ScrollView, ScrollViewProps } from "react-native";
+/** Declara el contenedor que adapta el contenido al teclado por plataforma. */
 export function KeyboardRoot(props: { children: ReactNode }): ReactNode;
 export const FormScrollView: ForwardRefExoticComponent<
   ScrollViewProps & RefAttributes<Pick<ScrollView, "scrollTo">>

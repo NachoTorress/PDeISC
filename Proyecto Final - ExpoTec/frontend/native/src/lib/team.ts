@@ -1,6 +1,7 @@
 /** Integrantes de proyectos en la demostración (nombres ficticios). */
 import type { DemoState, Project } from "./types";
 
+/** Datos mínimos de un proyecto necesarios para consultar sus integrantes. */
 type ProjectTeam = Pick<Project, "student"> & Partial<Pick<Project, "members">>;
 
 const cleanName = (name: string) =>

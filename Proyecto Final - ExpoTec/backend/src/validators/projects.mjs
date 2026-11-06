@@ -4,6 +4,7 @@ import { objectBody, userId } from './auth.mjs';
 import { spaceVersion } from './spaces.mjs';
 import { resourceRequests } from './inventory.mjs';
 
+/** Lanza el error de validación con los campos inválidos de la solicitud. */
 function invalid(fields) {
   if (Object.keys(fields).length) throw new HttpError(400, 'VALIDATION_ERROR', 'Revisá los datos del proyecto.', fields);
 }

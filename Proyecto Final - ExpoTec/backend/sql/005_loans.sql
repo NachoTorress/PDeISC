@@ -1,3 +1,4 @@
+-- Crea préstamos, devoluciones e historial de condición.
 CREATE TABLE IF NOT EXISTS loans (
   id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
   project_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,

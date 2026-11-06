@@ -1,7 +1,9 @@
+/** Edita integrantes del equipo y muestra errores de validación por fila. */
 import { useEffect, useRef, useState } from 'react';
 import { Plus, Trash } from '@phosphor-icons/react';
 import { memberKey, teamErrors } from '../lib/team';
 
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 type Props = {
   members: string[];
   onChange: (members: string[]) => void;

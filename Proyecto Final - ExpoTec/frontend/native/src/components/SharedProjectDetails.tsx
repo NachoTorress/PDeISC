@@ -5,6 +5,7 @@ import type { ProposalDraft } from "../lib/sharedProjects";
 import PhotoUploadField from "./PhotoUploadField";
 import { Button, Card, CheckRow, Field, Heading, InlineConfirm } from "./ui";
 
+/** Muestra los datos del proyecto compartido y las acciones permitidas. */
 export default function SharedProjectDetails({
   draft,
   saving,

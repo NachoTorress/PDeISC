@@ -9,6 +9,7 @@ import { Text } from "react-native";
 import { Button, Card, InlineConfirm } from "../ui";
 import { useTheme } from "../../contexts/ThemeContext";
 
+/** Muestra un error de la propuesta junto con su acción de recuperación. */
 export function ProposalErrorCard({
   error,
   hasDraft,

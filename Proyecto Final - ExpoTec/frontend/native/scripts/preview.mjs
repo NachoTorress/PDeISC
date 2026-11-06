@@ -1,3 +1,4 @@
+/** Sirve la exportación web local y redirige las solicitudes de API al backend. */
 import http from "node:http";
 import https from "node:https";
 import { readFile, stat } from "node:fs/promises";

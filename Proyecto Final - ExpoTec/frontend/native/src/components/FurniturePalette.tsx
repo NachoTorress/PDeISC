@@ -24,6 +24,7 @@ const tools: { type: Furniture["type"]; label: string; fullLabel: string }[] = [
   { type: "power", label: "Toma", fullLabel: "punto eléctrico" },
   { type: "label", label: "Zona", fullLabel: "etiqueta de zona" },
 ];
+/** Datos y callbacks de las herramientas de mobiliario. */
 type ToolProps = {
   type: Furniture["type"];
   label: string;

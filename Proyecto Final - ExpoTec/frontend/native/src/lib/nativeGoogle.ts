@@ -2,7 +2,9 @@
 import { AuthError } from "./authTypes";
 import { socialFlowId } from "./mobileSocial";
 
+/** Parámetros empleados al iniciar el acceso con Google. */
 type Query = <T>(path: string, body: object) => Promise<T>;
+/** Contrato del módulo nativo de ingreso con Google. */
 type Google = {
   configure: (options: {
     webClientId: string;

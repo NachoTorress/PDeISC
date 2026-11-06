@@ -6,6 +6,7 @@ import { memberKey, teamErrors } from "../lib/team";
 import { Button, Field, InlineConfirm, Section } from "./ui";
 import { Icon } from "./Icon";
 
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 type Props = {
   members: string[];
   onChange: (members: string[]) => void;

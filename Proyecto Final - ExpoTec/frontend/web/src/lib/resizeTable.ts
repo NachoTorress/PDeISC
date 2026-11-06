@@ -1,7 +1,10 @@
+/** Calcula el tamaño y la posición de mesas según el gesto y los límites del plano. */
 import { TABLE_LIMITS, TABLE_SIZE } from './layout';
 import type { Furniture } from './types';
 
+/** Bordes y esquinas desde los que puede redimensionarse una mesa. */
 export type ResizeHandle = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
+/** Posición y dimensiones utilizadas por los controles del plano. */
 type Geometry = Pick<Furniture, 'x' | 'y'> & { width: number; height: number };
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 

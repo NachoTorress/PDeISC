@@ -1,3 +1,4 @@
+/** Define las reglas de análisis estático del código de esta aplicación. */
 import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';

@@ -8,6 +8,7 @@ import { readConfig } from '../src/config/env.mjs';
 export const testConfig = readConfig({ JWT_SECRET: 'test-secret-'.repeat(5), CORS_ORIGINS: 'http://localhost:8081' });
 
 // Sustituye solo el almacenamiento; HTTP, validación, hash y JWT son los de producción.
+/** Crea un repositorio de cuentas y sesiones en memoria para las pruebas. */
 export function memoryRepository() {
   const users = new Map(), sessions = new Map(), tokens = new Map();
   const publicUser = user => {
@@ -55,6 +56,7 @@ export function memoryRepository() {
   };
 }
 
+/** Inicia la aplicación de prueba en un puerto disponible. */
 export async function listen(app) {
   const server = app.listen(0, '127.0.0.1');
   await new Promise(resolve => server.once('listening', resolve));

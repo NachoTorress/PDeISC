@@ -4,6 +4,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import { proposalSteps } from "../lib/proposalSteps";
 import { Icon } from "./Icon";
 
+/** Permite avanzar o retroceder entre los pasos de la propuesta. */
 export default function ProposalStepNavigation({
   step,
   complete,

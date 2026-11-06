@@ -32,6 +32,7 @@ export type TabRoutes = {
   photos: undefined;
   tv: undefined;
 };
+/** Destino de navegación con sus parámetros de ruta. */
 export type Destination = {
   id: keyof TabRoutes;
   label: string;

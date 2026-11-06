@@ -10,6 +10,7 @@ const CURRENT = "expotec-demo.json";
 const BACKUP = "expotec-demo.backup.json";
 const PENDING = "expotec-demo.pending.json";
 
+/** Contenedor del estado local utilizado por la persistencia nativa. */
 type Stored = { raw: string | null; source: File | null };
 
 /** Prefiere el último archivo confirmado; un archivo incompleto conserva su respaldo anterior. */

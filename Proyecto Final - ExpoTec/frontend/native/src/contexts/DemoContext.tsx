@@ -11,6 +11,7 @@ import { cloneData } from "../lib/clone";
 import { newId } from "../lib/helpers";
 import { useTheme } from "./ThemeContext";
 
+/** Estado y operaciones que comparte el proveedor de demostración. */
 interface DemoValue {
   state: DemoState;
   role: Role;

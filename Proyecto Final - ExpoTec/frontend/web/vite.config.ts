@@ -1,3 +1,4 @@
+/** Configura Vite para compilar y servir el prototipo web. */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 

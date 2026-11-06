@@ -62,6 +62,7 @@ const project = {
   booth: { id: "booth-fixture", spaceId: initialSpace.id, spaceName: initialSpace.name, furnitureId: "M01" },
 };
 
+/** Ejecuta las comprobaciones de interfaz del flujo y comunica sus resultados. */
 async function run() {
   await fs.mkdir(output, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE });

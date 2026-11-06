@@ -1,3 +1,4 @@
+/** Presenta la ficha completa del proyecto y sus acciones disponibles. */
 import { useState } from 'react';
 import {
   ArrowCounterClockwise,

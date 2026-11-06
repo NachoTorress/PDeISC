@@ -5,6 +5,7 @@ import type { ProposalDraft } from "../lib/sharedProjects";
 import { Button, Card, Heading } from "./ui";
 import GalleryImage from "./GalleryImage";
 
+/** Resume los datos elegidos antes del envío de la propuesta. */
 export default function ProposalReview({
   draft,
   spaceName,

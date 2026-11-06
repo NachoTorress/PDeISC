@@ -2,6 +2,7 @@
 import { Text, View, useWindowDimensions } from "react-native";
 import { useTheme } from "../../contexts/ThemeContext";
 
+/** Presenta el contexto del acceso o registro de cuenta. */
 export function AccountIntro({ register }: { register: boolean }) {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();

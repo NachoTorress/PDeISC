@@ -4,6 +4,7 @@ import type { Furniture } from "./types";
 
 /** Tirador: lados y esquinas. */
 export type ResizeHandle = "n" | "ne" | "e" | "se" | "s" | "sw" | "w" | "nw";
+/** Posición y dimensiones utilizadas por los controles del plano. */
 type Geometry = Pick<Furniture, "x" | "y"> & { width: number; height: number };
 const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));

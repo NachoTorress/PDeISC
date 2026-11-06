@@ -1,3 +1,4 @@
+/** Compone la aplicación y sus proveedores de estado. */
 import { useEffect, useRef, useState } from 'react';
 import {
   MapTrifoldIcon,
@@ -45,6 +46,7 @@ const navigation = [
   { id: 'tv' as Page, label: 'Presentación en TV', icon: TelevisionIcon },
 ];
 
+/** Compone la navegación y la sección activa del prototipo web. */
 function Shell() {
   const { state, role, setRole, notice } = useDemo();
   const { theme, toggleTheme } = useTheme();
@@ -334,6 +336,7 @@ function Shell() {
   );
 }
 
+/** Monta los proveedores y la interfaz principal del prototipo web. */
 export default function App() {
   return (
     <DemoProvider>

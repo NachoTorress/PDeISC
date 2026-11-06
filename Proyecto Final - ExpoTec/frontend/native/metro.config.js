@@ -1,3 +1,4 @@
+/** Configura la resolución y transformación de módulos de Expo. */
 const path = require("node:path");
 const { getDefaultConfig } = require("expo/metro-config");
 

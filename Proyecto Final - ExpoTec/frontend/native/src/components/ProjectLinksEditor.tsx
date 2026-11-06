@@ -14,6 +14,7 @@ export type ProjectLinksValue = {
   githubUrl: string;
   websiteUrl: string;
 };
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 type Props = ProjectLinksValue & {
   onChange: (value: Partial<ProjectLinksValue>) => void;
   submitAttempt: boolean;

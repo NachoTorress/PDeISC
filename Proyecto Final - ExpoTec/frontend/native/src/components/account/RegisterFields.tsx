@@ -6,6 +6,7 @@
 import { Choice, Field } from "../ui";
 import type { Credentials } from "../../lib/authTypes";
 
+/** Recoge los datos personales requeridos al registrar la cuenta. */
 export function RegisterFields({
   accountType,
   input,

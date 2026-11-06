@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { Button, Section } from "../ui";
 import { useTheme } from "../../contexts/ThemeContext";
 
+/** Muestra los enlaces externos admitidos para el proyecto. */
 export function ProjectLinksSection({
   github,
   website,

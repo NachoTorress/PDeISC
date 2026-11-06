@@ -10,6 +10,7 @@ import { assertOwnedImage } from '../src/repositories/uploads.mjs';
 import { createApp } from '../src/create-app.mjs';
 import { memoryRepository, testConfig, listen } from './support.mjs';
 
+/** Prepara el servicio de cargas con dependencias controladas para las pruebas. */
 function uploads() {
   const images = new Map(), published = new Set();
   return { images, published,

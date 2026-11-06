@@ -10,6 +10,7 @@ import { formatDate } from "../../lib/format";
 import type { Furniture, Space } from "../../lib/types";
 import type { SharedSpace } from "../../lib/sharedSpaces";
 
+/** Datos del puesto asociado a una mesa del espacio. */
 type Booth = SharedSpace["booths"][number];
 
 /** Título visible de la pieza elegida. */
@@ -21,6 +22,7 @@ function title(chosen: Furniture | undefined, booth: boolean) {
   return chosen.type === "bench" ? "Banco" : "Punto eléctrico";
 }
 
+/** Muestra los datos del espacio y sus puestos habilitados. */
 export function SpaceDetailsCard({
   space,
   chosen,

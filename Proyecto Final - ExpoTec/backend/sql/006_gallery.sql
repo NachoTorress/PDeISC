@@ -1,3 +1,4 @@
+-- Crea fotos de galería y registros de moderación.
 INSERT IGNORE INTO roles (code) VALUES ('guest');
 
 CREATE TABLE IF NOT EXISTS gallery_photos (

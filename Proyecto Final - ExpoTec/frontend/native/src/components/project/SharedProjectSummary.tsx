@@ -12,6 +12,7 @@ import { formatDate } from "../../lib/format";
 import { sharedStatusLabel } from "../../lib/sharedProjects";
 import type { SharedProject } from "../../lib/sharedProjects";
 
+/** Resume la identidad, el estado y la descripción del proyecto compartido. */
 export function SharedProjectSummary({
   project,
   revision,

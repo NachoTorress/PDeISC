@@ -1,3 +1,4 @@
+-- Crea el registro de archivos de imágenes subidos.
 CREATE TABLE IF NOT EXISTS image_uploads (
   id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
   owner_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,

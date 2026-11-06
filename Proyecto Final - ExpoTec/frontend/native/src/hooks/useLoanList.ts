@@ -14,10 +14,12 @@ import { useFocusEffect } from "@react-navigation/native";
 import type { useAuth } from "../contexts/AuthContext";
 import type { LoanSummary } from "../lib/sharedLoans";
 
+/** Contrato del cliente de API requerido por este módulo. */
 type Client = ReturnType<typeof useAuth>["client"];
 /** Totales de préstamos abiertos en todas las jornadas. */
 type Summary = { pendingCount: number; pendingQuantity: number };
 
+/** Carga los préstamos compartidos y expone su actualización a la pantalla. */
 export function useLoanList({
   client,
   enabled,

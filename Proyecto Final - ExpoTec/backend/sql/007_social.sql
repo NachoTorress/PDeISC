@@ -1,3 +1,4 @@
+-- Incorpora identidades y flujos de autenticación social.
 CREATE TABLE IF NOT EXISTS social_providers (
   code VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY
 ) ENGINE=InnoDB;

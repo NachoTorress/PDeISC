@@ -10,6 +10,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { formatDate } from "../../lib/format";
 import type { Project, Role, Space } from "../../lib/types";
 
+/** Presenta la vista general de los espacios de la exposición. */
 export function MapOverview({
   space,
   tables,

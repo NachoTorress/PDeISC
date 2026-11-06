@@ -13,6 +13,7 @@ function savable(draft: SpaceDraft) {
   );
 }
 
+/** Ofrece guardar, cancelar y eliminar durante la edición del espacio. */
 export function SpaceEditActions({
   editing,
   busy,

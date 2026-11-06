@@ -7,6 +7,7 @@ import { Chip, Heading } from "./ui";
 import { Icon } from "./Icon";
 import type { PresentationProject } from "../lib/sharedPresentation";
 
+/** Compone la ficha pública del proyecto para la presentación. */
 export function SharedPresentationCard({
   project,
   video,

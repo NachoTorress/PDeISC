@@ -7,6 +7,7 @@ import type { ApiCall } from "./authTypes";
 
 /** Destino de la foto: galería o proyecto. */
 export type PhotoPurpose = "gallery" | "project";
+/** Contrato del envío de una fotografía con cancelación y progreso. */
 export type PhotoSender = ApiCall;
 /** Formatos aceptados. */
 export const photoTypes = ["image/jpeg", "image/png", "image/webp"];

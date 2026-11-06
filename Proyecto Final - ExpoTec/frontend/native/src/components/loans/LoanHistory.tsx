@@ -5,6 +5,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { formatMoment } from "../../lib/format";
 import type { SharedLoan } from "../../lib/sharedLoans";
 
+/** Muestra las entregas y devoluciones registradas del préstamo. */
 export function LoanHistory({
   loan,
   onClose,

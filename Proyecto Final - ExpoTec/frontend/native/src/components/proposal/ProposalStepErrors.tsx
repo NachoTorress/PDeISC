@@ -4,6 +4,7 @@ import { Card } from "../ui";
 import { useTheme } from "../../contexts/ThemeContext";
 import { proposalFieldLabels } from "../../lib/proposalSteps";
 
+/** Presenta los errores del paso actual de la propuesta. */
 export function ProposalStepErrors({
   issues,
 }: {

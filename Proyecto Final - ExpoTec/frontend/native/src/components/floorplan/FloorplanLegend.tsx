@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { useTheme } from "../../contexts/ThemeContext";
 import { styles } from "./styles";
 
+/** Explica los símbolos y estados visibles en el plano. */
 export function FloorplanLegend({
   shared,
   showPending,

@@ -1,3 +1,4 @@
+-- Crea los registros de recuperación de contraseña.
 CREATE TABLE IF NOT EXISTS password_resets (
   token_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
   user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,

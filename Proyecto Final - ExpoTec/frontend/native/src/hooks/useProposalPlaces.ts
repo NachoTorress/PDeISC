@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import type { useAuth } from "../contexts/AuthContext";
 import type { SharedSpace, SpaceSummary } from "../lib/sharedSpaces";
 
+/** Contrato del cliente de API requerido por este módulo. */
 type Client = ReturnType<typeof useAuth>["client"];
 
 /**

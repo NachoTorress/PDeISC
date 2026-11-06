@@ -15,6 +15,7 @@ import { Icon } from "../Icon";
 import AccountMenu from "../AccountMenu";
 import brandIcon from "../../../assets/brand/expotec-icon-v1.png";
 
+/** Presenta la cabecera y las acciones de navegación de la aplicación. */
 export function AppHeader({
   desktopNavigation,
   navigationOpen,

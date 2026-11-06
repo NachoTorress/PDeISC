@@ -3,6 +3,7 @@ import { Text } from "react-native";
 import { Card, CheckRow } from "../ui";
 import { useTheme } from "../../contexts/ThemeContext";
 
+/** Permite habilitar o deshabilitar una mesa como puesto. */
 export function BoothToggleCard({
   enabled,
   onChange,

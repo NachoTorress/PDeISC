@@ -22,6 +22,7 @@ const wrap = (text, width = 32) => {
   }
   return lines.join('\n');
 };
+/** Separa expresiones SQL por delimitadores fuera de paréntesis y comillas. */
 function splitTop(text, delimiter = ',') {
   const parts = []; let start = 0, depth = 0, quote = '';
   for (let i = 0; i < text.length; i++) {
@@ -35,6 +36,7 @@ function splitTop(text, delimiter = ',') {
   parts.push(text.slice(start).trim()); return parts.filter(Boolean);
 }
 const columnsOf = text => text.split(',').map(c => c.trim().replace(/`/g, ''));
+/** Extrae los metadatos de una definición SQL de columna. */
 function column(text) {
   const match = text.match(/^(\w+)\s+([A-Z]+(?:\([^)]*\))?(?:\s+UNSIGNED)?)\s*(.*)$/i);
   check(match, `Columna SQL no reconocida: ${text}`);
@@ -42,6 +44,7 @@ function column(text) {
 }
 
 const tables = new Map(); const migrationSources = [];
+/** Lee tablas, columnas y restricciones de las sentencias CREATE TABLE. */
 function parseCreates(text, source) {
   const pattern = /CREATE TABLE IF NOT EXISTS (\w+)\s*\(/gi;
   for (const match of text.matchAll(pattern)) {
@@ -196,6 +199,7 @@ const detailNodes = [
   ['P31','3.1','Validar solicitud y participantes'],['P32','3.2','Registrar propuesta o corrección'],['P33','3.3','Componer expediente y resultado'],['P34','3.4','Registrar dictamen y confirmación'],['P35','3.5','Reabrir o cancelar proyecto'],
 ].map(([id,number,name])=>({id,kind:'process',number,name,source:'backend/src/repositories/projects.mjs'}));
 const detailEdges = [];
+/** Agrega una conexión del DFD detallado vinculada con su flujo del nivel anterior. */
 function detailed(ref, source, target, label) {
   const original = level1.edges.find(e=>e.id===ref);
   detailEdges.push({id:`L2-${ref}-${detailEdges.length}`,source,target,label:label??original.label,refs:[ref]});
@@ -223,6 +227,7 @@ for (const view of dfdViews) {
   }
   for (const node of view.nodes.filter(n=>n.kind==='process')) check(view.edges.some(e=>e.source===node.id)&&view.edges.some(e=>e.target===node.id),`Proceso sin entrada/salida: ${node.id}`);
 }
+/** Comprueba que dos listas contengan las mismas referencias y falla si difieren. */
 function sameRefs(a,b,message) {check([...a].sort().join('|')===[...b].sort().join('|'),message);}
 sameRefs(new Set(context.edges.flatMap(e=>e.refs)),new Set(boundaryRows.map(r=>r[0])),'Desbalance contexto/nivel 1');
 sameRefs(new Set(detail.edges.filter(e=>!e.id.startsWith('I')).flatMap(e=>e.refs)),new Set(level1.edges.filter(e=>e.source==='P3'||e.target==='P3').map(e=>e.id)),'Desbalance nivel 1/nivel 2');
@@ -244,9 +249,11 @@ const erViews = [
   {id:'der-galeria',title:'DER · Galería y cargas de imágenes',names:['users',...groups.gallery]},
 ].map(v=>({...v,family:'der',note:v.keysOnly?'Vista general con PK, FK y grupos UNIQUE. Las vistas físicas incluyen todos los atributos.':v.names.length===tables.size?'Esquema físico derivado de las migraciones 001–010 y schema_migrations. Las líneas representan exclusivamente restricciones FK declaradas.':'Vista parcial del esquema: relaciones hacia tablas fuera de esta vista se consultan en el DER completo.',nodes:v.names.map(name=>tables.get(name)),edges:relations.filter(r=>v.names.includes(r.parent)&&v.names.includes(r.child))}));
 
+/** Construye la cabecera Graphviz con la dirección y el título indicados. */
 function baseDOT(title,rankdir='LR') {
   return `digraph G { graph [rankdir=${rankdir}, bgcolor="white", pad="0.45", nodesep="0.70", ranksep="1.8", splines=polyline, outputorder=edgesfirst, fontname="Arial", fontsize=22, labelloc=t, label=${q(title)}]; node [fontname="Arial",fontsize=15, color="#465360",penwidth=1.25]; edge [fontname="Arial",fontsize=12,color="#576474",fontcolor="#263341",penwidth=1.1,arrowsize=0.85];`;
 }
+/** Representa una vista del flujo de datos en formato Graphviz DOT. */
 function dfdDOT(view) {
   const lines=[baseDOT(view.title)];
   for (const node of view.nodes) {
@@ -268,10 +275,12 @@ function dfdDOT(view) {
   }
   return lines.join('\n')+'\n}';
 }
+/** Selecciona las columnas visibles según el nivel de detalle del DER. */
 function selectedColumns(table,keysOnly){
   const keys=new Set([...table.pk,...table.unique.flat(),...table.foreignKeys.flatMap(f=>f.columns)]);
   return table.columns.filter(c=>!keysOnly||keys.has(c.name));
 }
+/** Representa las entidades y relaciones de una vista en formato DOT. */
 function erDOT(view){
   const lines=[baseDOT(view.title)];
   for(const table of view.nodes){
@@ -292,6 +301,7 @@ function erDOT(view){
   return lines.join('\n')+'\n}';
 }
 
+/** Genera el documento draw.io con una página por vista. */
 function drawioDocument(views){
   const pages=[];
   for(const view of views){

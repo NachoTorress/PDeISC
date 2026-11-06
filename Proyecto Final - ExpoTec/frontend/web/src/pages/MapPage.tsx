@@ -1,3 +1,4 @@
+/** Coordina la selección y edición de espacios en el plano de demostración. */
 import { useState } from 'react';
 import {
   ArrowUpRightIcon,
@@ -19,6 +20,7 @@ import type { Space } from '../lib/types';
 import { formatDate } from '../lib/format';
 import { isProjectMember } from '../lib/team';
 
+/** Coordina la selección y edición de espacios en el plano de demostración. */
 export default function MapPage({
   onSelectProject,
   onProjects,

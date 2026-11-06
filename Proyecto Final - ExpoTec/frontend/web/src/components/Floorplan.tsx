@@ -1,9 +1,11 @@
+/** Representa el plano y coordina la selección y los gestos del mobiliario. */
 import { useLayoutEffect, useRef } from 'react';
 import { PlugIcon, CheckIcon, ClockIcon, ArrowDownIcon } from '@phosphor-icons/react';
 import type { Furniture, Project, Space } from '../lib/types';
 import { TABLE_SIZE } from '../lib/layout';
 import TableResizeHandles from './TableResizeHandles';
 
+/** Datos y callbacks que recibe el componente; los tipos delimitan su contrato. */
 interface Props {
   space: Space;
   projects: Project[];
@@ -14,6 +16,7 @@ interface Props {
   onFit: (positions: { id: string; x: number; y: number }[]) => void;
   onResize: (id: string, geometry: { x: number; y: number; width: number; height: number }) => void;
 }
+/** Datos de seguimiento del gesto de arrastre en el plano. */
 interface Drag {
   id: string;
   node: HTMLButtonElement;
@@ -36,6 +39,7 @@ function boundsFor(node: HTMLButtonElement, stage: HTMLDivElement) {
   return { minX, maxX: 100 - minX, minY, maxY: 100 - minY };
 }
 
+/** Ajusta un valor al intervalo admitido por el plano. */
 function fit(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }

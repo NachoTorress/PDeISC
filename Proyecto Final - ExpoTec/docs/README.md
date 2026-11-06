@@ -37,6 +37,7 @@ La APK disponible es **0.5.3, código Android 9**, con las correcciones de formu
 
 ## Documentación técnica y evidencia
 
+- [Convenciones de documentación: PEP 8, PEP 257 y JSDoc](CONVENCIONES_DOCUMENTACION.md).
 - [Despliegue](DESPLIEGUE.md).
 - [Accesos sociales](ACCESOS_SOCIALES.md) y [Google Android](ANDROID_GOOGLE.md).
 - [Recuperación de contraseña](RECUPERACION_CONTRASENA.md).

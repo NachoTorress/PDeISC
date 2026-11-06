@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { Button, Card, Field } from "../ui";
 
+/** Recoge los datos necesarios para crear un espacio compartido. */
 export function NewSpaceForm({
   busy,
   onCreate,

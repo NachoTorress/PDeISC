@@ -17,6 +17,7 @@ function feedbackProblem(feedback: string) {
   return "";
 }
 
+/** Ofrece las acciones de revisión del proyecto de demostración. */
 export function DemoReviewSection({
   onReview,
   onClearError,

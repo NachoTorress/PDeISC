@@ -15,6 +15,7 @@ import {
   socialFlowId,
 } from "./mobileSocial";
 
+/** Datos que vinculan el inicio del acceso social con su retorno a la aplicación. */
 type Flow = { flowId: string; proof: string; expiresAt: number; id?: string };
 const key = "expotec.social.v1";
 let flow: Flow | null = null;

@@ -24,6 +24,7 @@ export const proposalFieldLabels: Record<string, string> = {
   resources: "Elementos solicitados",
 };
 
+/** Operaciones pendientes durante la edición y envío de la propuesta. */
 export type ProposalPending = {
   students: boolean;
   teachers: boolean;

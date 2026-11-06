@@ -1,3 +1,4 @@
+/** Gestiona las entregas y devoluciones del inventario de demostración. */
 import { Fragment, useState } from 'react';
 import type { FormEvent } from 'react';
 import { ArrowUUpLeft, HandCoins, MagnifyingGlass, Plus, X } from '@phosphor-icons/react';
@@ -297,6 +298,7 @@ function LendingForm({ day, onClose }: { day: number; onClose: () => void }) {
   );
 }
 
+/** Gestiona las entregas y devoluciones del inventario de demostración. */
 export default function LoansPage() {
   const { state, role } = useDemo();
   const [day, setDay] = useState(1);

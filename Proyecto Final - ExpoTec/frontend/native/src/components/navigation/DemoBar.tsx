@@ -11,6 +11,7 @@ import { Icon } from "../Icon";
 import type { Role } from "../../lib/types";
 import { profiles } from "./routes";
 
+/** Muestra el perfil ficticio y los controles de la demostración local. */
 export function DemoBar({
   menu,
   onToggleMenu,
