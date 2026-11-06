@@ -8,15 +8,23 @@ Los pasos de uso, instalación y exposición están en el [índice de documentac
 
 ## Compilación actual
 
-APK actual: **0.5.4, Android versionCode 10**. [Descargar APK](https://expo.dev/artifacts/eas/ccLZbYnGK1ko9zTXOTepEfGWjF5VzC6QbQ4Z8FSYDNc.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/aee16978-5142-4959-ba28-759197c82a86), terminada el 06/11/2026 a las 10:13:00, hora de Argentina, desde el frontend de `30f06cf4209f2d9987c7758f4a1ecef73b676b98`.
+APK actual: **0.5.5, Android versionCode 11**. [Descargar APK](https://expo.dev/artifacts/eas/sce_pWeEp6y-Jspo1a1fLwxfb11JpTcXBuq_y3dxvY8.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/1b25b02c-495b-420b-a4d9-efe499ac1ca2), terminada el 06/11/2026 a las 10:58:12, hora de Argentina, desde el frontend de `3368175f3a4198695d2ce31ea3e1758d9d7da138`.
+
+Incluye el nuevo [visor de presentación TV](REVISION_TV_2026-11-06.md): preparación separada, inicio inmediato a pantalla completa, diapositivas con texto grande, controles que se ocultan durante la reproducción y salida a las opciones. La muestra pública y la demostración comparten el visor. Conserva las mejoras visuales y los accesos de la 0.5.4.
+
+Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.5-11.apk`, 110,020,219 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.5.5`, código `11`, sin modo depuración. Integridad ZIP, digest de contenido y firma APK v2 correctos; certificado idéntico al de la APK 0.5.4. Se verificaron en el bundle Android los identificadores y el contenido del nuevo visor TV. SHA-256: `1209b9afd164186290515d959d4cc49b9a01ce69e0073ae11cb55381c01fceba`. Informe local: `artifacts/android/verification-0.5.5.json`.
+
+Se inspeccionaron los 209 archivos enviados a EAS, sin archivos privados ni otros proyectos, y sus hashes coincidieron con las fuentes locales. Registro: `artifacts/android/source-manifest-0.5.5-11.json`. La revisión del visor pasó pruebas de navegador en cuatro tamaños, casos de error y demostración, tres pruebas unitarias, análisis de código, revisión de tipos y exportaciones web y Android. La instalación y el uso de esta versión en un teléfono físico siguen pendientes.
+
+## APK anteriores
+
+Décima APK de prueba: **0.5.4, Android versionCode 10**. [Descargar APK](https://expo.dev/artifacts/eas/ccLZbYnGK1ko9zTXOTepEfGWjF5VzC6QbQ4Z8FSYDNc.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/aee16978-5142-4959-ba28-759197c82a86), terminada el 06/11/2026 a las 10:13:00, hora de Argentina, desde el frontend de `30f06cf4209f2d9987c7758f4a1ecef73b676b98`.
 
 Incluye el acceso superior con ícono de login, puestos libres azules y ocupados verdes en modo oscuro, Google en una fila completa con Discord y GitHub juntos en celular y los ajustes suaves de bordes, cabeceras y acciones descritos en la [revisión visual del 6 de noviembre](REVISION_VISUAL_2026-11-06.md). Conserva las correcciones funcionales de la 0.5.3 y la API pública existente.
 
 Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.4-10.apk`, 110,014,275 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.5.4`, código `10`, sin modo depuración. Integridad ZIP, digest de contenido y firma APK v2 correctos; certificado idéntico al de la APK 0.5.3. El bundle Android contiene los nuevos colores de puestos y el ícono de login. SHA-256: `6b4ceb3fc4feec0b955734adc6074b996058c593b7983b074487e9445b281134`. Informe local: `artifacts/android/verification-0.5.4.json`.
 
 Se inspeccionaron los 207 archivos enviados a EAS y sus hashes coincidieron con las fuentes locales, sin archivos privados ni otros proyectos. Registro: `artifacts/android/source-manifest-0.5.4-10.json`. Pasaron revisión de tipos, análisis de código y exportación web. Se verificaron 50 capturas en navegador con datos ficticios, ambos temas y tamaños de celular y escritorio, sin desbordes horizontales del documento ni errores de ejecución. La instalación y el uso de esta versión en un teléfono físico siguen pendientes.
-
-## APK anteriores
 
 Novena APK de prueba: **0.5.3, Android versionCode 9**. [Descargar APK](https://expo.dev/artifacts/eas/pHPSd0wJPZqgZcbFK46WxwpwD0_QV4V6OqMqkLvQJ5I.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/2c2c2789-845b-495d-81eb-48f4e19b2999), terminada el 04/11/2026 a las 20:49:01, hora de Argentina, desde el frontend de `497b932dc93125264e0570ea3f7357dac6dba1eb`.
 

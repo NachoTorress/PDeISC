@@ -19,4 +19,4 @@ Si un video falla, la secuencia continúa con imagen y datos; si también falta 
 
 Regresión reproducible: `frontend/native/scripts/check-presentation.cjs`, disponible mediante `npm run test:presentation`. Requiere servir primero la exportación web en localhost (por defecto puerto 8097), Playwright y un navegador. `DESIGN_BASE_URL`, `PLAYWRIGHT_MODULE` y `BROWSER_EXECUTABLE` permiten seleccionar las herramientas del entorno. Las capturas e informes quedan en `artifacts/visual-review/tv/`, excluido de Git.
 
-La exportación Android verifica el empaquetado; no genera un instalador. La APK 0.5.4 descargada previamente conserva su contenido anterior. El cambio requiere otra compilación para distribuirse en APK. No se probaron una instalación Android ni un televisor físico en esta revisión.
+La exportación Android verifica el empaquetado; no genera un instalador. La [APK 0.5.5 (código Android 11)](APK_PRUEBA.md) ya incorpora el cambio y fue verificada en integridad y firma, con el mismo certificado de la 0.5.4. No se probaron una instalación Android ni un televisor físico en esta revisión.
