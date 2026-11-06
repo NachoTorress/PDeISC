@@ -6,7 +6,7 @@ Aplicación para organizar la exposición de proyectos de la E.E.S.T. N° 5 Aman
 | --- | --- |
 | Web | [expotec-web-gn19.vercel.app](https://expotec-web-gn19.vercel.app) |
 | API | `https://expotec-api-gn19.vercel.app` |
-| APK Android | [Descargar 0.5.5](https://expo.dev/artifacts/eas/sce_pWeEp6y-Jspo1a1fLwxfb11JpTcXBuq_y3dxvY8.apk), con el nuevo visor de presentación TV a pantalla completa. Historial y verificación en [APK de prueba](docs/APK_PRUEBA.md) |
+| APK Android | [Descargar 0.5.6](https://expo.dev/artifacts/eas/MUhVBTYP1a8Ipg-oJZ4k3w4_qMGWOrAICHutJ8ybqiE.apk), con el nuevo visor de presentación TV a pantalla completa. Historial y verificación en [APK de prueba](docs/APK_PRUEBA.md) |
 | Versión app / API | 0.5.3 / 0.5.1 |
 
 ## Documentación

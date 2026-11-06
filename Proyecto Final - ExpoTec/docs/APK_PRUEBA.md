@@ -8,15 +8,21 @@ Los pasos de uso, instalación y exposición están en el [índice de documentac
 
 ## Compilación actual
 
-APK actual: **0.5.5, Android versionCode 11**. [Descargar APK](https://expo.dev/artifacts/eas/sce_pWeEp6y-Jspo1a1fLwxfb11JpTcXBuq_y3dxvY8.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/1b25b02c-495b-420b-a4d9-efe499ac1ca2), terminada el 06/11/2026 a las 10:58:12, hora de Argentina, desde el frontend de `3368175f3a4198695d2ce31ea3e1758d9d7da138`.
+APK actual: **0.5.6, Android versionCode 12**. [Descargar APK](https://expo.dev/artifacts/eas/MUhVBTYP1a8Ipg-oJZ4k3w4_qMGWOrAICHutJ8ybqiE.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/3edac378-f1b7-425c-968a-0d4d72cf883d), terminada el 6/11/2026, 17:56:14, hora de Argentina, desde el frontend de `c9b2fa80`.
+
+Incluye la verificación por correo en el registro de Android: solicita un código de ocho números, espera la confirmación y luego crea la cuenta y guarda la sesión. Conserva el visor TV y las mejoras anteriores. La API ofrece `/api/auth/register/request` y `/api/auth/register/verify`; los accesos y las cuentas existentes siguen funcionando.
+
+Copia local excluida de Git: `artifacts/android/ExpoTec-0.5.6-12.apk`. Se usó el perfil `preview` y la firma remota habitual de Expo. Por indicación del usuario, se envió directamente a Expo sin ejecutar pruebas ni comprobaciones locales adicionales; no se verificaron el APK descargado ni su uso en un teléfono físico.
+
+## APK anteriores
+
+Undécima APK de prueba: **0.5.5, Android versionCode 11**. [Descargar APK](https://expo.dev/artifacts/eas/sce_pWeEp6y-Jspo1a1fLwxfb11JpTcXBuq_y3dxvY8.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/1b25b02c-495b-420b-a4d9-efe499ac1ca2), terminada el 06/11/2026 a las 10:58:12, hora de Argentina, desde el frontend de `3368175f3a4198695d2ce31ea3e1758d9d7da138`.
 
 Incluye el nuevo [visor de presentación TV](REVISION_TV_2026-11-06.md): preparación separada, inicio inmediato a pantalla completa, diapositivas con texto grande, controles que se ocultan durante la reproducción y salida a las opciones. La muestra pública y la demostración comparten el visor. Conserva las mejoras visuales y los accesos de la 0.5.4.
 
 Archivo local excluido de Git: `artifacts/android/ExpoTec-0.5.5-11.apk`, 110,020,219 bytes. Paquete `ar.edu.expotec.organizacion`, versión `0.5.5`, código `11`, sin modo depuración. Integridad ZIP, digest de contenido y firma APK v2 correctos; certificado idéntico al de la APK 0.5.4. Se verificaron en el bundle Android los identificadores y el contenido del nuevo visor TV. SHA-256: `1209b9afd164186290515d959d4cc49b9a01ce69e0073ae11cb55381c01fceba`. Informe local: `artifacts/android/verification-0.5.5.json`.
 
 Se inspeccionaron los 209 archivos enviados a EAS, sin archivos privados ni otros proyectos, y sus hashes coincidieron con las fuentes locales. Registro: `artifacts/android/source-manifest-0.5.5-11.json`. La revisión del visor pasó pruebas de navegador en cuatro tamaños, casos de error y demostración, tres pruebas unitarias, análisis de código, revisión de tipos y exportaciones web y Android. La instalación y el uso de esta versión en un teléfono físico siguen pendientes.
-
-## APK anteriores
 
 Décima APK de prueba: **0.5.4, Android versionCode 10**. [Descargar APK](https://expo.dev/artifacts/eas/ccLZbYnGK1ko9zTXOTepEfGWjF5VzC6QbQ4Z8FSYDNc.apk). [Compilación EAS](https://expo.dev/accounts/nachot/projects/expotec-organizacion/builds/aee16978-5142-4959-ba28-759197c82a86), terminada el 06/11/2026 a las 10:13:00, hora de Argentina, desde el frontend de `30f06cf4209f2d9987c7758f4a1ecef73b676b98`.
 
