@@ -148,6 +148,12 @@ export function authRoutes(repository, service, config, social) {
   router.use('/browser', browser);
 
   // ----- Variante nativa (tokens en JSON) -----
+  router.post('/register/request', ipLimit, registrationLimit, async (req, res) => {
+    res.status(202).json(await service.requestRegistration(credentials(req.body, true)));
+  });
+  router.post('/register/verify', ipLimit, codeLimit, async (req, res) => {
+    res.status(201).json(await service.verifyRegistration(req.body));
+  });
   router.post('/register', ipLimit, async (req, res) => {
     res.status(201).json(await service.register(credentials(req.body, true)));
   });

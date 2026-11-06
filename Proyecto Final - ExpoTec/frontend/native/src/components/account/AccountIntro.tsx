@@ -1,5 +1,5 @@
 /** Encabezado del formulario de cuenta: "Iniciá sesión" o "Creá tu cuenta" con su explicación. */
-import { Platform, Text, View, useWindowDimensions } from "react-native";
+import { Text, View, useWindowDimensions } from "react-native";
 import { useTheme } from "../../contexts/ThemeContext";
 
 /** Presenta el contexto del acceso o registro de cuenta. */
@@ -43,7 +43,7 @@ export function AccountIntro({ register }: { register: boolean }) {
       </Text>
       <Text style={paragraph}>
         {register
-          ? Platform.OS === "web" ? "Te enviaremos un código al correo para confirmar tu cuenta. La escuela asigna los permisos de organización." : "Elegí cómo vas a participar. La escuela asigna los permisos de organización."
+          ? "Te enviaremos un código al correo para confirmar tu cuenta. La escuela asigna los permisos de organización."
           : "Ingresá a tu cuenta para participar de la ExpoTec."}
       </Text>
     </View>

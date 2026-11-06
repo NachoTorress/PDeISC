@@ -138,7 +138,12 @@ export function createAuthClient(
           await request<AccountSession>(path("social/complete"), input),
         );
       }),
-    /** Crea la sesión web después de confirmar el código recibido por correo. */
+    /** Solicita el código de alta en web o Android sin abrir una sesión. */
+    requestRegistration: (input: Credentials) =>
+      request<{ verificationToken: string; email: string }>(
+        path(storage.browser ? "register" : "register/request"), input,
+      ),
+    /** Crea la sesión después de confirmar el código recibido por correo. */
     completeRegistration: (input: { verificationToken: string; code: string }) =>
       serial(async () => {
         await remember(await request<AccountSession>(path("register/verify"), input));

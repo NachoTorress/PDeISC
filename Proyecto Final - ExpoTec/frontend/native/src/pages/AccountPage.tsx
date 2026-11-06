@@ -7,7 +7,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Platform,
   Text,
   View,
   useWindowDimensions,
@@ -137,8 +136,8 @@ export default function AccountPage({
       });
     void run(
       async () => {
-        if (register && Platform.OS === "web") {
-          const pending = await client.query<{ verificationToken: string; email: string }>("/api/auth/browser/register", credentials);
+        if (register) {
+          const pending = await client.requestRegistration(credentials);
           setVerification(pending);
           setCode("");
         } else await client.signIn(credentials, register);
@@ -148,7 +147,7 @@ export default function AccountPage({
         setShowPassword(false);
       },
       register
-        ? Platform.OS === "web" ? "Enviamos un código a tu correo. Revisá también Spam y confirmalo para crear tu cuenta." : `Tu cuenta de ${accountType === "guest" ? "invitado" : "alumno"} está creada.`
+        ? "Enviamos un código a tu correo. Revisá también Spam y confirmalo para crear tu cuenta."
         : "Iniciaste sesión.",
     );
   }
@@ -317,7 +316,7 @@ export default function AccountPage({
                 title={
                   busy
                     ? register
-                      ? Platform.OS === "web" ? "Enviando código…" : "Creando cuenta…"
+                      ? "Enviando código…"
                       : "Ingresando…"
                     : register
                       ? "Crear cuenta"
