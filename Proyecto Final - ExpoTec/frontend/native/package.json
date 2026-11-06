@@ -13,6 +13,7 @@
     "export:android": "expo export --platform android --output-dir dist-android",
     "export:web": "expo export --platform web --output-dir dist",
     "preview": "node scripts/preview.mjs",
+    "test:presentation": "node scripts/check-presentation.cjs",
     "capture:manual": "node scripts/capture-manual.cjs"
   },
   "dependencies": {

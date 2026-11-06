@@ -181,9 +181,6 @@ export function RootStack({
         {({ navigation }) => (
           <SharedPresentationPage
             onBack={() => navigation.popTo("SharedProjects")}
-            onProject={(id) =>
-              navigation.navigate("SharedProject", { projectId: id })
-            }
           />
         )}
       </Stack.Screen>

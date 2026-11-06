@@ -1,13 +1,10 @@
-/** Ficha de un proyecto en la presentación TV. */
+/** Diapositiva de la muestra: imagen o video y texto legible a distancia. */
 import { useState } from "react";
 import { Image, Text, View, useWindowDimensions } from "react-native";
 import type { ReactNode } from "react";
-import { useTheme } from "../contexts/ThemeContext";
-import { Chip, Heading } from "./ui";
 import { Icon } from "./Icon";
 import type { PresentationProject } from "../lib/sharedPresentation";
 
-/** Compone la ficha pública del proyecto para la presentación. */
 export function SharedPresentationCard({
   project,
   video,
@@ -17,35 +14,34 @@ export function SharedPresentationCard({
   video?: ReactNode;
   videoFailed: boolean;
 }) {
-  const { colors } = useTheme();
   const { width, height } = useWindowDimensions();
-  const wide = width > 900;
+  const wide = width > height;
+  const compact = height < 600 || width < 600;
+  const titleSize = wide ? Math.min(60, Math.max(28, height * 0.055)) : 28;
+  const bodySize = compact ? 16 : 22;
   const [failedImage, setFailedImage] = useState("");
   const imageKey = `${project.id}:${project.imageUrl}`;
   const names = (people: PresentationProject["members"]) =>
-    people
-      .map((person) => `${person.firstName} ${person.lastName}`)
-      .join(" · ");
-  const paragraph = {
-    color: colors.text,
-    fontSize: wide ? 19 : 16,
-    lineHeight: wide ? 28 : 24,
-  };
+    people.map((p) => `${p.firstName} ${p.lastName}`).join(" · ");
   return (
     <View
+      testID="presentation-slide"
       style={{
+        flex: 1,
+        minHeight: 0,
         flexDirection: wide ? "row" : "column",
-        gap: 28,
-        flexGrow: 1,
-        justifyContent: "center",
+        gap: compact ? 16 : 40,
       }}
     >
       <View
         style={{
-          flex: wide ? 1.4 : undefined,
+          flex: wide ? 1.35 : 0.8,
           minWidth: 0,
+          minHeight: 0,
           justifyContent: "center",
-          gap: 10,
+          borderRadius: 16,
+          overflow: "hidden",
+          backgroundColor: "#141c2b",
         }}
       >
         {video ??
@@ -56,85 +52,126 @@ export function SharedPresentationCard({
               source={{ uri: project.imageUrl }}
               resizeMode="contain"
               onError={() => setFailedImage(imageKey)}
-              style={{
-                width: "100%",
-                height: wide ? Math.max(200, Math.min(520, height - 330)) : 230,
-                borderRadius: 14,
-              }}
+              style={{ width: "100%", height: "100%" }}
             />
           ) : (
             <View
               style={{
-                minHeight: wide ? 260 : 180,
+                flex: 1,
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: colors.surfaceVariant,
-                borderRadius: 14,
-                padding: 20,
                 gap: 16,
+                padding: 24,
               }}
             >
-              <Icon name="gallery" size={52} color={colors.muted} />
-              <Text style={{ color: colors.muted, lineHeight: 22 }}>
-                Imagen no disponible · la presentación continúa con la ficha.
+              <Icon name="projects" size={compact ? 64 : 110} color="#b3c4ff" />
+              <Text
+                style={{
+                  color: "#bcc7dd",
+                  fontSize: bodySize,
+                  textAlign: "center",
+                }}
+              >
+                {project.course}
               </Text>
             </View>
           ))}
-        {videoFailed && (
-          <Text style={{ color: colors.muted, lineHeight: 22 }}>
-            Video no disponible · presentación con ficha. Podés volver a
-            intentar el video.
-          </Text>
-        )}
       </View>
       <View
         style={{
-          flex: wide ? 1 : undefined,
+          flex: 1,
           minWidth: 0,
+          minHeight: 0,
           justifyContent: "center",
-          gap: 16,
+          gap: height < 700 ? 8 : compact ? 10 : 20,
         }}
       >
-        <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
-          <Chip label={project.course} />
-          <Chip label="Confirmado" tone="success" />
-        </View>
+        <Text
+          numberOfLines={1}
+          style={{
+            color: "#b3c4ff",
+            fontSize: compact ? 14 : 18,
+            fontWeight: "600",
+          }}
+        >
+          {project.course}
+        </Text>
         <Text
           accessibilityRole="header"
-          numberOfLines={wide ? 3 : undefined}
+          numberOfLines={height < 850 || compact ? 2 : 3}
           style={{
-            color: colors.text,
-            fontSize: wide ? 38 : 28,
-            lineHeight: wide ? 44 : 34,
+            color: "#f5f7ff",
+            fontSize: titleSize,
+            lineHeight: titleSize * 1.12,
             fontWeight: "700",
+            letterSpacing: -0.8,
           }}
         >
           {project.name}
         </Text>
         <Text
-          numberOfLines={wide ? 5 : undefined}
+          numberOfLines={height < 700 ? 2 : compact || height < 850 ? 3 : 5}
           style={{
-            color: colors.muted,
-            fontSize: wide ? 20 : 16,
-            lineHeight: wide ? 29 : 24,
+            color: "#ccd5e8",
+            fontSize: bodySize,
+            lineHeight: bodySize * 1.45,
           }}
         >
           {project.description}
         </Text>
-        <Text numberOfLines={wide ? 3 : undefined} style={paragraph}>
-          Equipo: {names(project.members)}
-        </Text>
-        <Text numberOfLines={wide ? 2 : undefined} style={paragraph}>
-          Profesores: {names(project.teachers)}
-        </Text>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-          {project.subjects.map((subject) => (
-            <Chip key={subject} label={subject} />
-          ))}
+        {!!project.members.length && (
+          <Text
+            numberOfLines={height < 700 ? 1 : compact || height < 850 ? 2 : 3}
+            style={{
+              color: "#f5f7ff",
+              fontSize: bodySize,
+              lineHeight: bodySize * 1.4,
+            }}
+          >
+            Equipo: {names(project.members)}
+          </Text>
+        )}
+        {!compact && height >= 850 && !!project.teachers.length && (
+          <Text
+            numberOfLines={2}
+            style={{ color: "#aebbd3", fontSize: 17, lineHeight: 24 }}
+          >
+            Profesores: {names(project.teachers)}
+          </Text>
+        )}
+        {!compact && height >= 850 && !!project.subjects.length && (
+          <Text
+            numberOfLines={2}
+            style={{ color: "#aebbd3", fontSize: 17, lineHeight: 24 }}
+          >
+            {project.subjects.join(" · ")}
+          </Text>
+        )}
+        <View
+          style={{
+            borderLeftWidth: 3,
+            borderLeftColor: "#b3c4ff",
+            paddingLeft: 14,
+            marginTop: compact ? 0 : 8,
+          }}
+        >
+          <Text
+            numberOfLines={2}
+            style={{
+              color: "#f0bd97",
+              fontSize: compact ? 17 : 24,
+              lineHeight: compact ? 23 : 31,
+              fontWeight: "600",
+            }}
+          >
+            {project.spaceName} · Puesto {project.furnitureId}
+          </Text>
         </View>
-        <Heading
-          title={`${project.spaceName} · Puesto ${project.furnitureId}`}
-        />
+        {videoFailed && (
+          <Text style={{ color: "#aebbd3", fontSize: 13 }}>
+            Video no disponible. La muestra continúa con la imagen y los datos.
+          </Text>
+        )}
       </View>
     </View>
   );

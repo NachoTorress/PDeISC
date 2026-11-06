@@ -68,8 +68,8 @@ export function SharedPresentationVideo({
       onError={onError}
       style={{
         width: "100%",
-        maxHeight: "60vh",
-        aspectRatio: "16 / 9",
+        height: "100%",
+        maxHeight: "100%",
         objectFit: "contain",
         borderRadius: 14,
         background: "#111",

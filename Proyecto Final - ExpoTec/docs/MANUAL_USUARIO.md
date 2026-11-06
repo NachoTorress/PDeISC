@@ -165,9 +165,11 @@ La demostración usa su propio formulario local, con límite de 2 MB para el arc
 
 ## Usar la presentación TV
 
-Abrí **Presentación TV** desde la navegación compartida y pulsá **Iniciar presentación**. Podés pausar, avanzar, retroceder y elegir la duración de las fichas. La secuencia vuelve al inicio al terminar. Los videos avanzan al finalizar su reproducción.
+Abrí **Presentación TV** desde la navegación compartida. Primero aparece la preparación de la muestra: los proyectos confirmados, el tiempo de cada imagen (8, 15 o 30 segundos) y el sonido. Pulsá **Iniciar presentación**: se abre el visor, se ocultan los menús y comienza la primera diapositiva a pantalla completa, sin otro paso de reproducción.
 
-El sonido comienza desactivado; **Activar sonido** lo habilita cuando el dispositivo lo permite. En el navegador, **Pantalla completa** aparece cuando está disponible. Si un video falla, se muestra la ficha y una opción de reintentar. Al salir de la pantalla o quedar oculta, la reproducción se pausa. Ante un error al actualizar la muestra, recuperá la conexión y volvé a iniciarla.
+En el visor, las imágenes avanzan por tiempo y los videos al terminar. La secuencia vuelve al primer proyecto al completar la muestra. Mové el mouse o tocá la pantalla para mostrar los controles de anterior, pausa, siguiente, sonido y **Salir**; se ocultan durante la reproducción. En una computadora también podés usar las flechas, la barra espaciadora para pausar o reanudar y **Esc** para volver a la preparación.
+
+El sonido comienza desactivado. Si el navegador bloquea un video con sonido, el visor permite reanudar sin sonido. Si falla un video o una imagen, se conservan los datos del proyecto y la muestra continúa. Si el navegador no admite pantalla completa, el visor ocupa toda la ventana. Al quedar oculta, la reproducción se pausa; si falla la actualización de la muestra, vuelve a la preparación con una opción de actualizar y reintentar.
 
 Para una exposición en televisor, comprobá previamente imagen, sonido, conexión y el modo de pantalla completa con el equipo que se vaya a usar.
 

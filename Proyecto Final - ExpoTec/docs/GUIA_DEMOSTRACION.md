@@ -86,7 +86,7 @@ Para mostrar el circuito de fotos, elegí **Galería** y **¡Subí tu foto de la
 
 Cambiá a **Organización**, abrí la moderación y aprobá ese aporte. Volvé a **Invitado** y comprobá que aparezca entre las fotos publicadas. Explicá que los aportes pendientes no se publican automáticamente.
 
-Desde Invitado, abrí **TV** o la presentación disponible en la demostración. Iniciá la secuencia y mostrá pausa, avance y retroceso. Si no hay videos cargados, las fichas permiten completar el ejemplo sin depender de contenido externo.
+Desde Invitado, abrí **TV** o la presentación disponible en la demostración. Pulsá **Iniciar presentación**: el visor debe ocupar la pantalla y comenzar inmediatamente, ocultando los menús. Mostrá pausa, avance y retroceso; salí con **Salir** o **Esc** para volver a las opciones. Si no hay videos cargados, las fichas permiten completar el ejemplo sin depender de contenido externo.
 
 ## Mostrar el sistema compartido
 

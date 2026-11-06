@@ -212,9 +212,9 @@ La carga de imagen de un proyecto comparte el servicio de archivos, pero su publ
 
 La muestra pública y TV usan proyectos confirmados. TV pide sus fichas por `POST /api/projects/presentation/query` y completa las páginas de la consulta antes de reproducir.
 
-La persona puede iniciar o pausar, ir al anterior o siguiente, elegir 8, 15 o 30 segundos por ficha y usar pantalla completa cuando la plataforma lo permita. Las imágenes avanzan por tiempo; los videos avanzan al terminar. El sonido puede activarse desde la pantalla.
+La preparación permite elegir 8, 15 o 30 segundos por imagen y configurar el sonido. Iniciar presentación abre un visor independiente a pantalla completa y arranca inmediatamente desde el primer proyecto. El visor oculta la navegación, muestra imágenes y textos grandes y esconde los controles durante la reproducción. Se puede pausar, retroceder, avanzar y salir con controles táctiles o con flechas, espacio y Esc en web. Las imágenes avanzan por tiempo y los videos al terminar. Si la plataforma no admite la pantalla completa del navegador, el visor ocupa toda la ventana.
 
-TV vuelve a consultar cada minuto. Si falla la conexión, pausa la presentación hasta recuperar los proyectos. La web y TV consultan datos actuales; no hay que reconstruir el frontend cada vez que se confirma un proyecto.
+TV vuelve a consultar cada minuto. Si falla la conexión, detiene la presentación y regresa a la preparación para actualizar y reintentar. La web y TV consultan datos actuales; no hay que reconstruir el frontend cada vez que se confirma un proyecto.
 
 **Fuentes:** [pantalla TV](../frontend/native/src/pages/SharedPresentationPage.tsx), [lógica de presentación](../frontend/native/src/lib/sharedPresentation.ts) y [consulta pública](../backend/src/repositories/projects.mjs).
 

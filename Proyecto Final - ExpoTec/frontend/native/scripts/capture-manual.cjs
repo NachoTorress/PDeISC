@@ -186,7 +186,7 @@ async function main() {
 
   // 1. Acceso sin sesión: ingreso, registro y proveedores sociales.
   await page.goto(base, { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Ingresar", exact: true }).click();
+  await page.getByRole("button", { name: "Iniciar sesión", exact: true }).click();
   await capture("01-ingreso");
 
   // A partir de aquí, sesión iniciada con todos los permisos.
@@ -240,7 +240,9 @@ async function main() {
   if (errors.length) throw new Error(`Errores en la página: ${errors.join(" | ")}`);
 }
 
-main().catch((error) => {
+module.exports = { answer };
+
+if (require.main === module) main().catch((error) => {
   console.error(error);
   process.exit(1);
 });

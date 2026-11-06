@@ -45,7 +45,7 @@ export function SharedPresentationVideo({
       player={player}
       nativeControls={false}
       contentFit="contain"
-      style={{ width: "100%", aspectRatio: 16 / 9, borderRadius: 14 }}
+      style={{ width: "100%", height: "100%", borderRadius: 14 }}
     />
   );
 }

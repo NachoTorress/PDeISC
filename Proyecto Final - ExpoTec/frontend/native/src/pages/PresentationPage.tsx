@@ -1,172 +1,177 @@
-/**
- * Pantalla de la demostración (datos locales del dispositivo, sin servidor). Presentación TV con los proyectos de ejemplo.
- */
-import { useCallback, useEffect, useState } from "react";
-import { Text, View, useWindowDimensions } from "react-native";
+/** Presentación de los proyectos de ejemplo con el mismo visor que la muestra pública. */
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { useDemo } from "../hooks/useDemo";
-import { useTheme } from "../contexts/ThemeContext";
-import { Button, Card, Chip, Heading, Screen } from "../components/ui";
-import { PresentationVideo } from "../components/PresentationVideo";
-import ProjectArt from "../components/ProjectArt";
+import {
+  usePresentationDisplay,
+  usePresentationKeyboard,
+} from "../hooks/usePresentationDisplay";
+import { PresentationSetup } from "../components/PresentationSetup";
+import { PresentationViewer } from "../components/PresentationViewer";
+import { SharedPresentationCard } from "../components/SharedPresentationCard";
+import { SharedPresentationVideo } from "../components/SharedPresentationVideo";
 import { projectMembers } from "../lib/team";
 
-/** Secuencia de fichas y videos con controles. */
 export default function PresentationPage({ onBack }: { onBack: () => void }) {
-  const { state, notify } = useDemo();
-  const { colors } = useTheme();
-  const { width, height } = useWindowDimensions();
+  const { state } = useDemo();
   const focused = useIsFocused();
-  const projects = state.projects.filter(
-    (project) => project.status === "approved",
+  const display = usePresentationDisplay();
+  const projects = useMemo(
+    () =>
+      state.projects
+        .filter((project) => project.status === "approved")
+        .map((project) => ({
+          id: project.id,
+          name: project.name,
+          description: project.description,
+          course: project.course,
+          imageUrl: project.image,
+          videoUrl: project.video,
+          furnitureId: project.furnitureId,
+          spaceName:
+            state.spaces.find((space) => space.id === project.spaceId)?.name ??
+            "ExpoTec",
+          members: projectMembers(project).map((name) => ({
+            firstName: name,
+            lastName: "",
+          })),
+          teachers: project.teachers.map((name) => ({
+            firstName: name,
+            lastName: "",
+          })),
+          subjects: project.subjects,
+        })),
+    [state.projects, state.spaces],
   );
   const [index, setIndex] = useState(0);
+  const [epoch, setEpoch] = useState(0);
+  const [presenting, setPresenting] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [seconds, setSeconds] = useState("8");
   const [failed, setFailed] = useState<string[]>([]);
-  const project = projects.length
-    ? projects[index % projects.length]
-    : undefined;
-  const hasVideo = !!project?.video && !failed.includes(project.id);
-  const next = useCallback(
-    () =>
-      setIndex((previous) =>
-        projects.length ? (previous + 1) % projects.length : 0,
-      ),
+  const [message, setMessage] = useState("");
+  const [blocked, setBlocked] = useState(false);
+  const project = projects[index % projects.length];
+  const hasVideo = !!project?.videoUrl && !failed.includes(project.id);
+  const active = presenting && playing && focused && display.visible;
+  const advance = useCallback(
+    (direction = 1) => {
+      setIndex((value) =>
+        projects.length
+          ? (value + direction + projects.length) % projects.length
+          : 0,
+      );
+      setEpoch((value) => value + 1);
+      setBlocked(false);
+    },
     [projects.length],
   );
+  const next = useCallback(() => advance(), [advance]);
   const fail = useCallback(() => {
-    if (!project) return;
-    setFailed((previous) =>
-      previous.includes(project.id) ? previous : [...previous, project.id],
-    );
-    notify("El video no está disponible. Mostramos la ficha del proyecto.");
-  }, [project, notify]);
+    if (project)
+      setFailed((value) =>
+        value.includes(project.id) ? value : [...value, project.id],
+      );
+  }, [project]);
+  const block = useCallback(() => {
+    setPlaying(false);
+    setBlocked(true);
+  }, []);
+  const close = useCallback(() => {
+    setPresenting(false);
+    setPlaying(false);
+    void display.exit().catch(() => {});
+  }, [display.exit]);
   useEffect(() => {
-    if (!playing || !focused || !projects.length || hasVideo) return;
-    const timer = setTimeout(next, 8000);
+    if (presenting && (!focused || !project)) close();
+  }, [presenting, focused, project, close]);
+  useEffect(() => {
+    if (!display.visible) setPlaying(false);
+  }, [display.visible]);
+  useEffect(() => {
+    if (!active || !project || hasVideo) return;
+    const timer = setTimeout(next, Number(seconds) * 1000);
     return () => clearTimeout(timer);
-  }, [playing, focused, projects.length, hasVideo, index, next]);
+  }, [active, project, hasVideo, epoch, seconds, next]);
+  usePresentationKeyboard(presenting, {
+    close,
+    next,
+    previous: () => advance(-1),
+    toggle: () => setPlaying((value) => !value),
+  });
+  function start() {
+    void display
+      .enter()
+      .catch(() =>
+        setMessage(
+          "El navegador no permitió ocultar su barra. La muestra continúa en esta ventana.",
+        ),
+      );
+    setIndex(0);
+    setEpoch((value) => value + 1);
+    setFailed([]);
+    setBlocked(false);
+    setMessage("");
+    setPresenting(true);
+    setPlaying(true);
+  }
   return (
-    <Screen>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Button
-          title="Volver"
-          icon="arrowLeft"
-          variant="quiet"
-          onPress={onBack}
-        />
-        <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}>
-          {projects.length ? (index % projects.length) + 1 : 0} /{" "}
-          {projects.length}
-        </Text>
-      </View>
-      {project ? (
-        <View
-          style={{ flexDirection: width > 900 ? "row" : "column", gap: 28 }}
-        >
-          <View
-            style={{
-              flex:
-                width > 900 && (hasVideo || project.image) ? 1.4 : undefined,
-              width:
-                width > 900 && !hasVideo && !project.image ? 156 : undefined,
-              justifyContent: "center",
-            }}
-          >
-            {hasVideo ? (
-              <PresentationVideo
-                key={`${project.id}-${index}`}
-                uri={project.video}
-                playing={playing && focused}
-                onEnd={next}
-                onError={fail}
-              />
-            ) : (
-              <ProjectArt
-                project={project}
-                bounded
-                height={
-                  project.image
-                    ? width > 900
-                      ? Math.max(260, Math.min(520, height - 300))
-                      : 230
-                    : width > 900
-                      ? 160
-                      : 132
-                }
-              />
-            )}
-          </View>
-          <View style={{ flex: width > 900 ? 1 : undefined, gap: 18 }}>
-            <Chip label={project.course} />
-            <Heading title={project.name} subtitle={project.description} />
-            <Text style={{ color: colors.text, fontSize: 16, lineHeight: 25 }}>
-              Equipo: {projectMembers(project).join(" · ")}
-            </Text>
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-              {project.subjects.map((subject) => (
-                <Chip key={subject} label={subject} />
-              ))}
-            </View>
-            <Text
-              style={{ color: colors.text, fontSize: 20, fontWeight: "600" }}
-            >
-              {state.spaces.find((space) => space.id === project.spaceId)?.name}{" "}
-              · Puesto {project.furnitureId}
-            </Text>
-            {failed.includes(project.id) && (
-              <Text
-                style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}
-              >
-                Video no disponible · presentación con ficha
-              </Text>
-            )}
-          </View>
-        </View>
-      ) : (
-        <Card>
-          <Heading
-            title="Todavía no hay proyectos confirmados"
-            subtitle="La presentación se completa cuando se confirman los proyectos."
-          />
-        </Card>
-      )}
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-        <Button
-          title="Anterior"
-          icon="arrowLeft"
-          variant="secondary"
-          disabled={!projects.length}
-          onPress={() =>
-            setIndex(
-              (previous) => (previous - 1 + projects.length) % projects.length,
-            )
+    <>
+      <PresentationSetup
+        projects={projects}
+        seconds={seconds}
+        muted={muted}
+        onSeconds={setSeconds}
+        onMute={() => setMuted((value) => !value)}
+        onStart={start}
+        onBack={onBack}
+      />
+      {presenting && project && (
+        <PresentationViewer
+          playing={active}
+          index={index % projects.length}
+          total={projects.length}
+          muted={muted}
+          onMute={() => setMuted((value) => !value)}
+          onClose={close}
+          onToggle={() => setPlaying((value) => !value)}
+          onNext={next}
+          onPrevious={() => advance(-1)}
+          message={
+            blocked
+              ? "El navegador bloqueó el sonido. Reanudá para continuar sin sonido."
+              : message
           }
-        />
-        <Button
-          title={playing ? "Pausar presentación" : "Iniciar presentación"}
-          icon={playing ? "pause" : "play"}
-          disabled={!projects.length}
-          onPress={() => setPlaying(!playing)}
-        />
-        <Button
-          title="Siguiente"
-          icon="arrowRight"
-          variant="secondary"
-          disabled={!projects.length}
-          onPress={next}
-        />
-      </View>
-      <Text style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}>
-        Las fichas avanzan cada 8 segundos. Los videos avanzan al terminar. Girá
-        el dispositivo para verlo en horizontal.
-      </Text>
-    </Screen>
+          onContinue={
+            blocked
+              ? () => {
+                  setMuted(true);
+                  setBlocked(false);
+                  setPlaying(true);
+                }
+              : undefined
+          }
+        >
+          <SharedPresentationCard
+            project={project}
+            videoFailed={failed.includes(project.id)}
+            video={
+              hasVideo ? (
+                <SharedPresentationVideo
+                  key={`${project.id}:${epoch}`}
+                  uri={project.videoUrl}
+                  playing={active}
+                  muted={muted}
+                  onEnd={next}
+                  onError={fail}
+                  onBlocked={block}
+                />
+              ) : undefined
+            }
+          />
+        </PresentationViewer>
+      )}
+    </>
   );
 }
